@@ -58,14 +58,16 @@ export function TicketCard({
         "cursor-move bg-white hover:shadow-md transition-shadow group",
         isDragging && "rotate-3 scale-105 shadow-xl"
       )}
+      {...attributes}
+      {...listeners}
     >
       <CardHeader className='p-3'>
         <div className='flex items-start gap-2'>
           <button
-            {...attributes}
-            {...listeners}
+            // {...attributes}
+            // {...listeners}
             className='cursor-grab active:cursor-grabbing mt-1 touch-none'
-            type="button"
+            type='button'
           >
             <GripVertical className='h-4 w-4 text-muted-foreground' />
           </button>
