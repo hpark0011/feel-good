@@ -1,0 +1,23 @@
+---
+alwaysApply: true
+---
+
+## Core Technologies
+
+- **Next.js 15** with App Router
+- **React 19** with React Compiler
+- **TypeScript** with strict configuration
+- **Tailwind CSS 4** for styling
+- **shadcn/ui with Radix UI primitives** for UI components
+- **pnpm** for package manager
+- **Custom SVG icons and Lucide React** for icons
+- **React Hook Form with Zod** for form management and validation
+- **TanStack Query(React Query)** for caching, refetching, deduplication,and keeping UI up-to-date as the data changes.
+
+## Coding principles
+
+- **KISS(Keep it simple stupid)**: Choose straightforward solutions over complex ones whenever possible.
+- **YAGNI**: Build only what’s needed now
+- **Clear separation of concern**: Do not mix different concerns in one function.
+- **Performance**: Fast startup, responsive UI, optimistic update.
+- **Privacy**: Data encryption and user control
