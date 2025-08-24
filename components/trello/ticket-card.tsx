@@ -37,7 +37,7 @@ export function TicketCard({
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition: isSortableDragging ? transition : undefined,
     opacity: isSortableDragging ? 0.5 : 1,
   };
 
@@ -46,7 +46,7 @@ export function TicketCard({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "bg-white hover:shadow-xl transition-all duration-200 translate-y-0 hover:translate-y-[-1px] scale-100 hover:scale-[1.02] ease-out group cursor-grab active:cursor-grabbing border-none shadow-lg",
+        "bg-white hover:shadow-xl transition-all duration-200 translate-y-0 hover:translate-y-[-1px] scale-100 hover:scale-[1.02] ease-out group cursor-grab active:cursor-grabbing border-none shadow-none",
         isDragging && "rotate-3 scale-105 shadow-xl"
       )}
       {...attributes}

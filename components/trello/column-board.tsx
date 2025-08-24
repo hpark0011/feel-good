@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import {
   DndContext,
   DragEndEvent,
@@ -325,16 +325,19 @@ export function ColumnBoard() {
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
-        <div className='flex gap-4 p-4 overflow-x-auto min-h-screen pt-20'>
+        <div className='flex p-0 overflow-x-auto min-h-screen pt-20'>
           {COLUMNS.map((column) => (
-            <BoardColumn
-              key={column.id}
-              column={column}
-              tickets={board[column.id]}
-              onAddTicket={() => handleAddTicket(column.id)}
-              onEditTicket={handleEditTicket}
-              onDeleteTicket={handleDeleteTicket}
-            />
+            <Fragment key={column.id}>
+              <BoardColumn
+                key={column.id}
+                column={column}
+                tickets={board[column.id]}
+                onAddTicket={() => handleAddTicket(column.id)}
+                onEditTicket={handleEditTicket}
+                onDeleteTicket={handleDeleteTicket}
+              />
+              <div className='w-[1px] bg-neutral-200 last:hidden' />
+            </Fragment>
           ))}
         </div>
         <DragOverlay>

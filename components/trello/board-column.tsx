@@ -32,8 +32,8 @@ export function BoardColumn({
   });
 
   return (
-    <Card className='w-1/4 h-[calc(100vh-96px)] flex flex-col bg-transparent shadow-none rounded-2xl py-0 overflow-y-hidden gap-0'>
-      <CardHeader className='pl-3.5 py-2 gap-0 pr-2'>
+    <Card className='w-1/3 h-[calc(100vh-96px)] flex flex-col bg-transparent shadow-none rounded-2xl py-0 gap-0 border-none'>
+      <CardHeader className='pl-6 pb-2 gap-0 pr-4'>
         <div className='flex items-center justify-between'>
           <div className='flex items-baseline gap-0.5'>
             <CardTitle className='text-sm font-medium'>
@@ -54,7 +54,7 @@ export function BoardColumn({
       </CardHeader>
       <CardContent
         ref={setNodeRef}
-        className='flex-1 p-0 px-2 overflow-y-scroll relative'
+        className='flex-1 p-0 px-5 overflow-y-scroll relative'
       >
         <div className='h-6 w-full bg-gradient-to-t from-transparent to-neutral-100 sticky top-0 left-0 z-10' />
 
@@ -74,11 +74,11 @@ export function BoardColumn({
             ))}
             <Button
               size='sm'
-              variant='ghost'
+              variant='outline'
               onClick={onAddTicket}
-              className='w-full justify-start'
+              className='w-full justify-start bg-transparent border-neutral-200 border p-0  rounded-xl h-[56px]'
             >
-              <PlusIcon className='h-4 w-4 mr-1' />
+              <PlusIcon className='h-4 w-4' />
               Add Ticket
             </Button>
           </div>
@@ -91,7 +91,7 @@ export function BoardColumn({
             </p>
           </div>
         )}
-        <div className='h-6 w-full bg-gradient-to-b from-transparent to-neutral-100 sticky bottom-0 left-0' />
+        <div className='h-2 w-full bg-gradient-to-b from-transparent to-neutral-100 sticky bottom-0 left-0' />
       </CardContent>
     </Card>
   );
