@@ -6,7 +6,8 @@
       "Bash(pnpm add:*)",
       "Bash(mkdir:*)",
       "Bash(pnpm lint:*)",
-      "Bash(pnpm dev:*)"
+      "Bash(pnpm dev:*)",
+      "Bash(gh issue create:*)"
     ],
     "deny": [],
     "ask": []
