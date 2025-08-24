@@ -8,6 +8,71 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Background Colors */
+  --color-base: var(--color-base);
+  --color-extra-light: var(--color-extra-light);
+  --color-light: var(--color-light);
+  --color-medium: var(--color-medium);
+  --color-dark: var(--color-dark);
+  --color-extra-dark: var(--color-extra-dark);
+  --color-extra-light-inverse: var(--color-extra-light-inverse);
+  --color-light-inverse: var(--color-light-inverse);
+  --color-medium-inverse: var(--color-medium-inverse);
+  --color-dark-inverse: var(--color-dark-inverse);
+  --color-extra-dark-inverse: var(--color-extra-dark-inverse);
+  --color-highlight: var(--color-text-highlight);
+
+  /* Text Colors */
+  --color-text-strong: var(--color-text-strong);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-tertiary: var(--color-text-tertiary);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-primary-inverse: var(--color-text-primary-inverse);
+  --color-text-secondary-inverse: var(--color-text-secondary-inverse);
+  --color-text-tertiary-inverse: var(--color-text-tertiary-inverse);
+
+  --color-text-success: var(--color-text-success);
+  --color-text-warning: var(--color-text-warning);
+  --color-text-error: var(--color-text-error);
+
+  --color-text-highlight: var(--color-text-highlight);
+
+  /* Icon Colors */
+  --color-icon-extra-light: var(--color-icon-extra-light);
+  --color-icon-light: var(--color-icon-light);
+  --color-icon-medium: var(--color-icon-medium);
+  --color-icon-dark: var(--color-icon-dark);
+  --color-icon-light-inverse: var(--color-icon-light-inverse);
+  --color-icon-medium-inverse: var(--color-icon-medium-inverse);
+  --color-icon-dark-inverse: var(--color-icon-dark-inverse);
+
+  /* Shadow Colors */
+  --shadow-button-primary: var(--shadow-button-primary);
+  --shadow-button-primary-hover: var(--shadow-button-primary-hover);
+  --shadow-button-outline-hover: var(--shadow-button-outline-hover);
+  --shadow-button-submit: var(--shadow-button-submit);
+  --shadow-button-submit-hover: var(--shadow-button-submit-hover);
+
+  /* Primitive Colors */
+  --color-dq-gray-50: var(--color-dq-gray-50);
+  --color-dq-gray-75: var(--color-dq-gray-75);
+  --color-dq-gray-100: var(--color-dq-gray-100);
+  --color-dq-gray-150: var(--color-dq-gray-150);
+  --color-dq-gray-200: var(--color-dq-gray-200);
+  --color-dq-gray-300: var(--color-dq-gray-300);
+  --color-dq-gray-400: var(--color-dq-gray-400);
+  --color-dq-gray-500: var(--color-dq-gray-500);
+  --color-dq-gray-600: var(--color-dq-gray-600);
+  --color-dq-gray-700: var(--color-dq-gray-700);
+  --color-dq-gray-800: var(--color-dq-gray-800);
+  --color-dq-gray-850: var(--color-dq-gray-850);
+  --color-dq-gray-900: var(--color-dq-gray-900);
+  --color-dq-gray-925: var(--color-dq-gray-925);
+  --color-dq-gray-950: var(--color-dq-gray-950);
+  --color-dq-gray-975: var(--color-dq-gray-975);
+
+  /* Shadcn UI */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-inter);

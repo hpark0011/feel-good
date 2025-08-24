@@ -34,7 +34,7 @@ import { Button } from "@/components/ui/button";
 const ticketSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title is too long"),
   description: z.string().max(500, "Description is too long").default(""),
-  status: z.enum(["not-started", "in-progress", "complete"]),
+  status: z.enum(["backlog", "not-started", "in-progress", "complete"]),
 });
 
 type TicketFormInput = z.input<typeof ticketSchema>;
@@ -49,6 +49,7 @@ interface TicketFormProps {
 }
 
 const COLUMN_OPTIONS = [
+  { value: "backlog", label: "Backlog" },
   { value: "not-started", label: "Not Started" },
   { value: "in-progress", label: "In Progress" },
   { value: "complete", label: "Complete" },
@@ -61,7 +62,7 @@ export function TicketForm({
   defaultValues = {
     title: "",
     description: "",
-    status: "not-started",
+    status: "backlog",
   },
   mode = "create",
 }: TicketFormProps) {

@@ -34,9 +34,9 @@ const STORAGE_KEY = "trello-board-state";
 
 const INITIAL_BOARD_STATE: BoardState = {
   backlog: [],
-  todo: [],
+  "not-started": [],
   "in-progress": [],
-  done: [],
+  complete: [],
 };
 
 export function ColumnBoard() {
@@ -63,7 +63,7 @@ export function ColumnBoard() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTicket, setEditingTicket] = useState<Ticket | null>(null);
-  const [formColumnId, setFormColumnId] = useState<ColumnId>("not-started");
+  const [formColumnId, setFormColumnId] = useState<ColumnId>("backlog");
 
   const sensors = useSensors(
     useSensor(MouseSensor, {

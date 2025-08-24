@@ -32,7 +32,7 @@ export function BoardColumn({
 
   return (
     <Card className='w-1/3 h-[calc(100vh-96px)] flex flex-col bg-transparent shadow-none rounded-2xl py-0 gap-0 border-none'>
-      <CardHeader className='pl-6 pb-2 gap-0 pr-4'>
+      <CardHeader className='pl-7 pb-2 gap-0 pr-6'>
         <div className='flex items-center justify-between'>
           <div className='flex items-baseline gap-0.5'>
             <CardTitle className='text-sm font-medium'>
@@ -53,7 +53,7 @@ export function BoardColumn({
       </CardHeader>
       <CardContent
         ref={setNodeRef}
-        className='flex-1 p-0 px-5 overflow-y-scroll relative'
+        className='flex-1 p-0 px-6 overflow-y-scroll relative'
       >
         <div className='h-6 w-full bg-gradient-to-t from-transparent to-neutral-100 sticky top-0 left-0 z-10' />
 
@@ -62,7 +62,7 @@ export function BoardColumn({
           items={tickets.map((t) => t.id)}
           strategy={verticalListSortingStrategy}
         >
-          <div className='space-y-1'>
+          <div className='space-y-1 h-full'>
             {tickets.map((ticket) => (
               <TicketCard
                 key={ticket.id}
@@ -71,25 +71,20 @@ export function BoardColumn({
                 onDelete={() => onDeleteTicket(ticket.id)}
               />
             ))}
-            <Button
-              size='sm'
-              variant='outline'
+            <button
               onClick={onAddTicket}
-              className='w-full justify-start bg-transparent border-neutral-200 border p-0  rounded-xl h-[56px] has-[>svg]:pl-3.5 hover:bg-dq-gray-150'
+              className='flex w-full items-center flex-col justify-center bg-transparent border-neutral-200 border p-2 rounded-xl h-[56px] hover:bg-base/50 transition-all duration-200 ease-out hover:scale-102 shadow-none scale-100 active:scale-98 cursor-pointer relative group hover:border-white/100 inset-shadow-none hover:shadow-[0_12px_12px_-6px_rgba(255,255,255,0.8),_0_14px_14px_-6px_rgba(0,0,0,0.3)]'
             >
-              <PlusIcon className='h-4 w-4' />
-              Add Ticket
-            </Button>
+              <div className='flex items-center gap-2 drop-shadow-none group-hover:drop-shadow-[2px_2px_0px_rgba(0,0,0,0.1)] transition-all duration-200 ease-out group-hover:scale-105 scale-100'>
+                <PlusIcon className='size-4 text-text-muted group-hover:text-text-primary' />
+                <span className='text-sm text-text-muted group-hover:text-text-primary'>
+                  Add Ticket
+                </span>
+              </div>
+            </button>
           </div>
         </SortableContext>
-        {tickets.length === 0 && (
-          <div className='text-center text-muted-foreground py-8'>
-            <p className='text-sm'>No tickets yet</p>
-            <p className='text-xs mt-1'>
-              Drop tickets here or create a new one
-            </p>
-          </div>
-        )}
+
         <div className='h-2 w-full bg-gradient-to-b from-transparent to-neutral-100 sticky bottom-0 left-0' />
       </CardContent>
     </Card>
