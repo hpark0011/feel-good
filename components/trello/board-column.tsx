@@ -1,16 +1,15 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useDroppable } from "@dnd-kit/core";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useDroppable } from "@dnd-kit/core";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { TicketCard } from "./ticket-card";
-import { Ticket, Column } from "./types";
-import { Icon } from "@/components/ui/icon";
 import { PlusIcon } from "lucide-react";
+import { TicketCard } from "./ticket-card";
+import { Column, Ticket } from "../../types/board";
 
 interface BoardColumnProps {
   column: Column;

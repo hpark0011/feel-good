@@ -17,7 +17,7 @@ import {
 import { arrayMove } from "@dnd-kit/sortable";
 import { BoardColumn } from "./board-column";
 import { TicketCard } from "./ticket-card";
-import { Ticket, BoardState, ColumnId } from "./types";
+import { Ticket, BoardState, ColumnId } from "../../types/board";
 import { TicketForm } from "./ticket-form";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import {
@@ -28,19 +28,15 @@ import {
   downloadJsonFile,
 } from "@/lib/storage";
 import { Header } from "./header";
-
-const COLUMNS = [
-  { id: "not-started" as ColumnId, title: "Not Started" },
-  { id: "in-progress" as ColumnId, title: "In Progress" },
-  { id: "complete" as ColumnId, title: "Complete" },
-] as const;
+import { COLUMNS } from "@/config/board-config";
 
 const STORAGE_KEY = "trello-board-state";
 
 const INITIAL_BOARD_STATE: BoardState = {
-  "not-started": [],
+  backlog: [],
+  todo: [],
   "in-progress": [],
-  complete: [],
+  done: [],
 };
 
 export function ColumnBoard() {

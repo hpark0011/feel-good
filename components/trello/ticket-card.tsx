@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Edit, GripVertical, Trash } from "lucide-react";
-import { Ticket } from "./types";
+import { Ticket } from "../../types/board";
 
 interface TicketCardProps {
   ticket: Ticket;
