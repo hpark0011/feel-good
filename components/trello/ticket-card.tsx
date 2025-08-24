@@ -8,6 +8,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Edit, Trash } from "lucide-react";
 import { Ticket } from "../../types/board";
+import { Separator } from "@/components/ui/separator";
 
 interface TicketCardProps {
   ticket: Ticket;
@@ -52,16 +53,16 @@ export function TicketCard({
       <CardHeader className={cn("p-4 pb-4 flex", ticket.description && "pb-2")}>
         <div className='flex items-start gap-2'>
           <div className='flex-1 min-w-0'>
-            <CardTitle className='text-lg font-medium leading-none'>
+            <CardTitle className='text-md font-medium leading-none'>
               {ticket.title}
             </CardTitle>
           </div>
           {!isDragging && (
-            <div className='absolute top-1.5 right-1.5 flex opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto border rounded-md p-0.5 border-extra-light shadow-lg'>
+            <div className='absolute top-2 right-2 flex opacity-0 group-hover:opacity-100 flex-row items-center transition-opacity pointer-events-none group-hover:pointer-events-auto border rounded-md border-neutral-100 bg-base shadow-lg'>
               <Button
                 size='icon'
                 variant='ghost'
-                className='h-5 w-6 bg-transparent hover:bg-extra-light rounded-sm'
+                className='h-6 w-7 bg-transparent hover:bg-neutral-100 rounded-none cursor-pointer hover:shadow-lg rounded-l-md'
                 onClick={(e) => {
                   e.stopPropagation();
                   onEdit?.();
@@ -72,10 +73,11 @@ export function TicketCard({
                   className='h-3 w-3 text-icon-dark'
                 />
               </Button>
+              <div className='self-stretch w-px bg-neutral-100' />
               <Button
                 size='icon'
                 variant='ghost'
-                className='h-5 w-6 bg-transparent hover:bg-extra-light rounded-sm'
+                className='h-6 w-7 bg-transparent hover:bg-neutral-100 rounded-none cursor-pointer hover:shadow-lg rounded-r-md'
                 onClick={(e) => {
                   e.stopPropagation();
                   onDelete?.();
@@ -90,7 +92,7 @@ export function TicketCard({
 
       {ticket.description && (
         <CardContent className='p-4 pt-0'>
-          <p className='text-sm line-clamp-2 w-full leading-[140%]'>
+          <p className='text-sm line-clamp-2 w-full leading-[140%] text-text-tertiary'>
             {ticket.description}
           </p>
         </CardContent>
