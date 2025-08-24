@@ -46,7 +46,7 @@ export function TicketCard({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "bg-white hover:shadow-xl transition-all duration-200 translate-y-0 hover:translate-y-[-1px] scale-100 hover:scale-[1.02] ease-out shadow-none group cursor-grab active:cursor-grabbing border-none",
+        "bg-white hover:shadow-xl transition-all duration-200 translate-y-0 hover:translate-y-[-1px] scale-100 hover:scale-[1.02] ease-out group cursor-grab active:cursor-grabbing border-none shadow-lg",
         isDragging && "rotate-3 scale-105 shadow-xl"
       )}
       {...attributes}
