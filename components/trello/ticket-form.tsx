@@ -30,6 +30,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { AutoResizingTextarea } from "../ui/auto-resizing-textarea";
 
 const ticketSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title is too long"),
@@ -89,14 +90,14 @@ export function TicketForm({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className='sm:max-w-[425px]'>
-        <DialogHeader>
-          <DialogTitle>
+      <DialogContent className='sm:max-w-xl px-4'>
+        <DialogHeader className='mb-6'>
+          <DialogTitle className='text-lg font-medium leading-[1]'>
             {mode === "create" ? "Create New Ticket" : "Edit Ticket"}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className='sr-only'>
             {mode === "create"
-              ? "Add a new ticket to your board. Fill in the details below."
+              ? "Add a new ticket to your board."
               : "Update the ticket details below."}
           </DialogDescription>
         </DialogHeader>
@@ -112,7 +113,11 @@ export function TicketForm({
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input placeholder='Enter ticket title...' {...field} />
+                    <Input
+                      placeholder='Enter ticket title...'
+                      {...field}
+                      className='h-9 border-[1px] border-light px-2.5 rounded-md placeholder:text-muted-foreground w-[calc(100%+8px)] ml-[-4px]'
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -125,10 +130,10 @@ export function TicketForm({
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea
+                    <AutoResizingTextarea
                       placeholder='Enter ticket description...'
-                      className='resize-none'
-                      rows={3}
+                      maxHeight={400}
+                      className='resize-none h-full bg-transparent border-light/90 border-[1px] rounded-lg min-h-[160px] w-[calc(100%+8px)] ml-[-4px] flex-1'
                       {...field}
                     />
                   </FormControl>
@@ -163,15 +168,16 @@ export function TicketForm({
                 </FormItem>
               )}
             />
-            <DialogFooter>
+            <DialogFooter className='gap-1'>
               <Button
                 type='button'
-                variant='outline'
+                variant='ghost'
                 onClick={() => handleOpenChange(false)}
+                size='sm'
               >
                 Cancel
               </Button>
-              <Button type='submit'>
+              <Button type='submit' variant='primary' size='sm'>
                 {mode === "create" ? "Create Ticket" : "Save Changes"}
               </Button>
             </DialogFooter>

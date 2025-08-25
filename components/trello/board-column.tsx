@@ -51,7 +51,7 @@ export function BoardColumn({
   return (
     <Card className='w-1/3 h-[calc(100vh-80px)] flex flex-col bg-transparent shadow-none rounded-2xl py-0 gap-0 border-none pb-0'>
       <CardHeader className='pl-4.5 pb-2 gap-0 pr-4'>
-        <div className='flex items-center justify-between'>
+        <div className='flex items-center justify-between h-6'>
           <div className='flex items-center gap-1'>
             <Icon
               name={column.icon}

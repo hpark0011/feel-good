@@ -4,6 +4,7 @@
 @import url("@/styles/text-colors.css");
 @import url("@/styles/icon-colors.css");
 @import url("@/styles/background-colors.css");
+@import url("@/styles/shadows.css");
 
 @custom-variant dark (&:is(.dark *));
 

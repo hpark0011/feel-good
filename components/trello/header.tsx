@@ -45,11 +45,11 @@ export function Header({
             <Button
               variant='ghost'
               onClick={() => fileInputRef.current?.click()}
-              className='h-6 w-6 bg-transparent'
+              className='h-6 w-6 bg-transparent cursor-pointer'
             >
               <Icon
                 name='ArrowDownToLineCompactIcon'
-                className='h-4 w-4 text-icon-light'
+                className='size-5 text-icon-light'
               />
             </Button>
           </TooltipTrigger>
@@ -57,10 +57,14 @@ export function Header({
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant='ghost' onClick={onExport} className='h-6 w-6'>
+            <Button
+              variant='ghost'
+              onClick={onExport}
+              className='h-6 w-6 cursor-pointer'
+            >
               <Icon
                 name='ArrowUpToLineCompactIcon'
-                className='h-4 w-4 text-icon-light'
+                className='size-5 text-icon-light'
               />
             </Button>
           </TooltipTrigger>
@@ -70,10 +74,10 @@ export function Header({
           <Tooltip>
             <TooltipTrigger asChild>
               <AlertDialogTrigger asChild>
-                <Button variant='ghost' className='h-6 w-6'>
+                <Button variant='ghost' className='h-6 w-6 cursor-pointer'>
                   <Icon
                     name='XmarkCircleFillIcon'
-                    className='size-5 text-icon-light'
+                    className='size-5.5 text-icon-light'
                   />
                 </Button>
               </AlertDialogTrigger>
