@@ -1,3 +1,5 @@
+import { IconName } from "@/components/ui/icon";
+
 export interface Ticket {
   id: string;
   title: string;
@@ -10,6 +12,9 @@ export interface Ticket {
 export interface Column {
   id: ColumnId;
   title: string;
+  icon: IconName;
+  iconColor: string;
+  iconSize: string;
 }
 
 export type BoardState = Record<string, Ticket[]>;

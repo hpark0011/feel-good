@@ -7,8 +7,13 @@ import { cn } from "@/lib/utils";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Edit, Trash } from "lucide-react";
-import { Ticket } from "../../types/board";
+import { Ticket } from "../../types/board.types";
 import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface TicketCardProps {
   ticket: Ticket;
@@ -58,33 +63,43 @@ export function TicketCard({
             </CardTitle>
           </div>
           {!isDragging && (
-            <div className='absolute top-2 right-2 flex opacity-0 group-hover:opacity-100 flex-row items-center transition-opacity pointer-events-none group-hover:pointer-events-auto border rounded-md border-neutral-100 bg-base shadow-lg'>
-              <Button
-                size='icon'
-                variant='ghost'
-                className='h-6 w-7 bg-transparent hover:bg-neutral-100 rounded-none cursor-pointer hover:shadow-lg rounded-l-md'
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onEdit?.();
-                }}
-              >
-                <Icon
-                  name='SquareAndPencilIcon'
-                  className='h-3 w-3 text-icon-dark'
-                />
-              </Button>
+            <div className='absolute top-2 right-2 flex opacity-0 group-hover:opacity-100 flex-row items-center transition-opacity pointer-events-none group-hover:pointer-events-auto border rounded-md border-gray-100 bg-base shadow-xs'>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size='icon'
+                    variant='ghost'
+                    className='h-6 w-7 bg-transparent hover:bg-neutral-100 rounded-none cursor-pointer hover:shadow-lg rounded-l-md'
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onEdit?.();
+                    }}
+                  >
+                    <Icon
+                      name='SquareAndPencilIcon'
+                      className='h-2.5 w-2.5 text-icon-dark'
+                    />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Edit Ticket</TooltipContent>
+              </Tooltip>
               <div className='self-stretch w-px bg-neutral-100' />
-              <Button
-                size='icon'
-                variant='ghost'
-                className='h-6 w-7 bg-transparent hover:bg-neutral-100 rounded-none cursor-pointer hover:shadow-lg rounded-r-md'
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete?.();
-                }}
-              >
-                <Icon name='TrashIcon' className='h-3 w-3 text-icon-dark' />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    size='icon'
+                    variant='ghost'
+                    className='h-6 w-7 bg-transparent hover:bg-neutral-100 rounded-none cursor-pointer hover:shadow-lg rounded-r-md'
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete?.();
+                    }}
+                  >
+                    <Icon name='TrashIcon' className='h-3 w-3 text-icon-dark' />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Delete Ticket</TooltipContent>
+              </Tooltip>
             </div>
           )}
         </div>

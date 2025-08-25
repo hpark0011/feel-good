@@ -32,8 +32,8 @@ export function Header({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className='flex justify-between items-center p-4 py-2  bg-transparent fixed top-0 w-full pl-[22px]'>
-      <h1 className='text-2xl font-medium'>{title}</h1>
+    <div className='flex justify-between items-center py-2  bg-transparent fixed top-0 w-full px-6'>
+      <h1 className='text-xl font-medium'>{title}</h1>
       <div className='flex gap-0.5'>
         <Button
           variant='ghost'

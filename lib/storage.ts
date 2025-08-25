@@ -1,4 +1,4 @@
-import { BoardState, Ticket } from "@/types/board";
+import { BoardState, Ticket } from "@/types/board.types";
 
 export interface SerializedBoardData {
   version: number;

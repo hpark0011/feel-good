@@ -44,6 +44,7 @@ export { default as CircleDashedIcon } from "@/icons/circle.dashed.svg";
 export { default as CircleGridCrossFillIcon } from "@/icons/circle.grid.cross.fill.svg";
 export { default as CircleLeftHalfFilledRightHalfStripedHorizontalInverseIcon } from "@/icons/circle.lefthalf.filled.righthalf.striped.horizontal.inverse.svg";
 export { default as CircleLeftHalfFilledRightHalfStripedHorizontalIcon } from "@/icons/circle.lefthalf.filled.righthalf.striped.horizontal.svg";
+export { default as CircleLeftHalfFilledIcon } from "@/icons/circle.lefthalf.filled.svg";
 export { default as ClockFillIcon } from "@/icons/clock.fill.svg";
 export { default as CodeIcon } from "@/icons/code.svg";
 export { default as CursorArrowClick2Icon } from "@/icons/cursorarrow.click.2.svg";

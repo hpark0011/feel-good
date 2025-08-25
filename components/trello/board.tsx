@@ -17,7 +17,7 @@ import {
 import { arrayMove } from "@dnd-kit/sortable";
 import { BoardColumn } from "./board-column";
 import { TicketCard } from "./ticket-card";
-import { Ticket, BoardState, ColumnId } from "../../types/board";
+import { Ticket, BoardState, ColumnId } from "../../types/board.types";
 import { TicketForm } from "./ticket-form";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import {
@@ -332,7 +332,7 @@ export function Board() {
                 onEditTicket={handleEditTicket}
                 onDeleteTicket={handleDeleteTicket}
               />
-              <div className='w-[1px] min-w-[1px] bg-neutral-200 last:hidden' />
+              <div className='w-[1px] min-w-[1px] bg-gray-300 last:hidden' />
             </Fragment>
           ))}
         </div>
