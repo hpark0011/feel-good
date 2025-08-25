@@ -3,17 +3,15 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Icon } from "@/components/ui/icon";
-import { cn } from "@/lib/utils";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { Edit, Trash } from "lucide-react";
-import { Ticket } from "../../types/board.types";
-import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { Ticket } from "../../types/board.types";
 
 interface TicketCardProps {
   ticket: Ticket;
@@ -63,7 +61,7 @@ export function TicketCard({
             </CardTitle>
           </div>
           {!isDragging && (
-            <div className='absolute top-2 right-2 flex opacity-0 group-hover:opacity-100 flex-row items-center transition-opacity pointer-events-none group-hover:pointer-events-auto border rounded-md border-gray-100 bg-base shadow-xs'>
+            <div className='absolute top-2 right-2 flex opacity-0 group-hover:opacity-100 flex-row items-center transition-opacity pointer-events-none group-hover:pointer-events-auto border rounded-md border-gray-100 bg-base'>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
