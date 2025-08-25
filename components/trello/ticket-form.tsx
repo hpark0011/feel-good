@@ -104,7 +104,7 @@ export function TicketForm({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className='space-y-4'
+            className='space-y-6'
           >
             <FormField
               control={form.control}
@@ -116,7 +116,7 @@ export function TicketForm({
                     <Input
                       placeholder='Enter ticket title...'
                       {...field}
-                      className='h-9 border-[1px] border-light px-2.5 rounded-md placeholder:text-muted-foreground w-[calc(100%+8px)] ml-[-4px]'
+                      className='h-9 border-[1px] px-2.5 rounded-md placeholder:text-muted-foreground w-[calc(100%+8px)] ml-[-4px]'
                     />
                   </FormControl>
                   <FormMessage />
@@ -133,7 +133,7 @@ export function TicketForm({
                     <AutoResizingTextarea
                       placeholder='Enter ticket description...'
                       maxHeight={400}
-                      className='resize-none h-full bg-transparent border-light/90 border-[1px] rounded-lg min-h-[160px] w-[calc(100%+8px)] ml-[-4px] flex-1'
+                      className='resize-none h-full bg-transparent border-[1px] rounded-lg min-h-[160px] w-[calc(100%+8px)] ml-[-4px] flex-1'
                       {...field}
                     />
                   </FormControl>
