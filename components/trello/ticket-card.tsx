@@ -43,7 +43,7 @@ export function TicketCard({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "relative border border-white/90 hover:shadow-xl transition-all duration-200 translate-y-0 hover:translate-y-[-1px] scale-100 hover:scale-[1.02] ease-out group cursor-grab active:cursor-grabbing p-0 gap-0 bg-background hover:bg-base hover:border-white/100 inset-shadow-none shadow-[0_12px_12px_-6px_rgba(255,255,255,0.9),_0_14px_14px_-6px_rgba(0,0,0,0.3)]",
+        "relative border border-white/40 transition-all duration-200 translate-y-0 hover:translate-y-[-1px] scale-100 hover:scale-[1.02] ease-out group cursor-grab active:cursor-grabbing p-0 gap-0 bg-white/40 hover:bg-base hover:border-white/100 inset-shadow-none shadow-xs hover:shadow-[0_12px_12px_-6px_rgba(255,255,255,0.9),_0_14px_14px_-6px_rgba(0,0,0,0.3)]",
         isDragging &&
           "rotate-5 scale-105 shadow-[0_12px_12px_-6px_rgba(255,255,255,0.9),_0_14px_14px_-6px_rgba(0,0,0,0.3)]"
       )}
@@ -92,7 +92,7 @@ export function TicketCard({
 
       {ticket.description && (
         <CardContent className='p-4 pt-0'>
-          <p className='text-sm line-clamp-2 w-full leading-[140%] text-text-tertiary'>
+          <p className='text-sm line-clamp-3 w-full leading-[140%] text-text-tertiary'>
             {ticket.description}
           </p>
         </CardContent>

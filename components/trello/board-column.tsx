@@ -31,7 +31,7 @@ export function BoardColumn({
   });
 
   return (
-    <Card className='w-1/3 h-[calc(100vh-96px)] flex flex-col bg-transparent shadow-none rounded-2xl py-0 gap-0 border-none'>
+    <Card className='w-1/3 h-[calc(100vh-80px)] flex flex-col bg-transparent shadow-none rounded-2xl py-0 gap-0 border-none pb-0'>
       <CardHeader className='pl-7 pb-2 gap-0 pr-6'>
         <div className='flex items-center justify-between'>
           <div className='flex items-baseline gap-0.5'>
@@ -55,14 +55,14 @@ export function BoardColumn({
         ref={setNodeRef}
         className='flex-1 p-0 px-6 overflow-y-scroll relative'
       >
-        <div className='h-6 w-full bg-gradient-to-t from-transparent to-neutral-100 sticky top-0 left-0 z-10' />
+        <div className='h-6 w-full bg-gradient-to-t from-transparent to-background sticky top-0 left-0 z-10' />
 
         <SortableContext
           id={column.id}
           items={tickets.map((t) => t.id)}
           strategy={verticalListSortingStrategy}
         >
-          <div className='space-y-1.5 h-full'>
+          <div className='space-y-1.5 h-fit pb-4'>
             {tickets.map((ticket) => (
               <TicketCard
                 key={ticket.id}
@@ -85,7 +85,7 @@ export function BoardColumn({
           </div>
         </SortableContext>
 
-        <div className='h-2 w-full bg-gradient-to-b from-transparent to-neutral-100 sticky bottom-0 left-0' />
+        <div className='h-4 w-full bg-gradient-to-b from-transparent to-background fixed bottom-0 left-0' />
       </CardContent>
     </Card>
   );
