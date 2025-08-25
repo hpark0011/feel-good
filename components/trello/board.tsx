@@ -279,6 +279,13 @@ export function Board() {
     setBoard(INITIAL_BOARD_STATE);
   };
 
+  const handleClearColumn = (columnId: ColumnId) => {
+    setBoard((board) => ({
+      ...board,
+      [columnId]: [],
+    }));
+  };
+
   const handleExportBoard = () => {
     const timestamp = new Date().toISOString().split("T")[0];
     const filename = `trello-board-${timestamp}.json`;
@@ -331,6 +338,7 @@ export function Board() {
                 onAddTicket={() => handleAddTicket(column.id)}
                 onEditTicket={handleEditTicket}
                 onDeleteTicket={handleDeleteTicket}
+                onClearColumn={column.id === 'complete' ? () => handleClearColumn('complete') : undefined}
               />
               <div className='w-[1px] min-w-[1px] bg-gray-300 last:hidden' />
             </Fragment>

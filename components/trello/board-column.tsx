@@ -8,7 +8,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, Trash2Icon } from "lucide-react";
 import { TicketCard } from "./ticket-card";
 import { TicketDetailDialog } from "./ticket-detail-dialog";
 import { Column, Ticket } from "../../types/board.types";
@@ -25,6 +25,7 @@ interface BoardColumnProps {
   onAddTicket: () => void;
   onEditTicket: (ticket: Ticket) => void;
   onDeleteTicket: (ticketId: string) => void;
+  onClearColumn?: () => void;
 }
 
 export function BoardColumn({
@@ -33,10 +34,11 @@ export function BoardColumn({
   onAddTicket,
   onEditTicket,
   onDeleteTicket,
+  onClearColumn,
 }: BoardColumnProps) {
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
-  
+
   const { setNodeRef, isOver, active } = useDroppable({
     id: column.id,
   });
@@ -64,20 +66,41 @@ export function BoardColumn({
               </span>
             </div>
           </div>
-          {column.id !== "complete" && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant='ghost'
-                  onClick={onAddTicket}
-                  className='p-2 w-6 h-6 rounded-md cursor-pointer active:scale-90 transition-all duration-200 ease-out'
-                >
-                  <PlusIcon className='h-3.5 w-3.5 text-icon-light' />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Add Ticket</TooltipContent>
-            </Tooltip>
-          )}
+          <div className='flex items-center gap-1'>
+            {column.id === "complete" &&
+              onClearColumn &&
+              tickets.length > 0 && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant='ghost'
+                      onClick={onClearColumn}
+                      className='p-2 w-6 h-6 rounded-md cursor-pointer active:scale-90 transition-all duration-200 ease-out'
+                    >
+                      <Icon
+                        name='TrashIcon'
+                        className='h-3.5 w-3.5 text-icon-light'
+                      />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Clear all completed tickets</TooltipContent>
+                </Tooltip>
+              )}
+            {column.id !== "complete" && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant='ghost'
+                    onClick={onAddTicket}
+                    className='p-2 w-6 h-6 rounded-md cursor-pointer active:scale-90 transition-all duration-200 ease-out'
+                  >
+                    <PlusIcon className='h-3.5 w-3.5 text-icon-light' />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Add Ticket</TooltipContent>
+              </Tooltip>
+            )}
+          </div>
         </div>
       </CardHeader>
       <CardContent
@@ -119,7 +142,7 @@ export function BoardColumn({
 
         <div className='h-4 w-full bg-gradient-to-b from-transparent to-background fixed bottom-0 left-0' />
       </CardContent>
-      
+
       <TicketDetailDialog
         ticket={selectedTicket}
         open={isDetailOpen}

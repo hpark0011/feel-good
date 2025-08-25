@@ -15,6 +15,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Icon } from "@/components/ui/icon";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type HeaderProps = {
   onImport: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -35,22 +40,37 @@ export function Header({
     <div className='flex justify-between items-center py-2  bg-transparent fixed top-0 w-full px-6'>
       <h1 className='text-xl font-medium'>{title}</h1>
       <div className='flex gap-0.5'>
-        <Button
-          variant='ghost'
-          onClick={() => fileInputRef.current?.click()}
-          className='h-6 w-6 hover:bg-light bg-transparent'
-        >
-          <Icon name='ArrowDownToLineCompactIcon' className='h-4 w-4' />
-        </Button>
-        <Button variant='ghost' onClick={onExport} className='h-6 w-6'>
-          <Icon name='ArrowUpToLineCompactIcon' className='h-4 w-4' />
-        </Button>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant='ghost' className='h-6 w-6'>
-              <Icon name='TrashIcon' className='h-4 w-4' />
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant='ghost'
+              onClick={() => fileInputRef.current?.click()}
+              className='h-6 w-6 bg-transparent'
+            >
+              <Icon name='ArrowDownToLineCompactIcon' className='h-4 w-4' />
             </Button>
-          </AlertDialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent>Export Board as JSON</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant='ghost' onClick={onExport} className='h-6 w-6'>
+              <Icon name='ArrowUpToLineCompactIcon' className='h-4 w-4' />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Import Board</TooltipContent>
+        </Tooltip>
+        <AlertDialog>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <AlertDialogTrigger asChild>
+                <Button variant='ghost' className='h-6 w-6'>
+                  <Icon name='TrashIcon' className='h-4 w-4' />
+                </Button>
+              </AlertDialogTrigger>
+            </TooltipTrigger>
+            <TooltipContent>Clear All Board</TooltipContent>
+          </Tooltip>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Clear Board</AlertDialogTitle>
