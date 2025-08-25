@@ -1,9 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -20,8 +17,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Icon } from "@/components/ui/icon";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -29,7 +26,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+import { COLUMNS } from "@/config/board-config";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import { AutoResizingTextarea } from "../ui/auto-resizing-textarea";
 
 const ticketSchema = z.object({
@@ -49,12 +50,13 @@ interface TicketFormProps {
   mode?: "create" | "edit";
 }
 
-const COLUMN_OPTIONS = [
-  { value: "backlog", label: "Backlog" },
-  { value: "not-started", label: "Not Started" },
-  { value: "in-progress", label: "In Progress" },
-  { value: "complete", label: "Complete" },
-] as const;
+const COLUMN_OPTIONS = COLUMNS.map((column) => ({
+  value: column.id,
+  label: column.title,
+  icon: column.icon,
+  iconColor: column.iconColor,
+  iconSize: column.iconSize,
+}));
 
 export function TicketForm({
   open,
@@ -159,7 +161,13 @@ export function TicketForm({
                     <SelectContent>
                       {COLUMN_OPTIONS.map((option) => (
                         <SelectItem key={option.value} value={option.value}>
-                          {option.label}
+                          <div className='flex items-center gap-1'>
+                            <Icon
+                              name={option.icon}
+                              className={`${option.iconColor} ${option.iconSize}`}
+                            />
+                            <span>{option.label}</span>
+                          </div>
                         </SelectItem>
                       ))}
                     </SelectContent>
