@@ -1,9 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -20,8 +17,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Icon } from "@/components/ui/icon";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -29,12 +26,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+import { COLUMNS } from "@/config/board-config";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { AutoResizingTextarea } from "../ui/auto-resizing-textarea";
 
 const ticketSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title is too long"),
   description: z.string().max(500, "Description is too long").default(""),
-  status: z.enum(["not-started", "in-progress", "complete"]),
+  status: z.enum(["backlog", "not-started", "in-progress", "complete"]),
 });
 
 type TicketFormInput = z.input<typeof ticketSchema>;
@@ -48,11 +50,13 @@ interface TicketFormProps {
   mode?: "create" | "edit";
 }
 
-const COLUMN_OPTIONS = [
-  { value: "not-started", label: "Not Started" },
-  { value: "in-progress", label: "In Progress" },
-  { value: "complete", label: "Complete" },
-] as const;
+const COLUMN_OPTIONS = COLUMNS.map((column) => ({
+  value: column.id,
+  label: column.title,
+  icon: column.icon,
+  iconColor: column.iconColor,
+  iconSize: column.iconSize,
+}));
 
 export function TicketForm({
   open,
@@ -61,7 +65,7 @@ export function TicketForm({
   defaultValues = {
     title: "",
     description: "",
-    status: "not-started",
+    status: "backlog",
   },
   mode = "create",
 }: TicketFormProps) {
@@ -88,21 +92,21 @@ export function TicketForm({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className='sm:max-w-[425px]'>
-        <DialogHeader>
-          <DialogTitle>
+      <DialogContent className='sm:max-w-xl px-4'>
+        <DialogHeader className='mb-6'>
+          <DialogTitle className='text-lg font-medium leading-[1]'>
             {mode === "create" ? "Create New Ticket" : "Edit Ticket"}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className='sr-only'>
             {mode === "create"
-              ? "Add a new ticket to your board. Fill in the details below."
+              ? "Add a new ticket to your board."
               : "Update the ticket details below."}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className='space-y-4'
+            className='space-y-6'
           >
             <FormField
               control={form.control}
@@ -111,7 +115,11 @@ export function TicketForm({
                 <FormItem>
                   <FormLabel>Title</FormLabel>
                   <FormControl>
-                    <Input placeholder='Enter ticket title...' {...field} />
+                    <Input
+                      placeholder='Enter ticket title...'
+                      {...field}
+                      className='h-9 border-[1px] px-2.5 rounded-md placeholder:text-muted-foreground w-[calc(100%+8px)] ml-[-4px]'
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -124,10 +132,10 @@ export function TicketForm({
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea
+                    <AutoResizingTextarea
                       placeholder='Enter ticket description...'
-                      className='resize-none'
-                      rows={3}
+                      maxHeight={400}
+                      className='resize-none h-full bg-transparent border-[1px] rounded-lg min-h-[160px] w-[calc(100%+8px)] ml-[-4px] flex-1'
                       {...field}
                     />
                   </FormControl>
@@ -146,14 +154,20 @@ export function TicketForm({
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className='ml-[-4px]'>
                         <SelectValue placeholder='Select a status' />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {COLUMN_OPTIONS.map((option) => (
                         <SelectItem key={option.value} value={option.value}>
-                          {option.label}
+                          <div className='flex items-center gap-1'>
+                            <Icon
+                              name={option.icon}
+                              className={`${option.iconColor} ${option.iconSize}`}
+                            />
+                            <span>{option.label}</span>
+                          </div>
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -162,15 +176,16 @@ export function TicketForm({
                 </FormItem>
               )}
             />
-            <DialogFooter>
+            <DialogFooter className='gap-1'>
               <Button
                 type='button'
-                variant='outline'
+                variant='ghost'
                 onClick={() => handleOpenChange(false)}
+                size='sm'
               >
                 Cancel
               </Button>
-              <Button type='submit'>
+              <Button type='submit' variant='primary' size='sm'>
                 {mode === "create" ? "Create Ticket" : "Save Changes"}
               </Button>
             </DialogFooter>

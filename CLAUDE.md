@@ -5,17 +5,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ### Development
+
 - `pnpm dev` - Start development server with Turbopack at http://localhost:3000
 - `pnpm build` - Build the production application
 - `pnpm start` - Start the production server
 - `pnpm lint` - Run ESLint to check code quality
 
 ### Package Management
+
 Use `pnpm` for all package operations (not npm, yarn, or bun).
 
 ## Architecture
 
 ### Tech Stack
+
 - **Next.js 15.4.7** with App Router
 - **React 19** with React Compiler
 - **TypeScript 5** with strict configuration
@@ -27,6 +30,7 @@ Use `pnpm` for all package operations (not npm, yarn, or bun).
 - **next-themes** for dark/light mode support
 
 ### Project Structure
+
 - `/app` - Next.js App Router pages and layouts
 - `/components/ui` - shadcn/ui components (pre-configured with New York style)
 - `/components/providers` - React context providers (root-provider, react-query, theme)
@@ -37,12 +41,14 @@ Use `pnpm` for all package operations (not npm, yarn, or bun).
 - `/PRPs` - Product Requirements Plans for features
 
 ### Path Aliases
+
 - `@/*` maps to the project root
 - Common imports: `@/components`, `@/lib/utils`, `@/hooks`
 
 ## Development Principles
 
-### Core Principles (from Cursor rules)
+### Core Principles
+
 - **KISS**: Keep solutions simple and straightforward
 - **YAGNI**: Build only what's needed now
 - **Clear separation of concerns**: Don't mix different concerns in one function
@@ -50,6 +56,7 @@ Use `pnpm` for all package operations (not npm, yarn, or bun).
 - **Privacy**: Data encryption and user control
 
 ### Component Patterns
+
 - **Compound components** with `data-slot` attributes for identification
 - **Class Variance Authority (CVA)** for variant-based styling
 - **Radix UI Slot pattern** for flexible composition
@@ -58,25 +65,29 @@ Use `pnpm` for all package operations (not npm, yarn, or bun).
 - Use `cn()` utility from `@/lib/utils` for className management (combines clsx + tailwind-merge)
 
 ### Icons
+
 - **Primary**: Lucide React (configured as default in components.json)
 - **Custom SVG icons**: Available in `/icons` directory with TypeScript exports
 - Icon component at `/components/ui/icon.tsx` for custom SVG icons
 - SVGR webpack configuration for importing SVGs as React components
 
 ### Forms and Validation
+
 - Use React Hook Form for all form handling
 - Use Zod for schema validation
 - Form components available at `@/components/ui/form`
 - Pattern: Define Zod schema → infer TypeScript types → use with useForm
 
 ### Styling
+
 - Tailwind CSS 4 with CSS variables for theming
-- Global styles in `/app/globals.css` 
+- Global styles in `/app/globals.css`
 - Component styles use `cn()` utility from `@/lib/utils`
 - Theme tokens defined as CSS variables in `:root` and `.dark`
 - Container queries support enabled
 
 ### Provider Architecture
+
 - All providers composed in `/components/providers/root-provider.tsx`
 - Includes: TanStack Query client, Theme provider, Toast notifications (sonner)
 - Root layout wraps app with `<RootProvider>`
@@ -84,6 +95,7 @@ Use `pnpm` for all package operations (not npm, yarn, or bun).
 ## Current Features
 
 ### Trello Board Implementation
+
 - Located in `/components/trello/`
 - Three columns: "Not Started", "In Progress", "Complete"
 - Drag-and-drop between columns using @dnd-kit
@@ -94,14 +106,17 @@ Use `pnpm` for all package operations (not npm, yarn, or bun).
 ## Feature Development
 
 ### Feature Flag System (Planned)
+
 A PRP exists at `/PRPs/feature-flag-system.md` for implementing an environment-variable-based feature flag system using TypeScript without additional dependencies.
 
 ### Environment Variables
+
 - Client-side variables must use `NEXT_PUBLIC_` prefix
 - Server-side variables don't need the prefix
 - Define in `.env.local` for development
 
 ### Next.js Configuration
+
 - Standalone output mode for containerization
 - Custom webpack config for SVG handling with @svgr/webpack
 - Turbopack enabled for fast development builds

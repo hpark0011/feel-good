@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { Fragment, useState } from "react";
 import {
   DndContext,
   DragEndEvent,
@@ -17,7 +17,7 @@ import {
 import { arrayMove } from "@dnd-kit/sortable";
 import { BoardColumn } from "./board-column";
 import { TicketCard } from "./ticket-card";
-import { Ticket, BoardState, ColumnId } from "./types";
+import { Ticket, BoardState, ColumnId } from "../../types/board.types";
 import { TicketForm } from "./ticket-form";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import {
@@ -27,34 +27,19 @@ import {
   importBoardFromJson,
   downloadJsonFile,
 } from "@/lib/storage";
-import { Button } from "@/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-
-const COLUMNS = [
-  { id: "not-started" as ColumnId, title: "Not Started" },
-  { id: "in-progress" as ColumnId, title: "In Progress" },
-  { id: "complete" as ColumnId, title: "Complete" },
-] as const;
+import { Header } from "./header";
+import { COLUMNS } from "@/config/board-config";
 
 const STORAGE_KEY = "trello-board-state";
 
 const INITIAL_BOARD_STATE: BoardState = {
+  backlog: [],
   "not-started": [],
   "in-progress": [],
   complete: [],
 };
 
-export function TrelloBoard() {
+export function Board() {
   const [rawBoard, setRawBoard, clearBoard] = useLocalStorage<string>(
     STORAGE_KEY,
     serializeBoardData(INITIAL_BOARD_STATE)
@@ -68,15 +53,17 @@ export function TrelloBoard() {
     }
   })();
 
-  const setBoard = (newBoard: BoardState | ((prev: BoardState) => BoardState)) => {
-    const updatedBoard = typeof newBoard === "function" ? newBoard(board) : newBoard;
+  const setBoard = (
+    newBoard: BoardState | ((prev: BoardState) => BoardState)
+  ) => {
+    const updatedBoard =
+      typeof newBoard === "function" ? newBoard(board) : newBoard;
     setRawBoard(serializeBoardData(updatedBoard));
   };
   const [activeId, setActiveId] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTicket, setEditingTicket] = useState<Ticket | null>(null);
-  const [formColumnId, setFormColumnId] = useState<ColumnId>("not-started");
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [formColumnId, setFormColumnId] = useState<ColumnId>("backlog");
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -292,6 +279,13 @@ export function TrelloBoard() {
     setBoard(INITIAL_BOARD_STATE);
   };
 
+  const handleClearColumn = (columnId: ColumnId) => {
+    setBoard((board) => ({
+      ...board,
+      [columnId]: [],
+    }));
+  };
+
   const handleExportBoard = () => {
     const timestamp = new Date().toISOString().split("T")[0];
     const filename = `trello-board-${timestamp}.json`;
@@ -315,57 +309,18 @@ export function TrelloBoard() {
       }
     };
     reader.readAsText(file);
-    
-    // Reset file input
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
   };
 
   const activeTicket = activeId ? findTicket(activeId) : null;
 
   return (
     <>
-      <div className="flex justify-between items-center p-4 bg-white border-b">
-        <h1 className="text-2xl font-bold">Trello Board</h1>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            Import Board
-          </Button>
-          <Button variant="outline" onClick={handleExportBoard}>
-            Export Board
-          </Button>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive">Clear Board</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Clear Board</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This will permanently delete all tickets and reset the board to empty state. This action cannot be undone.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleClearBoard}>
-                  Clear Board
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept=".json"
-          onChange={handleImportBoard}
-          style={{ display: "none" }}
-        />
-      </div>
+      <Header
+        onImport={handleImportBoard}
+        onExport={handleExportBoard}
+        onClear={handleClearBoard}
+        title='Delphi'
+      />
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -373,16 +328,24 @@ export function TrelloBoard() {
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
-        <div className='flex gap-4 p-4 overflow-x-auto min-h-screen bg-gray-50'>
+        <div className='flex p-0 overflow-x-auto min-h-screen pt-20'>
           {COLUMNS.map((column) => (
-            <BoardColumn
-              key={column.id}
-              column={column}
-              tickets={board[column.id]}
-              onAddTicket={() => handleAddTicket(column.id)}
-              onEditTicket={handleEditTicket}
-              onDeleteTicket={handleDeleteTicket}
-            />
+            <Fragment key={column.id}>
+              <BoardColumn
+                key={column.id}
+                column={column}
+                tickets={board[column.id]}
+                onAddTicket={() => handleAddTicket(column.id)}
+                onEditTicket={handleEditTicket}
+                onDeleteTicket={handleDeleteTicket}
+                onClearColumn={
+                  column.id === "complete"
+                    ? () => handleClearColumn("complete")
+                    : undefined
+                }
+              />
+              <div className='w-[1px] min-w-[1px] bg-gray-300 last:hidden' />
+            </Fragment>
           ))}
         </div>
         <DragOverlay>
