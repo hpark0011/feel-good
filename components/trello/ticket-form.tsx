@@ -152,7 +152,7 @@ export function TicketForm({
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className='ml-[-4px]'>
                         <SelectValue placeholder='Select a status' />
                       </SelectTrigger>
                     </FormControl>
