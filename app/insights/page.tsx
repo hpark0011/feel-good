@@ -4,7 +4,7 @@ import React from "react";
 
 export default function InsightsPage() {
   return (
-    <div className='flex flex-col max-w-3xl mx-auto w-full gap-4'>
+    <div className='flex flex-col max-w-3xl mx-auto w-full gap-4 pb-[80px]'>
       <h1 className='text-2xl font-medium w-full flex items-center justify-center mb-8'>
         Good afternoon, Han
       </h1>
@@ -63,6 +63,7 @@ export default function InsightsPage() {
           <Icon name='EyesIcon' className='size-5 text-icon-light -ml-1' />{" "}
           Noticeable users
         </div>
+        <div className='flex flex-col gap-6 w-full'></div>
       </TrendGroupWrapper>
 
       <TrendGroupWrapper>
@@ -73,6 +74,7 @@ export default function InsightsPage() {
           />{" "}
           Interesting chats
         </div>
+        <div className='flex flex-col gap-6 w-full'></div>
       </TrendGroupWrapper>
 
       <TrendGroupWrapper>
@@ -88,26 +90,33 @@ export default function InsightsPage() {
             <div className='text-text-strong text-lg w-full'>
               Your clone is getting more popular!
             </div>
-            <div className='grid grid-cols-3 gap-2 w-[calc(100%+16px)] -ml-2'>
-              <InsightsCardWrapper>
+            <div className='grid grid-cols-4 gap-2 w-[calc(100%+16px)] -ml-2'>
+              <InsightsCardWrapper orientation='vertical'>
                 <InsightsCardLabel>Chats Exchanged</InsightsCardLabel>
                 <InsightsCardValueWrapper>
                   <InsightsCardValue>232</InsightsCardValue>
-                  <GrowthRate isPositive>10%</GrowthRate>
+                  <GrowthRate isPositive>43%</GrowthRate>
                 </InsightsCardValueWrapper>
               </InsightsCardWrapper>
-              <InsightsCardWrapper>
+              <InsightsCardWrapper orientation='vertical'>
                 <InsightsCardLabel>Users Engaged</InsightsCardLabel>
                 <InsightsCardValueWrapper>
                   <InsightsCardValue>24</InsightsCardValue>
                   <GrowthRate isPositive>10%</GrowthRate>
                 </InsightsCardValueWrapper>
               </InsightsCardWrapper>
-              <InsightsCardWrapper>
+              <InsightsCardWrapper orientation='vertical'>
                 <InsightsCardLabel>Actions Created</InsightsCardLabel>
                 <InsightsCardValueWrapper>
                   <InsightsCardValue>8</InsightsCardValue>
                   <GrowthRate isPositive={false}>10%</GrowthRate>
+                </InsightsCardValueWrapper>
+              </InsightsCardWrapper>
+              <InsightsCardWrapper orientation='vertical'>
+                <InsightsCardLabel>Average Match</InsightsCardLabel>
+                <InsightsCardValueWrapper>
+                  <InsightsCardValue>71%</InsightsCardValue>
+                  <GrowthRate isPositive>4%</GrowthRate>
                 </InsightsCardValueWrapper>
               </InsightsCardWrapper>
             </div>
@@ -217,7 +226,7 @@ export function InsightsCardWrapper({
     <div
       className={cn(
         "rounded-xl w-full border p-4 py-3 flex flex-row justify-between items-center relative  transition-all duration-200 translate-y-0  scale-100 ease-out group bg-white/30 border-white/30  gap-0 inset-shadow-none shadow-xs",
-        orientation === "vertical" && "flex-col",
+        orientation === "vertical" && "flex-col items-start",
         className,
         isHoverable &&
           "hover:bg-base hover:shadow-[0_12px_12px_-6px_rgba(255,255,255,0.9),_0_14px_14px_-6px_rgba(0,0,0,0.3) hover:translate-y-[-1px] hover:border-opacity-100 hover:scale-[1.02] "
