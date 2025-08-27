@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import React from "react";
 import { RingPercentage } from "./ring-percentage";
 import { Icon } from "@/components/ui/icon";

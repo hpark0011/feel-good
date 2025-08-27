@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import type React from "react";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -38,7 +37,6 @@ export function KanbanHeader({
   onImport,
   onExport,
   onClear,
-  title = "Greyboard",
 }: HeaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
