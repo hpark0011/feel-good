@@ -21,6 +21,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  HeaderContainer,
+  HeaderLogo,
+  HeaderMenu,
+} from "@/components/header/header-ui";
 
 type HeaderProps = {
   onImport: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -29,7 +34,7 @@ type HeaderProps = {
   title?: string;
 };
 
-export function Header({
+export function KanbanHeader({
   onImport,
   onExport,
   onClear,
@@ -38,18 +43,9 @@ export function Header({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className='flex justify-between items-center py-2  bg-transparent fixed top-0 w-full px-4 pl-5'>
-      <div className='flex items-center gap-1.5'>
-        <Image
-          src='/delphi.svg'
-          alt='Delphi logo'
-          width={20}
-          height={20}
-          priority
-        />
-        <h1 className='text-xl font-medium pb-[1px]'>{title}</h1>
-      </div>
-      <div className='flex gap-0'>
+    <HeaderContainer>
+      <HeaderLogo title='Delphi' />
+      <HeaderMenu>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -110,7 +106,7 @@ export function Header({
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      </div>
+      </HeaderMenu>
       <input
         ref={fileInputRef}
         type='file'
@@ -123,6 +119,6 @@ export function Header({
         }}
         style={{ display: "none" }}
       />
-    </div>
+    </HeaderContainer>
   );
 }
