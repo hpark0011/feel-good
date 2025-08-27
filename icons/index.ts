@@ -57,6 +57,8 @@ export { default as EllipsisIcon } from "@/icons/ellipsis.svg";
 export { default as EnvelopeFillIcon } from "@/icons/envelope.fill.svg";
 export { default as ExclamationmarkTriangleFillIcon } from "@/icons/exclamationmark.triangle.fill.svg";
 export { default as EyeFillIcon } from "@/icons/eye.fill.svg";
+export { default as EyesInverseIcon } from "@/icons/eyes.inverse.svg";
+export { default as EyesIcon } from "@/icons/eyes.svg";
 export { default as FaceSmilingInverseIcon } from "@/icons/face.smiling.inverse.svg";
 export { default as GearIcon } from "@/icons/gear.svg";
 export { default as GlobeFillIcon } from "@/icons/globe.fill.svg";
