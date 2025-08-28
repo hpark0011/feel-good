@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,11 +17,23 @@ import { AnimatePresence, motion } from "framer-motion";
 interface FeedbackDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  startOnSecondPage?: boolean;
 }
 
-export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
+export function FeedbackDialog({
+  open,
+  onOpenChange,
+  startOnSecondPage,
+}: FeedbackDialogProps) {
   const [showTextarea, setShowTextarea] = useState(false);
   const [feedback, setFeedback] = useState("");
+
+  // When dialog opens, decide which page to show based on prop
+  useEffect(() => {
+    if (open) {
+      setShowTextarea(!!startOnSecondPage);
+    }
+  }, [open, startOnSecondPage]);
 
   const handleClose = () => {
     onOpenChange(false);
@@ -42,7 +54,7 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
       <DialogContent
         className={cn(
           "fixed left-1/2 bottom-0 translate-x-[-50%] translate-y-0",
-          "mb-8 max-w-[496px] rounded-2xl shadow-2xl h-fit p-0",
+          "max-w-[496px] rounded-2xl shadow-2xl h-fit p-0",
           "bg-white dark:bg-gray-900 border-gray-200",
           "data-[state=open]:animate-in data-[state=closed]:animate-out",
           "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
@@ -53,7 +65,6 @@ export function FeedbackDialog({ open, onOpenChange }: FeedbackDialogProps) {
         <div className='overflow-hidden relative px-5'>
           <motion.div
             className='flex gap-6'
-            layout
             animate={{ x: showTextarea ? "calc(-100% - 24px)" : "0%" }}
             transition={{
               type: "spring",

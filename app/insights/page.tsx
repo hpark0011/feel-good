@@ -3,7 +3,6 @@
 import { Icon } from "@/components/ui/icon";
 import React, { useEffect, useState, useRef } from "react";
 import { InsightCard } from "./_components/insight-card";
-import { FeedbackDialog } from "./_components/feedback-dialog";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion, type Variants } from "framer-motion";
@@ -17,6 +16,7 @@ import {
   TrendBodyWrapper,
 } from "./_components/insight-components";
 import { insights } from "./data";
+import { FeedbackDialog } from "./_components/feedback-dialog";
 
 const groupVariants: Variants = {
   hidden: {
@@ -40,6 +40,7 @@ const groupVariants: Variants = {
 export default function InsightsPage() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [hasShownDrawer, setHasShownDrawer] = useState(false);
+  const [startOnSecondPage, setStartOnSecondPage] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -189,7 +190,7 @@ export default function InsightsPage() {
                   <div className='text-text-strong text-sm'>
                     Is this action recommendation helpful?
                   </div>
-                  <div className='flex items-center justify-center gap-0 border w-fit rounded-lg bg-neutral-100 p-0.5'>
+                  <div className='flex items-center justify-center gap-0 border w-fit rounded-lg bg-neutral-100 p-0.5fe'>
                     <Button
                       variant='outline'
                       size='sm'
@@ -210,6 +211,10 @@ export default function InsightsPage() {
                       variant='outline'
                       size='sm'
                       className='text-text-primary bg-transparent border-none hover:bg-white'
+                      onClick={() => {
+                        setStartOnSecondPage(true);
+                        setIsDrawerOpen(true);
+                      }}
                     >
                       Provide detail feedback
                     </Button>
@@ -286,7 +291,16 @@ export default function InsightsPage() {
         </TabsContent>
       </Tabs>
       <div ref={bottomRef} className='h-1' />
-      <FeedbackDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <FeedbackDialog
+        open={isDrawerOpen}
+        onOpenChange={(open) => {
+          setIsDrawerOpen(open);
+          if (!open) {
+            setStartOnSecondPage(false);
+          }
+        }}
+        startOnSecondPage={startOnSecondPage}
+      />
     </div>
   );
 }
