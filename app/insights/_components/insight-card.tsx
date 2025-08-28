@@ -163,7 +163,7 @@ export function InsightCard({
 
         <div className='text-text-primary px-3 py-3 border-neutral-100 border border-px w-full rounded-[12px] bg-white flex items-start gap-1 '>
           <div>
-            <p className='text-text-strong text-md leading-[1.2] pl-0.5'>
+            <p className='text-text-strong text-md leading-[1.3] pl-0.5'>
               {segments?.map((segment, index) =>
                 segment.highlight ? (
                   <span key={index} className='text-[#FF5C02] font-medium'>
@@ -179,7 +179,7 @@ export function InsightCard({
                 {references.map((ref, i) => (
                   <div
                     key={`${ref.chatNumber}-${ref.messageNumber}-${i}`}
-                    className='px-2 pl-1.5 gap-1 text-[11px] flex items-center bg-neutral-100 rounded-md h-[24px]'
+                    className='px-2 pl-1.5 gap-1 text-[11px] flex items-center bg-neutral-100 rounded-md h-[24px] hover:bg-neutral-200'
                   >
                     <Avatar className='size-[14px]'>
                       <AvatarFallback className='bg-dq-gray-900 text-text-primary-inverse text-[8px]'>
