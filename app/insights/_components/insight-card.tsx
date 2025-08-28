@@ -1,8 +1,12 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import type { IconName } from "@/components/ui/icon";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
 import { RingPercentage } from "./ring-percentage";
+import { InsightHeaderBadgeWrapper } from "./insight-components";
+import {
+  INSIGHT_VARIANTS,
+  type InsightActionType,
+} from "@/config/insight-variants";
 
 export function InsightCard({
   user,
@@ -11,25 +15,9 @@ export function InsightCard({
 }: {
   user: string;
   match: number;
-  actionType: "contact" | "create-content" | "add-data";
+  actionType: InsightActionType;
 }) {
-  const actionTypeIcon: Record<
-    "contact" | "create-content" | "add-data",
-    IconName
-  > = {
-    contact: "HandWaveFillIcon",
-    "create-content": "SparkleIcon",
-    "add-data": "CylinderSplit1x2FillIcon",
-  };
-
-  const actionTypeText: Record<
-    "contact" | "create-content" | "add-data",
-    string
-  > = {
-    contact: "Reach out to",
-    "create-content": "Create content on",
-    "add-data": "Add data to",
-  };
+  const variant = INSIGHT_VARIANTS[actionType];
 
   return (
     <div
@@ -45,21 +33,17 @@ export function InsightCard({
         <div className='flex items-center gap-2 w-full'>
           <div className={cn("flex items-center gap-0.5")}>
             <Icon
-              name={actionTypeIcon[actionType]}
+              name={variant.icon}
               className={cn(
-                "size-5.5 min-w-5.5 mr-0.5 rounded-full p-0.5",
-                actionType === "contact" && "text-blue-500 bg-blue-100 ",
-                actionType === "create-content" && "text-pink-600 bg-pink-100",
-                actionType === "add-data" && "text-pink-500 bg-pink-100"
+                "size-5.5 min-w-5.5 mr-1 rounded-full p-0.5",
+                variant.iconColorClasses
               )}
             />
-            <span className='whitespace-nowrap'>
-              {actionTypeText[actionType]}
-            </span>
+            <span className='whitespace-nowrap'>{variant.headerText}</span>
           </div>
 
           {actionType === "contact" && (
-            <div className='flex items-center gap-1 px-1 rounded-md border border-neutral-100 w-fit pr-2 h-8'>
+            <InsightHeaderBadgeWrapper>
               <Avatar className='size-5'>
                 <AvatarFallback className='bg-dq-gray-900 text-text-primary-inverse text-[10px]'>
                   CN
@@ -70,19 +54,27 @@ export function InsightCard({
               </div>
               <div className='w-px bg-neutral-100 self-stretch mx-1' />
               <RingPercentage value={match} />
-            </div>
+            </InsightHeaderBadgeWrapper>
           )}
 
           {actionType === "create-content" && (
-            <div className='inline-flex items-center gap-0.5 p-1 rounded-md border border-neutral-100 w-fit pr-2'>
-              <Icon name='SparkleIcon' className='size-5' />
+            <InsightHeaderBadgeWrapper className='gap-0.5'>
+              <Icon
+                name={variant.badgeIcon ?? variant.icon}
+                className='size-5'
+              />
               Healthy diet
-            </div>
+              <div className='w-px bg-neutral-100 self-stretch mx-1' />
+              <RingPercentage value={match} />
+            </InsightHeaderBadgeWrapper>
           )}
           {actionType === "add-data" && (
-            <div className='inline-flex items-center gap-1 p-1 rounded-md border border-neutral-100 w-fit pr-1.5'>
-              <Icon name='CylinderSplit1x2FillIcon' className='size-5' />
-            </div>
+            <InsightHeaderBadgeWrapper className='gap-1'>
+              <Icon
+                name={variant.badgeIcon ?? variant.icon}
+                className='size-5'
+              />
+            </InsightHeaderBadgeWrapper>
           )}
         </div>
       </div>

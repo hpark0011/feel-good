@@ -117,3 +117,22 @@ export function GrowthRate({
     </div>
   );
 }
+
+export function InsightHeaderBadgeWrapper({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        "flex items-center gap-1 px-1 rounded-md border border-neutral-100 w-fit pr-2 h-8",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
+}

@@ -71,7 +71,7 @@ export function RingPercentage({
           style={{
             fontWeight: 600,
             fontFeatureSettings: "'tnum' on",
-            fontSize: "13px",
+            fontSize: "12px",
             color: "var(--color-neutral-500)",
           }}
         >

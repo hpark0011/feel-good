@@ -13,48 +13,7 @@ import {
   GrowthRate,
   TrendBodyWrapper,
 } from "./_components/insight-components";
-
-const insights = [
-  {
-    user: "John Doe",
-    match: 90,
-    actionType: "contact",
-  },
-  {
-    user: "Sam Jung",
-    match: 80,
-    actionType: "contact",
-  },
-  {
-    user: "Sam Jung",
-    match: 80,
-    actionType: "contact",
-  },
-  {
-    user: "David Thompson",
-    match: 75,
-    actionType: "create-content",
-  },
-  {
-    user: "Sam Jung",
-    match: 74,
-    actionType: "create-content",
-  },
-  {
-    user: "David Thompson",
-    match: 75,
-    actionType: "add-data",
-  },
-  {
-    user: "Sam Jung",
-    userDescription: "CTO at FinanceFlow - Currently evaluating AI solutions",
-    reason: [
-      "47 users asked about integrating AI ethics into corporate training. This could be your next viral blog post or video series.",
-    ],
-    match: 74,
-    actionType: "add-data",
-  },
-];
+import { insights } from "./data";
 
 export default function InsightsPage() {
   return (
