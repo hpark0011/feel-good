@@ -1,11 +1,13 @@
+"use client";
+
 import { Icon } from "@/components/ui/icon";
-import React from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { InsightCard } from "./_components/insight-card";
+import { FeedbackDrawer } from "./_components/feedback-drawer";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   TrendGroupWrapper,
-  TrendItem,
   InsightsCardWrapper,
   InsightsCardLabel,
   InsightsCardValueWrapper,
@@ -16,6 +18,36 @@ import {
 import { insights } from "./data";
 
 export default function InsightsPage() {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [hasShownDrawer, setHasShownDrawer] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const bottomElement = bottomRef.current;
+    
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasShownDrawer) {
+          setIsDrawerOpen(true);
+          setHasShownDrawer(true);
+        }
+      },
+      {
+        threshold: 0.1,
+      }
+    );
+
+    if (bottomElement) {
+      observer.observe(bottomElement);
+    }
+
+    return () => {
+      if (bottomElement) {
+        observer.unobserve(bottomElement);
+      }
+    };
+  }, [hasShownDrawer]);
+
   return (
     <div className='flex flex-col max-w-2xl mx-auto w-full gap-6 pb-[80px] px-4 justify-center items-center'>
       <h1 className='text-2xl font-medium w-full flex items-center justify-center mb-4'>
@@ -112,6 +144,7 @@ export default function InsightsPage() {
                             | "add-data"
                         }
                         segments={insight.segments}
+                        index={index}
                       />
                     ))}
                   </div>
@@ -177,6 +210,7 @@ export default function InsightsPage() {
                       | "add-data"
                   }
                   segments={insight.segments}
+                  index={index}
                 />
               ))}
             </div>
@@ -209,12 +243,15 @@ export default function InsightsPage() {
                       | "add-data"
                   }
                   segments={insight.segments}
+                  index={index}
                 />
               ))}
             </div>
           </div>
         </TabsContent>
       </Tabs>
+      <div ref={bottomRef} className="h-1" />
+      <FeedbackDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
     </div>
   );
 }
