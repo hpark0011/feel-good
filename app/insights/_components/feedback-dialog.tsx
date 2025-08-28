@@ -97,10 +97,10 @@ export function FeedbackDialog({
               {/* First Page */}
               <div
                 ref={firstPageRef}
-                className='w-full flex-shrink-0 flex flex-col justify-center items-center gap-4 py-6'
+                className='w-full flex-shrink-0 flex flex-col justify-center items-center gap-6'
               >
-                <DialogHeader>
-                  <DialogTitle className='text-xl font-medium text-center'>
+                <DialogHeader className='gap-0'>
+                  <DialogTitle className='text-lg font-medium text-center text-text-primary'>
                     <div className='leading-[1.2]'>
                       We noticed that you took{" "}
                       <div className='inline-flex items-center'>
@@ -111,7 +111,7 @@ export function FeedbackDialog({
                       actions we suggested.
                     </div>
                   </DialogTitle>
-                  <DialogDescription className='text-text-tertiary text-md text-center'>
+                  <DialogDescription className='text-text-primary text-lg text-center font-medium'>
                     Tell us why and we&apos;ll give you better recommendations.
                   </DialogDescription>
                 </DialogHeader>
@@ -131,12 +131,15 @@ export function FeedbackDialog({
               </div>
 
               {/* Second Page */}
-              <div ref={secondPageRef} className='w-full flex-shrink-0 py-6'>
-                <DialogHeader className='gap-0 mb-0 px-1'>
-                  <DialogTitle className='text-xl font-medium'>
-                    Tell us more
+              <div
+                ref={secondPageRef}
+                className='w-full flex-shrink-0 pt-4.5 pb-5'
+              >
+                <DialogHeader className='gap-0 mb-1 px-1'>
+                  <DialogTitle className='text-xl font-medium leading-1.2'>
+                    How can we do better?
                   </DialogTitle>
-                  <DialogDescription className='text-text-tertiary text-md'>
+                  <DialogDescription className='sr-only'>
                     Your detailed feedback helps us improve recommendations.
                   </DialogDescription>
                 </DialogHeader>
@@ -146,7 +149,7 @@ export function FeedbackDialog({
                     placeholder='What would make our recommendations more helpful?'
                     value={feedback}
                     onChange={(e) => setFeedback(e.target.value)}
-                    className='min-h-[80px] resize-none'
+                    className='min-h-[88px] resize-none overflow-auto max-h-[88px]'
                   />
                 </div>
 
@@ -155,13 +158,16 @@ export function FeedbackDialog({
                     variant='outline'
                     onClick={() => setShowTextarea(false)}
                     className='flex-1'
+                    size='sm'
                   >
                     Back
                   </Button>
                   <Button
                     onClick={handleFeedbackSubmit}
                     disabled={!feedback.trim()}
-                    className='flex-1 bg-black text-white hover:bg-gray-800 disabled:opacity-50'
+                    className='flex-1'
+                    variant='primary'
+                    size='sm'
                   >
                     Submit
                   </Button>
