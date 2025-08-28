@@ -22,12 +22,18 @@ export function InsightCard({
   match,
   actionType,
   segments,
+  references,
   index = 0,
 }: {
   user: string;
   match: number;
   actionType: InsightActionType;
   segments?: ReadonlyArray<{ text: string; highlight?: boolean }>;
+  references?: ReadonlyArray<{
+    chatNumber: number;
+    messageNumber: number;
+    initials?: string;
+  }>;
   index?: number;
 }) {
   const variant = INSIGHT_VARIANTS[actionType];
@@ -168,25 +174,25 @@ export function InsightCard({
                 )
               )}
             </p>
-            <div className='flex items-center mt-2 -ml-0.5 gap-1'>
-              <div className='px-2 pl-1.5 gap-1 text-[11px] flex items-center bg-neutral-100 rounded-md h-[24px]'>
-                <Avatar className='size-[14px]'>
-                  <AvatarFallback className='bg-dq-gray-900 text-text-primary-inverse text-[8px]'>
-                    HP
-                  </AvatarFallback>
-                </Avatar>
-                Chat History 1
+            {references && references.length > 0 && (
+              <div className='flex items-center mt-2 -ml-0.5 gap-1'>
+                {references.map((ref, i) => (
+                  <div
+                    key={`${ref.chatNumber}-${ref.messageNumber}-${i}`}
+                    className='px-2 pl-1.5 gap-1 text-[11px] flex items-center bg-neutral-100 rounded-md h-[24px]'
+                  >
+                    <Avatar className='size-[14px]'>
+                      <AvatarFallback className='bg-dq-gray-900 text-text-primary-inverse text-[8px]'>
+                        {ref.initials ?? "HP"}
+                      </AvatarFallback>
+                    </Avatar>
+                    Chat {ref.chatNumber}{" "}
+                    <span className='text-text-muted px-0.5'>/</span> Message{" "}
+                    {ref.messageNumber}
+                  </div>
+                ))}
               </div>
-              <div className='px-2 pl-1.5 gap-1 text-[11px] flex items-center bg-neutral-100 rounded-md h-[24px]'>
-                <Avatar className='size-[14px]'>
-                  <AvatarFallback className='bg-dq-gray-900 text-text-primary-inverse text-[8px]'>
-                    HP
-                  </AvatarFallback>
-                </Avatar>
-                Chat History 2 <span className='text-text-muted px-0.5'>/</span>{" "}
-                Message 3
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </motion.div>

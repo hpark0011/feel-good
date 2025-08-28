@@ -179,6 +179,7 @@ export default function InsightsPage() {
                               | "add-data"
                           }
                           segments={insight.segments}
+                          references={insight.references}
                           index={index}
                         />
                       ))}
@@ -250,6 +251,7 @@ export default function InsightsPage() {
                       | "add-data"
                   }
                   segments={insight.segments}
+                  references={insight.references}
                   index={index}
                 />
               ))}
@@ -283,6 +285,7 @@ export default function InsightsPage() {
                       | "add-data"
                   }
                   segments={insight.segments}
+                  references={insight.references}
                   index={index}
                 />
               ))}
