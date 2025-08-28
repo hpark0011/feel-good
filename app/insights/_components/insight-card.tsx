@@ -10,22 +10,48 @@ import {
   type InsightActionType,
 } from "@/config/insight-variants";
 import { Button } from "@/components/ui/button";
+import { motion, type Variants } from "framer-motion";
 
 export function InsightCard({
   user,
   match,
   actionType,
   segments,
+  index = 0,
 }: {
   user: string;
   match: number;
   actionType: InsightActionType;
   segments?: ReadonlyArray<{ text: string; highlight?: boolean }>;
+  index?: number;
 }) {
   const variant = INSIGHT_VARIANTS[actionType];
 
+  const cardVariants: Variants = {
+    hidden: {
+      opacity: 0,
+      y: 30,
+      scale: 0.98,
+    },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        delay: i * 0.05,
+        type: "spring" as const,
+        damping: 20,
+        stiffness: 300,
+      },
+    }),
+  };
+
   return (
-    <div
+    <motion.div
+      variants={cardVariants}
+      initial='hidden'
+      animate='visible'
+      custom={index}
       className={cn(
         "rounded-[16px] w-full flex flex-col items-start relative  transition-all duration-200 translate-y-0 scale-100 ease-out group hover:translate-y-[-1px] hover:shadow-lg hover:border-opacity-100 hover:scale-[1.02] cursor-pointer inset-shadow-[0_0_0_1px_rgba(255,255,255,1)] p-1.5 bg-white"
       )}
@@ -63,7 +89,7 @@ export function InsightCard({
                 </AvatarFallback>
               </Avatar>
               <div className='flex flex-col gap-0 min-w-0'>
-                <div className='text-text-strong text-[13px]'>{user}</div>
+                <div className='text-text-strong'>{user}</div>
               </div>
               <div className='w-px bg-extra-light self-stretch mx-1' />
               <RingPercentage value={match} />
@@ -123,6 +149,6 @@ export function InsightCard({
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
