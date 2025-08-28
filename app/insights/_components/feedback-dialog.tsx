@@ -136,7 +136,7 @@ export function FeedbackDialog({
                 className='w-full flex-shrink-0 pt-4.5 pb-5'
               >
                 <DialogHeader className='gap-0 mb-1 px-1'>
-                  <DialogTitle className='text-xl font-medium leading-1.2'>
+                  <DialogTitle className='text-lg font-medium leading-1.2'>
                     How can we do better?
                   </DialogTitle>
                   <DialogDescription className='sr-only'>

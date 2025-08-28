@@ -128,7 +128,7 @@ export function InsightHeaderBadgeWrapper({
   return (
     <div
       className={cn(
-        "flex items-center gap-1 px-1 text-[12px] rounded-md border border-extra-light w-fit pr-2 h-[26px]",
+        "flex items-center gap-1 px-1 text-[12px] rounded-md border border-extra-light w-fit pr-2 h-[26px] hover:bg-neutral-100",
         className
       )}
     >

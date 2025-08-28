@@ -117,14 +117,28 @@ export function InsightCard({
                   <div className='text-text-strong'>{user}</div>
                 </div>
                 <div className='w-px bg-extra-light self-stretch mx-1' />
-                <RingPercentage value={match} />
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span>
+                      <RingPercentage value={match} />
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>Match Score</TooltipContent>
+                </Tooltip>
               </InsightHeaderBadgeWrapper>
             )}
             {actionType === "create-content" && (
               <InsightHeaderBadgeWrapper className='pl-2'>
                 # Healthy diet
                 <div className='w-px bg-extra-light self-stretch mx-1' />
-                <RingPercentage value={match} />
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span>
+                      <RingPercentage value={match} />
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>Demand Signal</TooltipContent>
+                </Tooltip>
               </InsightHeaderBadgeWrapper>
             )}
             {actionType === "add-data" && (
@@ -161,7 +175,7 @@ export function InsightCard({
                     HP
                   </AvatarFallback>
                 </Avatar>
-                Chat with hello
+                Chat History 1
               </div>
               <div className='px-2 pl-1.5 gap-1 text-[11px] flex items-center bg-neutral-100 rounded-md h-[24px]'>
                 <Avatar className='size-[14px]'>
@@ -169,7 +183,8 @@ export function InsightCard({
                     HP
                   </AvatarFallback>
                 </Avatar>
-                Chat with hello
+                Chat History 2 <span className='text-text-muted px-0.5'>/</span>{" "}
+                Message 3
               </div>
             </div>
           </div>
