@@ -32,7 +32,7 @@ export function InsightCard({
     >
       <Button
         variant='outline'
-        className='absolute top-2 right-2 gap-0.5 h-7 pl-1 has-[>svg]:pl-1.5 opacity-0 -translate-y-1 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto transform-gpu bg-transparent border-neutral-200'
+        className='absolute top-1.5 right-1.5 gap-0.5 h-[26px] pl-1 has-[>svg]:pl-1.5 opacity-0 -translate-y-1 transition-all duration-200 ease-out group-hover:opacity-100 group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto transform-gpu bg-transparent border-neutral-200'
         size='sm'
         onClick={() => {}}
       >
@@ -98,7 +98,7 @@ export function InsightCard({
         <p className='text-text-strong text-md leading-[1.2] pl-0.5'>
           {segments?.map((segment, index) =>
             segment.highlight ? (
-              <span key={index} className='text-[#FF5C02]'>
+              <span key={index} className='text-[#FF5C02] font-medium'>
                 {segment.text}
               </span>
             ) : (
