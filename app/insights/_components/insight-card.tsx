@@ -48,21 +48,33 @@ export function InsightCard({
   return (
     <div
       className={cn(
-        "rounded-xl w-full border  flex flex-col items-start relative  transition-all duration-200 translate-y-0 scale-100 ease-out group bg-neutral-50 border-neutral-100 hover:translate-y-[-1px] hover:shadow-xl hover:border-opacity-100 hover:scale-[1.02] cursor-pointer inset-shadow-[0_0_0_1px_rgba(255,255,255,1)]"
+        "rounded-xl w-full flex flex-col items-start relative  transition-all duration-200 translate-y-0 scale-100 ease-out group hover:translate-y-[-1px] hover:shadow-lg hover:border-opacity-100 hover:scale-[1.02] cursor-pointer inset-shadow-[0_0_0_1px_rgba(255,255,255,1)] p-1 bg-white"
       )}
     >
       <div
         className={cn(
-          "text-text-tertiary text-sm flex items-center gap-0.5 min-w-[130px] justify-start px-2.5 py-2 w-full rounded-t-xl"
+          "text-text-tertiary text-sm flex items-center gap-0.5 min-w-[130px] justify-start px-2.5 py-2 w-full pb-2.5"
         )}
       >
         <div className='flex items-center gap-2 w-full'>
-          <div className='flex items-center gap-0.5'>
+          <div
+            className={cn(
+              "flex items-center gap-0.5"
+              // actionType === "contact" && "text-blue-500",
+              // actionType === "create-content" && "text-pink-600",
+              // actionType === "add-data" && "text-pink-500"
+            )}
+          >
             {/* 
             <span className='whitespace-nowrap'>Insights from</span> */}
             <Icon
               name={actionTypeIcon[actionType]}
-              className='size-5 min-w-5'
+              className={cn(
+                "size-5.5 min-w-5.5 mr-0.5 rounded-full p-0.5",
+                actionType === "contact" && "text-blue-500 bg-blue-100 ",
+                actionType === "create-content" && "text-pink-600 bg-pink-100",
+                actionType === "add-data" && "text-pink-500 bg-pink-100"
+              )}
             />
             <span className='whitespace-nowrap'>
               {actionTypeText[actionType]}
@@ -81,14 +93,18 @@ export function InsightCard({
         </div>
       </div>
 
-      <div className='text-text-primary px-2.5 py-2.5 border-neutral-100 border border-px w-full rounded-[13px] bg-white shadow-lg flex items-center gap-1.5'>
+      <div className='text-text-primary px-2.5 py-2.5 border-neutral-100 border border-px w-full rounded-[12px] bg-white flex items-start gap-1 '>
         <Icon
           name='LightbulbFillIcon'
-          className='size-4.5 text-neutral-400 min-w-4.5'
+          className='size-4.5 text-icon-light min-w-4.5 mt-[1px]'
         />
-        Rising engagement with your guidence on{" "}
-        <span className='text-[#FF5C02]'>improving sleep</span> and optimizing
-        daily routines.
+        <p className='text-text-primary text-sm'>
+          Rising engagement with your guidence on{" "}
+          <span className='text-[#FF5C02]'>improving sleep</span>
+          and optimizing daily routines. Rising engagement with your guidence on{" "}
+          <span className='text-[#FF5C02]'>improving sleep</span> and optimizing
+          daily routines.
+        </p>
       </div>
     </div>
   );

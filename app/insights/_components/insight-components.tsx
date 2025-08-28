@@ -3,7 +3,23 @@ import React from "react";
 
 export function TrendGroupWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className='py-3.5 pt-3 px-5 border border-extra-light rounded-3xl gap-6 flex flex-col w-full'>
+    <div className='border border-neutral-100 rounded-2xl flex flex-col w-full bg-neutral-100 overflow-hidden'>
+      {children}
+    </div>
+  );
+}
+
+export function TrendBodyWrapper({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn("flex flex-col gap-6 w-full py-2.5 px-4 pb-2", className)}
+    >
       {children}
     </div>
   );
@@ -50,7 +66,7 @@ export function InsightsCardWrapper({
   return (
     <div
       className={cn(
-        "rounded-xl w-full border p-3 py-2.5 flex flex-row justify-between items-center relative  transition-all duration-200 translate-y-0  scale-100 ease-out group border-extra-light  gap-0 inset-shadow-none",
+        "rounded-xl w-full p-3 py-2 flex flex-row justify-between items-center relative  transition-all duration-200 translate-y-0 bg-white scale-100 ease-out group gap-1 inset-shadow-none",
         orientation === "vertical" && "flex-col items-start",
         className,
         isHoverable &&

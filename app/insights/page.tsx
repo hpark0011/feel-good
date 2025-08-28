@@ -11,6 +11,7 @@ import {
   InsightsCardValueWrapper,
   InsightsCardValue,
   GrowthRate,
+  TrendBodyWrapper,
 } from "./_components/insight-components";
 
 const insights = [
@@ -86,16 +87,16 @@ export default function InsightsPage() {
           className='w-full flex flex-col justify-center items-center gap-6'
         >
           <TrendGroupWrapper>
-            <div className='text-text-muted text-sm w-full flex items-center gap-1'>
+            <div className='text-text-muted text-sm w-full flex items-center gap-1 bg-white py-2.5 px-4'>
               <Icon
                 name='TextBubbleFillIcon'
                 className='size-5 text-icon-light -ml-1'
               />{" "}
               Summary of your clone
             </div>
-            <div className='flex flex-col gap-6 w-full'>
+            <TrendBodyWrapper>
               <div className='space-y-3'>
-                <div className='text-text-strong text-lg w-full'>
+                <div className='text-text-strong w-full py-1'>
                   Your clone is getting more popular!
                 </div>
                 <div className='grid grid-cols-4 gap-2 w-[calc(100%+16px)] -ml-2'>
@@ -129,170 +130,74 @@ export default function InsightsPage() {
                   </InsightsCardWrapper>
                 </div>
               </div>
-
-              {/* <div className='space-y-3'>
-                <div className='text-text-strong text-lg leading-[140%]'>
-                  <span className='flex items-center gap-1'>
-                    Your audience is{" "}
-                    <Icon
-                      name='LineUpTrendIcon'
-                      className='size-4.5 text-green-600'
-                    />{" "}
-                    engaing more with health related topics.{" "}
-                  </span>
-                  <span className='flex items-center gap-1'>
-                    Career guidance and motivation are on the{" "}
-                    <Icon
-                      name='LineDownTrendIcon'
-                      className='size-4.5 text-red-600'
-                    />{" "}
-                    decline.
-                  </span>
-                </div>
-                <div className='flex w-[calc(100%+16px)] -ml-2'>
-                  <InsightsCardWrapper isHoverable={false} className='pt-2.5'>
-                    <div className='flex items-center gap-2 w-full'>
-                      <div className='flex flex-col gap-1 w-full'>
-                        <div className='text-sm text-text-muted mb-2 flex items-center gap-1 flex-row'>
-                          <Icon name='LineUpTrendIcon' className='size-4.5' />
-                          Trending up
-                        </div>
-                        <TrendItem>
-                          # Healthy diet
-                          <GrowthRate isPositive>74%</GrowthRate>
-                        </TrendItem>
-                        <TrendItem>
-                          # Mindfulness and meditation
-                          <GrowthRate isPositive>42%</GrowthRate>
-                        </TrendItem>
-                        <TrendItem>
-                          # Creating a routine
-                          <GrowthRate isPositive>39%</GrowthRate>
-                        </TrendItem>
-                        <TrendItem>
-                          # Creating a routine
-                          <GrowthRate isPositive>22%</GrowthRate>
-                        </TrendItem>
-                      </div>
-                      <div className='w-px min-w-[1px] bg-extra-light self-stretch shrink-0 mx-2' />
-                      <div className='flex flex-col gap-1 w-full self-stretch'>
-                        <div className='text-sm text-text-muted mb-2 flex items-center gap-1 flex-row'>
-                          <Icon name='LineDownTrendIcon' className='size-4.5' />
-                          Trending down
-                        </div>
-                        <TrendItem>
-                          # Career guidance
-                          <GrowthRate isPositive={false}>56%</GrowthRate>
-                        </TrendItem>
-                        <TrendItem>
-                          # Motivation
-                          <GrowthRate isPositive={false}>47%</GrowthRate>
-                        </TrendItem>
-                        <TrendItem>
-                          # Motivation
-                          <GrowthRate isPositive={false}>10%</GrowthRate>
-                        </TrendItem>
-                      </div>
-                    </div>
-                  </InsightsCardWrapper>
-                </div>
-              </div> */}
-            </div>
-            {/* <div className='text-center flex flex-col justify-center w-full gap-2.5 items-center mb-8 mt-4'>
-              <div className='text-text-strong text-sm'>
-                Is this summary helpful?
-              </div>
-              <div className='flex items-center justify-center gap-0 border border-dq-gray-200 w-fit rounded-lg'>
-                <Button
-                  variant='outline'
-                  size='sm'
-                  className='text-text-primary'
-                >
-                  Yes
-                </Button>
-                <div className='w-px h-4 bg-dq-gray-200' />
-                <Button
-                  variant='outline'
-                  size='sm'
-                  className='text-text-primary'
-                >
-                  No
-                </Button>
-                <div className='w-px h-4 bg-dq-gray-200' />
-                <Button
-                  variant='outline'
-                  size='sm'
-                  className='text-text-primary'
-                >
-                  Provide detail feedback
-                </Button>
-              </div>
-            </div> */}
+            </TrendBodyWrapper>
           </TrendGroupWrapper>
 
           <TrendGroupWrapper>
-            <div className='text-text-muted text-sm w-full flex items-center gap-1'>
+            <div className='text-text-muted text-sm w-full flex items-center gap-1 bg-white py-2.5 px-4 '>
               <Icon
                 name='SparkleIcon'
                 className='size-5 text-icon-light -ml-1'
               />{" "}
               Top actions you can take
             </div>
-            <div className='space-y-3'>
-              <div className='text-text-strong text-lg w-full'>
-                Take these actions to get more opportunities.
-              </div>
-              <div className='flex flex-col gap-6 w-full'>
-                <div className='flex flex-col gap-2 w-[calc(100%+16px)] -ml-2'>
-                  {insights.map((insight, index) => (
-                    <InsightCard
-                      key={index}
-                      user={insight.user ?? ""}
-                      userDescription={insight.userDescription ?? ""}
-                      reason={insight.reason ?? [""]}
-                      match={insight.match ?? 0}
-                      actionType={
-                        insight.actionType as
-                          | "contact"
-                          | "create-content"
-                          | "add-data"
-                      }
-                    />
-                  ))}
+            <TrendBodyWrapper>
+              <div className='space-y-3'>
+                <div className='text-text-strong text-md w-full py-1'>
+                  Take these actions to get more opportunities.
+                </div>
+                <div className='flex flex-col gap-6 w-full'>
+                  <div className='flex flex-col gap-2 w-[calc(100%+16px)] -ml-2'>
+                    {insights.map((insight, index) => (
+                      <InsightCard
+                        key={index}
+                        user={insight.user ?? ""}
+                        userDescription={insight.userDescription ?? ""}
+                        reason={insight.reason ?? [""]}
+                        match={insight.match ?? 0}
+                        actionType={
+                          insight.actionType as
+                            | "contact"
+                            | "create-content"
+                            | "add-data"
+                        }
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className='text-center flex flex-col justify-center w-full gap-2.5 items-center mb-8 mt-4'>
-              <div className='text-text-strong text-sm'>
-                Is this action recommendation helpful?
+              <div className='text-center flex flex-col justify-center w-full gap-2.5 items-center mb-8 mt-4'>
+                <div className='text-text-strong text-sm'>
+                  Is this action recommendation helpful?
+                </div>
+                <div className='flex items-center justify-center gap-0 border w-fit rounded-lg bg-neutral-100'>
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    className='text-text-primary bg-transparent border-none hover:bg-white'
+                  >
+                    Yes
+                  </Button>
+                  <div className='w-px h-4 bg-dq-gray-200' />
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    className='text-text-primary bg-transparent border-none hover:bg-white'
+                  >
+                    No
+                  </Button>
+                  <div className='w-px h-4 bg-dq-gray-200' />
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    className='text-text-primary bg-transparent border-none hover:bg-white'
+                  >
+                    Provide detail feedback
+                  </Button>
+                </div>
               </div>
-              <div className='flex items-center justify-center gap-0 border w-fit rounded-lg bg-neutral-100'>
-                <Button
-                  variant='outline'
-                  size='sm'
-                  className='text-text-primary bg-transparent border-none hover:bg-white'
-                >
-                  Yes
-                </Button>
-                <div className='w-px h-4 bg-dq-gray-200' />
-                <Button
-                  variant='outline'
-                  size='sm'
-                  className='text-text-primary bg-transparent border-none hover:bg-white'
-                >
-                  No
-                </Button>
-                <div className='w-px h-4 bg-dq-gray-200' />
-                <Button
-                  variant='outline'
-                  size='sm'
-                  className='text-text-primary bg-transparent border-none hover:bg-white'
-                >
-                  Provide detail feedback
-                </Button>
-              </div>
-            </div>
+            </TrendBodyWrapper>
           </TrendGroupWrapper>
         </TabsContent>
         <TabsContent
