@@ -1,20 +1,15 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import React from "react";
-import { RingPercentage } from "./ring-percentage";
-import { Icon } from "@/components/ui/icon";
 import type { IconName } from "@/components/ui/icon";
+import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
+import { RingPercentage } from "./ring-percentage";
 
 export function InsightCard({
   user,
-  userDescription,
-  reason,
   match,
   actionType,
 }: {
   user: string;
-  userDescription: string;
-  reason: string[];
   match: number;
   actionType: "contact" | "create-content" | "add-data";
 }) {
@@ -34,15 +29,6 @@ export function InsightCard({
     contact: "Reach out to",
     "create-content": "Create content on",
     "add-data": "Add data to",
-  };
-
-  const actionTypeColor: Record<
-    "contact" | "create-content" | "add-data",
-    string
-  > = {
-    contact: "text-blue-500",
-    "create-content": "text-pink-600",
-    "add-data": "text-pink-600",
   };
 
   return (

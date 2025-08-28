@@ -17,40 +17,33 @@ import {
 const insights = [
   {
     user: "John Doe",
-    userDescription: "Writer - currently writing about healthy diet",
-    reason: [
-      "Influential tech founder with 50K+ followers. Mentioned considering a public testimonial about your product.",
-      "Technical leader evaluating AI for fraud detection. Your expertise in financial AI makes this a perfect match.",
-    ],
     match: 90,
     actionType: "contact",
   },
   {
     user: "Sam Jung",
-    userDescription: "CTO at FinanceFlow - Currently evaluating AI solutions",
-    reason: [
-      "Technical leader evaluating AI for fraud detection. Your expertise in financial AI makes this a perfect match.",
-    ],
     match: 80,
     actionType: "contact",
   },
   {
     user: "Sam Jung",
-    userDescription: "CTO at FinanceFlow - Currently evaluating AI solutions",
-    reason: [
-      "Technical leader evaluating AI for fraud detection. Your expertise in financial AI makes this a perfect match.",
-    ],
     match: 80,
     actionType: "contact",
   },
   {
     user: "David Thompson",
-    userDescription: "AI Researcher at University",
-    reason: [
-      "47 users asked about integrating AI ethics into corporate training. This could be your next viral blog post or video series.",
-    ],
     match: 75,
     actionType: "create-content",
+  },
+  {
+    user: "Sam Jung",
+    match: 74,
+    actionType: "create-content",
+  },
+  {
+    user: "David Thompson",
+    match: 75,
+    actionType: "add-data",
   },
   {
     user: "Sam Jung",
@@ -59,7 +52,7 @@ const insights = [
       "47 users asked about integrating AI ethics into corporate training. This could be your next viral blog post or video series.",
     ],
     match: 74,
-    actionType: "create-content",
+    actionType: "add-data",
   },
 ];
 
@@ -152,8 +145,6 @@ export default function InsightsPage() {
                       <InsightCard
                         key={index}
                         user={insight.user ?? ""}
-                        userDescription={insight.userDescription ?? ""}
-                        reason={insight.reason ?? [""]}
                         match={insight.match ?? 0}
                         actionType={
                           insight.actionType as
@@ -218,8 +209,6 @@ export default function InsightsPage() {
                 <InsightCard
                   key={index}
                   user={insight.user ?? ""}
-                  userDescription={insight.userDescription ?? ""}
-                  reason={insight.reason ?? [""]}
                   match={insight.match ?? 0}
                   actionType={
                     insight.actionType as
@@ -251,8 +240,6 @@ export default function InsightsPage() {
                 <InsightCard
                   key={index}
                   user={insight.user ?? ""}
-                  userDescription={insight.userDescription ?? ""}
-                  reason={insight.reason ?? [""]}
                   match={insight.match ?? 0}
                   actionType={
                     insight.actionType as
