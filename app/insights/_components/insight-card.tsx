@@ -58,12 +58,8 @@ export function InsightCard({
           )}
 
           {actionType === "create-content" && (
-            <InsightHeaderBadgeWrapper className='gap-0.5'>
-              <Icon
-                name={variant.badgeIcon ?? variant.icon}
-                className='size-5'
-              />
-              Healthy diet
+            <InsightHeaderBadgeWrapper className='pl-2'>
+              # Healthy diet
               <div className='w-px bg-neutral-100 self-stretch mx-1' />
               <RingPercentage value={match} />
             </InsightHeaderBadgeWrapper>

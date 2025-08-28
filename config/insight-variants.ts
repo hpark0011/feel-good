@@ -16,8 +16,8 @@ export const INSIGHT_VARIANTS: Record<InsightActionType, InsightVariant> = {
     headerText: "Reach out to",
   },
   "create-content": {
-    icon: "SparkleIcon",
-    badgeIcon: "SparkleIcon",
+    icon: "SquareTextSquareFillIcon",
+    badgeIcon: "SquareTextSquareFillIcon",
     iconColorClasses: "text-pink-600 bg-pink-100",
     headerText: "Create content on",
   },
@@ -25,6 +25,6 @@ export const INSIGHT_VARIANTS: Record<InsightActionType, InsightVariant> = {
     icon: "CylinderSplit1x2FillIcon",
     badgeIcon: "CylinderSplit1x2FillIcon",
     iconColorClasses: "text-orange-500 bg-orange-100",
-    headerText: "Add",
+    headerText: "Set",
   },
 };

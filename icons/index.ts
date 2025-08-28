@@ -123,6 +123,7 @@ export { default as SquareGrid2x2FillInIcon } from "@/icons/square.grid.2x2.fill
 export { default as SquareOnSquareFillIcon } from "@/icons/square.on.square.fill.svg";
 export { default as SquareOnSquareIcon } from "@/icons/square.on.square.svg";
 export { default as SquareStackFillIcon } from "@/icons/square.stack.fill.svg";
+export { default as SquareTextSquareFillIcon } from "@/icons/square.text.square.fill.svg";
 export { default as StarFillIcon } from "@/icons/star.fill.svg";
 export { default as StarIcon } from "@/icons/star.svg";
 export { default as StopFillIcon } from "@/icons/stop.fill.svg";
