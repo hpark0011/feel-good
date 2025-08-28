@@ -111,6 +111,7 @@ export default function InsightsPage() {
                             | "create-content"
                             | "add-data"
                         }
+                        segments={insight.segments}
                       />
                     ))}
                   </div>
@@ -175,6 +176,7 @@ export default function InsightsPage() {
                       | "create-content"
                       | "add-data"
                   }
+                  segments={insight.segments}
                 />
               ))}
             </div>
@@ -206,6 +208,7 @@ export default function InsightsPage() {
                       | "create-content"
                       | "add-data"
                   }
+                  segments={insight.segments}
                 />
               ))}
             </div>

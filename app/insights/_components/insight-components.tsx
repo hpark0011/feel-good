@@ -3,7 +3,7 @@ import React from "react";
 
 export function TrendGroupWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className='border border-neutral-100 rounded-2xl flex flex-col w-full bg-neutral-100 overflow-hidden'>
+    <div className='border border-extra-light rounded-2xl flex flex-col w-full bg-neutral-100 overflow-hidden'>
       {children}
     </div>
   );
@@ -128,7 +128,7 @@ export function InsightHeaderBadgeWrapper({
   return (
     <div
       className={cn(
-        "flex items-center gap-1 px-1 rounded-md border border-neutral-100 w-fit pr-2 h-8",
+        "flex items-center gap-1 px-1 text-[13px] rounded-md border border-extra-light w-fit pr-2 h-[26px]",
         className
       )}
     >

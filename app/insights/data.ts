@@ -3,49 +3,78 @@ export const insights = [
     user: "John Doe",
     match: 90,
     actionType: "contact",
-    insight:
-      "Rising engagement with your guidence on improving sleep and optimizing daily routines.",
+    segments: [
+      { text: "Rising engagement with your guidance on " },
+      { text: "improving sleep", highlight: true },
+      { text: " and morning energy. A quick check-in could convert interest." },
+    ],
+    sources: [],
   },
   {
     user: "Sam Jung",
     match: 80,
     actionType: "contact",
-    insight:
-      "Rising engagement with your guidence on improving sleep and optimizing daily routines.",
+    segments: [
+      { text: "Users are asking about " },
+      { text: "stress management", highlight: true },
+      { text: " tips—consider reaching out with a short plan." },
+    ],
+    sources: [],
   },
   {
     user: "Sam Jung",
     match: 80,
     actionType: "contact",
-    insight:
-      "Rising engagement with your guidence on improving sleep and optimizing daily routines.",
+    segments: [
+      { text: "Positive sentiment around " },
+      { text: "habit building", highlight: true },
+      { text: " is trending—send a quick nudge to keep momentum." },
+    ],
+    sources: [],
   },
   {
     user: "David Thompson",
     match: 75,
     actionType: "create-content",
-    insight:
-      "Rising engagement with your guidence on improving sleep and optimizing daily routines.",
+    segments: [
+      { text: "24 people asked about " },
+      { text: "healthy lunch ideas", highlight: true },
+      {
+        text: " for busy weekdays. Creating a 3-post series would help you get more audience.",
+      },
+    ],
+    sources: [],
   },
   {
     user: "Sam Jung",
     match: 74,
     actionType: "create-content",
-    insight:
-      "Rising engagement with your guidence on improving sleep and optimizing daily routines.",
+    segments: [
+      { text: "Interest in " },
+      { text: "beginner strength training", highlight: true },
+      { text: " is climbing—publish a short starter routine." },
+    ],
+    sources: [],
   },
   {
     user: "David Thompson",
     match: 75,
     actionType: "add-data",
-    insight:
-      "Rising engagement with your guidence on improving sleep and optimizing daily routines.",
+    segments: [
+      { text: "Missing " },
+      { text: "blood pressure readings", highlight: true },
+      { text: " for the last month. Add recent values to improve recs." },
+    ],
   },
   {
     user: "Sam Jung",
     match: 74,
     actionType: "add-data",
-    insight:
-      "Rising engagement with your guidence on improving sleep and optimizing daily routines.",
+    segments: [
+      { text: "Update your " },
+      { text: "sleep diary", highlight: true },
+      { text: " for this week to refine insights." },
+    ],
+    sources: [],
   },
 ] as const;
