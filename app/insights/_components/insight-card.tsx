@@ -27,7 +27,7 @@ export function InsightCard({
   return (
     <div
       className={cn(
-        "rounded-xl w-full flex flex-col items-start relative  transition-all duration-200 translate-y-0 scale-100 ease-out group hover:translate-y-[-1px] hover:shadow-lg hover:border-opacity-100 hover:scale-[1.02] cursor-pointer inset-shadow-[0_0_0_1px_rgba(255,255,255,1)] p-1 bg-white"
+        "rounded-[16px] w-full flex flex-col items-start relative  transition-all duration-200 translate-y-0 scale-100 ease-out group hover:translate-y-[-1px] hover:shadow-lg hover:border-opacity-100 hover:scale-[1.02] cursor-pointer inset-shadow-[0_0_0_1px_rgba(255,255,255,1)] p-1.5 bg-white"
       )}
     >
       <Button
@@ -90,11 +90,7 @@ export function InsightCard({
         </div>
       </div>
 
-      <div className='text-text-primary px-2.5 py-3 border-neutral-100 border border-px w-full rounded-[12px] bg-white flex items-start gap-1 '>
-        <Icon
-          name='LightbulbFillIcon'
-          className='size-4.5 text-icon-light min-w-4.5 mt-[1px]'
-        />
+      <div className='text-text-primary px-3 py-3 border-neutral-100 border border-px w-full rounded-[12px] bg-white flex items-start gap-1 '>
         <div>
           <p className='text-text-strong text-md leading-[1.2] pl-0.5'>
             {segments?.map((segment, index) =>

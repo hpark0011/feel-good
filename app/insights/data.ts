@@ -17,7 +17,7 @@ export const insights = [
     segments: [
       { text: "Users are asking about " },
       { text: "stress management", highlight: true },
-      { text: " tips—consider reaching out with a short plan." },
+      { text: " tips. Consider reaching out with a short plan." },
     ],
     sources: [],
   },
@@ -28,7 +28,7 @@ export const insights = [
     segments: [
       { text: "Positive sentiment around " },
       { text: "habit building", highlight: true },
-      { text: " is trending—send a quick nudge to keep momentum." },
+      { text: " is trending. Send a quick nudge to keep momentum." },
     ],
     sources: [],
   },
@@ -52,7 +52,7 @@ export const insights = [
     segments: [
       { text: "Interest in " },
       { text: "beginner strength training", highlight: true },
-      { text: " is climbing—publish a short starter routine." },
+      { text: " is climbing. Publish a short starter routine." },
     ],
     sources: [],
   },

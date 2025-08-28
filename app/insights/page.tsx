@@ -39,7 +39,7 @@ export default function InsightsPage() {
           className='w-full flex flex-col justify-center items-center gap-6'
         >
           <TrendGroupWrapper>
-            <div className='text-text-muted text-sm w-full flex items-center gap-1 bg-white py-2.5 px-4'>
+            <div className='text-text-muted text-sm w-full flex items-center gap-1 bg-white py-2 px-4'>
               <Icon
                 name='TextBubbleFillIcon'
                 className='size-5 text-icon-light -ml-1'
@@ -86,7 +86,7 @@ export default function InsightsPage() {
           </TrendGroupWrapper>
 
           <TrendGroupWrapper>
-            <div className='text-text-muted text-sm w-full flex items-center gap-1 bg-white py-2.5 px-4 '>
+            <div className='text-text-muted text-sm w-full flex items-center gap-1 bg-white py-2 px-4 '>
               <Icon
                 name='SparkleIcon'
                 className='size-5 text-icon-light -ml-1'
