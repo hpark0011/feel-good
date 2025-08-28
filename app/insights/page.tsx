@@ -3,7 +3,7 @@
 import { Icon } from "@/components/ui/icon";
 import React, { useEffect, useState, useRef } from "react";
 import { InsightCard } from "./_components/insight-card";
-import { FeedbackDrawer } from "./_components/feedback-drawer";
+import { FeedbackDialog } from "./_components/feedback-dialog";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion, type Variants } from "framer-motion";
@@ -286,7 +286,7 @@ export default function InsightsPage() {
         </TabsContent>
       </Tabs>
       <div ref={bottomRef} className='h-1' />
-      <FeedbackDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <FeedbackDialog open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
     </div>
   );
 }
