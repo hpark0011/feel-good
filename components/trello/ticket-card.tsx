@@ -166,7 +166,7 @@ export function TicketCard({
 
       {ticket.description && (
         <CardContent className='p-4 pt-0'>
-          <p className='text-sm line-clamp-3 w-full leading-[140%] text-text-tertiary'>
+          <p className='text-sm line-clamp-3 w-full leading-[140%] text-text-tertiary whitespace-pre'>
             {ticket.description}
           </p>
         </CardContent>
