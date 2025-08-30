@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import type React from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +25,8 @@ import {
   HeaderLogo,
   HeaderMenu,
 } from "@/components/header/header-ui";
+import { FocusForm } from "./focus-form";
+import { cn } from "@/lib/utils";
 
 type HeaderProps = {
   onImport: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -33,16 +35,37 @@ type HeaderProps = {
   title?: string;
 };
 
-export function KanbanHeader({
-  onImport,
-  onExport,
-  onClear,
-}: HeaderProps) {
+export function KanbanHeader({ onImport, onExport, onClear }: HeaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [focusDialogOpen, setFocusDialogOpen] = useState(false);
+  const [todayFocus, setTodayFocus] = useState<string | null>(null);
 
   return (
     <HeaderContainer>
       <HeaderLogo title='Delphi' />
+      <button
+        onClick={() => setFocusDialogOpen(true)}
+        className='bg-white/100 shadow-xs border-white border rounded-md text-[15px] h-[28px] hover:bg-white/70 transition-all duration-200 ease-out hover:scale-105 cursor-pointer scale-100 absolute left-1/2 -translate-x-1/2 flex items-center translate-y-[0px] hover:translate-y-[-1px] hover:shadow-lg overflow-hidden'
+      >
+        <div className='text-text-muted font-medium pl-2 pr-1.5 h-full flex items-center'>
+          {new Date().toLocaleDateString(undefined, {
+            weekday: "short",
+            month: "short",
+            day: "numeric",
+          })}
+        </div>
+        <div className='w-px self-stretch mx-0 bg-neutral-100' />
+        <span
+          className={cn(
+            "hover:bg-neutral-100 px-2 h-full flex items-center",
+            todayFocus
+              ? "text-text-primary font-medium"
+              : "text-text-muted font-[480]"
+          )}
+        >
+          {todayFocus || "Set today's focus"}
+        </span>
+      </button>
       <HeaderMenu>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -116,6 +139,15 @@ export function KanbanHeader({
           }
         }}
         style={{ display: "none" }}
+      />
+      <FocusForm
+        open={focusDialogOpen}
+        onOpenChange={setFocusDialogOpen}
+        onSubmit={(data) => {
+          setTodayFocus(data.focus);
+          setFocusDialogOpen(false);
+        }}
+        defaultValue={todayFocus || ""}
       />
     </HeaderContainer>
   );
