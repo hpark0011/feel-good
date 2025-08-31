@@ -3,7 +3,7 @@ import React from "react";
 
 export function TrendGroupWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <div className='border border-extra-light rounded-2xl flex flex-col w-full bg-neutral-100 overflow-hidden'>
+    <div className='border border-extra-light rounded-2xl flex flex-col w-full  overflow-hidden'>
       {children}
     </div>
   );
