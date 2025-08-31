@@ -26,21 +26,11 @@ import {
 } from "@/components/ui/select";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
 import { COLUMNS } from "@/config/board-config";
+import { useDialogAutoSave } from "@/hooks/use-dialog-auto-save";
+import { useFocusManagement } from "@/hooks/use-focus-management";
+import { type TicketFormInput, type TicketFormOutput, useTicketForm } from "@/hooks/use-ticket-form";
 import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { AutoResizingTextarea } from "../ui/auto-resizing-textarea";
-
-const ticketSchema = z.object({
-  title: z.string().min(1, "Title is required").max(100, "Title is too long"),
-  description: z.string().max(500, "Description is too long").default(""),
-  status: z.enum(["backlog", "not-started", "in-progress", "complete"]),
-});
-
-type TicketFormInput = z.input<typeof ticketSchema>;
-type TicketFormOutput = z.output<typeof ticketSchema>;
 
 interface TicketFormProps {
   open: boolean;
@@ -66,66 +56,24 @@ export function TicketForm({
   },
   mode = "create",
 }: TicketFormProps) {
-  const titleInputRef = useRef<HTMLInputElement | null>(null);
-  const [isCancelAction, setIsCancelAction] = useState(false);
-
-  const form = useForm<TicketFormInput, unknown, TicketFormOutput>({
-    resolver: zodResolver(ticketSchema),
+  const { form, handleSubmit } = useTicketForm({
     defaultValues,
+    onSubmit,
   });
 
-  useEffect(() => {
-    form.reset(defaultValues);
-  }, [defaultValues, form]);
+  const { handleOpenChange, handleCancel } = useDialogAutoSave({
+    form,
+    onSubmit: handleSubmit,
+    onOpenChange,
+  });
 
-  const handleSubmit = (data: TicketFormOutput) => {
-    onSubmit(data);
-    form.reset();
-  };
-
-  const handleOpenChange = (newOpen: boolean) => {
-    // If dialog is opening, just pass through
-    if (newOpen) {
-      onOpenChange(newOpen);
-      return;
-    }
-
-    // If cancel action, reset and close
-    if (isCancelAction) {
-      form.reset();
-      setIsCancelAction(false);
-      onOpenChange(newOpen);
-      return;
-    }
-
-    // Try to save valid data on close
-    const formValues = form.getValues();
-    if (formValues.title && formValues.title.trim().length > 0) {
-      handleSubmit(formValues as TicketFormOutput);
-      return;
-    }
-
-    // No valid data, just reset and close
-    form.reset();
-    setIsCancelAction(false);
-    onOpenChange(newOpen);
-  };
+  const { handleAutoFocus, setRefs } = useFocusManagement();
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         className='sm:max-w-xl px-4'
-        onOpenAutoFocus={(event) => {
-          event.preventDefault();
-          const input = titleInputRef.current;
-          if (input) {
-            input.focus({ preventScroll: true });
-            try {
-              const position = input.value?.length ?? 0;
-              input.setSelectionRange(position, position);
-            } catch {}
-          }
-        }}
+        onOpenAutoFocus={handleAutoFocus}
       >
         <DialogHeader>
           <VisuallyHidden asChild>
@@ -149,10 +97,7 @@ export function TicketForm({
                       <Input
                         placeholder='Enter ticket title…'
                         {...field}
-                        ref={(el) => {
-                          field.ref(el);
-                          titleInputRef.current = el;
-                        }}
+                        ref={(el) => setRefs(el, field.ref)}
                         className={cn(
                           "md:text-xl h-auto py-1 px-2 rounded-lg placeholder:text-text-muted transition-all w-[calc(100%+8px)] ml-[-4px] mt-[-4px]",
                           "border-transparent hover:border-light"
@@ -218,10 +163,7 @@ export function TicketForm({
               <Button
                 type='button'
                 variant='ghost'
-                onClick={() => {
-                  setIsCancelAction(true);
-                  handleOpenChange(false);
-                }}
+                onClick={handleCancel}
                 size='sm'
               >
                 Cancel
