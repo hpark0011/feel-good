@@ -16,7 +16,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Icon } from "@/components/ui/icon";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -25,23 +24,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { COLUMNS } from "@/config/board-config";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { AutoResizingTextarea } from "../ui/auto-resizing-textarea";
-import { cn } from "@/lib/utils";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
-
-const ticketSchema = z.object({
-  title: z.string().min(1, "Title is required").max(100, "Title is too long"),
-  description: z.string().max(500, "Description is too long").default(""),
-  status: z.enum(["backlog", "not-started", "in-progress", "complete"]),
-});
-
-type TicketFormInput = z.input<typeof ticketSchema>;
-type TicketFormOutput = z.output<typeof ticketSchema>;
+import { COLUMNS } from "@/config/board-config";
+import { useDialogAutoSave } from "@/hooks/use-dialog-auto-save";
+import { useFocusManagement } from "@/hooks/use-focus-management";
+import { type TicketFormInput, type TicketFormOutput, useTicketForm } from "@/hooks/use-ticket-form";
+import { cn } from "@/lib/utils";
+import { AutoResizingTextarea } from "../ui/auto-resizing-textarea";
 
 interface TicketFormProps {
   open: boolean;
@@ -54,9 +43,6 @@ interface TicketFormProps {
 const COLUMN_OPTIONS = COLUMNS.map((column) => ({
   value: column.id,
   label: column.title,
-  icon: column.icon,
-  iconColor: column.iconColor,
-  iconSize: column.iconSize,
 }));
 
 export function TicketForm({
@@ -70,45 +56,24 @@ export function TicketForm({
   },
   mode = "create",
 }: TicketFormProps) {
-  const [descriptionFocused, setDescriptionFocused] = useState(false);
-  const titleInputRef = useRef<HTMLInputElement | null>(null);
-
-  const form = useForm<TicketFormInput, unknown, TicketFormOutput>({
-    resolver: zodResolver(ticketSchema),
+  const { form, handleSubmit } = useTicketForm({
     defaultValues,
+    onSubmit,
   });
 
-  useEffect(() => {
-    form.reset(defaultValues);
-  }, [defaultValues, form]);
+  const { handleOpenChange, handleCancel } = useDialogAutoSave({
+    form,
+    onSubmit: handleSubmit,
+    onOpenChange,
+  });
 
-  const handleSubmit = (data: TicketFormOutput) => {
-    onSubmit(data);
-    form.reset();
-  };
-
-  const handleOpenChange = (newOpen: boolean) => {
-    if (!newOpen) {
-      form.reset();
-    }
-    onOpenChange(newOpen);
-  };
+  const { handleAutoFocus, setRefs } = useFocusManagement();
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         className='sm:max-w-xl px-4'
-        onOpenAutoFocus={(event) => {
-          event.preventDefault();
-          const input = titleInputRef.current;
-          if (input) {
-            input.focus({ preventScroll: true });
-            try {
-              const position = input.value?.length ?? 0;
-              input.setSelectionRange(position, position);
-            } catch {}
-          }
-        }}
+        onOpenAutoFocus={handleAutoFocus}
       >
         <DialogHeader>
           <VisuallyHidden asChild>
@@ -132,10 +97,7 @@ export function TicketForm({
                       <Input
                         placeholder='Enter ticket title…'
                         {...field}
-                        ref={(el) => {
-                          field.ref(el);
-                          titleInputRef.current = el;
-                        }}
+                        ref={(el) => setRefs(el, field.ref)}
                         className={cn(
                           "md:text-xl h-auto py-1 px-2 rounded-lg placeholder:text-text-muted transition-all w-[calc(100%+8px)] ml-[-4px] mt-[-4px]",
                           "border-transparent hover:border-light"
@@ -157,8 +119,6 @@ export function TicketForm({
                         placeholder='Enter ticket description...'
                         maxHeight={400}
                         {...field}
-                        onFocus={() => setDescriptionFocused(true)}
-                        onBlur={() => setDescriptionFocused(false)}
                         className={cn(
                           "resize-none h-full bg-transparent rounded-lg min-h-[160px] flex-1 transition-all w-[calc(100%+8px)] ml-[-4px] border-transparent hover:border-light px-2"
                         )}
@@ -190,10 +150,6 @@ export function TicketForm({
                         {COLUMN_OPTIONS.map((option) => (
                           <SelectItem key={option.value} value={option.value}>
                             <div className='flex items-center gap-1'>
-                              <Icon
-                                name={option.icon}
-                                className={`${option.iconColor} ${option.iconSize}`}
-                              />
                               <span>{option.label}</span>
                             </div>
                           </SelectItem>
@@ -207,7 +163,7 @@ export function TicketForm({
               <Button
                 type='button'
                 variant='ghost'
-                onClick={() => handleOpenChange(false)}
+                onClick={handleCancel}
                 size='sm'
               >
                 Cancel
