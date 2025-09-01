@@ -19,4 +19,4 @@ export interface Column {
 
 export type BoardState = Record<string, Ticket[]>;
 
-export type ColumnId = "backlog" | "not-started" | "in-progress" | "complete";
+export type ColumnId = "backlog" | "to-do" | "in-progress" | "complete";
