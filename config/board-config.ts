@@ -3,28 +3,28 @@ import { IconName } from "@/components/ui/icon";
 
 export const COLUMNS: Column[] = [
   {
-    id: "backlog" as ColumnId,
+    id: "backlog",
     title: "Backlog",
     icon: "SquareStackFillIcon" as IconName,
     iconColor: "text-icon-light",
     iconSize: "h-5 w-5",
   },
   {
-    id: "to-do" as ColumnId,
+    id: "to-do",
     title: "To Do",
     icon: "CircleDashedIcon" as IconName,
     iconColor: "text-icon-light",
     iconSize: "h-[22px] w-[22px]",
   },
   {
-    id: "in-progress" as ColumnId,
+    id: "in-progress",
     title: "In Progress",
     icon: "CircleLeftHalfFilledIcon" as IconName,
     iconColor: "text-blue-500",
     iconSize: "h-[22px] w-[22px]",
   },
   {
-    id: "complete" as ColumnId,
+    id: "complete",
     title: "Complete",
     icon: "CheckedCircleFillIcon" as IconName,
     iconColor: "text-green-500",

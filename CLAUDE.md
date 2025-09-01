@@ -97,7 +97,7 @@ Use `pnpm` for all package operations (not npm, yarn, or bun).
 ### Trello Board Implementation
 
 - Located in `/components/trello/`
-- Three columns: "Not Started", "In Progress", "Complete"
+- Four columns: "Backlog", "To Do", "In Progress", "Complete"
 - Drag-and-drop between columns using @dnd-kit
 - Ticket CRUD operations with modal forms
 - TypeScript interfaces in `types.ts`
