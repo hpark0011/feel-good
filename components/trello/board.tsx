@@ -28,16 +28,9 @@ import {
   downloadJsonFile,
 } from "@/lib/storage";
 import { KanbanHeader } from "./kanban-header";
-import { COLUMNS } from "@/config/board-config";
+import { COLUMNS, INITIAL_BOARD_STATE } from "@/config/board-config";
 
 const STORAGE_KEY = "trello-board-state";
-
-const INITIAL_BOARD_STATE: BoardState = {
-  backlog: [],
-  "not-started": [],
-  "in-progress": [],
-  complete: [],
-};
 
 export function Board() {
   const [rawBoard, setRawBoard] = useLocalStorage<string>(
@@ -334,7 +327,7 @@ export function Board() {
               <BoardColumn
                 key={column.id}
                 column={column}
-                tickets={board[column.id]}
+                tickets={board[column.id] || []}
                 onAddTicket={() => handleAddTicket(column.id)}
                 onEditTicket={handleEditTicket}
                 onDeleteTicket={handleDeleteTicket}

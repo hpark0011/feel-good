@@ -10,8 +10,8 @@ export const COLUMNS: Column[] = [
     iconSize: "h-5 w-5",
   },
   {
-    id: "not-started" as ColumnId,
-    title: "Not Started",
+    id: "to-do" as ColumnId,
+    title: "To Do",
     icon: "CircleDashedIcon" as IconName,
     iconColor: "text-icon-light",
     iconSize: "h-[22px] w-[22px]",
@@ -34,7 +34,7 @@ export const COLUMNS: Column[] = [
 
 export const INITIAL_BOARD_STATE: BoardState = {
   backlog: [],
-  "not-started": [],
+  "to-do": [],
   "in-progress": [],
   complete: [],
 };
