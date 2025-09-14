@@ -133,7 +133,6 @@ export { default as StopWatchFillIcon } from "@/icons/stopwatch.fill.svg";
 export { default as StrikethroughIcon } from "@/icons/strikethrough.svg";
 export { default as SunMaxFillIcon } from "@/icons/sun.max.fill.svg";
 export { default as TargetIcon } from "@/icons/target.svg";
-export { default as TavusLogo } from "@/icons/tavus.logo.svg";
 export { default as TextBubbleFillIcon } from "@/icons/text.bubble.fill.svg";
 export { default as TextFormatSizeLargerIcon } from "@/icons/textformat.size.larger.svg";
 export { default as TextFormatSizeSmallerIcon } from "@/icons/textformat.size.smaller.svg";

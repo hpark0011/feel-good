@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/tooltip";
 import {
   HeaderContainer,
-  HeaderLogo,
+  // HeaderLogo,
   HeaderMenu,
 } from "@/components/header/header-ui";
 import { FocusForm } from "./focus-form";
@@ -43,7 +43,7 @@ export function KanbanHeader({ onImport, onExport, onClear }: HeaderProps) {
 
   return (
     <HeaderContainer>
-      <HeaderLogo title='Delphi' />
+      {/* <HeaderLogo title='Delphi' /> */}
       <button
         onClick={() => setFocusDialogOpen(true)}
         className='bg-white/100 shadow-xs border-white border rounded-md text-[15px] h-[28px] hover:bg-white/70 transition-all duration-200 ease-out hover:scale-105 cursor-pointer scale-100 absolute left-1/2 -translate-x-1/2 flex items-center translate-y-[0px] hover:translate-y-[-1px] hover:shadow-lg overflow-hidden'
