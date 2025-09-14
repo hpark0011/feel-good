@@ -42,7 +42,7 @@ export function KanbanHeader({ onImport, onExport, onClear }: HeaderProps) {
   const [todayFocus, setTodayFocus] = useTodayFocus();
 
   return (
-    <HeaderContainer>
+    <HeaderContainer className='justify-end'>
       {/* <HeaderLogo title='Delphi' /> */}
       <button
         onClick={() => setFocusDialogOpen(true)}
