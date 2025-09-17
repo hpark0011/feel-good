@@ -1,0 +1,7 @@
+:root {
+  --card: oklch(0.97 0 0 / 100%);
+}
+
+.dark {
+  --card: oklch(0.18 0 0 / 100%);
+}
