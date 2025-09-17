@@ -97,7 +97,7 @@ export function FocusForm({
                     <Input
                       placeholder='Enter your focus...'
                       {...field}
-                      className='h-9 border-[1px] px-2.5 rounded-md placeholder:text-muted-foreground w-[calc(100%+8px)] ml-[-4px]'
+                      className='h-9 border-[1px] px-2.5 rounded-md placeholder:text-muted-foreground w-[calc(100%+8px)] ml-[-4px] dark:focus:border-neutral-900 dark:border-neutral-800'
                       autoFocus
                     />
                   </FormControl>

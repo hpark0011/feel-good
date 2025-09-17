@@ -46,7 +46,7 @@ export function KanbanHeader({ onImport, onExport, onClear }: HeaderProps) {
       {/* <HeaderLogo title='Delphi' /> */}
       <button
         onClick={() => setFocusDialogOpen(true)}
-        className='bg-white/100 shadow-xs border-white border rounded-md text-[15px] h-[28px] hover:bg-white/70 transition-all duration-200 ease-out hover:scale-105 cursor-pointer scale-100 absolute left-1/2 -translate-x-1/2 flex items-center translate-y-[0px] hover:translate-y-[-1px] hover:shadow-lg overflow-hidden'
+        className='bg-white/100 dark:bg-neutral-900 shadow-xs border-white dark:border-white/2 border rounded-md text-[15px] h-[28px] hover:bg-white/70 dark:hover:bg-white/10 transition-all duration-200 ease-out hover:scale-105 cursor-pointer scale-100 absolute left-1/2 -translate-x-1/2 flex items-center translate-y-[0px] hover:translate-y-[-1px] hover:shadow-lg overflow-hidden'
       >
         <div className='text-text-muted font-medium pl-2 pr-1.5 h-full flex items-center'>
           {new Date().toLocaleDateString(undefined, {
@@ -55,10 +55,10 @@ export function KanbanHeader({ onImport, onExport, onClear }: HeaderProps) {
             day: "numeric",
           })}
         </div>
-        <div className='w-px self-stretch mx-0 bg-neutral-100' />
+        <div className='w-px self-stretch mx-0 bg-neutral-100 dark:bg-neutral-800' />
         <span
           className={cn(
-            "hover:bg-neutral-100 px-2 h-full flex items-center",
+            "hover:bg-neutral-100 dark:hover:bg-neutral-700 px-2 h-full flex items-center dark:hover:text-white/70",
             todayFocus
               ? "text-text-primary font-medium"
               : "text-text-muted font-[480]"

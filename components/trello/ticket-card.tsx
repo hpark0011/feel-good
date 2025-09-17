@@ -87,8 +87,10 @@ export function TicketCard({
   };
 
   const statusStyles = {
-    backlog: "bg-white/70 border-white/30 hover:bg-base",
-    "to-do": "bg-white/70 border-white/30 hover:bg-base",
+    backlog:
+      "bg-white/70 dark:bg-white/5 border-white/30 dark:border-white/2 hover:bg-base",
+    "to-do":
+      "bg-white/70 dark:bg-white/5 border-white/30 dark:border-white/2 hover:bg-base",
     "in-progress":
       "bg-white/70 border-white/60 shadow-[0_8px_8px_-4px_rgba(255,255,255,0.9),_0_12px_12px_-6px_rgba(0,0,0,0.3)] hover:shadow-[0_24px_24px_-12px_rgba(255,255,255,0.9),_0_24px_24px_-12px_rgba(19, 10, 10, 0.3)] hover:bg-base",
     complete:
