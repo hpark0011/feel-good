@@ -265,7 +265,6 @@ export function Board() {
     }
 
     setIsFormOpen(false);
-    setEditingTicket(null);
   };
 
   const handleClearBoard = () => {
@@ -350,7 +349,13 @@ export function Board() {
 
       <TicketForm
         open={isFormOpen}
-        onOpenChange={setIsFormOpen}
+        onOpenChange={(open) => {
+          setIsFormOpen(open);
+          // Clear editingTicket only after dialog is closed
+          if (!open) {
+            setEditingTicket(null);
+          }
+        }}
         onSubmit={handleFormSubmit}
         defaultValues={
           editingTicket
