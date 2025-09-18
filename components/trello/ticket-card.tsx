@@ -122,7 +122,7 @@ export function TicketCard({
             </CardTitle>
           </div>
           {!isDragging && (
-            <div className='absolute top-2 right-2 flex opacity-0 group-hover:opacity-100 flex-row items-center transition-opacity pointer-events-none group-hover:pointer-events-auto border rounded-md border-gray-100 bg-base'>
+            <div className='absolute top-2 right-2 flex opacity-0 group-hover:opacity-100 flex-row items-center transition-opacity pointer-events-none group-hover:pointer-events-auto border rounded-md border-border-light bg-white dark:bg-neutral-800'>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
