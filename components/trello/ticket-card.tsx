@@ -96,7 +96,7 @@ export function TicketCard({
   };
 
   const cardClassName = cn(
-    "bg-card border-white/30 dark:border-white/1 hover:bg-base dark:hover:bg-neutral-900 relative border transition-all duration-200 translate-y-0 hover:translate-y-[-1px] scale-100 hover:scale-[1.02] ease-out group cursor-grab active:cursor-grabbing p-0 gap-0 hover:border-opacity-100 inset-shadow-none shadow-xs hover:shadow-[0_12px_12px_-6px_rgba(255,255,255,0.9),_0_14px_14px_-6px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_12px_12px_-6px_rgba(255,255,255,0.1),_0_14px_14px_-6px_rgba(0,0,0,0.9)]",
+    "bg-card border-card-border hover:bg-base dark:hover:bg-neutral-900 relative border transition-all duration-200 translate-y-0 hover:translate-y-[-1px] scale-100 hover:scale-[1.02] ease-out group cursor-grab active:cursor-grabbing p-0 gap-0 hover:border-opacity-100 inset-shadow-none shadow-xs hover:shadow-[0_12px_12px_-6px_rgba(255,255,255,0.9),_0_14px_14px_-6px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_12px_12px_-6px_rgba(255,255,255,0.1),_0_14px_14px_-6px_rgba(0,0,0,0.9)]",
     statusStyles[ticket.status],
     isDragging &&
       "rotate-5 scale-105 shadow-[0_12px_12px_-6px_rgba(255,255,255,0.9),_0_14px_14px_-6px_rgba(0,0,0,0.3)]"
