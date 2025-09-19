@@ -114,7 +114,9 @@ export function TicketCard({
 
   const cardContent = (
     <>
-      <CardHeader className={cn("p-4 pb-4 flex", ticket.description && "pb-2")}>
+      <CardHeader
+        className={cn("p-4 pb-4 py-3 flex", ticket.description && "pb-2")}
+      >
         <div className='flex items-start gap-2'>
           <div className='flex-1 min-w-0'>
             <CardTitle className='text-md font-medium leading-[1.2]'>
