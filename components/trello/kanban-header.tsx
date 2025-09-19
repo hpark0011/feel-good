@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/tooltip";
 import {
   HeaderContainer,
-  // HeaderLogo,
+  HeaderLogo,
   HeaderMenu,
 } from "@/components/header/header-ui";
 import { FocusForm } from "./focus-form";
@@ -42,8 +42,8 @@ export function KanbanHeader({ onImport, onExport, onClear }: HeaderProps) {
   const [todayFocus, setTodayFocus] = useTodayFocus();
 
   return (
-    <HeaderContainer className='justify-end'>
-      {/* <HeaderLogo title='Delphi' /> */}
+    <HeaderContainer className='justify-between'>
+      <HeaderLogo />
       <button
         onClick={() => setFocusDialogOpen(true)}
         className='bg-white/100 dark:bg-neutral-900 shadow-xs border-white dark:border-white/2 border rounded-md text-[15px] h-[28px] hover:bg-white/70 dark:hover:bg-white/10 transition-all duration-200 ease-out hover:scale-105 cursor-pointer scale-100 absolute left-1/2 -translate-x-1/2 flex items-center translate-y-[0px] hover:translate-y-[-1px] hover:shadow-lg overflow-hidden'
