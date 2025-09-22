@@ -21,7 +21,7 @@ import { useNavigation } from "@/hooks/use-navigation";
 import Link from "next/link";
 
 export function AgentsHeader() {
-  const { getCurrentValue, handleNavigate } = useNavigation();
+  const { getCurrentValue, handleNavigate, navItems } = useNavigation();
 
   return (
     <HeaderContainer className='justify-between'>
@@ -58,9 +58,11 @@ export function AgentsHeader() {
                   sideOffset={0}
                   className='rounded-[11px]'
                 >
-                  <SelectItem value='Files'>Files</SelectItem>
-                  <SelectItem value='Tasks'>Tasks</SelectItem>
-                  <SelectItem value='Agents'>Agents</SelectItem>
+                  {navItems.map((item) => (
+                    <SelectItem key={item.href} value={item.label}>
+                      {item.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </BreadcrumbPage>
