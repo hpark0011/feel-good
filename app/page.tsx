@@ -1,7 +1,5 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import { Board } from "@/components/trello/board";
-
-export default function Home() {
-  return <Board />;
+export default function HomePage() {
+  redirect("/tasks");
 }

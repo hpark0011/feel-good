@@ -1,8 +1,8 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import type React from "react";
-import { cn } from "@/lib/utils";
 
 export const HeaderContainer = ({
   children,
@@ -14,7 +14,7 @@ export const HeaderContainer = ({
   return (
     <div
       className={cn(
-        "flex justify-between items-center py-2 bg-transparent fixed top-0 w-full px-4 pl-5",
+        "flex justify-between items-center py-2 bg-transparent fixed top-0 w-full px-4",
         className
       )}
     >
@@ -23,17 +23,25 @@ export const HeaderContainer = ({
   );
 };
 
-export const HeaderLogo = ({ title }: { title: string }) => {
+export const HeaderLogo = () => {
   return (
-    <div className='flex items-center gap-1.5'>
+    <div className='flex items-center gap-1.5 cursor-pointer'>
       <Image
-        src='/delphi.svg'
-        alt='Delphi logo'
-        width={20}
-        height={20}
+        src='/gb-logo-light.png'
+        alt='GraphBase logo'
+        width={120}
+        height={64}
         priority
+        className='h-6 w-auto dark:hidden'
       />
-      <h1 className='text-xl font-medium pb-[1px]'>{title}</h1>
+      <Image
+        src='/gb-logo-dark.png'
+        alt='GraphBase logo'
+        width={120}
+        height={64}
+        priority
+        className='hidden h-6 w-auto dark:inline'
+      />
     </div>
   );
 };
