@@ -1,6 +1,6 @@
 "use client";
 
-import { NAV_ITEMS } from "@/config/nav-config";
+import { NAV_ITEMS } from "@/config/navs.config";
 import { usePathname, useRouter } from "next/navigation";
 
 export function useNavigation() {

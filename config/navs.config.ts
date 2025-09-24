@@ -10,10 +10,10 @@ export const NAV_ITEMS: NavItem[] = [
   },
   {
     label: "Tasks",
-    href: "/tasks",
+    href: "/dashboard/tasks",
   },
   {
     label: "Agents",
-    href: "/agents",
+    href: "/dashboard/agents",
   },
 ];
