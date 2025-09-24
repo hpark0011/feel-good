@@ -1,7 +1,7 @@
 "use server";
 
 import { enhanceAction } from "@/utils/enhance-actions";
-import { AuthService } from "@/services/auth.service";
+import { AuthService } from "@/lib/services/auth.service";
 import { getSupabaseServerClient } from "@/utils/supabase/client/supabase-server";
 import {
   signInSchema,
