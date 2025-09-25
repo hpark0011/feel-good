@@ -19,7 +19,7 @@ import { arrayMove } from "@dnd-kit/sortable";
 import { BoardColumn } from "./board-column";
 import { TicketCard } from "./ticket-card";
 import { Ticket, BoardState, ColumnId } from "../../types/board.types";
-import { TicketForm } from "./ticket-form";
+import { TicketFormDialog } from "./ticket-form-dialog";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import {
   serializeBoardData,
@@ -358,7 +358,7 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
         </DragOverlay>
       </DndContext>
 
-      <TicketForm
+      <TicketFormDialog
         open={isFormOpen}
         onOpenChange={(open) => {
           setIsFormOpen(open);

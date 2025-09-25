@@ -14,7 +14,7 @@ export const HeaderContainer = ({
   return (
     <div
       className={cn(
-        "flex justify-between items-center py-2 bg-transparent fixed top-0 w-full px-4",
+        "flex justify-between items-center h-12 bg-transparent fixed top-0 w-full px-4",
         className
       )}
     >

@@ -44,7 +44,7 @@ import { useNavigation } from "@/hooks/use-navigation";
 import Link from "next/link";
 import type React from "react";
 import { useRef, useState } from "react";
-import { FocusForm } from "./focus-form";
+import { FocusFormDialog } from "./focus-form-dialog";
 
 type HeaderProps = {
   onImport: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -201,7 +201,7 @@ export function TasksHeader({ onImport, onExport, onClear }: HeaderProps) {
         }}
         style={{ display: "none" }}
       />
-      <FocusForm
+      <FocusFormDialog
         open={focusDialogOpen}
         onOpenChange={setFocusDialogOpen}
         onSubmit={(data) => {

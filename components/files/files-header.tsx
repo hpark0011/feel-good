@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   HeaderContainer,
   HeaderLogo,
@@ -24,9 +25,11 @@ import {
 import { useNavigation } from "@/hooks/use-navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { FileUploadDialog } from "./file-upload-dialog";
 
 export function FilesHeader() {
   const { getCurrentValue, handleNavigate, navItems } = useNavigation();
+  const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
 
   return (
     <HeaderContainer className='justify-between'>
@@ -76,10 +79,19 @@ export function FilesHeader() {
       </Breadcrumb>
 
       <HeaderMenu>
-        <Button variant='primary' size='sm'>
+        <Button
+          variant='primary'
+          size='sm'
+          onClick={() => setIsUploadDialogOpen(true)}
+        >
           <Icon name='PlusIcon' /> Add Files
         </Button>
       </HeaderMenu>
+
+      <FileUploadDialog
+        open={isUploadDialogOpen}
+        onOpenChange={setIsUploadDialogOpen}
+      />
     </HeaderContainer>
   );
 }

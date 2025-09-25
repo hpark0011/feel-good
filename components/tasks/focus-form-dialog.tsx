@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -40,7 +41,7 @@ interface FocusFormProps {
   defaultValue?: string;
 }
 
-export function FocusForm({
+export function FocusFormDialog({
   open,
   onOpenChange,
   onSubmit,
@@ -71,8 +72,8 @@ export function FocusForm({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className='sm:max-w-md px-4'>
-        <DialogHeader className='mb-4'>
+      <DialogContent className='sm:max-w-md'>
+        <DialogHeader>
           <DialogTitle className='text-lg font-medium leading-[1]'>
             Set Today&apos;s Focus
           </DialogTitle>
@@ -82,27 +83,29 @@ export function FocusForm({
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
-            <FormField
-              control={form.control}
-              name='focus'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='sr-only'>
-                    What&apos;s your focus for today?
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder='Enter your focus...'
-                      {...field}
-                      className='h-9 border-[1px] px-2.5 rounded-md placeholder:text-muted-foreground w-[calc(100%+8px)] ml-[-4px] dark:focus:border-neutral-900 dark:border-neutral-800'
-                      autoFocus
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <DialogFooter className='gap-1 mt-4'>
+            <DialogBody>
+              <FormField
+                control={form.control}
+                name='focus'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='sr-only'>
+                      What&apos;s your focus for today?
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='Enter your focus...'
+                        {...field}
+                        className='h-9 border-[1px] px-2.5 rounded-md placeholder:text-muted-foreground w-[calc(100%+8px)] ml-[-4px] dark:focus:border-neutral-900 dark:border-neutral-800'
+                        autoFocus
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </DialogBody>
+            <DialogFooter>
               <Button
                 type='button'
                 variant='ghost'

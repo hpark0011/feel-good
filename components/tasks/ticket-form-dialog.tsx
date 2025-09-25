@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogFooter,
   DialogHeader,
@@ -55,7 +56,7 @@ const COLUMN_OPTIONS = COLUMNS.map((column) => ({
   iconSize: column.iconSize,
 }));
 
-export function TicketForm({
+export function TicketFormDialog({
   open,
   onOpenChange,
   onSubmit,
@@ -81,23 +82,18 @@ export function TicketForm({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent
-        className='sm:max-w-xl px-4'
-        onOpenAutoFocus={handleAutoFocus}
-      >
-        <DialogHeader>
+      <DialogContent className='sm:max-w-xl' onOpenAutoFocus={handleAutoFocus}>
+        <DialogHeader className='sr-only'>
           <VisuallyHidden asChild>
             <DialogTitle>
               {mode === "create" ? "Create New Ticket" : "Edit Ticket"}
             </DialogTitle>
           </VisuallyHidden>
         </DialogHeader>
+
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className='space-y-4'
-          >
-            <div>
+          <form onSubmit={form.handleSubmit(handleSubmit)}>
+            <DialogBody className='mt-4'>
               <FormField
                 control={form.control}
                 name='title'
@@ -138,7 +134,7 @@ export function TicketForm({
                   </FormItem>
                 )}
               />
-            </div>
+            </DialogBody>
 
             <DialogFooter className='gap-1 w-full flex justify-between items-center '>
               <FormField
