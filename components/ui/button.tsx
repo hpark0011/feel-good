@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer has-[>svg]:gap-0.5",
   {
     variants: {
       variant: {
@@ -16,7 +16,7 @@ const buttonVariants = cva(
         outline:
           "border bg-transparent hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
         primary:
-          "bg-medium-inverse dark:bg-dark-inverse text-light font-base shadow-button-primary transform transition-all duration-200 disabled:text-secondary-inverse dark:disabled:text-dq-gray-700 dark:disabled:bg-medium disabled:shadow-none disabled:bg-dark hover:shadow-button-primary-hover hover:bg-light-inverse",
+          "bg-medium-inverse dark:bg-dark-inverse text-light font-base shadow-button-primary transform transition-all duration-200 disabled:text-secondary-inverse dark:disabled:text-dq-gray-700 dark:disabled:bg-medium disabled:shadow-none disabled:bg-dark hover:shadow-button-primary-hover hover:bg-light-inverse [&_svg:not([class*='size-'])]:text-icon-light ",
         secondary:
           "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
         ghost:
@@ -24,9 +24,9 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 text-[13px]",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
+        default: "h-8 px-4 py-2 has-[>svg]:px-3",
+        sm: "h-7 rounded-md gap-1.5 px-3 text-[13px] [&_svg:not([class*='size-'])]:size-4.5 has-[svg]:pl-1.5 has-[svg]:pr-2.5",
+        lg: "h-9 rounded-md px-6 has-[>svg]:px-4",
         icon: "size-9",
       },
     },

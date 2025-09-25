@@ -1,6 +1,10 @@
 "use client";
 
-import { HeaderContainer, HeaderLogo } from "@/components/header/header-ui";
+import {
+  HeaderContainer,
+  HeaderLogo,
+  HeaderMenu,
+} from "@/components/header/header-ui";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -19,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { useNavigation } from "@/hooks/use-navigation";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export function FilesHeader() {
   const { getCurrentValue, handleNavigate, navItems } = useNavigation();
@@ -69,6 +74,12 @@ export function FilesHeader() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+
+      <HeaderMenu>
+        <Button variant='primary' size='sm'>
+          <Icon name='PlusIcon' /> Add Files
+        </Button>
+      </HeaderMenu>
     </HeaderContainer>
   );
 }
