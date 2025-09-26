@@ -34,6 +34,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      files: {
+        Row: {
+          bucket_name: string
+          created_at: string
+          id: string
+          mime_type: string | null
+          name: string
+          original_name: string
+          size: number
+          storage_path: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bucket_name?: string
+          created_at?: string
+          id?: string
+          mime_type?: string | null
+          name: string
+          original_name: string
+          size: number
+          storage_path: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bucket_name?: string
+          created_at?: string
+          id?: string
+          mime_type?: string | null
+          name?: string
+          original_name?: string
+          size?: number
+          storage_path?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
