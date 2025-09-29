@@ -1,9 +1,6 @@
-import { SupabaseClient } from '@supabase/supabase-js';
-import { Database } from '@/types/database.types';
-
-type FileTable = Database['public']['Tables']['files'];
-type FileRow = FileTable['Row'];
-type FileInsert = FileTable['Insert'];
+import { SupabaseClient } from "@supabase/supabase-js";
+import { Database } from "@/types/database.types";
+import { FileInsert, FileRow } from "@/types/file.types";
 
 export class FileService {
   constructor(private supabase: SupabaseClient<Database>) {}
@@ -16,18 +13,16 @@ export class FileService {
    */
   async uploadFile(file: File, userId: string): Promise<FileRow> {
     // Generate unique storage path with user ID prefix for RLS
-    const fileExt = file.name.split('.').pop();
+    const fileExt = file.name.split(".").pop();
     const timestamp = Date.now();
     const randomId = Math.random().toString(36).substring(7);
     const fileName = `${userId}/${timestamp}-${randomId}.${fileExt}`;
-    
+
     // Upload to storage bucket
-    const { data: storageData, error: storageError } = await this.supabase
-      .storage
-      .from('documents')
-      .upload(fileName, file, {
-        cacheControl: '3600',
-        upsert: false
+    const { data: storageData, error: storageError } =
+      await this.supabase.storage.from("documents").upload(fileName, file, {
+        cacheControl: "3600",
+        upsert: false,
       });
 
     if (storageError) {
@@ -35,7 +30,7 @@ export class FileService {
     }
 
     // Extract file name without extension for display
-    const displayName = file.name.replace(/\.[^/.]+$/, '');
+    const displayName = file.name.replace(/\.[^/.]+$/, "");
 
     // Store metadata in database
     const fileRecord: FileInsert = {
@@ -45,31 +40,27 @@ export class FileService {
       size: file.size,
       mime_type: file.type || null,
       storage_path: fileName,
-      bucket_name: 'documents'
+      bucket_name: "documents",
     };
 
     const { data: fileData, error: dbError } = await this.supabase
-      .from('files')
+      .from("files")
       .insert(fileRecord)
       .select()
       .single();
 
     if (dbError) {
       // Cleanup storage on database error
-      await this.supabase.storage
-        .from('documents')
-        .remove([fileName]);
-      
+      await this.supabase.storage.from("documents").remove([fileName]);
+
       throw new Error(`Database insert failed: ${dbError.message}`);
     }
 
     if (!fileData) {
       // Cleanup storage if no data returned
-      await this.supabase.storage
-        .from('documents')
-        .remove([fileName]);
-      
-      throw new Error('Failed to create file record');
+      await this.supabase.storage.from("documents").remove([fileName]);
+
+      throw new Error("Failed to create file record");
     }
 
     return fileData;
@@ -82,10 +73,10 @@ export class FileService {
    */
   async getUserFiles(userId: string): Promise<FileRow[]> {
     const { data, error } = await this.supabase
-      .from('files')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
+      .from("files")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
 
     if (error) {
       throw new Error(`Failed to fetch files: ${error.message}`);
@@ -100,23 +91,25 @@ export class FileService {
    * @param userId - The ID of the user (for authorization)
    * @returns Success status
    */
-  async deleteFile(fileId: string, userId: string): Promise<{ success: boolean }> {
+  async deleteFile(
+    fileId: string,
+    userId: string
+  ): Promise<{ success: boolean }> {
     // Get file details first (also serves as authorization check)
     const { data: file, error: fetchError } = await this.supabase
-      .from('files')
-      .select('storage_path')
-      .eq('id', fileId)
-      .eq('user_id', userId)
+      .from("files")
+      .select("storage_path")
+      .eq("id", fileId)
+      .eq("user_id", userId)
       .single();
 
     if (fetchError || !file) {
-      throw new Error('File not found or unauthorized');
+      throw new Error("File not found or unauthorized");
     }
 
     // Delete from storage first
-    const { error: storageError } = await this.supabase
-      .storage
-      .from('documents')
+    const { error: storageError } = await this.supabase.storage
+      .from("documents")
       .remove([file.storage_path]);
 
     if (storageError) {
@@ -125,10 +118,10 @@ export class FileService {
 
     // Delete from database
     const { error: dbError } = await this.supabase
-      .from('files')
+      .from("files")
       .delete()
-      .eq('id', fileId)
-      .eq('user_id', userId);
+      .eq("id", fileId)
+      .eq("user_id", userId);
 
     if (dbError) {
       throw new Error(`Database deletion failed: ${dbError.message}`);
@@ -144,23 +137,26 @@ export class FileService {
    * @param expiresIn - URL expiration time in seconds (default 1 hour)
    * @returns Signed URL for file download
    */
-  async getFileUrl(fileId: string, userId: string, expiresIn: number = 3600): Promise<string> {
+  async getFileUrl(
+    fileId: string,
+    userId: string,
+    expiresIn: number = 3600
+  ): Promise<string> {
     // Get file details (also serves as authorization check)
     const { data: file, error } = await this.supabase
-      .from('files')
-      .select('storage_path, original_name')
-      .eq('id', fileId)
-      .eq('user_id', userId)
+      .from("files")
+      .select("storage_path, original_name")
+      .eq("id", fileId)
+      .eq("user_id", userId)
       .single();
 
     if (error || !file) {
-      throw new Error('File not found or unauthorized');
+      throw new Error("File not found or unauthorized");
     }
 
     // Generate signed URL
-    const { data: urlData, error: urlError } = await this.supabase
-      .storage
-      .from('documents')
+    const { data: urlData, error: urlError } = await this.supabase.storage
+      .from("documents")
       .createSignedUrl(file.storage_path, expiresIn);
 
     if (urlError || !urlData) {
@@ -178,14 +174,14 @@ export class FileService {
    */
   async getFile(fileId: string, userId: string): Promise<FileRow> {
     const { data, error } = await this.supabase
-      .from('files')
-      .select('*')
-      .eq('id', fileId)
-      .eq('user_id', userId)
+      .from("files")
+      .select("*")
+      .eq("id", fileId)
+      .eq("user_id", userId)
       .single();
 
     if (error || !data) {
-      throw new Error('File not found or unauthorized');
+      throw new Error("File not found or unauthorized");
     }
 
     return data;
@@ -198,9 +194,9 @@ export class FileService {
    */
   async getUserStorageUsage(userId: string): Promise<number> {
     const { data, error } = await this.supabase
-      .from('files')
-      .select('size')
-      .eq('user_id', userId);
+      .from("files")
+      .select("size")
+      .eq("user_id", userId);
 
     if (error) {
       throw new Error(`Failed to calculate storage usage: ${error.message}`);
@@ -217,20 +213,20 @@ export class FileService {
   validateFile(file: File): { valid: boolean; error?: string } {
     const MAX_FILE_SIZE = 52428800; // 50MB
     const ALLOWED_MIME_TYPES = [
-      'application/pdf',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'text/plain',
-      'image/jpeg',
-      'image/png',
-      'image/gif'
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "text/plain",
+      "image/jpeg",
+      "image/png",
+      "image/gif",
     ];
 
     // Check file size
     if (file.size > MAX_FILE_SIZE) {
       return {
         valid: false,
-        error: `File size exceeds 50MB limit (${Math.round(file.size / 1048576)}MB)`
+        error: `File size exceeds 50MB limit (${Math.round(file.size / 1048576)}MB)`,
       };
     }
 
@@ -238,7 +234,7 @@ export class FileService {
     if (file.type && !ALLOWED_MIME_TYPES.includes(file.type)) {
       return {
         valid: false,
-        error: `File type not allowed: ${file.type}`
+        error: `File type not allowed: ${file.type}`,
       };
     }
 

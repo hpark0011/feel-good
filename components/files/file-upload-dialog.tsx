@@ -13,6 +13,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
+import { uploadFileAction } from "@/app/_actions/file-actions";
+import { validateFile, formatFileSize } from "@/lib/schema/file.schema";
+import type { FileUploadProgress } from "@/types/file.types";
 
 interface FileUploadDialogProps {
   open: boolean;
@@ -26,10 +29,26 @@ export function FileUploadDialog({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<FileUploadProgress[]>([]);
+  const [validationErrors, setValidationErrors] = useState<Map<string, string>>(new Map());
 
   const handleFileSelect = (files: FileList | null) => {
     if (files) {
-      setSelectedFiles(Array.from(files));
+      const newFiles = Array.from(files);
+      const errors = new Map<string, string>();
+      
+      // Validate each file
+      newFiles.forEach(file => {
+        const validation = validateFile(file);
+        if (!validation.valid && validation.error) {
+          errors.set(file.name, validation.error);
+        }
+      });
+      
+      setValidationErrors(errors);
+      // Only set files that passed validation
+      setSelectedFiles(newFiles.filter(file => !errors.has(file.name)));
     }
   };
 
@@ -49,26 +68,99 @@ export function FileUploadDialog({
   };
 
   const handleUpload = async () => {
-    if (selectedFiles.length === 0) return;
+    if (selectedFiles.length === 0 || isUploading) return;
 
-    console.log("Uploading files:", selectedFiles);
+    setIsUploading(true);
+    const progress: FileUploadProgress[] = selectedFiles.map(file => ({
+      file,
+      status: 'pending' as const,
+      progress: 0,
+    }));
+    setUploadProgress(progress);
 
-    setSelectedFiles([]);
-    onOpenChange(false);
+    const uploadResults: FileUploadProgress[] = [];
+    
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const file = selectedFiles[i];
+      const progressItem = { ...progress[i], status: 'uploading' as const, progress: 50 };
+      
+      // Update progress for current file
+      setUploadProgress(prev => [
+        ...uploadResults,
+        progressItem,
+        ...progress.slice(i + 1)
+      ]);
+
+      try {
+        const result = await uploadFileAction({ file });
+        
+        if (result.success && result.data) {
+          uploadResults.push({
+            ...progressItem,
+            status: 'success',
+            progress: 100,
+            result: result.data
+          });
+        } else {
+          uploadResults.push({
+            ...progressItem,
+            status: 'error',
+            progress: 100,
+            error: result.message || 'Upload failed'
+          });
+        }
+      } catch (error) {
+        uploadResults.push({
+          ...progressItem,
+          status: 'error',
+          progress: 100,
+          error: error instanceof Error ? error.message : 'Upload failed'
+        });
+      }
+      
+      // Update progress with result
+      setUploadProgress([...uploadResults, ...progress.slice(i + 1)]);
+    }
+
+    setIsUploading(false);
+    
+    // Check if all uploads succeeded
+    const allSuccess = uploadResults.every(r => r.status === 'success');
+    
+    if (allSuccess) {
+      // Reset and close dialog after a short delay to show success
+      setTimeout(() => {
+        setSelectedFiles([]);
+        setUploadProgress([]);
+        setValidationErrors(new Map());
+        onOpenChange(false);
+      }, 1000);
+    }
   };
 
   const removeFile = (index: number) => {
     setSelectedFiles((files) => files.filter((_, i) => i !== index));
+    // Also clear any validation error for this file
+    if (selectedFiles[index]) {
+      const newErrors = new Map(validationErrors);
+      newErrors.delete(selectedFiles[index].name);
+      setValidationErrors(newErrors);
+    }
   };
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return bytes + " bytes";
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
-    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  // Reset dialog state when closed
+  const handleClose = (open: boolean) => {
+    if (!open) {
+      setSelectedFiles([]);
+      setUploadProgress([]);
+      setValidationErrors(new Map());
+      setIsUploading(false);
+    }
+    onOpenChange(open);
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className='sm:max-w-[600px]'>
         <DialogHeader>
           <DialogTitle>Upload Files</DialogTitle>
@@ -78,6 +170,22 @@ export function FileUploadDialog({
         </DialogHeader>
 
         <DialogBody className='space-y-4'>
+          {/* Show validation errors if any */}
+          {validationErrors.size > 0 && (
+            <div className='bg-destructive/10 border border-destructive/20 rounded-lg p-3'>
+              <p className='text-sm font-medium text-destructive mb-2'>
+                Some files could not be added:
+              </p>
+              <ul className='space-y-1'>
+                {Array.from(validationErrors.entries()).map(([filename, error]) => (
+                  <li key={filename} className='text-xs text-destructive/90'>
+                    <span className='font-medium'>{filename}:</span> {error}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <div
             className={cn(
               "border-[2px] border-dashed rounded-lg p-8 text-center transition-colors",
@@ -101,7 +209,7 @@ export function FileUploadDialog({
                   Click to upload or drag and drop
                 </p>
                 <p className='text-xs text-muted-foreground mt-1'>
-                  PDF, DOC, TXT, or any other document format
+                  PDF, Word documents, text files, and images (Max 50MB)
                 </p>
               </div>
             </div>
@@ -109,12 +217,65 @@ export function FileUploadDialog({
               ref={fileInputRef}
               type='file'
               multiple
+              accept='.pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif'
               className='hidden'
               onChange={(e) => handleFileSelect(e.target.files)}
+              disabled={isUploading}
             />
           </div>
 
-          {selectedFiles.length > 0 && (
+          {/* Show upload progress when uploading */}
+          {isUploading && uploadProgress.length > 0 && (
+            <div className='space-y-2'>
+              <p className='text-sm font-medium'>
+                Uploading files...
+              </p>
+              <div className='max-h-[200px] overflow-y-auto space-y-2'>
+                {uploadProgress.map((item, index) => (
+                  <div
+                    key={index}
+                    className='flex items-center gap-2 p-2 bg-muted/30 rounded-lg'
+                  >
+                    <Icon
+                      name={
+                        item.status === 'success' 
+                          ? 'CheckCircleIcon'
+                          : item.status === 'error'
+                          ? 'ExclamationCircleIcon'
+                          : item.status === 'uploading'
+                          ? 'ArrowUpIcon'
+                          : 'ClockIcon'
+                      }
+                      className={cn(
+                        'w-4 h-4 flex-shrink-0',
+                        item.status === 'success' && 'text-green-600',
+                        item.status === 'error' && 'text-destructive',
+                        item.status === 'uploading' && 'text-primary animate-pulse',
+                        item.status === 'pending' && 'text-muted-foreground'
+                      )}
+                    />
+                    <div className='flex-1 min-w-0'>
+                      <p className='text-sm truncate'>{item.file.name}</p>
+                      {item.error && (
+                        <p className='text-xs text-destructive'>{item.error}</p>
+                      )}
+                      {item.status === 'uploading' && (
+                        <div className='mt-1 h-1 bg-muted rounded-full overflow-hidden'>
+                          <div 
+                            className='h-full bg-primary transition-all duration-300'
+                            style={{ width: `${item.progress}%` }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Show selected files when not uploading */}
+          {!isUploading && selectedFiles.length > 0 && (
             <div className='space-y-2'>
               <p className='text-sm font-medium'>
                 Selected files ({selectedFiles.length})
@@ -145,6 +306,7 @@ export function FileUploadDialog({
                         removeFile(index);
                       }}
                       className='flex-shrink-0 h-8 w-8 p-0'
+                      disabled={isUploading}
                     >
                       <Icon name='XmarkIcon' className='w-4 h-4' />
                     </Button>
@@ -156,16 +318,28 @@ export function FileUploadDialog({
         </DialogBody>
 
         <DialogFooter>
-          <Button variant='ghost' onClick={() => onOpenChange(false)} size='sm'>
-            Cancel
+          <Button 
+            variant='ghost' 
+            onClick={() => handleClose(false)} 
+            size='sm'
+            disabled={isUploading}
+          >
+            {isUploading ? 'Close' : 'Cancel'}
           </Button>
           <Button
             variant='primary'
             size='sm'
             onClick={handleUpload}
-            disabled={selectedFiles.length === 0}
+            disabled={selectedFiles.length === 0 || isUploading}
           >
-            Upload {selectedFiles.length > 0 && `(${selectedFiles.length})`}
+            {isUploading ? (
+              <>
+                <Icon name='ArrowUpIcon' className='w-4 h-4 mr-1 animate-pulse' />
+                Uploading...
+              </>
+            ) : (
+              <>Upload {selectedFiles.length > 0 && `(${selectedFiles.length})`}</>
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>
