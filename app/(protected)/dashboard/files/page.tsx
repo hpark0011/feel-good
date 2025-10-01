@@ -21,9 +21,9 @@ export default function FilesPage() {
     <>
       <FilesHeader onUploadComplete={handleRefresh} />
       <BodyContainer>
-        <div className='px-5 py-4 w-full'>
+        <div className='px-4 py-4 w-full'>
           {/* View mode toggle */}
-          <div className='flex items-center justify-between mb-6'>
+          <div className='flex items-center justify-between mb-6 px-3'>
             <h2 className='text-lg font-medium'>All</h2>
             <div className='flex items-center rounded-md p-0.5'>
               <Button

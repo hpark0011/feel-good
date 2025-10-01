@@ -1,17 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Icon } from "@/components/ui/icon";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 import {
-  getFilesAction,
   deleteFileAction,
+  getFilesAction,
   getFileUrlAction,
 } from "@/app/_actions/file-actions";
-import { formatFileSize, getFileCategory } from "@/lib/schema/file.schema";
-import type { FileRow } from "@/types/file.types";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,6 +15,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/ui/icon";
+import { Skeleton } from "@/components/ui/skeleton";
+import { formatFileSize, getFileCategory } from "@/lib/schema/file.schema";
+import { cn } from "@/lib/utils";
+import type { FileRow } from "@/types/file.types";
+import { useEffect, useState } from "react";
 
 interface FilesListProps {
   refreshTrigger?: number; // Optional prop to trigger refresh from parent
@@ -192,11 +192,11 @@ export function FilesList({
   if (view === "list") {
     return (
       <>
-        <div className='space-y-2'>
+        <div className='space-y-0'>
           {files.map((file) => (
             <div
               key={file.id}
-              className='flex items-center gap-4 p-3 bg-card border rounded-lg hover:bg-muted/50 transition-colors'
+              className='flex items-center gap-4 p-1 hover:bg-card rounded-lg transition-colors'
             >
               <Icon
                 name={getFileIcon(file.mime_type)}
