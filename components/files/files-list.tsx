@@ -196,15 +196,17 @@ export function FilesList({
           {files.map((file) => (
             <div
               key={file.id}
-              className='flex items-center gap-4 p-1 hover:bg-card rounded-lg transition-colors'
+              className='flex items-center gap-1 px-2.5 hover:bg-card rounded-md transition-colors w-[calc(100%+24px)] -ml-3'
             >
               <Icon
                 name={getFileIcon(file.mime_type)}
-                className='w-10 h-10 text-muted-foreground flex-shrink-0'
+                className='w-8 h-8 text-muted-foreground flex-shrink-0'
               />
-              <div className='flex-1 min-w-0'>
-                <p className='font-medium text-sm truncate'>{file.name}</p>
-                <div className='flex items-center gap-4 text-xs text-muted-foreground mt-1'>
+              <div className='flex-1 min-w-0 flex'>
+                <p className='font-medium text-[15px] flex-1 truncate'>
+                  {file.name}
+                </p>
+                <div className='flex items-center gap-2 text-sm text-muted-foreground mt-1'>
                   <span>{formatFileSize(file.size)}</span>
                   <span>•</span>
                   <span>{formatDate(file.created_at)}</span>
