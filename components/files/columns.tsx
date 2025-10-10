@@ -62,14 +62,14 @@ export const createColumns = (
           (table.getIsSomePageRowsSelected() && "indeterminate")
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
+        aria-label='Select all'
       />
     ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
+        aria-label='Select row'
       />
     ),
     enableSorting: false,
@@ -80,28 +80,27 @@ export const createColumns = (
     header: ({ column }) => {
       return (
         <Button
-          variant="ghost"
+          variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-8 px-2 -ml-2"
+          className='px-2'
+          size='sm'
         >
           Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <Icon name='ArrowUpAndDownIcon' className='ml-2 size-4' />
         </Button>
       );
     },
     cell: ({ row }) => {
       const file = row.original;
       return (
-        <div className="flex items-center gap-3">
+        <div className='flex items-center gap-1'>
           <Icon
             name={getFileIcon(file.mime_type)}
-            className="w-8 h-8 text-muted-foreground flex-shrink-0"
+            className='w-8 h-8 text-muted-foreground flex-shrink-0'
           />
-          <div className="flex flex-col min-w-0">
-            <p className="font-medium text-sm truncate">{file.name}</p>
-            <p className="text-xs text-muted-foreground truncate">
-              {file.original_name}
-            </p>
+          <div className='flex flex-col min-w-0'>
+            {/* <p className="font-medium text-sm truncate">{file.name}</p> */}
+            <p className='truncate'>{file.original_name}</p>
           </div>
         </div>
       );
@@ -112,18 +111,19 @@ export const createColumns = (
     header: ({ column }) => {
       return (
         <Button
-          variant="ghost"
+          variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-8 px-2"
+          className='h-8 px-2 -ml-2'
+          size='sm'
         >
           Size
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <Icon name='ArrowUpAndDownIcon' className='ml-2 size-4' />
         </Button>
       );
     },
     cell: ({ row }) => {
       return (
-        <div className="text-sm">{formatFileSize(row.getValue("size"))}</div>
+        <div className='text-sm'>{formatFileSize(row.getValue("size"))}</div>
       );
     },
   },
@@ -132,18 +132,19 @@ export const createColumns = (
     header: ({ column }) => {
       return (
         <Button
-          variant="ghost"
+          variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-8 px-2"
+          className='h-8 px-2 -ml-2'
+          size='sm'
         >
           Token Count
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <Icon name='ArrowUpAndDownIcon' className='ml-2 size-4' />
         </Button>
       );
     },
     cell: ({ row }) => {
       return (
-        <div className="text-sm">
+        <div className='text-sm'>
           {formatTokenCount(row.getValue("token_count"))}
         </div>
       );
@@ -154,18 +155,19 @@ export const createColumns = (
     header: ({ column }) => {
       return (
         <Button
-          variant="ghost"
+          variant='ghost'
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-8 px-2"
+          className='h-8 px-2 -ml-1.5'
+          size='sm'
         >
           Created At
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          <Icon name='ArrowUpAndDownIcon' className='ml-2 size-4' />
         </Button>
       );
     },
     cell: ({ row }) => {
       return (
-        <div className="text-sm">{formatDate(row.getValue("created_at"))}</div>
+        <div className='text-sm'>{formatDate(row.getValue("created_at"))}</div>
       );
     },
   },
@@ -179,19 +181,19 @@ export const createColumns = (
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
+            <Button variant='ghost' className='h-8 w-8 p-0'>
+              <span className='sr-only'>Open menu</span>
+              <MoreHorizontal className='h-4 w-4' />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align='end'>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => onDownload(file)}
               disabled={isDownloading}
             >
               <Icon
-                name="ArrowDownIcon"
+                name='ArrowDownIcon'
                 className={`mr-2 h-4 w-4 ${isDownloading ? "animate-pulse" : ""}`}
               />
               {isDownloading ? "Downloading..." : "Download"}
@@ -199,9 +201,9 @@ export const createColumns = (
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => onDelete(file.id)}
-              className="text-destructive focus:text-destructive"
+              className='text-destructive focus:text-destructive'
             >
-              <Icon name="TrashIcon" className="mr-2 h-4 w-4" />
+              <Icon name='TrashIcon' className='mr-2 h-4 w-4' />
               Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
