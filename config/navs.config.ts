@@ -6,14 +6,14 @@ export type NavItem = {
 export const NAV_ITEMS: NavItem[] = [
   {
     label: "Files",
-    href: "/files",
+    href: "/dashboard/files",
   },
   {
     label: "Tasks",
-    href: "/tasks",
+    href: "/dashboard/tasks",
   },
   {
     label: "Agents",
-    href: "/agents",
+    href: "/dashboard/agents",
   },
 ];

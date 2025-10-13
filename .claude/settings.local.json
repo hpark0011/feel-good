@@ -9,9 +9,18 @@
       "Bash(pnpm dev:*)",
       "Bash(gh issue create:*)",
       "Bash(pnpm build:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "WebFetch(domain:supabase.com)"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "enabledMcpjsonServers": [
+    "shadcn"
+  ],
+  "disabledMcpjsonServers": [
+    "supabase",
+    "Context7"
+  ],
+  "enableAllProjectMcpServers": true
 }
