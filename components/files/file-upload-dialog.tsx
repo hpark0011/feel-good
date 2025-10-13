@@ -172,7 +172,7 @@ export function FileUploadDialog({
       <DialogContent className='sm:max-w-[600px]'>
         <DialogHeader>
           <DialogTitle>Upload Files</DialogTitle>
-          <DialogDescription>
+          <DialogDescription className='sr-only'>
             Select files from your computer or drag and drop them here
           </DialogDescription>
         </DialogHeader>
@@ -198,7 +198,7 @@ export function FileUploadDialog({
 
           <div
             className={cn(
-              "border-[2px] border-dashed rounded-lg p-8 text-center transition-colors",
+              "rounded-lg p-8 text-center transition-colors",
               "hover:border-primary/50 hover:bg-muted/30 w-[calc(100%+8px)] ml-[-4px]",
               isDragging && "border-primary bg-primary/5"
             )}

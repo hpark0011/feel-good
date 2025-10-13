@@ -74,7 +74,7 @@ export function FocusFormDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className='sm:max-w-md'>
         <DialogHeader>
-          <DialogTitle className='text-lg font-medium leading-[1]'>
+          <DialogTitle className='leading-[1]'>
             Set Today&apos;s Focus
           </DialogTitle>
           <DialogDescription className='sr-only'>
