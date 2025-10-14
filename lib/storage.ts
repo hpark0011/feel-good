@@ -27,10 +27,7 @@ export function deserializeBoardData(data: string): BoardState {
   try {
     const parsed: SerializedBoardData = JSON.parse(data);
 
-    // Handle version migration if needed
-    const migrated = migrateData(parsed);
-
-    return deserializeTickets(migrated.data);
+    return deserializeTickets(parsed.data);
   } catch (error) {
     console.error("Error deserializing board data:", error);
     throw new Error("Failed to deserialize board data");
@@ -63,27 +60,6 @@ function deserializeTickets(boardState: BoardState): BoardState {
   }
 
   return deserialized;
-}
-
-function migrateData(data: SerializedBoardData): SerializedBoardData {
-  const migrated = { ...data };
-
-  // Handle future migrations
-  if (migrated.version < CURRENT_VERSION) {
-    console.log(
-      `Migrating board data from version ${migrated.version} to ${CURRENT_VERSION}`
-    );
-
-    // Add migration logic here for future schema changes
-    // Example:
-    // if (migrated.version < 2) {
-    //   migrated = migrateToV2(migrated);
-    // }
-
-    migrated.version = CURRENT_VERSION;
-  }
-
-  return migrated;
 }
 
 export function validateBoardData(data: unknown): data is SerializedBoardData {
