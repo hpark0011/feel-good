@@ -168,10 +168,13 @@ function SelectScrollDownButton({
   );
 }
 
+const SelectIcon = SelectPrimitive.Icon;
+
 export {
   Select,
   SelectContent,
   SelectGroup,
+  SelectIcon,
   SelectItem,
   SelectLabel,
   SelectScrollDownButton,

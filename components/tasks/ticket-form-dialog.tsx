@@ -18,15 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
-import { COLUMNS } from "@/config/board-config";
 import { useDialogAutoSave } from "@/hooks/use-dialog-auto-save";
 import { useFocusManagement } from "@/hooks/use-focus-management";
 import {
@@ -36,10 +28,8 @@ import {
 } from "@/hooks/use-ticket-form";
 import { cn } from "@/lib/utils";
 import { AutoResizingTextarea } from "../ui/auto-resizing-textarea";
-import { Icon, IconName } from "../ui/icon";
-import { ChevronDownIcon } from "lucide-react";
-import { SelectIcon } from "@radix-ui/react-select";
 import { ProjectSelect } from "./project-select";
+import { StatusSelect } from "./status-select";
 
 interface TicketFormProps {
   open: boolean;
@@ -49,13 +39,6 @@ interface TicketFormProps {
   mode?: "create" | "edit";
 }
 
-const COLUMN_OPTIONS = COLUMNS.map((column) => ({
-  value: column.id,
-  label: column.title,
-  icon: column.icon as IconName,
-  iconColor: column.iconColor,
-  iconSize: column.iconSize,
-}));
 
 export function TicketFormDialog({
   open,
@@ -162,40 +145,12 @@ export function TicketFormDialog({
                   render={({ field }) => (
                     <FormItem className='flex-1'>
                       <FormLabel className='sr-only'>Status</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className='pl-1.5'>
-                            <SelectValue placeholder='Select a status' />
-                            <div className='absolute right-[26px] self-stretch h-full top-0 w-[1px] bg-light' />
-                            <SelectIcon asChild>
-                              <ChevronDownIcon className='size-4 opacity-50' />
-                            </SelectIcon>
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {COLUMN_OPTIONS.map((option) => (
-                            <SelectItem
-                              key={option.value}
-                              value={option.value}
-                              className='pl-1.5'
-                            >
-                              <div className='flex items-center gap-1 px-1 pl-0'>
-                                <Icon
-                                  name={option.icon}
-                                  className={cn(
-                                    option.iconColor,
-                                    "min-h-5 min-w-5"
-                                  )}
-                                />
-                                <span>{option.label}</span>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <FormControl>
+                        <StatusSelect
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}

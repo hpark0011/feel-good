@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -29,7 +29,11 @@ interface ProjectSelectProps {
   className?: string;
 }
 
-const PROJECT_COLORS: { color: ProjectColor; bgClass: string; displayClass: string }[] = [
+const PROJECT_COLORS: {
+  color: ProjectColor;
+  bgClass: string;
+  displayClass: string;
+}[] = [
   { color: "gray", bgClass: "bg-neutral-500", displayClass: "bg-neutral-500" },
   { color: "red", bgClass: "bg-red-500", displayClass: "bg-red-500" },
   { color: "orange", bgClass: "bg-orange-500", displayClass: "bg-orange-500" },
@@ -55,8 +59,20 @@ export function ProjectSelect({
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
   const selectedProject = value ? getProjectById(value) : undefined;
+
+  // Filter projects based on search query
+  const filteredProjects = projects.filter((project) =>
+    project.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Reset highlighted index when search changes
+  useEffect(() => {
+    setHighlightedIndex(-1);
+  }, [searchQuery]);
 
   const handleCreate = () => {
     if (!projectName.trim()) return;
@@ -126,6 +142,35 @@ export function ProjectSelect({
       setViewMode("list");
       setProjectName("");
       setSelectedColor("blue");
+      setSearchQuery("");
+      setHighlightedIndex(-1);
+    }
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setHighlightedIndex((prev) =>
+        prev < filteredProjects.length - 1 ? prev + 1 : prev
+      );
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : -1));
+    } else if (e.key === "Enter" && highlightedIndex >= 0) {
+      e.preventDefault();
+      const selectedProject = filteredProjects[highlightedIndex];
+      onValueChange(selectedProject.id);
+      setOpen(false);
+      setSearchQuery("");
+      setHighlightedIndex(-1);
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      if (searchQuery) {
+        setSearchQuery("");
+        setHighlightedIndex(-1);
+      } else {
+        setOpen(false);
+      }
     }
   };
 
@@ -133,49 +178,68 @@ export function ProjectSelect({
     <>
       <DropdownMenu open={open} onOpenChange={handleOpenChange}>
         <DropdownMenuTrigger asChild>
-          <Button
-            variant="outline"
-            className={cn(
-              "w-full justify-between h-9 px-3 text-sm border-border",
-              className
-            )}
-          >
-            <div className="flex items-center gap-2">
-              {selectedProject ? (
-                <>
-                  <span
-                    className={cn(
-                      "size-2 rounded-full",
-                      PROJECT_COLORS.find((c) => c.color === selectedProject.color)
-                        ?.bgClass
-                    )}
-                  />
-                  <span>{selectedProject.name}</span>
-                </>
-              ) : (
-                <span className="text-muted-foreground">No project</span>
+          <div>
+            <Button
+              variant='outline'
+              className={cn(
+                "border-light data-[placeholder]:text-muted-foreground [&_svg:not([class*='text-'])]:text-muted-foreground focus-visible:ring-ring/50 dark:bg-transparent dark:hover:bg-input/10 flex w-full items-center justify-between gap-3.5 rounded-md border bg-transparent pl-1.5 pr-[5px] py-1.5 text-[14px] whitespace-nowrap transition-[color,box-shadow] outline-none focus-visible:ring-[2px] disabled:cursor-not-allowed disabled:opacity-50 h-7 hover:bg-extra-light relative cursor-pointer",
+                className
               )}
-            </div>
-            <ChevronDownIcon className="size-4 opacity-50" />
-          </Button>
+            >
+              <div className='flex items-center gap-2 flex-1 min-w-0'>
+                {selectedProject ? (
+                  <>
+                    <span
+                      className={cn(
+                        "size-2 rounded-full flex-shrink-0",
+                        PROJECT_COLORS.find(
+                          (c) => c.color === selectedProject.color
+                        )?.bgClass
+                      )}
+                    />
+                    <span className='truncate'>{selectedProject.name}</span>
+                  </>
+                ) : (
+                  <span className='text-muted-foreground'>No project</span>
+                )}
+              </div>
+              <ChevronDownIcon className='size-4 opacity-50 shrink-0' />
+            </Button>
+          </div>
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent className="min-w-[280px]" align="start">
+        <DropdownMenuContent className='min-w-[280px]' align='start'>
           {viewMode === "list" ? (
             <>
-              {projects.length > 0 ? (
-                projects.map((project) => (
+              <div className='px-2 pt-2 pb-1'>
+                <Input
+                  placeholder='Search projects...'
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearchKeyDown}
+                  className='h-8'
+                  autoFocus={false}
+                />
+              </div>
+              <DropdownMenuSeparator />
+              {filteredProjects.length > 0 ? (
+                filteredProjects.map((project, index) => (
                   <DropdownMenuItem
                     key={project.id}
-                    className="flex items-center justify-between gap-2 pr-1"
+                    className={cn(
+                      'flex items-center justify-between gap-2 pr-1',
+                      highlightedIndex === index &&
+                        'bg-accent text-accent-foreground'
+                    )}
                     onSelect={(e) => {
                       e.preventDefault();
                       onValueChange(
                         value === project.id ? undefined : project.id
                       );
                     }}
+                    onMouseEnter={() => setHighlightedIndex(index)}
                   >
-                    <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <div className='flex items-center gap-2 flex-1 min-w-0'>
                       <span
                         className={cn(
                           "size-2 rounded-full flex-shrink-0",
@@ -183,38 +247,42 @@ export function ProjectSelect({
                             ?.bgClass
                         )}
                       />
-                      <span className="truncate">{project.name}</span>
+                      <span className='truncate'>{project.name}</span>
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className='flex items-center gap-1'>
                       <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-6 w-6 p-0"
+                        size='sm'
+                        variant='ghost'
+                        className='h-6 w-6 p-0'
                         onClick={(e) => {
                           e.stopPropagation();
                           startEdit(project.id);
                         }}
-                        aria-label="Edit project"
+                        aria-label='Edit project'
                       >
-                        <PencilIcon className="size-3" />
+                        <PencilIcon className='size-3' />
                       </Button>
                       <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-6 w-6 p-0 text-destructive hover:text-destructive"
+                        size='sm'
+                        variant='ghost'
+                        className='h-6 w-6 p-0 text-destructive hover:text-destructive'
                         onClick={(e) => {
                           e.stopPropagation();
                           startDelete(project.id);
                         }}
-                        aria-label="Delete project"
+                        aria-label='Delete project'
                       >
-                        <TrashIcon className="size-3" />
+                        <TrashIcon className='size-3' />
                       </Button>
                     </div>
                   </DropdownMenuItem>
                 ))
+              ) : searchQuery ? (
+                <div className='px-2 py-6 text-center text-sm text-muted-foreground'>
+                  No projects found
+                </div>
               ) : (
-                <div className="px-2 py-6 text-center text-sm text-muted-foreground">
+                <div className='px-2 py-6 text-center text-sm text-muted-foreground'>
                   No projects yet
                 </div>
               )}
@@ -235,19 +303,21 @@ export function ProjectSelect({
                 onSelect={(e) => {
                   e.preventDefault();
                   setViewMode("create");
+                  setSearchQuery("");
+                  setHighlightedIndex(-1);
                 }}
               >
                 Create New Project
               </DropdownMenuItem>
             </>
           ) : (
-            <div className="p-2 space-y-3">
-              <div className="space-y-2">
-                <label className="text-xs font-medium text-foreground">
+            <div className='p-2 space-y-3'>
+              <div className='space-y-2'>
+                <label className='text-xs font-medium text-foreground'>
                   Project Name
                 </label>
                 <Input
-                  placeholder="Enter project name..."
+                  placeholder='Enter project name...'
                   value={projectName}
                   onChange={(e) => setProjectName(e.target.value)}
                   onKeyDown={(e) => {
@@ -267,19 +337,19 @@ export function ProjectSelect({
                     }
                   }}
                   autoFocus
-                  className="h-8"
+                  className='h-8'
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="text-xs font-medium text-foreground">
+              <div className='space-y-2'>
+                <label className='text-xs font-medium text-foreground'>
                   Color
                 </label>
-                <div className="flex gap-2 flex-wrap">
+                <div className='flex gap-2 flex-wrap'>
                   {PROJECT_COLORS.map(({ color, bgClass }) => (
                     <button
                       key={color}
-                      type="button"
+                      type='button'
                       onClick={() => setSelectedColor(color)}
                       className={cn(
                         "size-6 rounded-full transition-all border-2",
@@ -294,19 +364,19 @@ export function ProjectSelect({
                 </div>
               </div>
 
-              <div className="flex gap-2 pt-2">
+              <div className='flex gap-2 pt-2'>
                 <Button
-                  size="sm"
-                  variant="outline"
-                  className="flex-1 h-8"
+                  size='sm'
+                  variant='outline'
+                  className='flex-1 h-8'
                   onClick={cancelForm}
                 >
                   Cancel
                 </Button>
                 <Button
-                  size="sm"
-                  variant="primary"
-                  className="flex-1 h-8"
+                  size='sm'
+                  variant='primary'
+                  className='flex-1 h-8'
                   onClick={() => {
                     if (viewMode === "create") {
                       handleCreate();
@@ -328,19 +398,19 @@ export function ProjectSelect({
       </DropdownMenu>
 
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className='sm:max-w-md'>
           <DialogHeader>
             <DialogTitle>Delete Project</DialogTitle>
           </DialogHeader>
           <DialogBody>
-            <p className="text-sm text-muted-foreground">
-              Are you sure you want to delete this project? This action cannot be
-              undone.
+            <p className='text-sm text-muted-foreground'>
+              Are you sure you want to delete this project? This action cannot
+              be undone.
             </p>
           </DialogBody>
           <DialogFooter>
             <Button
-              variant="outline"
+              variant='outline'
               onClick={() => {
                 setDeleteDialogOpen(false);
                 setProjectToDelete(null);
@@ -348,7 +418,7 @@ export function ProjectSelect({
             >
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleDelete}>
+            <Button variant='destructive' onClick={handleDelete}>
               Delete
             </Button>
           </DialogFooter>
