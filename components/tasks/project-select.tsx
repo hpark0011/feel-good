@@ -234,7 +234,13 @@ export function ProjectSelect({
                   placeholder='Search projects...'
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={handleSearchKeyDown}
+                  onKeyDown={(e) => {
+                    // Prevent DropdownMenu typeahead from intercepting keystrokes
+                    e.stopPropagation();
+
+                    // Handle our custom keyboard navigation
+                    handleSearchKeyDown(e);
+                  }}
                   className='h-8 border-none'
                   autoFocus={false}
                 />
