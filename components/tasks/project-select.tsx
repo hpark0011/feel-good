@@ -29,15 +29,15 @@ interface ProjectSelectProps {
   className?: string;
 }
 
-const PROJECT_COLORS: { color: ProjectColor; class: string }[] = [
-  { color: "gray", class: "text-neutral-500" },
-  { color: "red", class: "text-red-500" },
-  { color: "orange", class: "text-orange-500" },
-  { color: "yellow", class: "text-yellow-500" },
-  { color: "green", class: "text-green-500" },
-  { color: "blue", class: "text-blue-500" },
-  { color: "purple", class: "text-purple-500" },
-  { color: "pink", class: "text-pink-500" },
+const PROJECT_COLORS: { color: ProjectColor; bgClass: string; displayClass: string }[] = [
+  { color: "gray", bgClass: "bg-neutral-500", displayClass: "bg-neutral-500" },
+  { color: "red", bgClass: "bg-red-500", displayClass: "bg-red-500" },
+  { color: "orange", bgClass: "bg-orange-500", displayClass: "bg-orange-500" },
+  { color: "yellow", bgClass: "bg-yellow-500", displayClass: "bg-yellow-500" },
+  { color: "green", bgClass: "bg-green-500", displayClass: "bg-green-500" },
+  { color: "blue", bgClass: "bg-blue-500", displayClass: "bg-blue-500" },
+  { color: "purple", bgClass: "bg-purple-500", displayClass: "bg-purple-500" },
+  { color: "pink", bgClass: "bg-pink-500", displayClass: "bg-pink-500" },
 ];
 
 type ViewMode = "list" | "create" | { mode: "edit"; projectId: string };
@@ -147,7 +147,7 @@ export function ProjectSelect({
                     className={cn(
                       "size-2 rounded-full",
                       PROJECT_COLORS.find((c) => c.color === selectedProject.color)
-                        ?.class
+                        ?.bgClass
                     )}
                   />
                   <span>{selectedProject.name}</span>
@@ -180,7 +180,7 @@ export function ProjectSelect({
                         className={cn(
                           "size-2 rounded-full flex-shrink-0",
                           PROJECT_COLORS.find((c) => c.color === project.color)
-                            ?.class
+                            ?.bgClass
                         )}
                       />
                       <span className="truncate">{project.name}</span>
@@ -276,7 +276,7 @@ export function ProjectSelect({
                   Color
                 </label>
                 <div className="flex gap-2 flex-wrap">
-                  {PROJECT_COLORS.map(({ color, class: colorClass }) => (
+                  {PROJECT_COLORS.map(({ color, bgClass }) => (
                     <button
                       key={color}
                       type="button"
@@ -286,9 +286,8 @@ export function ProjectSelect({
                         selectedColor === color
                           ? "border-foreground scale-110"
                           : "border-transparent hover:scale-105",
-                        colorClass
+                        bgClass
                       )}
-                      style={{ backgroundColor: "currentColor" }}
                       aria-label={`Select ${color} color`}
                     />
                   ))}
