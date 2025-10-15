@@ -225,6 +225,7 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
     title: string;
     description: string;
     status: ColumnId;
+    projectId?: string;
   }) => {
     if (editingTicket) {
       const oldColumn = findColumn(editingTicket.id);
@@ -236,6 +237,7 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
           title: data.title,
           description: data.description,
           status: data.status,
+          projectId: data.projectId,
           updatedAt: new Date(),
         };
 
@@ -262,6 +264,7 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
         title: data.title,
         description: data.description,
         status: data.status,
+        projectId: data.projectId,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -375,11 +378,13 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
                 title: editingTicket.title,
                 description: editingTicket.description,
                 status: editingTicket.status,
+                projectId: editingTicket.projectId,
               }
             : {
                 title: "",
                 description: "",
                 status: formColumnId,
+                projectId: undefined,
               }
         }
         mode={editingTicket ? "edit" : "create"}
