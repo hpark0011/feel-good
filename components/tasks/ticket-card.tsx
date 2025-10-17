@@ -12,18 +12,10 @@ import { cn } from "@/lib/utils";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { motion, type Variants } from "framer-motion";
-import { forwardRef } from "react";
 import { Ticket } from "../../types/board.types";
 import { useProjects } from "@/hooks/use-projects";
 
-// Create motion component outside to prevent re-creation
-const ForwardedCard = forwardRef<
-  HTMLDivElement,
-  React.ComponentProps<typeof Card>
->((props, ref) => <Card ref={ref} {...props} />);
-ForwardedCard.displayName = "ForwardedCard";
-
-const MotionCard = motion(ForwardedCard);
+const MotionWrapper = motion.div;
 
 const PROJECT_COLOR_CLASSES: Record<string, string> = {
   gray: "bg-neutral-500",
@@ -103,6 +95,12 @@ export function TicketCard({
     opacity: isSortableDragging ? 0.5 : 1,
   };
 
+  const cardWrapperClassName = cn(
+    "relative",
+    isDragging &&
+      "rotate-5 scale-105 shadow-[0_12px_12px_-6px_rgba(255,255,255,0.9),_0_14px_14px_-6px_rgba(0,0,0,0.3)]"
+  );
+
   const statusStyles = {
     backlog: "",
     "to-do": "",
@@ -114,9 +112,9 @@ export function TicketCard({
 
   const cardClassName = cn(
     "bg-card border-card-border hover:bg-base dark:hover:bg-neutral-900 relative border transition-all duration-200 translate-y-0 hover:translate-y-[-1px] scale-100 hover:scale-[1.02] ease-out group cursor-grab active:cursor-grabbing p-0 gap-0 hover:border-opacity-100 inset-shadow-none shadow-xs hover:shadow-[0_12px_12px_-6px_rgba(255,255,255,0.9),_0_14px_14px_-6px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_12px_12px_-6px_rgba(255,255,255,0.15),_0_14px_14px_-6px_rgba(0,0,0,0.9)] relative rounded-[12px]",
-    statusStyles[ticket.status],
-    isDragging &&
-      "rotate-5 scale-105 shadow-[0_12px_12px_-6px_rgba(255,255,255,0.9),_0_14px_14px_-6px_rgba(0,0,0,0.3)]"
+    statusStyles[ticket.status]
+    // isDragging &&
+    //   "rotate-5 scale-105 shadow-[0_12px_12px_-6px_rgba(255,255,255,0.9),_0_14px_14px_-6px_rgba(0,0,0,0.3)]"
   );
 
   const handleClick = (e: React.MouseEvent) => {
@@ -157,7 +155,7 @@ export function TicketCard({
   const cardContent = (
     <>
       <CardHeader
-        className={cn("p-4 pb-4 py-3 flex", ticket.description && "pb-2")}
+        className={cn("p-4 py-2.5 flex", ticket.description && "pb-2")}
       >
         <div className='flex items-center gap-1.5 leading-[1.2] font-medium'>
           <div className='flex-1 min-w-0'>
@@ -209,7 +207,7 @@ export function TicketCard({
       </CardHeader>
 
       {ticket.description && (
-        <CardContent className='p-4 pt-0'>
+        <CardContent className='p-3.5 pt-0'>
           <p className='text-sm line-clamp-6 w-full leading-[120%] text-text-tertiary whitespace-pre-wrap'>
             {ticket.description}
           </p>
@@ -218,43 +216,36 @@ export function TicketCard({
     </>
   );
 
+  const commonWrapperProps = {
+    ref: setNodeRef,
+    style,
+    className: cardWrapperClassName,
+    onClick: handleClick,
+    ...attributes,
+    ...listeners,
+  } as const;
+
   // Only use animated card for initial load
   if (isInitialLoad && !isSortableDragging) {
     return (
-      <div className='relative'>
+      <MotionWrapper
+        variants={cardVariants}
+        initial='hidden'
+        animate='visible'
+        custom={index}
+        {...commonWrapperProps}
+      >
         <ProjectTag />
-        <MotionCard
-          ref={setNodeRef}
-          style={style}
-          variants={cardVariants}
-          initial='hidden'
-          animate='visible'
-          custom={index}
-          className={cardClassName}
-          onClick={handleClick}
-          {...attributes}
-          {...listeners}
-        >
-          {cardContent}
-        </MotionCard>
-      </div>
+        <Card className={cardClassName}>{cardContent}</Card>
+      </MotionWrapper>
     );
   }
 
   // Regular non-animated card for all other cases
   return (
-    <div className='relative'>
+    <div {...commonWrapperProps}>
       <ProjectTag />
-      <Card
-        ref={setNodeRef}
-        style={style}
-        className={cardClassName}
-        onClick={handleClick}
-        {...attributes}
-        {...listeners}
-      >
-        {cardContent}
-      </Card>
+      <Card className={cardClassName}>{cardContent}</Card>
     </div>
   );
 }
