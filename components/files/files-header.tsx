@@ -34,7 +34,7 @@ interface FilesHeaderProps {
 export function FilesHeader({ onUploadComplete }: FilesHeaderProps) {
   const { getCurrentValue, handleNavigate, navItems } = useNavigation();
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
-  
+
   const handleDialogClose = (open: boolean) => {
     setIsUploadDialogOpen(open);
     // Call onUploadComplete when dialog closes after successful upload

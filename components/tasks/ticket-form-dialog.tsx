@@ -122,8 +122,8 @@ export function TicketFormDialog({
               />
             </DialogBody>
 
-            <DialogFooter className='gap-1 w-full flex justify-between items-center '>
-              <div className='flex gap-1 flex-1'>
+            <DialogFooter className='gap-1 w-full flex justify-between items-center'>
+              <div className='flex gap-1 flex-1 -ml-0.5'>
                 <FormField
                   control={form.control}
                   name='status'

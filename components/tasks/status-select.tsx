@@ -35,10 +35,12 @@ export function StatusSelect({
 }: StatusSelectProps) {
   return (
     <Select value={value} onValueChange={onValueChange}>
-      <SelectTrigger className={cn("pl-1.5 border-none gap-0", className)}>
+      <SelectTrigger
+        className={cn("pl-1.5 border-none gap-0 text-[13px] ", className)}
+      >
         <SelectValue placeholder='Select a status' />
         <SelectIcon asChild>
-          <ChevronDownIcon className='size-4 opacity-50' />
+          <ChevronDownIcon className='size-4 text-icon-light' />
         </SelectIcon>
       </SelectTrigger>
       <SelectContent>

@@ -61,7 +61,7 @@ export function TasksHeader({ onImport, onExport, onClear }: HeaderProps) {
   return (
     <HeaderContainer className='justify-between'>
       <Breadcrumb>
-        <BreadcrumbList className='items-center text-[15px] text-foreground sm:gap-0'>
+        <BreadcrumbList className='items-center text-[14px] text-foreground sm:gap-0'>
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
               <Link href='/' aria-label='Go to home'>
@@ -76,7 +76,7 @@ export function TasksHeader({ onImport, onExport, onClear }: HeaderProps) {
             />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbPage className='text-[15px]'>
+            <BreadcrumbPage className='text-[14px]'>
               <Select value={getCurrentValue()} onValueChange={handleNavigate}>
                 <SelectTrigger className='outline-none hover:bg-extra-light rounded-sm border-none data-[size=default]:h-6 data-[size=sm]:h-6 focus-visible:bg-extra-light focus-visible:ring-0'>
                   <div className='flex items-center gap-1.5 pr-0.5 py-0.5 rounded-sm leading-[1.0] '>
@@ -106,7 +106,7 @@ export function TasksHeader({ onImport, onExport, onClear }: HeaderProps) {
       </Breadcrumb>
       <button
         onClick={() => setFocusDialogOpen(true)}
-        className='bg-white/100 dark:bg-neutral-900 shadow-xs border-white dark:border-white/2 border rounded-md text-[15px] h-[28px] hover:bg-white/70 dark:hover:bg-white/10 transition-all duration-200 ease-out hover:scale-105 cursor-pointer scale-100 absolute left-1/2 -translate-x-1/2 flex items-center translate-y-[0px] hover:translate-y-[-1px] hover:shadow-lg overflow-hidden'
+        className='bg-white/100 dark:bg-neutral-900 shadow-xs border-white dark:border-white/2 border rounded-md h-[28px] hover:bg-white/70 dark:hover:bg-white/10 transition-all duration-200 ease-out hover:scale-105 cursor-pointer scale-100 absolute left-1/2 -translate-x-1/2 flex items-center translate-y-[0px] hover:translate-y-[-1px] hover:shadow-lg overflow-hidden text-[14px]'
       >
         <div className='text-text-muted font-medium pl-2 pr-2 h-full flex items-center'>
           {new Date().toLocaleDateString(undefined, {

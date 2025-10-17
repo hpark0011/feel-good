@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { useProjects } from "@/hooks/use-projects";
 import { cn } from "@/lib/utils";
 import { ProjectColor } from "@/types/board.types";
-import { PencilIcon, TrashIcon } from "lucide-react";
+import { ChevronDownIcon, PencilIcon, TrashIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/ui/icon";
 
@@ -197,8 +197,8 @@ export function ProjectSelect({
     <>
       <DropdownMenu open={open} onOpenChange={handleOpenChange}>
         <DropdownMenuTrigger asChild>
-          <div className='flex items-center gap-1.5 cursor-pointer hover:bg-base px-1.5 py-0 rounded-sm'>
-            <div className='flex items-center gap-1.5 flex-1 min-w-0 text-[17px]'>
+          <div className='flex items-center gap-1.5 cursor-pointer hover:bg-base px-1.5 py-0 rounded-md'>
+            <div className='flex items-center gap-1.5 flex-1 min-w-0 text-[13px]'>
               {selectedProject ? (
                 <>
                   <span
@@ -212,13 +212,16 @@ export function ProjectSelect({
                   <span className='truncate'>{selectedProject.name}</span>
                 </>
               ) : (
-                <span className='text-text-muted'>Project</span>
+                <>
+                  <Icon
+                    name='FolderFillIcon'
+                    className='size-4 text-icon-light'
+                  />{" "}
+                  <span className='text-text-muted'>Project</span>
+                </>
               )}
             </div>
-            <Icon
-              name='TriangleFillDownIcon'
-              className='size-2 text-icon-extra-light'
-            />
+            <ChevronDownIcon className='size-4 text-icon-light' />
           </div>
         </DropdownMenuTrigger>
 
