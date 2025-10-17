@@ -78,36 +78,19 @@ export function TicketFormDialog({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
             <DialogBody className='mt-3'>
-              <div className='flex gap-0.5 items-center w-[calc(100%+8px)] ml-[-4px] mb-2'>
-                <FormField
-                  control={form.control}
-                  name='projectId'
-                  render={({ field }) => (
-                    <FormItem className=''>
-                      <FormLabel className='sr-only'>Project</FormLabel>
-                      <FormControl>
-                        <ProjectSelect
-                          value={field.value}
-                          onValueChange={field.onChange}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className='text-gray-300'>/</div>
+              <div className='flex gap-0.5 items-center w-[calc(100%+8px)] ml-[-4px] mb-1'>
                 <FormField
                   control={form.control}
                   name='title'
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className='w-full'>
                       <FormControl>
                         <Input
                           placeholder='Enter ticket title…'
                           {...field}
                           ref={(el) => setRefs(el, field.ref)}
                           className={cn(
-                            "md:text-text-primary h-auto py-0 px-1.5 rounded-sm placeholder:text-text-muted transition-all md:text-[17px] border-none ",
+                            "md:text-text-primary h-auto py-0 px-1.5 rounded-sm placeholder:text-text-muted transition-all md:text-[18px] border-none ",
                             "bg-transparent hover:bg-base"
                           )}
                         />
@@ -140,15 +123,31 @@ export function TicketFormDialog({
             </DialogBody>
 
             <DialogFooter className='gap-1 w-full flex justify-between items-center '>
-              <div className='flex gap-2 flex-1'>
+              <div className='flex gap-1 flex-1'>
                 <FormField
                   control={form.control}
                   name='status'
                   render={({ field }) => (
-                    <FormItem className='flex-1'>
+                    <FormItem>
                       <FormLabel className='sr-only'>Status</FormLabel>
                       <FormControl>
                         <StatusSelect
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name='projectId'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className='sr-only'>Project</FormLabel>
+                      <FormControl>
+                        <ProjectSelect
                           value={field.value}
                           onValueChange={field.onChange}
                         />
