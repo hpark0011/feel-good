@@ -52,9 +52,8 @@ function AutoResizingTextarea({
   return (
     <textarea
       className={cn(
-        "flex min-h-[40px] w-full rounded-md border border-input bg-background px-3 py-1 text-[15px] placeholder:text-text-muted focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 resize-none overflow-hidden transition-all duration-200 caret-blue-300",
-        "focus-visible:ring-light focus-visible:ring-[2px]",
-        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+        "flex min-h-[40px] w-full rounded-md border border-input bg-background px-3 py-1 text-[15px] placeholder:text-text-muted  disabled:cursor-not-allowed disabled:opacity-50 resize-none overflow-hidden transition-all duration-200 caret-blue-300",
+        "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive focus:outline-none hover:bg-base",
         className
       )}
       onChange={handleChange}

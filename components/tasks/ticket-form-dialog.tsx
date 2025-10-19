@@ -112,7 +112,7 @@ export function TicketFormDialog({
                         maxHeight={400}
                         {...field}
                         className={cn(
-                          "resize-none h-full bg-transparent rounded-lg min-h-[160px] flex-1 transition-all w-[calc(100%+12px)] ml-[-6px] border-transparent hover:border-light px-2"
+                          "resize-none h-full bg-transparent rounded-lg min-h-[160px] flex-1 transition-all w-[calc(100%+12px)] ml-[-6px] border-transparent px-2"
                         )}
                       />
                     </FormControl>
