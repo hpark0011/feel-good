@@ -37,7 +37,7 @@ export function useKeyboardSubmit({
       // Check for Cmd+Enter (Mac) or Ctrl+Enter (Windows/Linux)
       if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
         event.preventDefault();
-        onSubmit();
+        onSubmitRef.current();
       }
     };
 
