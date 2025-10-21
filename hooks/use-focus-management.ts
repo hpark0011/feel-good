@@ -1,3 +1,23 @@
+/**
+ * Manages focus behavior for form inputs in dialogs.
+ *
+ * Handles auto-focus on dialog open and Enter key navigation from title to description.
+ * Automatically positions cursor at end of text when focusing.
+ *
+ * @returns Object containing refs and event handlers for form fields
+ *
+ * @example
+ * const { handleAutoFocus, handleTitleKeyDown, setRefs, setDescriptionRef } = useFocusManagement();
+ *
+ * <DialogContent onOpenAutoFocus={handleAutoFocus}>
+ *   <Input
+ *     ref={(el) => setRefs(el, field.ref)}
+ *     onKeyDown={handleTitleKeyDown}
+ *   />
+ *   <Textarea ref={(el) => setDescriptionRef(el, field.ref)} />
+ * </DialogContent>
+ */
+
 import { useRef, type KeyboardEvent } from "react";
 
 export function useFocusManagement() {

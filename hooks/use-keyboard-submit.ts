@@ -1,3 +1,18 @@
+/**
+ * Enables keyboard shortcut (Cmd/Ctrl+Enter) to submit forms.
+ *
+ * Useful for modal dialogs and forms where users expect quick submission.
+ *
+ * @param enabled - Whether the keyboard listener should be active
+ * @param onSubmit - Callback to invoke when shortcut is pressed
+ *
+ * @example
+ * useKeyboardSubmit({
+ *   enabled: dialogOpen,
+ *   onSubmit: () => form.handleSubmit(handleSubmit)(),
+ * });
+ */
+
 import { useEffect, useRef } from "react";
 
 interface UseKeyboardSubmitProps {
