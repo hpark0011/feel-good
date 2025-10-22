@@ -8,7 +8,6 @@ export function useLocalStorage<T>(
 ): [T, (value: T | ((val: T) => T)) => void, () => void] {
   // Initialize state with initialValue (SSR-safe)
   const [storedValue, setStoredValue] = useState<T>(initialValue);
-  const [isInitialized, setIsInitialized] = useState(false);
 
   // Load value from localStorage on client side
   useEffect(() => {
@@ -22,8 +21,6 @@ export function useLocalStorage<T>(
       }
     } catch (error) {
       console.warn(`Error loading localStorage key "${key}":`, error);
-    } finally {
-      setIsInitialized(true);
     }
   }, [key]);
 
@@ -46,6 +43,21 @@ export function useLocalStorage<T>(
     return () => window.removeEventListener("storage", handleStorageChange);
   }, [key]);
 
+  // Listen for same-tab localStorage changes via custom event
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleLocalStorageChange = (e: Event) => {
+      const customEvent = e as CustomEvent<{ key: string; newValue: T }>;
+      if (customEvent.detail.key === key) {
+        setStoredValue(customEvent.detail.newValue);
+      }
+    };
+
+    window.addEventListener("local-storage-change", handleLocalStorageChange);
+    return () => window.removeEventListener("local-storage-change", handleLocalStorageChange);
+  }, [key]);
+
   // Set value function
   const setValue = useCallback(
     (value: T | ((val: T) => T)) => {
@@ -53,21 +65,33 @@ export function useLocalStorage<T>(
 
       setStoredValue((currentStoredValue) => {
         try {
-          const valueToStore = value instanceof Function 
-            ? value(currentStoredValue) 
+          const valueToStore = value instanceof Function
+            ? value(currentStoredValue)
             : value;
-          
+
           // Save to localStorage
           window.localStorage.setItem(key, JSON.stringify(valueToStore));
+
+          // Dispatch custom event for same-tab synchronization
+          // Use queueMicrotask to defer event dispatch until after current render
+          // This prevents "Cannot update component during render" errors
+          queueMicrotask(() => {
+            window.dispatchEvent(
+              new CustomEvent('local-storage-change', {
+                detail: { key, newValue: valueToStore },
+              })
+            );
+          });
+
           return valueToStore;
         } catch (error) {
           console.warn(`Error setting localStorage key "${key}":`, error);
-          
+
           // Handle quota exceeded error
           if (error instanceof DOMException && error.name === "QuotaExceededError") {
             console.error("LocalStorage quota exceeded. Consider clearing some data.");
           }
-          
+
           return currentStoredValue;
         }
       });
@@ -87,6 +111,5 @@ export function useLocalStorage<T>(
     }
   }, [key, initialValue]);
 
-  // Return initialValue during SSR or before initialization
-  return [isInitialized ? storedValue : initialValue, setValue, clearValue];
+  return [storedValue, setValue, clearValue];
 }

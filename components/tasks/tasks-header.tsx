@@ -45,6 +45,7 @@ import Link from "next/link";
 import type React from "react";
 import { useRef, useState } from "react";
 import { FocusFormDialog } from "./focus-form-dialog";
+import { ProjectFilter } from "./project-filter";
 
 type HeaderProps = {
   onImport: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -128,7 +129,8 @@ export function TasksHeader({ onImport, onExport, onClear }: HeaderProps) {
         </span>
       </button>
       <HeaderMenu>
-        <Tooltip>
+        <ProjectFilter />
+        {/* <Tooltip>
           <TooltipTrigger asChild>
             <Button
               variant='ghost'
@@ -157,7 +159,7 @@ export function TasksHeader({ onImport, onExport, onClear }: HeaderProps) {
             </Button>
           </TooltipTrigger>
           <TooltipContent>Import Board</TooltipContent>
-        </Tooltip>
+        </Tooltip> */}
         <AlertDialog>
           <Tooltip>
             <TooltipTrigger asChild>
