@@ -8,7 +8,6 @@ export function useLocalStorage<T>(
 ): [T, (value: T | ((val: T) => T)) => void, () => void] {
   // Initialize state with initialValue (SSR-safe)
   const [storedValue, setStoredValue] = useState<T>(initialValue);
-  const [isInitialized, setIsInitialized] = useState(false);
 
   // Load value from localStorage on client side
   useEffect(() => {
@@ -22,8 +21,6 @@ export function useLocalStorage<T>(
       }
     } catch (error) {
       console.warn(`Error loading localStorage key "${key}":`, error);
-    } finally {
-      setIsInitialized(true);
     }
   }, [key]);
 
@@ -87,6 +84,5 @@ export function useLocalStorage<T>(
     }
   }, [key, initialValue]);
 
-  // Return initialValue during SSR or before initialization
-  return [isInitialized ? storedValue : initialValue, setValue, clearValue];
+  return [storedValue, setValue, clearValue];
 }
