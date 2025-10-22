@@ -48,69 +48,66 @@ export function ProjectFilter() {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <PopoverTrigger asChild>
-            <Button
-              variant="ghost"
-              className={cn(
-                "h-6 w-6 bg-transparent cursor-pointer relative",
-                hasActiveFilters && "text-blue-600 dark:text-blue-400"
-              )}
-            >
-              <Icon
-                name="Line3HorizontalIcon"
-                className={cn(
-                  "size-5",
-                  hasActiveFilters ? "text-blue-600 dark:text-blue-400" : "text-icon-light"
-                )}
-              />
-              {hasActiveFilters && (
-                <div className="absolute -top-0.5 -right-0.5 size-2 bg-blue-600 dark:bg-blue-400 rounded-full" />
-              )}
-            </Button>
-          </PopoverTrigger>
-        </TooltipTrigger>
-        <TooltipContent>
-          Filter by Project
-          {hasActiveFilters && ` (${selectedProjectIds.length} active)`}
-        </TooltipContent>
-      </Tooltip>
+      <PopoverTrigger asChild>
+        <Button
+          variant='ghost'
+          className={cn(
+            "h-6 w-fit bg-transparent cursor-pointer relative",
+            hasActiveFilters && "text-blue-600 dark:text-blue-400"
+          )}
+          size='sm'
+        >
+          <Icon
+            name='Line3Icon'
+            className={cn(
+              "size-5.5",
+              hasActiveFilters
+                ? "text-blue-600 dark:text-blue-400"
+                : "text-icon-light"
+            )}
+          />
+          {hasActiveFilters ? (
+            <div className='absolute -top-0.5 -right-0.5 size-2 bg-blue-600 dark:bg-blue-400 rounded-full' />
+          ) : (
+            "Filter"
+          )}
+        </Button>
+      </PopoverTrigger>
 
-      <PopoverContent align="end" className="w-[240px] p-3">
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h4 className="text-sm font-medium">Filter by Project</h4>
+      <PopoverContent align='end' className='w-[240px] p-3'>
+        <div className='space-y-3'>
+          <div className='flex items-center justify-between'>
+            <h4 className='text-sm font-medium'>Filter by Project</h4>
             {hasActiveFilters && (
               <Button
-                variant="ghost"
-                size="sm"
+                variant='ghost'
+                size='sm'
                 onClick={handleClearFilter}
-                className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
+                className='h-6 px-2 text-xs text-muted-foreground hover:text-foreground'
               >
                 Clear
               </Button>
             )}
           </div>
 
-          <div className="space-y-2">
+          <div className='space-y-2'>
             {projects.map((project: Project) => {
               const isSelected = selectedProjectIds.includes(project.id);
               return (
                 <div
                   key={project.id}
-                  className="flex items-center space-x-2 rounded-md px-2 py-1.5 hover:bg-accent cursor-pointer"
+                  className='flex items-center space-x-2 rounded-md px-2 py-1.5 hover:bg-accent cursor-pointer'
                   onClick={() => toggleProject(project.id)}
                 >
                   <Checkbox
                     id={`project-${project.id}`}
                     checked={isSelected}
                     onCheckedChange={() => toggleProject(project.id)}
-                    className="pointer-events-none"
+                    className='pointer-events-none'
                   />
                   <label
                     htmlFor={`project-${project.id}`}
-                    className="flex items-center gap-2 flex-1 text-sm cursor-pointer"
+                    className='flex items-center gap-2 flex-1 text-sm cursor-pointer'
                   >
                     <div
                       className={cn(
@@ -118,7 +115,7 @@ export function ProjectFilter() {
                         PROJECT_COLOR_CLASSES[project.color]
                       )}
                     />
-                    <span className="flex-1">{project.name}</span>
+                    <span className='flex-1'>{project.name}</span>
                   </label>
                 </div>
               );

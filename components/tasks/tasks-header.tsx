@@ -130,7 +130,7 @@ export function TasksHeader({ onImport, onExport, onClear }: HeaderProps) {
       </button>
       <HeaderMenu>
         <ProjectFilter />
-        <Tooltip>
+        {/* <Tooltip>
           <TooltipTrigger asChild>
             <Button
               variant='ghost'
@@ -159,7 +159,7 @@ export function TasksHeader({ onImport, onExport, onClear }: HeaderProps) {
             </Button>
           </TooltipTrigger>
           <TooltipContent>Import Board</TooltipContent>
-        </Tooltip>
+        </Tooltip> */}
         <AlertDialog>
           <Tooltip>
             <TooltipTrigger asChild>
