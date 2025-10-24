@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 import { useProjects } from "@/hooks/use-projects";
 import { useProjectFilter } from "@/hooks/use-project-filter";
 import type { Project } from "@/types/board.types";
+import { Separator } from "@radix-ui/react-separator";
 
 const PROJECT_COLOR_CLASSES: Record<string, string> = {
   gray: "bg-neutral-500",
@@ -140,8 +141,10 @@ export function ProjectFilter() {
             className='h-8 border-none'
             autoFocus={false}
           />
+          <div className='h-[1px] bg-border-light w-full' />
+          <Separator />
 
-          <div className='space-y-2'>
+          <div>
             {filteredProjects.length > 0 ? (
               filteredProjects.map((project: Project, index) => {
                 const isSelected = selectedProjectIds.includes(project.id);
