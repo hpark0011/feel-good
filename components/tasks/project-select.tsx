@@ -191,33 +191,36 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
   return (
     <>
       <DropdownMenu open={open} onOpenChange={handleOpenChange}>
-        <DropdownMenuTrigger asChild>
-          <div className='flex items-center gap-1.5 cursor-pointer hover:bg-base px-1.5 py-0 rounded-md'>
-            <div className='flex items-center gap-1.5 flex-1 min-w-0 text-[13px]'>
-              {selectedProject ? (
-                <>
-                  <span
-                    className={cn(
-                      "size-1.5 rounded-full flex-shrink-0",
-                      PROJECT_COLORS.find(
-                        (c) => c.color === selectedProject.color
-                      )?.bgClass
-                    )}
-                  />
-                  <span className='truncate'>{selectedProject.name}</span>
-                </>
-              ) : (
-                <>
-                  <Icon
-                    name='FolderFillIcon'
-                    className='size-4 text-icon-light'
-                  />{" "}
-                  <span className='text-text-muted'>Project</span>
-                </>
-              )}
-            </div>
-            <ChevronDownIcon className='size-4 text-icon-light' />
+        <DropdownMenuTrigger
+          className={cn(
+            "focus-visible:ring-ring/50 flex items-center gap-1.5 rounded-md bg-transparent px-1.5 py-0 text-[13px] transition-[color,box-shadow] outline-none focus-visible:ring-[2px] disabled:cursor-not-allowed disabled:opacity-50 hover:bg-hover relative cursor-pointer",
+            !selectedProject && "text-text-muted"
+          )}
+        >
+          <div className='flex items-center gap-1.5 flex-1 min-w-0 text-[13px]'>
+            {selectedProject ? (
+              <>
+                <span
+                  className={cn(
+                    "size-1.5 rounded-full flex-shrink-0",
+                    PROJECT_COLORS.find(
+                      (c) => c.color === selectedProject.color
+                    )?.bgClass
+                  )}
+                />
+                <span className='truncate'>{selectedProject.name}</span>
+              </>
+            ) : (
+              <>
+                <Icon
+                  name='FolderFillIcon'
+                  className='size-4 text-icon-light'
+                />{" "}
+                <span className='text-text-muted'>Project</span>
+              </>
+            )}
           </div>
+          <ChevronDownIcon className='size-4 text-icon-light' />
         </DropdownMenuTrigger>
 
         <DropdownMenuContent className='min-w-[280px]' align='start'>

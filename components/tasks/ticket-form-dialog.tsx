@@ -98,7 +98,7 @@ export function TicketFormDialog({
                           ref={(el) => setRefs(el, field.ref)}
                           onKeyDown={handleTitleKeyDown}
                           className={cn(
-                            "md:text-text-primary h-auto py-0 px-2 rounded-[8px] placeholder:text-text-muted transition-all md:text-[18px] border-none w-full leading-[1.6]"
+                            "md:text-text-primary h-auto py-0 px-2 rounded-[8px] placeholder:text-text-muted transition-all md:text-[18px] border-none w-full leading-[1.8]"
                           )}
                         />
                       </FormControl>
@@ -131,7 +131,7 @@ export function TicketFormDialog({
             </DialogBody>
 
             <DialogFooter className='gap-1 w-full flex justify-between items-center p-3'>
-              <div className='flex gap-1 flex-1 -ml-0.5'>
+              <div className='flex gap-1 flex-1'>
                 <FormField
                   control={form.control}
                   name='status'
