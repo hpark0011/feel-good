@@ -152,7 +152,7 @@ export function ProjectFilter() {
                   <div
                     key={project.id}
                     className={cn(
-                      "flex items-center space-x-2 rounded-md px-2 py-1.5 hover:bg-accent cursor-pointer",
+                      "flex items-center space-x-2 rounded-md px-2 py-1.5 hover:bg-accent cursor-pointer h-7",
                       highlightedIndex === index &&
                         "bg-accent text-accent-foreground"
                     )}
@@ -167,11 +167,11 @@ export function ProjectFilter() {
                     />
                     <label
                       htmlFor={`project-${project.id}`}
-                      className='flex items-center gap-2 flex-1 text-sm cursor-pointer'
+                      className='flex items-center gap-1.5 flex-1 text-sm cursor-pointer'
                     >
                       <div
                         className={cn(
-                          "size-2 rounded-full",
+                          "size-1.5 rounded-full",
                           PROJECT_COLOR_CLASSES[project.color]
                         )}
                       />
