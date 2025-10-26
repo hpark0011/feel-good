@@ -21,11 +21,11 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
         ghost: "hover:bg-hover text-text-secondary",
         link: "text-primary underline-offset-4 hover:underline",
-        icon: "has-[>svg]:px-1.5 hover:bg-extra-light",
+        icon: "has-[>svg]:px-1.5 hover:bg-hover",
       },
       size: {
         default: "h-8 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-7 rounded-[8px] gap-1.5 px-2.5 text-[13px] [&_svg:not([class*='size-'])]:size-4.5 has-[svg]:pl-1.5 has-[svg]:pr-2.5",
+        sm: "h-7 rounded-[8px] gap-1.5 px-2.5 text-[13px] [&_svg:not([class*='size-'])]:size-4.5 has-[svg]:pl-1.5 has-[svg]:pr-2.5 has-[svg]:rounded-[6px]",
         lg: "h-9 rounded-lg px-6 has-[>svg]:px-4",
       },
     },

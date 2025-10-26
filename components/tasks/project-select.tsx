@@ -237,7 +237,7 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                   // Handle our custom keyboard navigation
                   handleSearchKeyDown(e);
                 }}
-                className='h-8 border-none'
+                className='h-7 border-none p-2'
                 autoFocus={false}
               />
               <DropdownMenuSeparator />
@@ -246,7 +246,7 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                   <DropdownMenuItem
                     key={project.id}
                     className={cn(
-                      "flex items-center justify-between gap-2 pr-1",
+                      "group flex items-center justify-between gap-2 pr-1",
                       highlightedIndex === index &&
                         "bg-accent text-accent-foreground"
                     )}
@@ -257,21 +257,27 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                       );
                     }}
                     onMouseEnter={() => setHighlightedIndex(index)}
+                    onMouseLeave={() => setHighlightedIndex(-1)}
                   >
                     <div className='flex items-center gap-2 flex-1 min-w-0'>
                       <span
                         className={cn(
-                          "size-2 rounded-full flex-shrink-0",
+                          "size-1.5 rounded-full flex-shrink-0",
                           PROJECT_COLORS.find((c) => c.color === project.color)
                             ?.bgClass
                         )}
                       />
                       <span className='truncate'>{project.name}</span>
                     </div>
-                    <div className='flex items-center gap-1'>
+                    <div
+                      className={cn(
+                        "flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 group-data-[highlighted]:opacity-100",
+                        highlightedIndex === index && "opacity-100"
+                      )}
+                    >
                       <Button
                         size='sm'
-                        variant='ghost'
+                        variant='icon'
                         className='h-6 w-6 p-0'
                         onClick={(e) => {
                           e.stopPropagation();
@@ -279,11 +285,14 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                         }}
                         aria-label='Edit project'
                       >
-                        <PencilIcon className='size-3' />
+                        <Icon
+                          name='PencilIcon'
+                          className='size-4 text-icon-light'
+                        />
                       </Button>
                       <Button
                         size='sm'
-                        variant='ghost'
+                        variant='icon'
                         className='h-6 w-6 p-0 text-destructive hover:text-destructive'
                         onClick={(e) => {
                           e.stopPropagation();
@@ -291,7 +300,10 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                         }}
                         aria-label='Delete project'
                       >
-                        <TrashIcon className='size-3' />
+                        <Icon
+                          name='TrashFillIcon'
+                          className='size-4 text-icon-light'
+                        />
                       </Button>
                     </div>
                   </DropdownMenuItem>
