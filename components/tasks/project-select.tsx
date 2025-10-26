@@ -191,61 +191,62 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
   return (
     <>
       <DropdownMenu open={open} onOpenChange={handleOpenChange}>
-        <DropdownMenuTrigger asChild>
-          <div className='flex items-center gap-1.5 cursor-pointer hover:bg-base px-1.5 py-0 rounded-md'>
-            <div className='flex items-center gap-1.5 flex-1 min-w-0 text-[13px]'>
-              {selectedProject ? (
-                <>
-                  <span
-                    className={cn(
-                      "size-1.5 rounded-full flex-shrink-0",
-                      PROJECT_COLORS.find(
-                        (c) => c.color === selectedProject.color
-                      )?.bgClass
-                    )}
-                  />
-                  <span className='truncate'>{selectedProject.name}</span>
-                </>
-              ) : (
-                <>
-                  <Icon
-                    name='FolderFillIcon'
-                    className='size-4 text-icon-light'
-                  />{" "}
-                  <span className='text-text-muted'>Project</span>
-                </>
-              )}
-            </div>
-            <ChevronDownIcon className='size-4 text-icon-light' />
+        <DropdownMenuTrigger
+          className={cn(
+            "focus-visible:ring-ring/50 flex items-center gap-1.5 rounded-md bg-transparent px-1.5 py-0 text-[13px] transition-[color,box-shadow] outline-none focus-visible:ring-[2px] disabled:cursor-not-allowed disabled:opacity-50 hover:bg-hover relative cursor-pointer",
+            !selectedProject && "text-text-muted"
+          )}
+        >
+          <div className='flex items-center gap-1.5 flex-1 min-w-0 text-[13px]'>
+            {selectedProject ? (
+              <>
+                <span
+                  className={cn(
+                    "size-1.5 rounded-full flex-shrink-0",
+                    PROJECT_COLORS.find(
+                      (c) => c.color === selectedProject.color
+                    )?.bgClass
+                  )}
+                />
+                <span className='truncate'>{selectedProject.name}</span>
+              </>
+            ) : (
+              <>
+                <Icon
+                  name='FolderFillIcon'
+                  className='size-4 text-icon-light'
+                />{" "}
+                <span className='text-text-muted'>Project</span>
+              </>
+            )}
           </div>
+          <ChevronDownIcon className='size-4 text-icon-light' />
         </DropdownMenuTrigger>
 
         <DropdownMenuContent className='min-w-[280px]' align='start'>
           {viewMode === "list" ? (
             <>
-              <div>
-                <Input
-                  placeholder='Search projects...'
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    // Prevent DropdownMenu typeahead from intercepting keystrokes
-                    e.stopPropagation();
+              <Input
+                placeholder='Search projects...'
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  // Prevent DropdownMenu typeahead from intercepting keystrokes
+                  e.stopPropagation();
 
-                    // Handle our custom keyboard navigation
-                    handleSearchKeyDown(e);
-                  }}
-                  className='h-8 border-none'
-                  autoFocus={false}
-                />
-              </div>
+                  // Handle our custom keyboard navigation
+                  handleSearchKeyDown(e);
+                }}
+                className='h-7 border-none p-2'
+                autoFocus={false}
+              />
               <DropdownMenuSeparator />
               {filteredProjects.length > 0 ? (
                 filteredProjects.map((project, index) => (
                   <DropdownMenuItem
                     key={project.id}
                     className={cn(
-                      "flex items-center justify-between gap-2 pr-1",
+                      "group flex items-center justify-between gap-2 pl-1 pr-0.5 data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground",
                       highlightedIndex === index &&
                         "bg-accent text-accent-foreground"
                     )}
@@ -256,21 +257,27 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                       );
                     }}
                     onMouseEnter={() => setHighlightedIndex(index)}
+                    onMouseLeave={() => setHighlightedIndex(-1)}
                   >
-                    <div className='flex items-center gap-2 flex-1 min-w-0'>
+                    <div className='flex flex-1 min-w-0 items-center gap-1.5 px-1'>
                       <span
                         className={cn(
-                          "size-2 rounded-full flex-shrink-0",
+                          "size-1.5 rounded-full",
                           PROJECT_COLORS.find((c) => c.color === project.color)
                             ?.bgClass
                         )}
                       />
                       <span className='truncate'>{project.name}</span>
                     </div>
-                    <div className='flex items-center gap-1'>
+                    <div
+                      className={cn(
+                        "flex items-center opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 group-data-[highlighted]:opacity-100",
+                        highlightedIndex === index && "opacity-100"
+                      )}
+                    >
                       <Button
                         size='sm'
-                        variant='ghost'
+                        variant='icon'
                         className='h-6 w-6 p-0'
                         onClick={(e) => {
                           e.stopPropagation();
@@ -278,11 +285,14 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                         }}
                         aria-label='Edit project'
                       >
-                        <PencilIcon className='size-3' />
+                        <Icon
+                          name='PencilIcon'
+                          className='size-4 text-icon-light'
+                        />
                       </Button>
                       <Button
                         size='sm'
-                        variant='ghost'
+                        variant='icon'
                         className='h-6 w-6 p-0 text-destructive hover:text-destructive'
                         onClick={(e) => {
                           e.stopPropagation();
@@ -290,7 +300,10 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                         }}
                         aria-label='Delete project'
                       >
-                        <TrashIcon className='size-3' />
+                        <Icon
+                          name='TrashFillIcon'
+                          className='size-4 text-icon-light'
+                        />
                       </Button>
                     </div>
                   </DropdownMenuItem>

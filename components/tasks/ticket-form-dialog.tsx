@@ -84,8 +84,8 @@ export function TicketFormDialog({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
-            <DialogBody className='mt-3'>
-              <div className='flex gap-0.5 items-center w-[calc(100%+8px)] ml-[-4px] mb-1'>
+            <DialogBody className='mt-3 gap-0'>
+              <div className='flex gap-0.5 items-center w-[calc(100%+12px)] ml-[-6px]'>
                 <FormField
                   control={form.control}
                   name='title'
@@ -98,8 +98,7 @@ export function TicketFormDialog({
                           ref={(el) => setRefs(el, field.ref)}
                           onKeyDown={handleTitleKeyDown}
                           className={cn(
-                            "md:text-text-primary h-auto py-0 px-1.5 rounded-sm placeholder:text-text-muted transition-all md:text-[18px] border-none ",
-                            "bg-transparent hover:bg-base"
+                            "md:text-text-primary h-auto py-0 px-2 rounded-[8px] placeholder:text-text-muted transition-all md:text-[18px] border-none w-full leading-[1.8]"
                           )}
                         />
                       </FormControl>
@@ -121,7 +120,7 @@ export function TicketFormDialog({
                         {...field}
                         ref={(el) => setDescriptionRef(el, field.ref)}
                         className={cn(
-                          "resize-none h-full bg-transparent rounded-lg min-h-[160px] flex-1 transition-all w-[calc(100%+12px)] ml-[-6px] border-transparent px-2"
+                          "resize-none h-full rounded-md min-h-[160px] flex-1 transition-all w-[calc(100%+12px)] ml-[-6px] border-transparent px-2"
                         )}
                       />
                     </FormControl>
@@ -131,8 +130,8 @@ export function TicketFormDialog({
               />
             </DialogBody>
 
-            <DialogFooter className='gap-1 w-full flex justify-between items-center'>
-              <div className='flex gap-1 flex-1 -ml-0.5'>
+            <DialogFooter className='gap-1 w-full flex justify-between items-center p-3'>
+              <div className='flex gap-1 flex-1'>
                 <FormField
                   control={form.control}
                   name='status'
