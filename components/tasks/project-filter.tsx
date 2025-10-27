@@ -114,7 +114,16 @@ export function ProjectFilter() {
             <div className='gap-1 bg-card shadow-xs border-border-highlight dark:border-white/2 border rounded-sm h-[24px] transition-all duration-200 ease-out cursor-pointer scale-100 flex items-center translate-y-[0px] overflow-hidden text-[13px]'>
               {selectedProjectIds.length === 1 ? (
                 <div className='flex items-center relative h-full'>
-                  <div className='px-1.5'>
+                  <div className='px-1.5 flex items-center gap-1.5'>
+                    <span
+                      className={cn(
+                        "size-1.5 rounded-full flex-shrink-0",
+                        PROJECT_COLOR_CLASSES[
+                          projects.find((p) => p.id === selectedProjectIds[0])
+                            ?.color || "gray"
+                        ]
+                      )}
+                    />
                     {projects.find((p) => p.id === selectedProjectIds[0])
                       ?.name || "Filter"}
                   </div>
