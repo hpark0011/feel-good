@@ -343,6 +343,10 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                       setShowColorPicker((prev) => !prev);
                     }}
                   >
+                    <Icon
+                      name='PlusCircleFillIcon'
+                      className='size-6 text-icon-light'
+                    />
                     Create &apos;{searchQuery.trim()}&apos;
                   </DropdownMenuItem>
                   {showColorPicker && (
@@ -394,6 +398,7 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                     setHighlightedIndex(-1);
                   }}
                 >
+                  <Icon name='PlusIcon' className='size-5 text-icon-light' />
                   Create new project
                 </DropdownMenuItem>
               )}
