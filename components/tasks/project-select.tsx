@@ -270,9 +270,6 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                       <span className='truncate'>{project.name}</span>
                     </div>
                     <div className='flex items-center gap-0.5'>
-                      {value === project.id && (
-                        <CheckIcon className='size-4 text-blue-400 mr-1' />
-                      )}
                       <div
                         className={cn(
                           "flex items-center opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 group-data-[highlighted]:opacity-100",
@@ -310,6 +307,9 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                           />
                         </Button>
                       </div>
+                      {value === project.id && (
+                        <CheckIcon className='size-4 text-blue-400 mr-1 ml-0.5' />
+                      )}
                     </div>
                   </DropdownMenuItem>
                 ))
