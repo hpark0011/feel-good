@@ -97,7 +97,7 @@ export function ProjectFilter() {
       <PopoverTrigger asChild>
         <button
           className={cn(
-            "flex items-center h-6 w-fit bg-transparent cursor-pointer relative mr-0",
+            "flex items-center h-6 w-fit bg-transparent cursor-pointer relative mr-0.5",
             hasActiveFilters &&
               "bg-card shadow-xs border-border-highlight dark:border-white/2 border rounded-sm h-[24px] transition-all duration-200 ease-out cursor-pointer scale-100 flex items-center translate-y-[0px] overflow-hidden text-[13px] mr-1.5"
           )}

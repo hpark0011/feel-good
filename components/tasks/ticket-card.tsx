@@ -184,8 +184,8 @@ export function TicketCard({
                     }}
                   >
                     <Icon
-                      name='SquareAndPencilIcon'
-                      className='h-2.5 w-2.5 text-icon-dark'
+                      name='PencilIcon'
+                      className='size-4.5 text-icon-dark'
                     />
                   </Button>
                 </TooltipTrigger>
@@ -203,7 +203,7 @@ export function TicketCard({
                       onDelete?.();
                     }}
                   >
-                    <Icon name='TrashIcon' className='h-3 w-3 text-icon-dark' />
+                    <Icon name='TrashIcon' className='size-4 text-icon-dark' />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>Delete Ticket</TooltipContent>
