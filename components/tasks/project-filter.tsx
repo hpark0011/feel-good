@@ -157,7 +157,7 @@ export function ProjectFilter() {
           <div className='h-[1px] bg-border-light w-full' />
           {hasActiveFilters && (
             <>
-              <div className='flex items-center gap-1 px-1 py-1 flex-wrap'>
+              <div className='flex items-center gap-1 p-1 flex-wrap'>
                 {selectedProjectIds.map((projectId) => {
                   const project = projects.find((p) => p.id === projectId);
                   if (!project) return null;
@@ -207,7 +207,7 @@ export function ProjectFilter() {
             </>
           )}
 
-          <div>
+          <div className='p-0.5'>
             {filteredProjects.length > 0 ? (
               filteredProjects.map((project: Project, index) => {
                 const isSelected = selectedProjectIds.includes(project.id);
@@ -215,7 +215,7 @@ export function ProjectFilter() {
                   <div
                     key={project.id}
                     className={cn(
-                      "flex items-center space-x-2 rounded-md px-2 py-1.5 hover:bg-accent cursor-pointer h-7",
+                      "flex items-center space-x-2 rounded-md px-2 pl-1 py-1.5 hover:bg-accent cursor-pointer h-7",
                       highlightedIndex === index &&
                         "bg-accent text-accent-foreground"
                     )}
@@ -244,7 +244,7 @@ export function ProjectFilter() {
                 );
               })
             ) : (
-              <div className='px-2 py-6 text-center text-sm text-muted-foreground'>
+              <div className='px-1 py-6 text-center text-xs text-muted-foreground'>
                 No projects found
               </div>
             )}

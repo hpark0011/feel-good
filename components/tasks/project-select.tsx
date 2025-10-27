@@ -418,7 +418,7 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                     setHighlightedIndex(-1);
                   }}
                 >
-                  <Icon name='PlusIcon' className='size-5 text-icon-light' />
+                  <Icon name='PlusIcon' className='size-4.5 text-icon-light' />
                   Create new project
                 </DropdownMenuItem>
               )}
