@@ -95,13 +95,10 @@ export function ProjectFilter() {
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
-        <Button
-          variant='ghost'
+        <button
           className={cn(
-            "h-6 w-fit bg-transparent cursor-pointer relative gap-1.5",
-            hasActiveFilters && "text-blue-600 dark:text-blue-400"
+            "flex items-center h-6 w-fit bg-transparent cursor-pointer relative gap-0.5 mr-1"
           )}
-          size='sm'
         >
           <Icon
             name='Line3Icon'
@@ -112,36 +109,69 @@ export function ProjectFilter() {
                 : "text-icon-light"
             )}
           />
-          <div className='flex items-center gap-1'>
-            {hasActiveFilters
-              ? selectedProjectIds.length === 1
-                ? projects.find((p) => p.id === selectedProjectIds[0])?.name ||
-                  "Filter"
-                : `${selectedProjectIds.length} filters`
-              : "Filter"}
-            {hasActiveFilters && (
-              <span
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleClearFilter();
-                }}
-                className='flex items-center justify-center transition-colors hover:text-blue-500 cursor-pointer'
-                aria-label='Clear filters'
-                role='button'
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleClearFilter();
-                  }
-                }}
-              >
-                <XIcon className='size-3' />
-              </span>
-            )}
-          </div>
-        </Button>
+
+          {hasActiveFilters && (
+            <div className='gap-1 bg-card shadow-xs border-border-highlight dark:border-white/2 border rounded-sm h-[24px] transition-all duration-200 ease-out cursor-pointer scale-100 flex items-center translate-y-[0px] overflow-hidden text-[13px]'>
+              {selectedProjectIds.length === 1 ? (
+                <div className='flex items-center relative h-full'>
+                  <div className='px-1.5'>
+                    {projects.find((p) => p.id === selectedProjectIds[0])
+                      ?.name || "Filter"}
+                  </div>
+                  <div className='w-px self-stretch mx-0 bg-border-light' />
+                  <span
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleClearFilter();
+                    }}
+                    className='flex items-center justify-center transition-colors hover:text-blue-500 cursor-pointer px-1 group h-full hover:bg-base hover:shadow-lg'
+                    aria-label='Clear filters'
+                    role='button'
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleClearFilter();
+                      }
+                    }}
+                  >
+                    <XIcon className='size-3.5 text-icon-light group-hover:text-blue-500' />
+                  </span>
+                </div>
+              ) : (
+                <div className='flex items-center relative h-full'>
+                  <div className='px-1.5'>
+                    <span className='text-text-muted'>
+                      {" "}
+                      {selectedProjectIds.length} filters
+                    </span>
+                  </div>
+                  <div className='w-px self-stretch mx-0 bg-border-light' />
+                  <span
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleClearFilter();
+                    }}
+                    className='flex items-center justify-center transition-colors cursor-pointer px-1 group hover:bg-hover h-full hover:shadow-lg'
+                    aria-label='Clear filters'
+                    role='button'
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleClearFilter();
+                      }
+                    }}
+                  >
+                    <XIcon className='size-3.5 text-icon-light group-hover:text-blue-500' />
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
+        </button>
       </PopoverTrigger>
 
       <PopoverContent align='end' className='w-[240px] p-0'>
