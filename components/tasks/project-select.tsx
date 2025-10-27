@@ -309,7 +309,7 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                         <Button
                           size='sm'
                           variant='icon'
-                          className='h-6 w-6 p-0'
+                          className='h-6 w-6 p-0 dark:hover:bg-black/50 [&_svg]:dark:text-dq-gray-600 [&_svg]:text-icon-light hover:[&_svg]:text-blue-500'
                           onClick={(e) => {
                             e.stopPropagation();
                             startEdit(project.id);
@@ -324,7 +324,7 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                         <Button
                           size='sm'
                           variant='icon'
-                          className='h-6 w-6 p-0 text-destructive hover:text-destructive'
+                          className='h-6 w-6 p-0 dark:hover:bg-black/50 [&_svg]:dark:text-dq-gray-600 [&_svg]:text-icon-light hover:[&_svg]:text-destructive'
                           onClick={(e) => {
                             e.stopPropagation();
                             startDelete(project.id);
