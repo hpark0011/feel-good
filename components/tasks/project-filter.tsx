@@ -10,11 +10,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useProjects } from "@/hooks/use-projects";
 import { useProjectFilter } from "@/hooks/use-project-filter";
 import type { Project } from "@/types/board.types";
 import { Separator } from "@radix-ui/react-separator";
+import { XIcon } from "lucide-react";
 
 const PROJECT_COLOR_CLASSES: Record<string, string> = {
   gray: "bg-neutral-500",
@@ -96,7 +98,7 @@ export function ProjectFilter() {
         <Button
           variant='ghost'
           className={cn(
-            "h-6 w-fit bg-transparent cursor-pointer relative",
+            "h-6 w-fit bg-transparent cursor-pointer relative gap-1.5",
             hasActiveFilters && "text-blue-600 dark:text-blue-400"
           )}
           size='sm'
@@ -110,28 +112,68 @@ export function ProjectFilter() {
                 : "text-icon-light"
             )}
           />
-          {hasActiveFilters ? (
-            <div className='absolute -top-0.5 -right-0.5 size-2 bg-blue-600 dark:bg-blue-400 rounded-full' />
-          ) : (
-            "Filter"
+          <span>
+            {hasActiveFilters
+              ? selectedProjectIds.length === 1
+                ? projects.find((p) => p.id === selectedProjectIds[0])?.name ||
+                  "Filter"
+                : `${selectedProjectIds.length} filters`
+              : "Filter"}
+          </span>
+          {hasActiveFilters && (
+            <button
+              type='button'
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClearFilter();
+              }}
+              className='flex items-center justify-center transition-colors hover:text-blue-500'
+              aria-label='Clear filters'
+            >
+              <XIcon className='size-3' />
+            </button>
           )}
         </Button>
       </PopoverTrigger>
 
       <PopoverContent align='end' className='w-[240px] p-0'>
         <div>
-          <div className='flex items-center justify-between'>
-            {hasActiveFilters && (
-              <Button
-                variant='ghost'
-                size='sm'
-                onClick={handleClearFilter}
-                className='h-6 px-2 text-xs text-muted-foreground hover:text-foreground'
-              >
-                Clear
-              </Button>
-            )}
-          </div>
+          {hasActiveFilters && (
+            <>
+              <div className='flex items-center gap-1.5 px-2 py-1.5 flex-wrap'>
+                {selectedProjectIds.map((projectId) => {
+                  const project = projects.find((p) => p.id === projectId);
+                  if (!project) return null;
+
+                  return (
+                    <Badge key={projectId}>
+                      <div className='flex items-center gap-1.5'>
+                        <span
+                          className={cn(
+                            "size-1.5 rounded-full flex-shrink-0 ml-0.5",
+                            PROJECT_COLOR_CLASSES[project.color]
+                          )}
+                        />
+                        <span className='truncate'>{project.name}</span>
+                      </div>
+                      <button
+                        type='button'
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleProject(projectId);
+                        }}
+                        className='flex items-center justify-center transition-colors [&_svg]:hover:text-blue-500 [&_svg]:text-icon-light ml-0.5'
+                        aria-label={`Remove ${project.name} filter`}
+                      >
+                        <XIcon className='size-3' />
+                      </button>
+                    </Badge>
+                  );
+                })}
+              </div>
+              <div className='h-[1px] bg-border-light w-full' />
+            </>
+          )}
 
           <Input
             placeholder='Filter by projects...'
