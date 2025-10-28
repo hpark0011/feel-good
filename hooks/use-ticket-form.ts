@@ -24,6 +24,9 @@ export function useTicketForm({ defaultValues, onSubmit }: UseTicketFormProps) {
     defaultValues,
   });
 
+  // console.log("[use-ticket-form] form:::", form);
+  // console.log("[use-ticket-form] defaultValues:::", defaultValues?.projectId);
+
   useEffect(() => {
     form.reset(defaultValues);
   }, [defaultValues]);
