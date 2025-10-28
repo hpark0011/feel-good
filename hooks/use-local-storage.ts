@@ -69,6 +69,23 @@ export function useLocalStorage<T>(
             ? value(currentStoredValue)
             : value;
 
+          // Handle undefined by removing the key instead of stringifying
+          // JSON.stringify(undefined) produces "undefined" (invalid JSON)
+          if (valueToStore === undefined) {
+            window.localStorage.removeItem(key);
+
+            // Dispatch custom event for same-tab synchronization
+            queueMicrotask(() => {
+              window.dispatchEvent(
+                new CustomEvent('local-storage-change', {
+                  detail: { key, newValue: undefined },
+                })
+              );
+            });
+
+            return valueToStore;
+          }
+
           // Save to localStorage
           window.localStorage.setItem(key, JSON.stringify(valueToStore));
 

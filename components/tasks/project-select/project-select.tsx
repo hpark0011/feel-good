@@ -2,14 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogBody,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -19,31 +11,23 @@ import {
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useProjects } from "@/hooks/use-projects";
+import { useKeyboardNavigation } from "@/hooks/use-keyboard-navigation";
+import { useSearchState } from "@/hooks/use-search-state";
+import { useProjectSelection } from "@/hooks/use-project-selection";
 import { cn } from "@/lib/utils";
 import { ProjectColor } from "@/types/board.types";
-import { ChevronDownIcon, CheckIcon, XIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ChevronDownIcon, XIcon } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Icon } from "@/components/ui/icon";
+import { PROJECT_COLORS } from "@/config/tasks.config";
+import { ProjectColorIndicator } from "./project-color-indicator";
+import { DeleteProjectDialog } from "./delete-project-dialog";
+import { ProjectMenuItem } from "./project-menu-item";
 
 interface ProjectSelectProps {
   value?: string;
   onValueChange: (projectId: string | undefined) => void;
 }
-
-const PROJECT_COLORS: {
-  color: ProjectColor;
-  bgClass: string;
-  displayClass: string;
-}[] = [
-  { color: "gray", bgClass: "bg-neutral-500", displayClass: "bg-neutral-500" },
-  { color: "red", bgClass: "bg-red-500", displayClass: "bg-red-500" },
-  { color: "orange", bgClass: "bg-orange-500", displayClass: "bg-orange-500" },
-  { color: "yellow", bgClass: "bg-yellow-500", displayClass: "bg-yellow-500" },
-  { color: "green", bgClass: "bg-green-500", displayClass: "bg-green-500" },
-  { color: "blue", bgClass: "bg-blue-500", displayClass: "bg-blue-500" },
-  { color: "purple", bgClass: "bg-purple-500", displayClass: "bg-purple-500" },
-  { color: "pink", bgClass: "bg-pink-500", displayClass: "bg-pink-500" },
-];
 
 type ViewMode = "list" | "create" | { mode: "edit"; projectId: string };
 
@@ -56,29 +40,61 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [projectToDelete, setProjectToDelete] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [highlightedIndex, setHighlightedIndex] = useState(-1);
-  const [showColorPicker, setShowColorPicker] = useState(false);
+
+  // Use extracted hooks for search state management
+  const {
+    searchQuery,
+    setSearchQuery,
+    highlightedIndex,
+    updateHighlightedIndex,
+    showColorPicker,
+    toggleColorPicker,
+    resetSearch,
+  } = useSearchState();
 
   const selectedProject = value ? getProjectById(value) : undefined;
 
-  // Filter projects based on search query
-  const filteredProjects = projects.filter((project) =>
-    project.name.toLowerCase().includes(searchQuery.toLowerCase())
+  console.log("[project-select] selectedProject::::", selectedProject);
+
+  // Use project selection hook
+  const { selectProject, handleEscape } = useProjectSelection({
+    onValueChange,
+    setOpen,
+    resetSearch,
+  });
+
+  // Filtered projects and derived state with useMemo for performance
+  const filteredProjects = useMemo(
+    () =>
+      projects.filter((project) =>
+        project.name.toLowerCase().includes(searchQuery.toLowerCase())
+      ),
+    [projects, searchQuery]
   );
 
-  // Check if search query exactly matches an existing project
-  const exactMatch = filteredProjects.some(
-    (p) => p.name.toLowerCase() === searchQuery.trim().toLowerCase()
+  const canCreateNew = useMemo(
+    () =>
+      Boolean(searchQuery.trim()) &&
+      !filteredProjects.some(
+        (p) => p.name.toLowerCase() === searchQuery.trim().toLowerCase()
+      ),
+    [searchQuery, filteredProjects]
   );
 
-  // Can create new project if search has text and no exact match
-  const canCreateNew = searchQuery.trim() && !exactMatch;
+  // Keyboard navigation hook
+  const { handleKeyDown: handleNavigationKeyDown } = useKeyboardNavigation({
+    items: filteredProjects,
+    highlightedIndex,
+    onHighlightChange: updateHighlightedIndex,
+    onSelect: selectProject,
+    canCreateNew,
+    onToggleColorPicker: toggleColorPicker,
+  });
 
   // Reset highlighted index when search changes
   useEffect(() => {
-    setHighlightedIndex(-1);
-  }, [searchQuery]);
+    updateHighlightedIndex(-1);
+  }, [searchQuery, updateHighlightedIndex]);
 
   const handleCreate = () => {
     if (!projectName.trim()) return;
@@ -148,46 +164,43 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
       setViewMode("list");
       setProjectName("");
       setSelectedColor("blue");
-      setSearchQuery("");
-      setHighlightedIndex(-1);
-      setShowColorPicker(false);
+      resetSearch();
     }
   };
 
-  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setHighlightedIndex((prev) =>
-        prev < filteredProjects.length - 1 ? prev + 1 : prev
-      );
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : -1));
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      if (highlightedIndex >= 0) {
-        // Select highlighted project
-        const selectedProject = filteredProjects[highlightedIndex];
-        onValueChange(selectedProject.id);
-        setOpen(false);
-        setSearchQuery("");
-        setHighlightedIndex(-1);
-      } else if (canCreateNew) {
-        // Toggle color picker for creation
-        setShowColorPicker((prev) => !prev);
+  // Main keyboard handler with cleaner logic
+  const handleSearchKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      const result = handleNavigationKeyDown(e);
+
+      if (result === "escape") {
+        const action = handleEscape(showColorPicker, searchQuery);
+
+        switch (action) {
+          case "close-color-picker":
+            toggleColorPicker();
+            break;
+          case "clear-search":
+            setSearchQuery("");
+            updateHighlightedIndex(-1);
+            break;
+          case "close-dropdown":
+            setOpen(false);
+            break;
+        }
       }
-    } else if (e.key === "Escape") {
-      e.preventDefault();
-      if (showColorPicker) {
-        setShowColorPicker(false);
-      } else if (searchQuery) {
-        setSearchQuery("");
-        setHighlightedIndex(-1);
-      } else {
-        setOpen(false);
-      }
-    }
-  };
+    },
+    [
+      handleNavigationKeyDown,
+      handleEscape,
+      showColorPicker,
+      searchQuery,
+      toggleColorPicker,
+      setSearchQuery,
+      updateHighlightedIndex,
+      setOpen,
+    ]
+  );
 
   return (
     <>
@@ -200,17 +213,11 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
         >
           <div className='flex items-center gap-1.5 flex-1 min-w-0 text-[13px]'>
             {selectedProject ? (
-              <>
-                <span
-                  className={cn(
-                    "size-1.5 rounded-full flex-shrink-0",
-                    PROJECT_COLORS.find(
-                      (c) => c.color === selectedProject.color
-                    )?.bgClass
-                  )}
-                />
-                <span className='truncate'>{selectedProject.name}</span>
-              </>
+              <ProjectColorIndicator
+                color={selectedProject.color}
+                name={selectedProject.name}
+                className='flex-1 min-w-0'
+              />
             ) : (
               <>
                 <Icon
@@ -230,22 +237,15 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
               {selectedProject ? (
                 <div className='flex items-center px-0.5 h-7'>
                   <Badge>
-                    <div className='flex items-center gap-1.5'>
-                      <span
-                        className={cn(
-                          "size-1.5 rounded-full flex-shrink-0 ml-0.5",
-                          PROJECT_COLORS.find(
-                            (c) => c.color === selectedProject.color
-                          )?.bgClass
-                        )}
-                      />
-                      <span className='truncate'>{selectedProject.name}</span>
-                    </div>
+                    <ProjectColorIndicator
+                      color={selectedProject.color}
+                      name={selectedProject.name}
+                      className='ml-0.5'
+                    />
                     <button
                       type='button'
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onValueChange(undefined);
+                      onClick={() => {
+                        onValueChange("");
                       }}
                       className='flex items-center justify-center transition-colors [&_svg]:hover:text-blue-500 [&_svg]:text-icon-light ml-0.5'
                       aria-label='Clear project selection'
@@ -273,75 +273,19 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
               <DropdownMenuSeparator />
               {filteredProjects.length > 0 ? (
                 filteredProjects.map((project, index) => (
-                  <DropdownMenuItem
+                  <ProjectMenuItem
                     key={project.id}
-                    className={cn(
-                      "group flex items-center justify-between gap-2 pl-1 pr-0.5 data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground",
-                      highlightedIndex === index &&
-                        "bg-accent text-accent-foreground"
-                    )}
-                    onSelect={(e) => {
-                      e.preventDefault();
+                    project={project}
+                    isSelected={value === project.id}
+                    isKeyboardHighlighted={highlightedIndex === index}
+                    onSelect={(projectId) => {
                       onValueChange(
-                        value === project.id ? undefined : project.id
+                        value === projectId ? undefined : projectId
                       );
                     }}
-                    onMouseEnter={() => setHighlightedIndex(index)}
-                    onMouseLeave={() => setHighlightedIndex(-1)}
-                  >
-                    <div className='flex flex-1 min-w-0 items-center gap-1.5 px-1'>
-                      <span
-                        className={cn(
-                          "size-1.5 rounded-full",
-                          PROJECT_COLORS.find((c) => c.color === project.color)
-                            ?.bgClass
-                        )}
-                      />
-                      <span className='truncate'>{project.name}</span>
-                    </div>
-                    <div className='flex items-center gap-0.5'>
-                      <div
-                        className={cn(
-                          "flex items-center opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 group-data-[highlighted]:opacity-100",
-                          highlightedIndex === index && "opacity-100"
-                        )}
-                      >
-                        <Button
-                          size='sm'
-                          variant='icon'
-                          className='h-6 w-6 p-0 dark:hover:bg-black/50 [&_svg]:dark:text-dq-gray-600 [&_svg]:text-icon-light hover:[&_svg]:text-blue-500'
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            startEdit(project.id);
-                          }}
-                          aria-label='Edit project'
-                        >
-                          <Icon
-                            name='PencilIcon'
-                            className='size-4 text-icon-light'
-                          />
-                        </Button>
-                        <Button
-                          size='sm'
-                          variant='icon'
-                          className='h-6 w-6 p-0 dark:hover:bg-black/50 [&_svg]:dark:text-dq-gray-600 [&_svg]:text-icon-light hover:[&_svg]:text-destructive'
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            startDelete(project.id);
-                          }}
-                          aria-label='Delete project'
-                        >
-                          <Icon
-                            name='TrashFillIcon'
-                            className='size-4 text-icon-light'
-                          />
-                        </Button>
-                      </div>
-                      {value === project.id && (
-                        <CheckIcon className='size-4 text-blue-400 mr-1 ml-0.5' />
-                      )}
-                    </div>
-                  </DropdownMenuItem>
+                    onEdit={startEdit}
+                    onDelete={startDelete}
+                  />
                 ))
               ) : searchQuery ? (
                 <div className='px-2 py-6 text-center text-sm text-muted-foreground'>
@@ -360,7 +304,7 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                   <DropdownMenuItem
                     onSelect={(e) => {
                       e.preventDefault();
-                      setShowColorPicker((prev) => !prev);
+                      toggleColorPicker();
                     }}
                   >
                     <Icon
@@ -386,9 +330,7 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                                   color
                                 );
                                 onValueChange(newProject.id);
-                                setSearchQuery("");
-                                setShowColorPicker(false);
-                                setHighlightedIndex(-1);
+                                resetSearch();
                                 setOpen(false);
                               } catch (error) {
                                 console.error(
@@ -414,8 +356,7 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                   onSelect={(e) => {
                     e.preventDefault();
                     setViewMode("create");
-                    setSearchQuery("");
-                    setHighlightedIndex(-1);
+                    resetSearch();
                   }}
                 >
                   <Icon name='PlusIcon' className='size-4.5 text-icon-light' />
@@ -510,33 +451,19 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent className='sm:max-w-md'>
-          <DialogHeader>
-            <DialogTitle>Delete Project</DialogTitle>
-          </DialogHeader>
-          <DialogBody>
-            <p className='text-sm text-muted-foreground'>
-              Are you sure you want to delete this project? This action cannot
-              be undone.
-            </p>
-          </DialogBody>
-          <DialogFooter>
-            <Button
-              variant='outline'
-              onClick={() => {
-                setDeleteDialogOpen(false);
-                setProjectToDelete(null);
-              }}
-            >
-              Cancel
-            </Button>
-            <Button variant='destructive' onClick={handleDelete}>
-              Delete
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <DeleteProjectDialog
+        open={deleteDialogOpen}
+        onOpenChange={(open) => {
+          setDeleteDialogOpen(open);
+          if (!open) {
+            setProjectToDelete(null); // Cleanup when closing
+          }
+        }}
+        onConfirm={handleDelete}
+        projectName={
+          projectToDelete ? getProjectById(projectToDelete)?.name : undefined
+        }
+      />
     </>
   );
 }

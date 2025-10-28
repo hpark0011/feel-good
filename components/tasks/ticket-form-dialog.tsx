@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogBody,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -29,7 +30,7 @@ import {
 } from "@/hooks/use-ticket-form";
 import { cn } from "@/lib/utils";
 import { AutoResizingTextarea } from "../ui/auto-resizing-textarea";
-import { ProjectSelect } from "./project-select";
+import { ProjectSelect } from "./project-select/project-select";
 import { StatusSelect } from "./status-select";
 
 interface TicketFormProps {
@@ -55,6 +56,7 @@ export function TicketFormDialog({
   const { form, handleSubmit } = useTicketForm({
     defaultValues,
     onSubmit,
+    open,
   });
 
   const { handleOpenChange, handleCancel } = useDialogAutoSave({
@@ -79,6 +81,13 @@ export function TicketFormDialog({
             <DialogTitle>
               {mode === "create" ? "Create New Ticket" : "Edit Ticket"}
             </DialogTitle>
+          </VisuallyHidden>
+          <VisuallyHidden asChild>
+            <DialogDescription>
+              {mode === "create"
+                ? "Fill in the ticket details to create a new work item."
+                : "Update the ticket fields and save your changes."}
+            </DialogDescription>
           </VisuallyHidden>
         </DialogHeader>
 
@@ -151,18 +160,21 @@ export function TicketFormDialog({
                 <FormField
                   control={form.control}
                   name='projectId'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className='sr-only'>Project</FormLabel>
-                      <FormControl>
-                        <ProjectSelect
-                          value={field.value}
-                          onValueChange={field.onChange}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                  render={({ field }) => {
+                    console.log("[ticket-form-dialog] field:::", field);
+                    return (
+                      <FormItem>
+                        <FormLabel className='sr-only'>Project</FormLabel>
+                        <FormControl>
+                          <ProjectSelect
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    );
+                  }}
                 />
               </div>
               <Button
