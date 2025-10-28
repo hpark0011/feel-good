@@ -24,23 +24,23 @@ export function useKeyboardNavigation({
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       const { key } = e;
 
-      // Prevent default behavior for all handled keys
-      e.preventDefault();
-
       const keyHandlers = {
         ArrowDown: () => {
+          e.preventDefault();
           const nextIndex = Math.min(highlightedIndex + 1, items.length - 1);
           onHighlightChange(nextIndex);
           return undefined;
         },
 
         ArrowUp: () => {
+          e.preventDefault();
           const prevIndex = Math.max(highlightedIndex - 1, -1);
           onHighlightChange(prevIndex);
           return undefined;
         },
 
         Enter: () => {
+          e.preventDefault();
           if (highlightedIndex >= 0) {
             onSelect(items[highlightedIndex]);
           } else if (canCreateNew) {
@@ -50,6 +50,7 @@ export function useKeyboardNavigation({
         },
 
         Escape: () => {
+          e.preventDefault();
           // This will be handled by the parent component
           return "escape";
         },
