@@ -23,6 +23,7 @@ export function useTicketForm({
     title: "",
     description: "",
     status: "backlog",
+    projectId: undefined,
   },
   onSubmit,
 }: UseTicketFormProps) {
@@ -33,7 +34,7 @@ export function useTicketForm({
 
   useEffect(() => {
     form.reset(defaultValues);
-  }, [defaultValues, form]);
+  }, [defaultValues]);
 
   const handleSubmit = (data: TicketFormOutput) => {
     onSubmit(data);
