@@ -16,12 +16,13 @@ import { useSearchState } from "@/hooks/use-search-state";
 import { useProjectSelection } from "@/hooks/use-project-selection";
 import { cn } from "@/lib/utils";
 import { ProjectColor } from "@/types/board.types";
-import { ChevronDownIcon, CheckIcon, XIcon } from "lucide-react";
+import { ChevronDownIcon, XIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Icon } from "@/components/ui/icon";
 import { PROJECT_COLORS } from "@/config/tasks.config";
 import { ProjectColorIndicator } from "./project-color-indicator";
-import { DeleteProjectDialog } from "./project-select/delete-project-dialog";
+import { DeleteProjectDialog } from "./delete-project-dialog";
+import { ProjectMenuItem } from "./project-menu-item";
 
 interface ProjectSelectProps {
   value?: string;
@@ -52,6 +53,8 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
   } = useSearchState();
 
   const selectedProject = value ? getProjectById(value) : undefined;
+
+  console.log("[project-select] selectedProject::::", selectedProject);
 
   // Use project selection hook
   const { selectProject, handleEscape } = useProjectSelection({
@@ -270,72 +273,19 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
               <DropdownMenuSeparator />
               {filteredProjects.length > 0 ? (
                 filteredProjects.map((project, index) => (
-                  <DropdownMenuItem
+                  <ProjectMenuItem
                     key={project.id}
-                    className={cn(
-                      "group flex items-center justify-between gap-2 pl-1 pr-0.5 data-[highlighted]:bg-accent data-[highlighted]:text-accent-foreground",
-                      highlightedIndex === index &&
-                        "bg-accent text-accent-foreground"
-                    )}
-                    onSelect={(e) => {
-                      e.preventDefault();
+                    project={project}
+                    isSelected={value === project.id}
+                    isKeyboardHighlighted={highlightedIndex === index}
+                    onSelect={(projectId) => {
                       onValueChange(
-                        value === project.id ? undefined : project.id
+                        value === projectId ? undefined : projectId
                       );
                     }}
-                    onMouseEnter={() => updateHighlightedIndex(index)}
-                    onMouseLeave={() => updateHighlightedIndex(-1)}
-                  >
-                    <div className='flex flex-1 min-w-0 items-center px-1'>
-                      <ProjectColorIndicator
-                        color={project.color}
-                        name={project.name}
-                        className='flex-1 min-w-0'
-                      />
-                    </div>
-                    <div className='flex items-center gap-0.5'>
-                      <div
-                        className={cn(
-                          "flex items-center opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 group-data-[highlighted]:opacity-100",
-                          highlightedIndex === index && "opacity-100"
-                        )}
-                      >
-                        <Button
-                          size='sm'
-                          variant='icon'
-                          className='h-6 w-6 p-0 dark:hover:bg-black/50 [&_svg]:dark:text-dq-gray-600 [&_svg]:text-icon-light hover:[&_svg]:text-blue-500'
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            startEdit(project.id);
-                          }}
-                          aria-label='Edit project'
-                        >
-                          <Icon
-                            name='PencilIcon'
-                            className='size-4 text-icon-light'
-                          />
-                        </Button>
-                        <Button
-                          size='sm'
-                          variant='icon'
-                          className='h-6 w-6 p-0 dark:hover:bg-black/50 [&_svg]:dark:text-dq-gray-600 [&_svg]:text-icon-light hover:[&_svg]:text-destructive'
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            startDelete(project.id);
-                          }}
-                          aria-label='Delete project'
-                        >
-                          <Icon
-                            name='TrashFillIcon'
-                            className='size-4 text-icon-light'
-                          />
-                        </Button>
-                      </div>
-                      {value === project.id && (
-                        <CheckIcon className='size-4 text-blue-400 mr-1 ml-0.5' />
-                      )}
-                    </div>
-                  </DropdownMenuItem>
+                    onEdit={startEdit}
+                    onDelete={startDelete}
+                  />
                 ))
               ) : searchQuery ? (
                 <div className='px-2 py-6 text-center text-sm text-muted-foreground'>

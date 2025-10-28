@@ -22,14 +22,6 @@ Refactor `components/tasks/project-select.tsx` (544 lines) into smaller, maintai
 
 ## Task Checklist
 
-### Phase 1: Low-Risk Extractions (Start Here)
-
-- [ ] **1.1 Extract DeleteProjectDialog Component**
-
-  - Lines: 514-540
-  - Estimated reduction: ~30 lines
-  - Risk: Low (self-contained, no state dependencies)
-
 ### Phase 2: Hook Extractions
 
 - [ ] **2.1 Create use-keyboard-navigation Hook**

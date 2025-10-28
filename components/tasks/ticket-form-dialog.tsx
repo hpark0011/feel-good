@@ -30,7 +30,7 @@ import {
 } from "@/hooks/use-ticket-form";
 import { cn } from "@/lib/utils";
 import { AutoResizingTextarea } from "../ui/auto-resizing-textarea";
-import { ProjectSelect } from "./project-select";
+import { ProjectSelect } from "./project-select/project-select";
 import { StatusSelect } from "./status-select";
 
 interface TicketFormProps {
