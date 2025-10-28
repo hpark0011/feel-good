@@ -307,8 +307,8 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                     }}
                   >
                     <Icon
-                      name='PlusCircleFillIcon'
-                      className='size-6 text-icon-light'
+                      name='PlusIcon'
+                      className='size-4.5 text-icon-light'
                     />
                     Create &apos;{searchQuery.trim()}&apos;
                   </DropdownMenuItem>
