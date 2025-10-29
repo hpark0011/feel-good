@@ -194,7 +194,7 @@ export function TicketFormDialog({
                       />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>Add sub-tasks</TooltipContent>
+                  <TooltipContent sideOffset={-4}>Add sub-tasks</TooltipContent>
                 </Tooltip>
               </div>
 
