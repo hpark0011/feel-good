@@ -47,13 +47,45 @@ export function SubTasksList({ value, onChange }: SubTasksListProps) {
   const totalCount = value.length;
 
   return (
-    <div className='space-y-3'>
+    <div className='w-[calc(100%+12px)] ml-[-6px] border border-border-medium rounded-lg group hover:bg-hover px-2 py-1.5'>
       {/* Progress indicator */}
       {totalCount > 0 && (
-        <div className='text-sm text-text-muted'>
+        <div className='text-xs text-text-muted'>
           {completedCount}/{totalCount} completed
         </div>
       )}
+
+      {/* Sub-tasks list */}
+      <div>
+        {value.map((task) => (
+          <div key={task.id} className='flex items-center gap-3 rounded-md'>
+            <Checkbox
+              checked={task.completed}
+              onCheckedChange={(checked) =>
+                updateSubTask(task.id, { completed: !!checked })
+              }
+              className='border-border-medium'
+            />
+            <Input
+              value={task.text}
+              onChange={(e) => updateSubTask(task.id, { text: e.target.value })}
+              className={cn(
+                "flex-1 border-none bg-transparent p-0 focus-visible:ring-0 h-6",
+                task.completed && "line-through text-text-muted"
+              )}
+            />
+            <Button
+              type='button'
+              variant='icon'
+              size='sm'
+              onClick={() => deleteSubTask(task.id)}
+              className='p-0 text-icon-light hover:text-icon-primary'
+            >
+              <Icon name='XmarkIcon' className='size-3.5' />
+            </Button>
+          </div>
+        ))}
+      </div>
 
       {/* Add new sub-task */}
       <div className='flex gap-2'>
@@ -67,7 +99,7 @@ export function SubTasksList({ value, onChange }: SubTasksListProps) {
               addSubTask();
             }
           }}
-          className='flex-1'
+          className='flex-1 border-none'
         />
         <Button
           type='button'
@@ -78,40 +110,6 @@ export function SubTasksList({ value, onChange }: SubTasksListProps) {
         >
           Add
         </Button>
-      </div>
-
-      {/* Sub-tasks list */}
-      <div className='space-y-2'>
-        {value.map((task) => (
-          <div
-            key={task.id}
-            className='flex items-center gap-3 p-2 rounded-md border border-border-subtle bg-background-subtle'
-          >
-            <Checkbox
-              checked={task.completed}
-              onCheckedChange={(checked) =>
-                updateSubTask(task.id, { completed: !!checked })
-              }
-            />
-            <Input
-              value={task.text}
-              onChange={(e) => updateSubTask(task.id, { text: e.target.value })}
-              className={cn(
-                "flex-1 border-none bg-transparent p-0 focus-visible:ring-0",
-                task.completed && "line-through text-text-muted"
-              )}
-            />
-            <Button
-              type='button'
-              variant='ghost'
-              size='sm'
-              onClick={() => deleteSubTask(task.id)}
-              className='h-8 w-8 p-0 text-icon-light hover:text-icon-primary'
-            >
-              <Icon name='XmarkIcon' className='size-4' />
-            </Button>
-          </div>
-        ))}
       </div>
     </div>
   );

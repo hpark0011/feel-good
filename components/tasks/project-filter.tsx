@@ -92,8 +92,7 @@ export function ProjectFilter() {
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
-        <button
-          type='button'
+        <div
           className={cn(
             "flex items-center h-6 w-fit bg-transparent cursor-pointer relative mr-0.5",
             hasActiveFilters &&
@@ -182,7 +181,7 @@ export function ProjectFilter() {
               )}
             </div>
           )}
-        </button>
+        </div>
       </PopoverTrigger>
 
       <PopoverContent align='end' className='w-[240px] p-0'>

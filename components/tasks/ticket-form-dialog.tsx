@@ -105,7 +105,7 @@ export function TicketFormDialog({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
             <DialogBody className='mt-3 gap-0'>
-              <div className='flex gap-0.5 items-center w-[calc(100%+12px)] ml-[-6px]'>
+              <div className='flex items-center w-[calc(100%+12px)] ml-[-6px]'>
                 <FormField
                   control={form.control}
                   name='title'
@@ -134,15 +134,18 @@ export function TicketFormDialog({
                   <FormItem>
                     <FormLabel className='sr-only'>Description</FormLabel>
                     <FormControl>
-                      <AutoResizingTextarea
-                        placeholder='Enter ticket description...'
-                        maxHeight={400}
-                        {...field}
-                        ref={(el) => setDescriptionRef(el, field.ref)}
-                        className={cn(
-                          "resize-none h-full rounded-md min-h-[160px] flex-1 transition-all w-[calc(100%+12px)] ml-[-6px] border-transparent px-2"
-                        )}
-                      />
+                      <div className='relative w-[calc(100%+12px)] ml-[-6px]'>
+                        <AutoResizingTextarea
+                          placeholder='Enter ticket description...'
+                          maxHeight={400}
+                          {...field}
+                          ref={(el) => setDescriptionRef(el, field.ref)}
+                          className={cn(
+                            "resize-none h-full rounded-md min-h-[160px] flex-1 transition-all  border-none px-2 pb-4"
+                          )}
+                        />
+                        <div className='absolute bottom-[-1px] left-0 inset-x-0 h-8 bg-gradient-to-t from-background to-transparent' />
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -156,7 +159,7 @@ export function TicketFormDialog({
                     <FormItem>
                       <FormLabel className='sr-only'>Sub-tasks</FormLabel>
                       <FormControl>
-                        <div className='w-[calc(100%+12px)] ml-[-6px] p-2 border border-border-light mt-2 rounded-md'>
+                        <div className='relative z-1'>
                           <SubTasksList
                             value={field.value || []}
                             onChange={field.onChange}
