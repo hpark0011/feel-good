@@ -19,6 +19,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
 import { useDialogAutoSave } from "@/hooks/use-dialog-auto-save";
 import { useFocusManagement } from "@/hooks/use-focus-management";
@@ -32,6 +37,7 @@ import { cn } from "@/lib/utils";
 import { AutoResizingTextarea } from "../ui/auto-resizing-textarea";
 import { ProjectSelect } from "./project-select/project-select";
 import { StatusSelect } from "./status-select";
+import { Icon } from "../ui/icon";
 
 interface TicketFormProps {
   open: boolean;
@@ -140,7 +146,7 @@ export function TicketFormDialog({
             </DialogBody>
 
             <DialogFooter className='gap-1 w-full flex justify-between items-center p-3'>
-              <div className='flex gap-1 flex-1'>
+              <div className='flex flex-1'>
                 <FormField
                   control={form.control}
                   name='status'
@@ -161,7 +167,6 @@ export function TicketFormDialog({
                   control={form.control}
                   name='projectId'
                   render={({ field }) => {
-                    console.log("[ticket-form-dialog] field:::", field);
                     return (
                       <FormItem>
                         <FormLabel className='sr-only'>Project</FormLabel>
@@ -176,7 +181,23 @@ export function TicketFormDialog({
                     );
                   }}
                 />
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type='button'
+                      variant='icon'
+                      className='has-[>svg]:gap-1'
+                    >
+                      <Icon
+                        name='ChecklistIcon'
+                        className='size-4.5 text-icon-light'
+                      />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Add sub-tasks</TooltipContent>
+                </Tooltip>
               </div>
+
               <Button
                 type='button'
                 variant='ghost'

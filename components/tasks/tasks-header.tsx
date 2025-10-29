@@ -135,7 +135,10 @@ export function TasksHeader({ onImport, onExport, onClear }: HeaderProps) {
           <Tooltip>
             <TooltipTrigger asChild>
               <AlertDialogTrigger asChild>
-                <Button variant='ghost' className='h-6 w-6 cursor-pointer'>
+                <Button
+                  variant='icon'
+                  className='h-6 w-6 cursor-pointer rounded-[6px]'
+                >
                   <Icon
                     name='XmarkCircleFillIcon'
                     className='size-5.5 text-icon-light'
