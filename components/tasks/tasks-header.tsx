@@ -1,5 +1,8 @@
 "use client";
 
+import Link from "next/link";
+import type React from "react";
+import { useRef, useState } from "react";
 import {
   HeaderContainer,
   HeaderLogo,
@@ -38,12 +41,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useNavigation } from "@/hooks/use-navigation";
 import { useTodayFocus } from "@/hooks/use-today-focus";
 import { cn } from "@/lib/utils";
-import { useNavigation } from "@/hooks/use-navigation";
-import Link from "next/link";
-import type React from "react";
-import { useRef, useState } from "react";
 import { FocusFormDialog } from "./focus-form-dialog";
 import { ProjectFilter } from "./project-filter";
 
@@ -53,7 +53,7 @@ type HeaderProps = {
   onClear: () => void;
 };
 
-export function TasksHeader({ onImport, onExport, onClear }: HeaderProps) {
+export function TasksHeader({ onImport, onClear }: HeaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [focusDialogOpen, setFocusDialogOpen] = useState(false);
   const [todayFocus, setTodayFocus] = useTodayFocus();
@@ -106,6 +106,7 @@ export function TasksHeader({ onImport, onExport, onClear }: HeaderProps) {
         </BreadcrumbList>
       </Breadcrumb>
       <button
+        type='button'
         onClick={() => setFocusDialogOpen(true)}
         className='bg-card shadow-xs border-border-highlight dark:border-white/2 border rounded-sm h-[24px] hover:bg-base  transition-all duration-200 ease-out hover:scale-105 cursor-pointer scale-100 absolute left-1/2 -translate-x-1/2 flex items-center translate-y-[0px] hover:translate-y-[-1px] hover:shadow-lg overflow-hidden text-[14px]'
       >

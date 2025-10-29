@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -35,9 +36,10 @@ import {
 } from "@/hooks/use-ticket-form";
 import { cn } from "@/lib/utils";
 import { AutoResizingTextarea } from "../ui/auto-resizing-textarea";
+import { Icon } from "../ui/icon";
 import { ProjectSelect } from "./project-select/project-select";
 import { StatusSelect } from "./status-select";
-import { Icon } from "../ui/icon";
+import { SubTasksList } from "./sub-tasks/sub-tasks-list";
 
 interface TicketFormProps {
   open: boolean;
@@ -78,6 +80,9 @@ export function TicketFormDialog({
     enabled: open,
     onSubmit: () => form.handleSubmit(handleSubmit)(),
   });
+
+  const [showSubTasks, setShowSubTasks] = useState(false);
+  const toggleSubTasks = () => setShowSubTasks(!showSubTasks);
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -143,6 +148,26 @@ export function TicketFormDialog({
                   </FormItem>
                 )}
               />
+              {showSubTasks && (
+                <FormField
+                  control={form.control}
+                  name='subTasks'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className='sr-only'>Sub-tasks</FormLabel>
+                      <FormControl>
+                        <div className='w-[calc(100%+12px)] ml-[-6px] px-2'>
+                          <SubTasksList
+                            value={field.value || []}
+                            onChange={field.onChange}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
             </DialogBody>
 
             <DialogFooter className='gap-1 w-full flex justify-between items-center p-3'>
@@ -186,11 +211,14 @@ export function TicketFormDialog({
                     <Button
                       type='button'
                       variant='icon'
-                      className='has-[>svg]:gap-1'
+                      onClick={toggleSubTasks}
                     >
                       <Icon
                         name='ChecklistIcon'
-                        className='size-4.5 text-icon-light'
+                        className={cn(
+                          "size-4.5",
+                          showSubTasks ? "text-blue-500" : "text-icon-light"
+                        )}
                       />
                     </Button>
                   </TooltipTrigger>
