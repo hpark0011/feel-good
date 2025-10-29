@@ -47,7 +47,7 @@ export function SubTasksList({ value, onChange }: SubTasksListProps) {
   const totalCount = value.length;
 
   return (
-    <div className='w-[calc(100%+12px)] ml-[-6px] border border-border-medium rounded-lg group hover:bg-hover px-2 py-1.5'>
+    <div className='w-[calc(100%+12px)] ml-[-6px] border border-border-medium rounded-lg group hover:bg-hover px-2 py-1.5 flex flex-col gap-2'>
       {/* Progress indicator */}
       {totalCount > 0 && (
         <div className='text-xs text-text-muted'>
@@ -56,9 +56,9 @@ export function SubTasksList({ value, onChange }: SubTasksListProps) {
       )}
 
       {/* Sub-tasks list */}
-      <div>
+      <div className='flex flex-col w-full'>
         {value.map((task) => (
-          <div key={task.id} className='flex items-center gap-3 rounded-md'>
+          <div key={task.id} className='flex items-center gap-2'>
             <Checkbox
               checked={task.completed}
               onCheckedChange={(checked) =>
@@ -79,7 +79,7 @@ export function SubTasksList({ value, onChange }: SubTasksListProps) {
               variant='icon'
               size='sm'
               onClick={() => deleteSubTask(task.id)}
-              className='p-0 text-icon-light hover:text-icon-primary'
+              className='text-icon-light hover:text-icon-primary h-6 w-6'
             >
               <Icon name='XmarkIcon' className='size-3.5' />
             </Button>
