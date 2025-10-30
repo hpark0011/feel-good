@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -76,13 +76,27 @@ export function TicketFormDialog({
     (defaultValues?.subTasks?.length ?? 0) > 0
   );
 
-  // Auto-show sub-tasks section when sub-tasks are added
+  // Track previous count to distinguish between user toggle and user removing items
+  const prevCountRef = useRef<number>(defaultValues?.subTasks?.length ?? 0);
+
+  // Auto-show/hide sub-tasks section based on sub-tasks existence
   useEffect(() => {
     const subscription = form.watch((values) => {
       const subTasksCount = values?.subTasks?.length ?? 0;
+      const prevCount = prevCountRef.current;
+
+      // Show when sub-tasks added
       if (subTasksCount > 0 && !showSubTasks) {
         setShowSubTasks(true);
       }
+      // Hide only when user REMOVED last sub-task (went from 1+ to 0)
+      // Don't hide if count was already 0 (user just toggled manually)
+      else if (subTasksCount === 0 && prevCount > 0 && showSubTasks) {
+        setShowSubTasks(false);
+      }
+
+      // Update ref for next comparison
+      prevCountRef.current = subTasksCount;
     });
     return () => subscription.unsubscribe();
   }, [form, showSubTasks]);
