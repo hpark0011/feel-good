@@ -47,10 +47,10 @@ export function SubTasksList({ value, onChange }: SubTasksListProps) {
   const totalCount = value.length;
 
   return (
-    <div className='w-[calc(100%+12px)] ml-[-6px] border border-border-medium rounded-lg group hover:bg-hover/50 px-0 py-1.5 flex flex-col'>
+    <div className='w-[calc(100%+12px)] ml-[-6px] border border-border-medium rounded-lg group hover:bg-hover/50 flex flex-col'>
       {/* Progress indicator */}
       {totalCount > 0 && (
-        <div className='text-xs text-text-muted mb-2 px-2'>
+        <div className='text-xs text-text-muted mb-2 px-2 pt-1.5'>
           {completedCount} / {totalCount} completed
         </div>
       )}
@@ -91,7 +91,7 @@ export function SubTasksList({ value, onChange }: SubTasksListProps) {
       </div>
 
       {/* Add new sub-task */}
-      <div className='flex gap-2 pl-1'>
+      <div className='flex gap-2 pl-2 items-center'>
         <Input
           placeholder='Add a sub-task...'
           value={newTaskText}
@@ -102,7 +102,7 @@ export function SubTasksList({ value, onChange }: SubTasksListProps) {
               addSubTask();
             }
           }}
-          className='flex-1 border-none p-0 h-7'
+          className='flex-1 border-none p-0 h-8 hover:bg-transparent'
         />
         <Button
           type='button'
@@ -110,6 +110,7 @@ export function SubTasksList({ value, onChange }: SubTasksListProps) {
           size='sm'
           onClick={addSubTask}
           disabled={!newTaskText.trim()}
+          className='text-[13px] font-regular h-8 rounded-l-none hover:text-blue-500 text-text-muted'
         >
           Add
         </Button>
