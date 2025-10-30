@@ -1,5 +1,12 @@
 "use client";
 
+import { useDroppable } from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { PlusIcon } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -7,14 +14,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useDroppable } from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { PlusIcon } from "lucide-react";
-import { useState, useEffect } from "react";
-import { Column, Ticket } from "../../types/board.types";
+import type { Column, Ticket } from "../../types/board.types";
 import { Icon } from "../ui/icon";
 import { TicketCard } from "./ticket-card";
 
@@ -34,6 +34,7 @@ export const AddTicketButton = ({
 }) => {
   return (
     <button
+      type='button'
       onClick={onAddTicket}
       className='flex w-full items-center flex-col justify-center bg-transparent border border-transparent p-2 rounded-xl h-[48px] hover:bg-card transition-all duration-200 ease-out hover:scale-102 shadow-none scale-100 active:scale-98 cursor-pointer relative group hover:border-card-border inset-shadow-none hover:shadow-[0_12px_12px_-6px_rgba(255,255,255,0.9),_0_14px_14px_-6px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_12px_12px_-6px_rgba(255,255,255,0.15),_0_14px_14px_-6px_rgba(0,0,0,0.9)] '
     >

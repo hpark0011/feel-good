@@ -47,18 +47,21 @@ export function SubTasksList({ value, onChange }: SubTasksListProps) {
   const totalCount = value.length;
 
   return (
-    <div className='w-[calc(100%+12px)] ml-[-6px] border border-border-medium rounded-lg group hover:bg-hover px-2 py-1.5 flex flex-col gap-2'>
+    <div className='w-[calc(100%+12px)] ml-[-6px] border border-border-medium rounded-lg group hover:bg-hover/50 px-0 py-1.5 flex flex-col'>
       {/* Progress indicator */}
       {totalCount > 0 && (
-        <div className='text-xs text-text-muted'>
-          {completedCount}/{totalCount} completed
+        <div className='text-xs text-text-muted mb-2 px-2'>
+          {completedCount} / {totalCount} completed
         </div>
       )}
 
       {/* Sub-tasks list */}
       <div className='flex flex-col w-full'>
         {value.map((task) => (
-          <div key={task.id} className='flex items-center gap-2'>
+          <div
+            key={task.id}
+            className='flex items-center gap-2 group hover:bg-hover px-1 pl-2'
+          >
             <Checkbox
               checked={task.completed}
               onCheckedChange={(checked) =>
@@ -70,7 +73,7 @@ export function SubTasksList({ value, onChange }: SubTasksListProps) {
               value={task.text}
               onChange={(e) => updateSubTask(task.id, { text: e.target.value })}
               className={cn(
-                "flex-1 border-none bg-transparent p-0 focus-visible:ring-0 h-6",
+                "flex-1 border-none bg-transparent p-0 focus-visible:ring-0 h-7 hover:bg-transparent",
                 task.completed && "line-through text-text-muted"
               )}
             />
@@ -79,7 +82,7 @@ export function SubTasksList({ value, onChange }: SubTasksListProps) {
               variant='icon'
               size='sm'
               onClick={() => deleteSubTask(task.id)}
-              className='text-icon-light hover:text-icon-primary h-6 w-6'
+              className='text-icon-light hover:text-icon-primary h-6 w-6 hover:bg-transparent hover:text-blue-500'
             >
               <Icon name='XmarkIcon' className='size-3.5' />
             </Button>
@@ -88,7 +91,7 @@ export function SubTasksList({ value, onChange }: SubTasksListProps) {
       </div>
 
       {/* Add new sub-task */}
-      <div className='flex gap-2'>
+      <div className='flex gap-2 pl-1'>
         <Input
           placeholder='Add a sub-task...'
           value={newTaskText}
@@ -99,11 +102,11 @@ export function SubTasksList({ value, onChange }: SubTasksListProps) {
               addSubTask();
             }
           }}
-          className='flex-1 border-none'
+          className='flex-1 border-none p-0 h-7'
         />
         <Button
           type='button'
-          variant='outline'
+          variant='ghost'
           size='sm'
           onClick={addSubTask}
           disabled={!newTaskText.trim()}
