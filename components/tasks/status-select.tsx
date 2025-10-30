@@ -36,7 +36,7 @@ export function StatusSelect({
   return (
     <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger
-        className={cn("pl-1.5 border-none gap-0 text-[13px] ", className)}
+        className={cn("pl-1 border-none gap-0 text-[13px] ", className)}
       >
         <SelectValue placeholder='Select a status' />
         <SelectIcon asChild>

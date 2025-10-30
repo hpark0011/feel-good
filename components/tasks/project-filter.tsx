@@ -1,7 +1,8 @@
 "use client";
 
+import { XIcon } from "lucide-react";
+import { type KeyboardEvent, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Icon } from "@/components/ui/icon";
 import { Input } from "@/components/ui/input";
 import {
@@ -13,8 +14,6 @@ import { useProjectFilter } from "@/hooks/use-project-filter";
 import { useProjects } from "@/hooks/use-projects";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/types/board.types";
-import { XIcon } from "lucide-react";
-import { useEffect, useState, type KeyboardEvent } from "react";
 
 const PROJECT_COLOR_CLASSES: Record<string, string> = {
   gray: "bg-neutral-500",
@@ -44,7 +43,7 @@ export function ProjectFilter() {
   // Reset highlighted index when search changes
   useEffect(() => {
     setHighlightedIndex(-1);
-  }, [searchQuery]);
+  }, []);
 
   const handleClearFilter = () => {
     clearFilter();
@@ -93,7 +92,7 @@ export function ProjectFilter() {
   return (
     <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
-        <button
+        <div
           className={cn(
             "flex items-center h-6 w-fit bg-transparent cursor-pointer relative mr-0.5",
             hasActiveFilters &&
@@ -129,14 +128,14 @@ export function ProjectFilter() {
                       ?.name || "Filter"}
                   </div>
                   <div className='w-px self-stretch mx-0 bg-border-light' />
-                  <span
+                  <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleClearFilter();
                     }}
                     className='flex items-center justify-center transition-colors hover:text-blue-500 cursor-pointer px-1 group h-full hover:bg-base hover:shadow-lg'
                     aria-label='Clear filters'
-                    role='button'
+                    type='button'
                     tabIndex={0}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
@@ -147,7 +146,7 @@ export function ProjectFilter() {
                     }}
                   >
                     <XIcon className='size-3.5 text-icon-light group-hover:text-blue-500' />
-                  </span>
+                  </button>
                 </div>
               ) : (
                 <div className='flex items-center relative h-full pl-1.5'>
@@ -159,14 +158,14 @@ export function ProjectFilter() {
                     {selectedProjectIds.length} projects
                   </div>
                   <div className='w-px self-stretch mx-0 bg-border-light' />
-                  <span
+                  <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleClearFilter();
                     }}
                     className='flex items-center justify-center transition-colors cursor-pointer px-1 group hover:bg-hover h-full hover:shadow-lg'
                     aria-label='Clear filters'
-                    role='button'
+                    type='button'
                     tabIndex={0}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
@@ -177,12 +176,12 @@ export function ProjectFilter() {
                     }}
                   >
                     <XIcon className='size-3.5 text-icon-light group-hover:text-blue-500' />
-                  </span>
+                  </button>
                 </div>
               )}
             </div>
           )}
-        </button>
+        </div>
       </PopoverTrigger>
 
       <PopoverContent align='end' className='w-[240px] p-0'>
@@ -253,22 +252,33 @@ export function ProjectFilter() {
               filteredProjects.map((project: Project, index) => {
                 const isSelected = selectedProjectIds.includes(project.id);
                 return (
-                  <div
+                  <button
+                    type='button'
                     key={project.id}
                     className={cn(
-                      "flex items-center space-x-2 rounded-md px-2 pl-1 py-1.5 hover:bg-accent cursor-pointer h-7",
+                      "flex items-center space-x-2 rounded-md px-2 pl-1 py-1.5 hover:bg-accent cursor-pointer h-7 w-full",
                       highlightedIndex === index &&
                         "bg-accent text-accent-foreground"
                     )}
                     onClick={() => toggleProject(project.id)}
                     onMouseEnter={() => setHighlightedIndex(index)}
                   >
-                    <Checkbox
-                      id={`project-${project.id}`}
-                      checked={isSelected}
-                      onCheckedChange={() => toggleProject(project.id)}
-                      className='pointer-events-none'
-                    />
+                    <div
+                      aria-hidden
+                      className={cn(
+                        "w-4 h-4 shrink-0 rounded-full border transition-colors flex items-center justify-center",
+                        isSelected
+                          ? "bg-blue-500 border-blue-500 text-primary-foreground"
+                          : ""
+                      )}
+                    >
+                      {isSelected ? (
+                        <Icon
+                          name='CheckmarkSmallIcon'
+                          className='size-3 text-white'
+                        />
+                      ) : null}
+                    </div>
                     <label
                       htmlFor={`project-${project.id}`}
                       className='flex items-center gap-1.5 flex-1 text-sm cursor-pointer'
@@ -279,9 +289,9 @@ export function ProjectFilter() {
                           PROJECT_COLOR_CLASSES[project.color]
                         )}
                       />
-                      <span className='flex-1'>{project.name}</span>
+                      <span className='flex-1 text-start'>{project.name}</span>
                     </label>
-                  </div>
+                  </button>
                 );
               })
             ) : (

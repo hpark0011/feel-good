@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -19,10 +20,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
 import { useDialogAutoSave } from "@/hooks/use-dialog-auto-save";
 import { useFocusManagement } from "@/hooks/use-focus-management";
 import { useKeyboardSubmit } from "@/hooks/use-keyboard-submit";
+import { usePersistedSubTasks } from "@/hooks/use-persisted-sub-tasks";
 import {
   type TicketFormInput,
   type TicketFormOutput,
@@ -30,8 +37,10 @@ import {
 } from "@/hooks/use-ticket-form";
 import { cn } from "@/lib/utils";
 import { AutoResizingTextarea } from "../ui/auto-resizing-textarea";
+import { Icon } from "../ui/icon";
 import { ProjectSelect } from "./project-select/project-select";
 import { StatusSelect } from "./status-select";
+import { SubTasksList } from "./sub-tasks/sub-tasks-list";
 
 interface TicketFormProps {
   open: boolean;
@@ -59,6 +68,39 @@ export function TicketFormDialog({
     open,
   });
 
+  // Persist sub-tasks draft to localStorage (create mode only, never auto-clears)
+  usePersistedSubTasks(form, open, mode);
+
+  // Show sub-tasks section when there are sub-tasks (manual toggle still works)
+  const [showSubTasks, setShowSubTasks] = useState(
+    (defaultValues?.subTasks?.length ?? 0) > 0
+  );
+
+  // Track previous count to distinguish between user toggle and user removing items
+  const prevCountRef = useRef<number>(defaultValues?.subTasks?.length ?? 0);
+
+  // Auto-show/hide sub-tasks section based on sub-tasks existence
+  useEffect(() => {
+    const subscription = form.watch((values) => {
+      const subTasksCount = values?.subTasks?.length ?? 0;
+      const prevCount = prevCountRef.current;
+
+      // Show when sub-tasks added
+      if (subTasksCount > 0 && !showSubTasks) {
+        setShowSubTasks(true);
+      }
+      // Hide only when user REMOVED last sub-task (went from 1+ to 0)
+      // Don't hide if count was already 0 (user just toggled manually)
+      else if (subTasksCount === 0 && prevCount > 0 && showSubTasks) {
+        setShowSubTasks(false);
+      }
+
+      // Update ref for next comparison
+      prevCountRef.current = subTasksCount;
+    });
+    return () => subscription.unsubscribe();
+  }, [form, showSubTasks]);
+
   const { handleOpenChange, handleCancel } = useDialogAutoSave({
     form,
     onSubmit: handleSubmit,
@@ -72,6 +114,8 @@ export function TicketFormDialog({
     enabled: open,
     onSubmit: () => form.handleSubmit(handleSubmit)(),
   });
+
+  const toggleSubTasks = () => setShowSubTasks(!showSubTasks);
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -94,7 +138,7 @@ export function TicketFormDialog({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
             <DialogBody className='mt-3 gap-0'>
-              <div className='flex gap-0.5 items-center w-[calc(100%+12px)] ml-[-6px]'>
+              <div className='flex items-center w-[calc(100%+12px)] ml-[-6px]'>
                 <FormField
                   control={form.control}
                   name='title'
@@ -123,24 +167,47 @@ export function TicketFormDialog({
                   <FormItem>
                     <FormLabel className='sr-only'>Description</FormLabel>
                     <FormControl>
-                      <AutoResizingTextarea
-                        placeholder='Enter ticket description...'
-                        maxHeight={400}
-                        {...field}
-                        ref={(el) => setDescriptionRef(el, field.ref)}
-                        className={cn(
-                          "resize-none h-full rounded-md min-h-[160px] flex-1 transition-all w-[calc(100%+12px)] ml-[-6px] border-transparent px-2"
-                        )}
-                      />
+                      <div className='relative w-[calc(100%+12px)] ml-[-6px]'>
+                        <AutoResizingTextarea
+                          placeholder='Enter ticket description...'
+                          maxHeight={400}
+                          {...field}
+                          ref={(el) => setDescriptionRef(el, field.ref)}
+                          className={cn(
+                            "resize-none h-full rounded-md min-h-[160px] flex-1 transition-all  border-none px-2 pb-4"
+                          )}
+                        />
+                        <div className='absolute bottom-[-1px] left-0 inset-x-0 h-8 bg-gradient-to-t from-background to-transparent' />
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              {showSubTasks && (
+                <FormField
+                  control={form.control}
+                  name='subTasks'
+                  render={() => (
+                    <FormItem>
+                      <FormLabel className='sr-only'>Sub-tasks</FormLabel>
+                      <FormControl>
+                        <div className='relative z-1'>
+                          <SubTasksList
+                            control={form.control}
+                            name={"subTasks"}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
             </DialogBody>
 
             <DialogFooter className='gap-1 w-full flex justify-between items-center p-3'>
-              <div className='flex gap-1 flex-1'>
+              <div className='flex flex-1'>
                 <FormField
                   control={form.control}
                   name='status'
@@ -161,7 +228,6 @@ export function TicketFormDialog({
                   control={form.control}
                   name='projectId'
                   render={({ field }) => {
-                    console.log("[ticket-form-dialog] field:::", field);
                     return (
                       <FormItem>
                         <FormLabel className='sr-only'>Project</FormLabel>
@@ -176,7 +242,26 @@ export function TicketFormDialog({
                     );
                   }}
                 />
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type='button'
+                      variant='icon'
+                      onClick={toggleSubTasks}
+                    >
+                      <Icon
+                        name='ChecklistIcon'
+                        className={cn(
+                          "size-4.5",
+                          showSubTasks ? "text-blue-500" : "text-icon-light"
+                        )}
+                      />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent sideOffset={-4}>Add sub-tasks</TooltipContent>
+                </Tooltip>
               </div>
+
               <Button
                 type='button'
                 variant='ghost'

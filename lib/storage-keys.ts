@@ -28,6 +28,7 @@ const STORAGE_KEYS = {
     PROJECTS: `${APP_PREFIX}.${KEY_VERSION}.tasks.projects`,
     PROJECT_FILTER: `${APP_PREFIX}.${KEY_VERSION}.tasks.project-filter`,
     LAST_SELECTED_PROJECT: `${APP_PREFIX}.${KEY_VERSION}.tasks.last-selected-project`,
+    TICKET_FORM_SUBTASKS: `${APP_PREFIX}.${KEY_VERSION}.tasks.ticket-form-subtasks`,
   },
 
   // Dashboard/UI preferences
