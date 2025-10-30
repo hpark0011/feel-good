@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -29,7 +30,6 @@ import { useDialogAutoSave } from "@/hooks/use-dialog-auto-save";
 import { useFocusManagement } from "@/hooks/use-focus-management";
 import { useKeyboardSubmit } from "@/hooks/use-keyboard-submit";
 import { usePersistedSubTasks } from "@/hooks/use-persisted-sub-tasks";
-import { usePersistedSubTasksVisibility } from "@/hooks/use-persisted-sub-tasks-visibility";
 import {
   type TicketFormInput,
   type TicketFormOutput,
@@ -71,10 +71,21 @@ export function TicketFormDialog({
   // Persist sub-tasks draft to localStorage (create mode only, never auto-clears)
   usePersistedSubTasks(form, open, mode);
 
-  // Persist visibility toggle to localStorage
-  const [showSubTasks, setShowSubTasks] = usePersistedSubTasksVisibility(
+  // Show sub-tasks section when there are sub-tasks (manual toggle still works)
+  const [showSubTasks, setShowSubTasks] = useState(
     (defaultValues?.subTasks?.length ?? 0) > 0
   );
+
+  // Auto-show sub-tasks section when sub-tasks are added
+  useEffect(() => {
+    const subscription = form.watch((values) => {
+      const subTasksCount = values?.subTasks?.length ?? 0;
+      if (subTasksCount > 0 && !showSubTasks) {
+        setShowSubTasks(true);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [form, showSubTasks]);
 
   const { handleOpenChange, handleCancel } = useDialogAutoSave({
     form,
