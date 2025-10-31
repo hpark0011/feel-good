@@ -2,26 +2,23 @@
 
 import { useEffect, useMemo, useRef } from "react";
 
-type AnyFunction = (...args: any[]) => void;
+export type DebouncedFunction<TArgs extends unknown[]> = ((
+  ...args: TArgs
+) => void) & { cancel: () => void };
 
-export interface DebouncedFunction<T extends AnyFunction> {
-  (...args: Parameters<T>): void;
-  cancel: () => void;
-}
-
-export function useDebouncedCallback<T extends AnyFunction>(
-  callback: T,
+export function useDebouncedCallback<TArgs extends unknown[]>(
+  callback: (...args: TArgs) => void,
   delay: number
-): DebouncedFunction<T> {
-  const callbackRef = useRef<T>(callback);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+): DebouncedFunction<TArgs> {
+  const callbackRef = useRef<(...args: TArgs) => void>(callback);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     callbackRef.current = callback;
   }, [callback]);
 
   const debounced = useMemo(() => {
-    const debouncedFn = (...args: Parameters<T>) => {
+    const debouncedFn = ((...args: TArgs) => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
@@ -29,15 +26,16 @@ export function useDebouncedCallback<T extends AnyFunction>(
       timeoutRef.current = setTimeout(() => {
         callbackRef.current(...args);
       }, delay);
-    };
+    }) as DebouncedFunction<TArgs>;
 
-    (debouncedFn as DebouncedFunction<T>).cancel = () => {
+    debouncedFn.cancel = () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
       }
     };
 
-    return debouncedFn as DebouncedFunction<T>;
+    return debouncedFn;
   }, [delay]);
 
   useEffect(() => {

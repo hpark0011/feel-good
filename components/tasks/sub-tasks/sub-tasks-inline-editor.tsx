@@ -1,7 +1,7 @@
 "use client";
 
+import { LoaderCircle } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Badge } from "@/components/ui/badge";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 import { cn } from "@/lib/utils";
 import { type SubTask, SubTasksListControlled } from "./sub-tasks-list";
@@ -104,12 +104,10 @@ export function SubTasksInlineEditor({
   return (
     <div className={containerClassName}>
       {!readOnly && isDirty ? (
-        <Badge
-          variant='secondary'
-          className='absolute top-2 right-2 text-[10px] font-medium uppercase tracking-[0.08em]'
-        >
-          Saving...
-        </Badge>
+        <div className='absolute top-2 right-2 flex items-center gap-1 text-[10px] font-medium tracking-[0.08em] text-muted-foreground'>
+          <LoaderCircle className='h-3 w-3 animate-spin' aria-hidden='true' />
+          <span className='sr-only'>Saving...</span>
+        </div>
       ) : null}
       <SubTasksListControlled
         subTasks={draft}
