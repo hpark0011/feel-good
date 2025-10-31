@@ -2,7 +2,7 @@
 
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
-import * as React from "react";
+import type * as React from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -98,7 +98,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot='dialog-footer'
       className={cn(
-        "flex flex-col-reverse gap-1 sm:flex-row sm:justify-end p-4",
+        "flex flex-col-reverse gap-1 sm:flex-row sm:justify-end p-3",
         className
       )}
       {...props}

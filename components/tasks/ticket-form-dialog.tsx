@@ -19,6 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { GradientFade } from "@/components/ui/gradient-fade";
 import { Input } from "@/components/ui/input";
 import {
   Tooltip,
@@ -177,7 +178,7 @@ export function TicketFormDialog({
                             "resize-none h-full rounded-md min-h-[160px] flex-1 transition-all  border-none px-2 pb-4"
                           )}
                         />
-                        <div className='absolute bottom-[-1px] left-0 inset-x-0 h-8 bg-gradient-to-t from-background to-transparent' />
+                        <GradientFade />
                       </div>
                     </FormControl>
                     <FormMessage />
@@ -206,7 +207,7 @@ export function TicketFormDialog({
               )}
             </DialogBody>
 
-            <DialogFooter className='gap-1 w-full flex justify-between items-center p-3'>
+            <DialogFooter className='gap-1 w-full flex justify-between items-center'>
               <div className='flex flex-1'>
                 <FormField
                   control={form.control}
