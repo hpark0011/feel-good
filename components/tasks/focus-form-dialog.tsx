@@ -1,5 +1,9 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,11 +22,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Icon } from "@/components/ui/icon";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
 
 const focusSchema = z.object({
   focus: z
@@ -72,35 +73,39 @@ export function FocusFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className='sm:max-w-md'>
-        <DialogHeader>
-          <DialogTitle className='leading-[1]'>
-            Set Today&apos;s Focus
-          </DialogTitle>
+      <DialogContent className='sm:max-w-md '>
+        <DialogHeader className='p-0'>
+          <DialogTitle className='sr-only'>Set Today&apos;s Focus</DialogTitle>
           <DialogDescription className='sr-only'>
             Set your focus for today to stay productive.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
-            <DialogBody>
+            <DialogBody className='mt-[7px] px-2.5'>
               <FormField
                 control={form.control}
                 name='focus'
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className='gap-0'>
                     <FormLabel className='sr-only'>
                       What&apos;s your focus for today?
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder='Enter your focus...'
-                        {...field}
-                        className='h-9 border-[1px] px-2.5 rounded-md placeholder:text-muted-foreground w-[calc(100%+8px)] ml-[-4px] dark:focus:border-neutral-900 dark:border-neutral-800'
-                        autoFocus
-                      />
+                      <div className='flex items-center hover:bg-hover rounded-lg w-[calc(100%+8px)] ml-[-4px] px-1 gap-0.5'>
+                        <Icon
+                          name='TargetIcon'
+                          className='size-6 text-icon-light'
+                        />
+                        <Input
+                          placeholder="What's your focus for today?"
+                          {...field}
+                          className='h-9 border-none px-0 md:text-[16px]'
+                          autoFocus
+                        />
+                      </div>
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className='px-1 text-xs' />
                   </FormItem>
                 )}
               />
