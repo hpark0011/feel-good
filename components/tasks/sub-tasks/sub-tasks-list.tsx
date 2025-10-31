@@ -143,7 +143,7 @@ const SubTaskRow = memo(function SubTaskRow({
   }) as boolean | undefined;
 
   return (
-    <div className='flex items-center gap-2 group/subtask hover:bg-hover px-1 pl-2.5'>
+    <div className='flex items-center gap-2 group/subtask hover:bg-hover px-1 pl-2'>
       <Controller
         name={completedFieldName}
         control={control}
@@ -168,7 +168,7 @@ const SubTaskRow = memo(function SubTaskRow({
               value={stringValue}
               onChange={(e) => onChange(e.target.value)}
               className={cn(
-                "flex-1 border-none bg-transparent p-0 focus-visible:ring-0 h-6 hover:bg-transparent",
+                "flex-1 border-none bg-transparent p-0 focus-visible:ring-0 h-5 hover:bg-transparent",
                 completed && "line-through text-text-muted"
               )}
             />
@@ -180,7 +180,7 @@ const SubTaskRow = memo(function SubTaskRow({
         variant='icon'
         size='sm'
         onClick={() => remove(index)}
-        className='text-icon-light hover:text-icon-primary h-6 w-6 hover:bg-transparent hover:text-blue-500 opacity-0 group-hover/subtask:opacity-100 transition-opacity duration-150'
+        className='text-icon-light hover:text-icon-primary h-5 w-6 hover:bg-transparent hover:text-blue-500 opacity-0 group-hover/subtask:opacity-100 transition-opacity duration-150'
       >
         <Icon name='XmarkIcon' className='size-3.5' />
       </Button>
