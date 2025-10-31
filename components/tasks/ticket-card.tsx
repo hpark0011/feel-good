@@ -4,8 +4,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { motion, type Variants } from "framer-motion";
 import type React from "react";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Icon } from "@/components/ui/icon";
@@ -15,10 +14,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useProjects } from "@/hooks/use-projects";
-import type { TicketFormInput } from "@/hooks/use-ticket-form";
 import { cn } from "@/lib/utils";
 import type { SubTask, Ticket } from "../../types/board.types";
-import { SubTasksList } from "./sub-tasks/sub-tasks-list";
+import { SubTasksInlineEditor } from "./sub-tasks/sub-tasks-inline-editor";
 
 const MotionWrapper = motion.div;
 
@@ -106,50 +104,6 @@ export function TicketCard({
     (ticket.subTasks?.length ?? 0) > 0
   );
 
-  const serializedTicketSubTasks = useMemo(
-    () => JSON.stringify(ticket.subTasks ?? []),
-    [ticket.subTasks]
-  );
-
-  const {
-    control: subTaskControl,
-    setValue: setSubTaskValue,
-    watch: watchSubTaskForm,
-  } = useForm<TicketFormInput>({
-    defaultValues: {
-      title: ticket.title,
-      description: ticket.description,
-      status: ticket.status,
-      projectId: ticket.projectId,
-      subTasks: ticket.subTasks ?? [],
-    },
-  });
-
-  const latestSubTasksSnapshotRef = useRef<string>(serializedTicketSubTasks);
-  const isSyncingFromPropsRef = useRef<boolean>(false);
-  const latestOnChangeRef =
-    useRef<TicketCardProps["onSubTasksChange"]>(onSubTasksChange);
-
-  // Keep the latest onSubTasksChange without retriggering effects
-  useEffect(() => {
-    latestOnChangeRef.current = onSubTasksChange;
-  }, [onSubTasksChange]);
-
-  // Sync incoming ticket subTasks to the local form ONLY when they actually change
-  useEffect(() => {
-    if (serializedTicketSubTasks === latestSubTasksSnapshotRef.current) {
-      return;
-    }
-    // Programmatic update: skip emitting change back to parent once
-    isSyncingFromPropsRef.current = true;
-    setSubTaskValue("subTasks", ticket.subTasks ?? [], {
-      shouldDirty: false,
-      shouldTouch: false,
-      shouldValidate: false,
-    });
-    latestSubTasksSnapshotRef.current = serializedTicketSubTasks;
-  }, [serializedTicketSubTasks, setSubTaskValue, ticket.subTasks]);
-
   const ticketSubTaskCount = ticket.subTasks?.length ?? 0;
 
   useEffect(() => {
@@ -157,34 +111,6 @@ export function TicketCard({
       setIsSubTaskEditorOpen(true);
     }
   }, [ticketSubTaskCount]);
-
-  const watchedSubTasks = watchSubTaskForm("subTasks") ?? [];
-
-  useEffect(() => {
-    if (isDragging) {
-      return;
-    }
-
-    const onChange = latestOnChangeRef.current;
-    if (!onChange) {
-      return;
-    }
-
-    if (isSyncingFromPropsRef.current) {
-      // Consume the programmatic update without echoing back
-      isSyncingFromPropsRef.current = false;
-      latestSubTasksSnapshotRef.current = JSON.stringify(watchedSubTasks);
-      return;
-    }
-
-    const serialized = JSON.stringify(watchedSubTasks);
-    if (serialized === latestSubTasksSnapshotRef.current) {
-      return;
-    }
-
-    onChange(watchedSubTasks.map((subTask) => ({ ...subTask })));
-    latestSubTasksSnapshotRef.current = serialized;
-  }, [watchedSubTasks, isDragging]);
 
   const cardWrapperClassName = cn(
     "relative scale-100 hover:scale-[1.02] transition-all duration-200 ease-out",
@@ -347,7 +273,14 @@ export function TicketCard({
             onPointerDown={stopSubTaskAreaPropagation}
             onPointerUp={stopSubTaskAreaPropagation}
           >
-            <SubTasksList control={subTaskControl} name={"subTasks"} />
+            <SubTasksInlineEditor
+              initialSubTasks={ticket.subTasks ?? []}
+              onSave={(updated) => {
+                if (!isDragging) {
+                  onSubTasksChange?.(updated);
+                }
+              }}
+            />
           </div>
         </CardContent>
       ) : (

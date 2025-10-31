@@ -41,7 +41,7 @@ import { AutoResizingTextarea } from "../ui/auto-resizing-textarea";
 import { Icon } from "../ui/icon";
 import { ProjectSelect } from "./project-select/project-select";
 import { StatusSelect } from "./status-select";
-import { SubTasksList } from "./sub-tasks/sub-tasks-list";
+import { SubTasksListForm } from "./sub-tasks/sub-tasks-list";
 
 interface TicketFormProps {
   open: boolean;
@@ -201,7 +201,7 @@ export function TicketFormDialog({
                       <FormLabel className='sr-only'>Sub-tasks</FormLabel>
                       <FormControl>
                         <div className='relative z-1 w-[calc(100%+12px)] ml-[-6px] border border-border-medium rounded-lg overflow-hidden'>
-                          <SubTasksList
+                          <SubTasksListForm
                             control={form.control}
                             name={"subTasks"}
                           />
