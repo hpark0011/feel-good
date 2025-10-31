@@ -1,4 +1,6 @@
-import * as React from "react";
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
 
 export type RingPercentageProps = {
   /** Percentage value between 0 and 100 */
@@ -18,6 +20,15 @@ export type RingPercentageProps = {
   className?: string;
   /** Accessible label for the progress ring */
   ariaLabel?: string;
+  /** Toggle numeric label display */
+  showLabel?: boolean;
+};
+
+const SPRING_TRANSITION = {
+  type: "spring" as const,
+  stiffness: 170,
+  damping: 26,
+  mass: 0.7,
 };
 
 /**
@@ -27,13 +38,14 @@ export type RingPercentageProps = {
 export function RingPercentage({
   value,
   size = 12,
-  strokeWidth = 2,
+  strokeWidth = 1,
   trackColor = "var(--color-neutral-200)", // Tailwind gray-200
   progressColor = "var(--color-neutral-400)", // Deep navy-like
   label,
   animate = true,
   className,
   ariaLabel = "progress",
+  showLabel = true,
 }: RingPercentageProps) {
   const clamped = Math.max(
     0,
@@ -43,6 +55,8 @@ export function RingPercentage({
   const radius = Math.max(0, center - strokeWidth / 2);
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (clamped / 100) * circumference;
+  const shouldReduceMotion = useReducedMotion();
+  const animationEnabled = animate && !shouldReduceMotion;
 
   return (
     <div
@@ -57,27 +71,29 @@ export function RingPercentage({
       role='img'
       aria-label={`${ariaLabel}: ${clamped}%`}
     >
-      <div
-        style={{
-          position: "relative",
-          inset: 0,
-          display: "grid",
-          placeItems: "center",
-          marginRight: "3px",
-        }}
-        aria-hidden
-      >
-        <span
+      {showLabel && (
+        <div
           style={{
-            fontWeight: 600,
-            fontFeatureSettings: "'tnum' on",
-            fontSize: "12px",
-            color: "var(--color-neutral-500)",
+            position: "relative",
+            inset: 0,
+            display: "grid",
+            placeItems: "center",
+            marginRight: "3px",
           }}
+          aria-hidden
         >
-          {label ?? `${clamped}%`}
-        </span>
-      </div>
+          <span
+            style={{
+              fontWeight: 600,
+              fontFeatureSettings: "'tnum' on",
+              fontSize: "12px",
+              color: "var(--color-neutral-500)",
+            }}
+          >
+            {label ?? `${clamped}%`}
+          </span>
+        </div>
+      )}
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
         <title>{`${clamped}%`}</title>
         <circle
@@ -88,7 +104,7 @@ export function RingPercentage({
           stroke={trackColor}
           strokeWidth={strokeWidth}
         />
-        <circle
+        <motion.circle
           cx={center}
           cy={center}
           r={radius}
@@ -97,11 +113,16 @@ export function RingPercentage({
           strokeWidth={strokeWidth}
           strokeLinecap='round'
           strokeDasharray={`${circumference} ${circumference}`}
-          strokeDashoffset={offset}
           transform={`rotate(-90 ${center} ${center})`}
-          style={{
-            transition: animate ? "stroke-dashoffset 800ms ease" : undefined,
-          }}
+          initial={false}
+          {...(animationEnabled
+            ? {
+                animate: { strokeDashoffset: offset },
+                transition: SPRING_TRANSITION,
+              }
+            : {
+                style: { strokeDashoffset: offset },
+              })}
         />
       </svg>
     </div>

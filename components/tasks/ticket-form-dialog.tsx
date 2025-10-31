@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -41,7 +41,7 @@ import { AutoResizingTextarea } from "../ui/auto-resizing-textarea";
 import { Icon } from "../ui/icon";
 import { ProjectSelect } from "./project-select/project-select";
 import { StatusSelect } from "./status-select";
-import { SubTasksList } from "./sub-tasks/sub-tasks-list";
+import { SubTasksListForm } from "./sub-tasks/sub-tasks-list";
 
 interface TicketFormProps {
   open: boolean;
@@ -70,29 +70,58 @@ export function TicketFormDialog({
   });
 
   // Persist sub-tasks draft to localStorage (create mode only, never auto-clears)
-  usePersistedSubTasks(form, open, mode);
+  const { clearSubTasks } = usePersistedSubTasks(form, open, mode);
+
+  const handleSubmitWithCleanup = useCallback(
+    (data: TicketFormOutput) => {
+      handleSubmit(data);
+      if (mode === "create") {
+        clearSubTasks();
+      }
+    },
+    [handleSubmit, clearSubTasks, mode]
+  );
 
   // Show sub-tasks section when there are sub-tasks (manual toggle still works)
+  // CREATE mode: Always start collapsed
+  // EDIT mode: Start expanded if ticket has sub-tasks
   const [showSubTasks, setShowSubTasks] = useState(
-    (defaultValues?.subTasks?.length ?? 0) > 0
+    mode === "edit" && (defaultValues?.subTasks?.length ?? 0) > 0
   );
 
   // Track previous count to distinguish between user toggle and user removing items
   const prevCountRef = useRef<number>(defaultValues?.subTasks?.length ?? 0);
+  const showSubTasksRef = useRef<boolean>(showSubTasks);
+  const isInitialMountRef = useRef<boolean>(true);
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    showSubTasksRef.current = showSubTasks;
+  }, [showSubTasks]);
+
+  // Mark initial mount as complete after first render
+  useEffect(() => {
+    isInitialMountRef.current = false;
+  }, []);
 
   // Auto-show/hide sub-tasks section based on sub-tasks existence
   useEffect(() => {
     const subscription = form.watch((values) => {
       const subTasksCount = values?.subTasks?.length ?? 0;
       const prevCount = prevCountRef.current;
+      const currentShowSubTasks = showSubTasksRef.current;
 
-      // Show when sub-tasks added
-      if (subTasksCount > 0 && !showSubTasks) {
+      // Show when sub-tasks added (but not on initial load for CREATE mode)
+      // This prevents auto-showing when persisted sub-tasks are loaded
+      const shouldAutoShow = subTasksCount > 0 && !currentShowSubTasks;
+      const isInitialLoad = isInitialMountRef.current && mode === "create";
+
+      if (shouldAutoShow && !isInitialLoad) {
         setShowSubTasks(true);
       }
       // Hide only when user REMOVED last sub-task (went from 1+ to 0)
       // Don't hide if count was already 0 (user just toggled manually)
-      else if (subTasksCount === 0 && prevCount > 0 && showSubTasks) {
+      else if (subTasksCount === 0 && prevCount > 0 && currentShowSubTasks) {
         setShowSubTasks(false);
       }
 
@@ -100,20 +129,38 @@ export function TicketFormDialog({
       prevCountRef.current = subTasksCount;
     });
     return () => subscription.unsubscribe();
-  }, [form, showSubTasks]);
+  }, [form, mode]);
 
-  const { handleOpenChange, handleCancel } = useDialogAutoSave({
-    form,
-    onSubmit: handleSubmit,
-    onOpenChange,
-  });
+  const { handleOpenChange: autoSaveOpenChange, handleCancel: autoSaveCancel } =
+    useDialogAutoSave({
+      form,
+      onSubmit: handleSubmitWithCleanup,
+      onOpenChange,
+    });
+
+  const handleOpenChange = useCallback(
+    (nextOpen: boolean) => {
+      autoSaveOpenChange(nextOpen);
+      if (!nextOpen && mode === "create") {
+        clearSubTasks();
+      }
+    },
+    [autoSaveOpenChange, clearSubTasks, mode]
+  );
+
+  const handleCancel = useCallback(() => {
+    if (mode === "create") {
+      clearSubTasks();
+    }
+    autoSaveCancel();
+  }, [autoSaveCancel, clearSubTasks, mode]);
 
   const { handleAutoFocus, handleTitleKeyDown, setRefs, setDescriptionRef } =
     useFocusManagement();
 
   useKeyboardSubmit({
     enabled: open,
-    onSubmit: () => form.handleSubmit(handleSubmit)(),
+    onSubmit: () => form.handleSubmit(handleSubmitWithCleanup)(),
   });
 
   const toggleSubTasks = () => setShowSubTasks(!showSubTasks);
@@ -137,7 +184,7 @@ export function TicketFormDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <form onSubmit={form.handleSubmit(handleSubmitWithCleanup)}>
             <DialogBody className='mt-3 gap-0'>
               <div className='flex items-center w-[calc(100%+12px)] ml-[-6px]'>
                 <FormField
@@ -193,8 +240,8 @@ export function TicketFormDialog({
                     <FormItem>
                       <FormLabel className='sr-only'>Sub-tasks</FormLabel>
                       <FormControl>
-                        <div className='relative z-1'>
-                          <SubTasksList
+                        <div className='relative z-1 w-[calc(100%+12px)] ml-[-6px] border border-border-medium rounded-lg overflow-hidden'>
+                          <SubTasksListForm
                             control={form.control}
                             name={"subTasks"}
                           />

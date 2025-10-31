@@ -1,5 +1,6 @@
 "use client";
 
+import type React from "react";
 import { memo, useRef, useState } from "react";
 import {
   type Control,
@@ -9,6 +10,7 @@ import {
   useFieldArray,
   useWatch,
 } from "react-hook-form";
+import { RingPercentage } from "@/app/insights/_components/ring-percentage";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Icon } from "@/components/ui/icon";
@@ -22,12 +24,33 @@ export interface SubTask {
   completed: boolean;
 }
 
-interface SubTasksListProps {
+interface SubTasksListFormProps {
   control: Control<TicketFormInput>;
   name?: FieldArrayPath<TicketFormInput>;
 }
 
-export function SubTasksList({ control, name }: SubTasksListProps) {
+interface SubTasksListControlledProps {
+  subTasks: SubTask[];
+  onToggle: (id: string) => void;
+  onTextChange?: (id: string, text: string) => void;
+  onDelete?: (id: string) => void;
+  onAdd?: (text: string) => void;
+  readOnly?: boolean;
+}
+
+type SubTasksListProps =
+  | ({ variant?: "form" } & SubTasksListFormProps)
+  | ({ variant?: "controlled" } & SubTasksListControlledProps);
+
+export function SubTasksList(props: SubTasksListProps) {
+  if ("control" in props) {
+    return <SubTasksListForm {...props} />;
+  }
+
+  return <SubTasksListControlled {...props} />;
+}
+
+export function SubTasksListForm({ control, name }: SubTasksListFormProps) {
   const [newTaskText, setNewTaskText] = useState("");
   const fieldName = (name ?? "subTasks") as FieldArrayPath<TicketFormInput>;
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -62,21 +85,8 @@ export function SubTasksList({ control, name }: SubTasksListProps) {
   const totalCount = subTasks.length;
 
   return (
-    <div className='w-[calc(100%+12px)] ml-[-6px] border border-border-medium rounded-lg group hover:bg-hover/30 flex flex-col overflow-hidden'>
-      {/* Progress indicator */}
-      <div className='text-xs text-text-muted px-2 mb-2 pt-1.5 flex items-center gap-1'>
-        <Icon name='ChecklistIcon' className='size-3.5' />
-        {/* <span className='font-medium ml-1'>Sub-tasks</span> */}
-        {totalCount > 0 ? (
-          <span className='text-xs text-text-muted'>
-            {completedCount} / {totalCount} Completed
-          </span>
-        ) : (
-          <span className='text-xs text-text-muted'>Sub-tasks</span>
-        )}
-      </div>
-
-      {/* Sub-tasks list */}
+    <div className='group hover:bg-hover/30 flex flex-col overflow-hidden'>
+      <ProgressHeader completed={completedCount} total={totalCount} />
       <div className='flex flex-col w-full'>
         {fields.map((field, index) => (
           <SubTaskRow
@@ -88,37 +98,208 @@ export function SubTasksList({ control, name }: SubTasksListProps) {
           />
         ))}
       </div>
+      <AddSubTaskRow
+        inputRef={inputRef}
+        newTaskText={newTaskText}
+        onTextChange={setNewTaskText}
+        onSubmit={addSubTask}
+      />
+    </div>
+  );
+}
 
-      {/* Add new sub-task */}
-      <div className='flex gap-2 pl-2.5 pr-0 items-center hover:bg-hover'>
-        <Input
-          ref={inputRef}
-          placeholder='Add a sub-task...'
-          value={newTaskText}
-          onChange={(e) => setNewTaskText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              addSubTask();
+export function SubTasksListControlled({
+  subTasks,
+  onToggle,
+  onTextChange,
+  onDelete,
+  onAdd,
+  readOnly = false,
+}: SubTasksListControlledProps) {
+  const [newTaskText, setNewTaskText] = useState("");
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleAdd = () => {
+    if (!onAdd) return;
+    const trimmed = newTaskText.trim();
+    if (!trimmed) {
+      inputRef.current?.focus();
+      return;
+    }
+
+    onAdd(trimmed);
+    setNewTaskText("");
+    requestAnimationFrame(() => {
+      inputRef.current?.focus();
+    });
+  };
+
+  const completedCount = subTasks.filter((task) => task?.completed).length;
+  const totalCount = subTasks.length;
+
+  return (
+    <div className='group hover:bg-hover/30 flex flex-col overflow-hidden'>
+      <ProgressHeader completed={completedCount} total={totalCount} />
+      <div className='flex flex-col w-full'>
+        {subTasks.map((subTask) => (
+          <ControlledSubTaskRow
+            key={subTask.id}
+            subTask={subTask}
+            onToggle={() => onToggle(subTask.id)}
+            onTextChange={
+              onTextChange
+                ? (value) => onTextChange(subTask.id, value)
+                : undefined
             }
-          }}
-          className='flex-1 border-none p-0 h-8 hover:bg-transparent'
+            onDelete={onDelete ? () => onDelete(subTask.id) : undefined}
+            readOnly={readOnly}
+          />
+        ))}
+      </div>
+      {!readOnly && onAdd && (
+        <AddSubTaskRow
+          inputRef={inputRef}
+          newTaskText={newTaskText}
+          onTextChange={setNewTaskText}
+          onSubmit={handleAdd}
         />
+      )}
+    </div>
+  );
+}
+
+interface AddSubTaskRowProps {
+  inputRef: React.RefObject<HTMLInputElement | null>;
+  newTaskText: string;
+  onTextChange: (value: string) => void;
+  onSubmit: () => void;
+}
+
+function AddSubTaskRow({
+  inputRef,
+  newTaskText,
+  onTextChange,
+  onSubmit,
+}: AddSubTaskRowProps) {
+  return (
+    <div className='flex gap-2 pl-2.5 pr-0 items-center hover:bg-hover'>
+      <Input
+        ref={inputRef}
+        placeholder='Add a sub-task...'
+        value={newTaskText}
+        onChange={(e) => onTextChange(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            onSubmit();
+          }
+        }}
+        className='flex-1 border-none p-0 h-8 hover:bg-transparent'
+      />
+      <Button
+        type='button'
+        variant='icon'
+        size='sm'
+        onClick={onSubmit}
+        disabled={!newTaskText.trim()}
+        className='text-[13px] font-regular h-8 rounded-l-none hover:text-blue-500 text-text-muted p-0'
+      >
+        <Icon name='PlusCircleFillIcon' className='size-[22px]' />
+      </Button>
+    </div>
+  );
+}
+
+interface ProgressHeaderProps {
+  completed: number;
+  total: number;
+}
+
+const ProgressHeader = ({ completed, total }: ProgressHeaderProps) => {
+  const hasSubTasks = total > 0;
+  const completionPercentage = hasSubTasks
+    ? Math.round((completed / total) * 100)
+    : 0;
+
+  return (
+    <div className='text-xs text-text-muted px-2 mb-2 pt-1.5 flex items-center gap-1.5'>
+      {hasSubTasks ? (
+        <div className='flex items-center justify-center pt-[1px] pl-0.5'>
+          <RingPercentage
+            value={completionPercentage}
+            size={12}
+            strokeWidth={2}
+            ariaLabel='Sub-task completion'
+            showLabel={false}
+          />
+        </div>
+      ) : (
+        <Icon name='ChecklistIcon' className='size-3.5' />
+      )}
+      {hasSubTasks ? (
+        <span className='text-xs text-text-muted'>
+          {completed} / {total} Completed
+        </span>
+      ) : (
+        <span className='text-xs text-text-muted'>Sub-tasks</span>
+      )}
+    </div>
+  );
+};
+
+interface ControlledSubTaskRowProps {
+  subTask: SubTask;
+  onToggle: () => void;
+  onTextChange?: (value: string) => void;
+  onDelete?: () => void;
+  readOnly?: boolean;
+}
+
+const ControlledSubTaskRow = memo(function ControlledSubTaskRow({
+  subTask,
+  onToggle,
+  onTextChange,
+  onDelete,
+  readOnly = false,
+}: ControlledSubTaskRowProps) {
+  return (
+    <div className='flex items-center gap-2 group/subtask hover:bg-hover px-1 pl-2'>
+      <Checkbox
+        checked={!!subTask.completed}
+        onCheckedChange={() => {
+          if (!readOnly) {
+            onToggle();
+          }
+        }}
+        className='border-border-medium'
+        disabled={readOnly}
+      />
+      <Input
+        value={subTask.text}
+        onChange={(event) => onTextChange?.(event.target.value)}
+        readOnly={readOnly || !onTextChange}
+        className={cn(
+          "flex-1 border-none bg-transparent p-0 focus-visible:ring-0 h-5 hover:bg-transparent",
+          subTask.completed && "line-through text-text-muted",
+          readOnly && "cursor-default"
+        )}
+      />
+      {onDelete && !readOnly && (
         <Button
           type='button'
           variant='icon'
           size='sm'
-          onClick={addSubTask}
-          disabled={!newTaskText.trim()}
-          className='text-[13px] font-regular h-8 rounded-l-none hover:text-blue-500 text-text-muted p-0'
+          onClick={onDelete}
+          className='text-icon-light hover:text-icon-primary h-5 w-6 hover:bg-transparent hover:text-blue-500 opacity-0 group-hover/subtask:opacity-100 transition-opacity duration-150'
         >
-          <Icon name='PlusCircleFillIcon' className='size-[22px]' />
-          {/* Add */}
+          <Icon name='XmarkIcon' className='size-3.5' />
         </Button>
-      </div>
+      )}
     </div>
   );
-}
+});
+
+ControlledSubTaskRow.displayName = "ControlledSubTaskRow";
 
 interface SubTaskRowProps {
   control: Control<TicketFormInput>;
@@ -143,7 +324,7 @@ const SubTaskRow = memo(function SubTaskRow({
   }) as boolean | undefined;
 
   return (
-    <div className='flex items-center gap-2 group/subtask hover:bg-hover px-1 pl-2.5'>
+    <div className='flex items-center gap-2 group/subtask hover:bg-hover px-1 pl-2'>
       <Controller
         name={completedFieldName}
         control={control}
@@ -168,7 +349,7 @@ const SubTaskRow = memo(function SubTaskRow({
               value={stringValue}
               onChange={(e) => onChange(e.target.value)}
               className={cn(
-                "flex-1 border-none bg-transparent p-0 focus-visible:ring-0 h-6 hover:bg-transparent",
+                "flex-1 border-none bg-transparent p-0 focus-visible:ring-0 h-5 hover:bg-transparent",
                 completed && "line-through text-text-muted"
               )}
             />
@@ -180,7 +361,7 @@ const SubTaskRow = memo(function SubTaskRow({
         variant='icon'
         size='sm'
         onClick={() => remove(index)}
-        className='text-icon-light hover:text-icon-primary h-6 w-6 hover:bg-transparent hover:text-blue-500 opacity-0 group-hover/subtask:opacity-100 transition-opacity duration-150'
+        className='text-icon-light hover:text-icon-primary h-5 w-6 hover:bg-transparent hover:text-blue-500 opacity-0 group-hover/subtask:opacity-100 transition-opacity duration-150'
       >
         <Icon name='XmarkIcon' className='size-3.5' />
       </Button>
