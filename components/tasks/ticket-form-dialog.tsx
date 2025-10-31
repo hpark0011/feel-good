@@ -193,7 +193,7 @@ export function TicketFormDialog({
                     <FormItem>
                       <FormLabel className='sr-only'>Sub-tasks</FormLabel>
                       <FormControl>
-                        <div className='relative z-1'>
+                        <div className='relative z-1 w-[calc(100%+12px)] ml-[-6px] border border-border-medium rounded-lg overflow-hidden'>
                           <SubTasksList
                             control={form.control}
                             name={"subTasks"}

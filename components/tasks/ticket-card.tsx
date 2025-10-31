@@ -325,7 +325,7 @@ export function TicketCard({
       </CardHeader>
 
       {isSubTaskEditorOpen ? (
-        <CardContent className='p-3.5 pt-0'>
+        <CardContent className='border-border-light mt-0.5 rounded-b-[11px] p-0 overflow-hidden bg-[#f1f1f2] dark:bg-[#0F0F0F]'>
           <div
             data-subtasks-area='true'
             onPointerDown={stopSubTaskAreaPropagation}
