@@ -79,20 +79,27 @@ export function TicketFormDialog({
 
   // Track previous count to distinguish between user toggle and user removing items
   const prevCountRef = useRef<number>(defaultValues?.subTasks?.length ?? 0);
+  const showSubTasksRef = useRef<boolean>(showSubTasks);
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    showSubTasksRef.current = showSubTasks;
+  }, [showSubTasks]);
 
   // Auto-show/hide sub-tasks section based on sub-tasks existence
   useEffect(() => {
     const subscription = form.watch((values) => {
       const subTasksCount = values?.subTasks?.length ?? 0;
       const prevCount = prevCountRef.current;
+      const currentShowSubTasks = showSubTasksRef.current;
 
       // Show when sub-tasks added
-      if (subTasksCount > 0 && !showSubTasks) {
+      if (subTasksCount > 0 && !currentShowSubTasks) {
         setShowSubTasks(true);
       }
       // Hide only when user REMOVED last sub-task (went from 1+ to 0)
       // Don't hide if count was already 0 (user just toggled manually)
-      else if (subTasksCount === 0 && prevCount > 0 && showSubTasks) {
+      else if (subTasksCount === 0 && prevCount > 0 && currentShowSubTasks) {
         setShowSubTasks(false);
       }
 
@@ -100,7 +107,7 @@ export function TicketFormDialog({
       prevCountRef.current = subTasksCount;
     });
     return () => subscription.unsubscribe();
-  }, [form, showSubTasks]);
+  }, [form]);
 
   const { handleOpenChange, handleCancel } = useDialogAutoSave({
     form,

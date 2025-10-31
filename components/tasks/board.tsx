@@ -442,6 +442,27 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
 
   const activeTicket = activeId ? findTicket(activeId) : null;
 
+  // Memoize defaultValues to prevent unnecessary re-renders
+  // Note: Even if editingTicket reference changes, useTicketForm only resets when dialog opens
+  const defaultValues = useMemo(() => {
+    if (editingTicket) {
+      return {
+        title: editingTicket.title,
+        description: editingTicket.description,
+        status: editingTicket.status,
+        projectId: editingTicket.projectId,
+        subTasks: editingTicket.subTasks || [],
+      };
+    }
+    return {
+      title: "",
+      description: "",
+      status: formColumnId,
+      projectId: lastSelectedProjectId,
+      subTasks: [],
+    };
+  }, [editingTicket, formColumnId, lastSelectedProjectId]);
+
   return (
     <>
       <DndContext
@@ -489,23 +510,7 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
           }
         }}
         onSubmit={handleFormSubmit}
-        defaultValues={
-          editingTicket
-            ? {
-                title: editingTicket.title,
-                description: editingTicket.description,
-                status: editingTicket.status,
-                projectId: editingTicket.projectId,
-                subTasks: editingTicket.subTasks || [],
-              }
-            : {
-                title: "",
-                description: "",
-                status: formColumnId,
-                projectId: lastSelectedProjectId,
-                subTasks: [],
-              }
-        }
+        defaultValues={defaultValues}
         mode={editingTicket ? "edit" : "create"}
       />
     </>
