@@ -10,6 +10,7 @@ import {
   useFieldArray,
   useWatch,
 } from "react-hook-form";
+import { RingPercentage } from "@/app/insights/_components/ring-percentage";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Icon } from "@/components/ui/icon";
@@ -214,18 +215,37 @@ interface ProgressHeaderProps {
   total: number;
 }
 
-const ProgressHeader = ({ completed, total }: ProgressHeaderProps) => (
-  <div className='text-xs text-text-muted px-2 mb-2 pt-1.5 flex items-center gap-1'>
-    <Icon name='ChecklistIcon' className='size-3.5' />
-    {total > 0 ? (
-      <span className='text-xs text-text-muted'>
-        {completed} / {total} Completed
-      </span>
-    ) : (
-      <span className='text-xs text-text-muted'>Sub-tasks</span>
-    )}
-  </div>
-);
+const ProgressHeader = ({ completed, total }: ProgressHeaderProps) => {
+  const hasSubTasks = total > 0;
+  const completionPercentage = hasSubTasks
+    ? Math.round((completed / total) * 100)
+    : 0;
+
+  return (
+    <div className='text-xs text-text-muted px-2 mb-2 pt-1.5 flex items-center gap-1.5'>
+      {hasSubTasks ? (
+        <div className='flex items-center justify-center pt-0.5 pl-0.5'>
+          <RingPercentage
+            value={completionPercentage}
+            size={12}
+            strokeWidth={2}
+            ariaLabel='Sub-task completion'
+            showLabel={false}
+          />
+        </div>
+      ) : (
+        <Icon name='ChecklistIcon' className='size-3.5' />
+      )}
+      {hasSubTasks ? (
+        <span className='text-xs text-text-muted'>
+          {completed} / {total} Completed
+        </span>
+      ) : (
+        <span className='text-xs text-text-muted'>Sub-tasks</span>
+      )}
+    </div>
+  );
+};
 
 interface ControlledSubTaskRowProps {
   subTask: SubTask;

@@ -1,5 +1,3 @@
-import * as React from "react";
-
 export type RingPercentageProps = {
   /** Percentage value between 0 and 100 */
   value: number;
@@ -18,6 +16,8 @@ export type RingPercentageProps = {
   className?: string;
   /** Accessible label for the progress ring */
   ariaLabel?: string;
+  /** Toggle numeric label display */
+  showLabel?: boolean;
 };
 
 /**
@@ -34,6 +34,7 @@ export function RingPercentage({
   animate = true,
   className,
   ariaLabel = "progress",
+  showLabel = true,
 }: RingPercentageProps) {
   const clamped = Math.max(
     0,
@@ -57,27 +58,29 @@ export function RingPercentage({
       role='img'
       aria-label={`${ariaLabel}: ${clamped}%`}
     >
-      <div
-        style={{
-          position: "relative",
-          inset: 0,
-          display: "grid",
-          placeItems: "center",
-          marginRight: "3px",
-        }}
-        aria-hidden
-      >
-        <span
+      {showLabel && (
+        <div
           style={{
-            fontWeight: 600,
-            fontFeatureSettings: "'tnum' on",
-            fontSize: "12px",
-            color: "var(--color-neutral-500)",
+            position: "relative",
+            inset: 0,
+            display: "grid",
+            placeItems: "center",
+            marginRight: "3px",
           }}
+          aria-hidden
         >
-          {label ?? `${clamped}%`}
-        </span>
-      </div>
+          <span
+            style={{
+              fontWeight: 600,
+              fontFeatureSettings: "'tnum' on",
+              fontSize: "12px",
+              color: "var(--color-neutral-500)",
+            }}
+          >
+            {label ?? `${clamped}%`}
+          </span>
+        </div>
+      )}
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
         <title>{`${clamped}%`}</title>
         <circle
