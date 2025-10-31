@@ -1,3 +1,7 @@
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
+
 export type RingPercentageProps = {
   /** Percentage value between 0 and 100 */
   value: number;
@@ -20,6 +24,13 @@ export type RingPercentageProps = {
   showLabel?: boolean;
 };
 
+const SPRING_TRANSITION = {
+  type: "spring" as const,
+  stiffness: 170,
+  damping: 26,
+  mass: 0.7,
+};
+
 /**
  * A lightweight, accessible circular progress ring.
  * Uses an SVG circle with stroke-dashoffset to visualize the percentage.
@@ -27,7 +38,7 @@ export type RingPercentageProps = {
 export function RingPercentage({
   value,
   size = 12,
-  strokeWidth = 2,
+  strokeWidth = 1,
   trackColor = "var(--color-neutral-200)", // Tailwind gray-200
   progressColor = "var(--color-neutral-400)", // Deep navy-like
   label,
@@ -44,6 +55,8 @@ export function RingPercentage({
   const radius = Math.max(0, center - strokeWidth / 2);
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (clamped / 100) * circumference;
+  const shouldReduceMotion = useReducedMotion();
+  const animationEnabled = animate && !shouldReduceMotion;
 
   return (
     <div
@@ -91,7 +104,7 @@ export function RingPercentage({
           stroke={trackColor}
           strokeWidth={strokeWidth}
         />
-        <circle
+        <motion.circle
           cx={center}
           cy={center}
           r={radius}
@@ -100,11 +113,16 @@ export function RingPercentage({
           strokeWidth={strokeWidth}
           strokeLinecap='round'
           strokeDasharray={`${circumference} ${circumference}`}
-          strokeDashoffset={offset}
           transform={`rotate(-90 ${center} ${center})`}
-          style={{
-            transition: animate ? "stroke-dashoffset 800ms ease" : undefined,
-          }}
+          initial={false}
+          {...(animationEnabled
+            ? {
+                animate: { strokeDashoffset: offset },
+                transition: SPRING_TRANSITION,
+              }
+            : {
+                style: { strokeDashoffset: offset },
+              })}
         />
       </svg>
     </div>

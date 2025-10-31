@@ -224,7 +224,7 @@ const ProgressHeader = ({ completed, total }: ProgressHeaderProps) => {
   return (
     <div className='text-xs text-text-muted px-2 mb-2 pt-1.5 flex items-center gap-1.5'>
       {hasSubTasks ? (
-        <div className='flex items-center justify-center pt-0.5 pl-0.5'>
+        <div className='flex items-center justify-center pt-[1px] pl-0.5'>
           <RingPercentage
             value={completionPercentage}
             size={12}

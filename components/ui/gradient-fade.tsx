@@ -37,7 +37,7 @@ export function GradientFade({
     <div
       {...props}
       className={cn(
-        "pointer-events-none absolute inset-x-0 from-background dark:from-[#0F0F0F] to-transparent",
+        "pointer-events-none absolute inset-x-0 from-[#f1f1f2] dark:from-[#0F0F0F] to-transparent",
         offsetClass,
         directionClass,
         className

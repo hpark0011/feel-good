@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -70,7 +70,17 @@ export function TicketFormDialog({
   });
 
   // Persist sub-tasks draft to localStorage (create mode only, never auto-clears)
-  usePersistedSubTasks(form, open, mode);
+  const { clearSubTasks } = usePersistedSubTasks(form, open, mode);
+
+  const handleSubmitWithCleanup = useCallback(
+    (data: TicketFormOutput) => {
+      handleSubmit(data);
+      if (mode === "create") {
+        clearSubTasks();
+      }
+    },
+    [handleSubmit, clearSubTasks, mode]
+  );
 
   // Show sub-tasks section when there are sub-tasks (manual toggle still works)
   const [showSubTasks, setShowSubTasks] = useState(
@@ -109,18 +119,36 @@ export function TicketFormDialog({
     return () => subscription.unsubscribe();
   }, [form]);
 
-  const { handleOpenChange, handleCancel } = useDialogAutoSave({
-    form,
-    onSubmit: handleSubmit,
-    onOpenChange,
-  });
+  const { handleOpenChange: autoSaveOpenChange, handleCancel: autoSaveCancel } =
+    useDialogAutoSave({
+      form,
+      onSubmit: handleSubmitWithCleanup,
+      onOpenChange,
+    });
+
+  const handleOpenChange = useCallback(
+    (nextOpen: boolean) => {
+      autoSaveOpenChange(nextOpen);
+      if (!nextOpen && mode === "create") {
+        clearSubTasks();
+      }
+    },
+    [autoSaveOpenChange, clearSubTasks, mode]
+  );
+
+  const handleCancel = useCallback(() => {
+    if (mode === "create") {
+      clearSubTasks();
+    }
+    autoSaveCancel();
+  }, [autoSaveCancel, clearSubTasks, mode]);
 
   const { handleAutoFocus, handleTitleKeyDown, setRefs, setDescriptionRef } =
     useFocusManagement();
 
   useKeyboardSubmit({
     enabled: open,
-    onSubmit: () => form.handleSubmit(handleSubmit)(),
+    onSubmit: () => form.handleSubmit(handleSubmitWithCleanup)(),
   });
 
   const toggleSubTasks = () => setShowSubTasks(!showSubTasks);
@@ -144,7 +172,7 @@ export function TicketFormDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)}>
+          <form onSubmit={form.handleSubmit(handleSubmitWithCleanup)}>
             <DialogBody className='mt-3 gap-0'>
               <div className='flex items-center w-[calc(100%+12px)] ml-[-6px]'>
                 <FormField
