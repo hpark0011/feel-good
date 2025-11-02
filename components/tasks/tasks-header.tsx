@@ -1,8 +1,11 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import type React from "react";
-import { useRef, useState } from "react";
+import { useRef, useState, useTransition } from "react";
+import { signOutAction } from "@/app/_actions/auth-actions";
+import { customToast } from "@/components/custom-toast";
 import {
   HeaderContainer,
   HeaderLogo,
@@ -28,6 +31,12 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Icon } from "@/components/ui/icon";
 import {
   Select,
@@ -41,6 +50,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { PATHS } from "@/config/paths.config";
 import { useNavigation } from "@/hooks/use-navigation";
 import { useTodayFocus } from "@/hooks/use-today-focus";
 import { cn } from "@/lib/utils";
@@ -58,19 +68,77 @@ export function TasksHeader({ onImport, onClear }: HeaderProps) {
   const [focusDialogOpen, setFocusDialogOpen] = useState(false);
   const [todayFocus, setTodayFocus] = useTodayFocus();
   const { getCurrentValue, handleNavigate, navItems } = useNavigation();
+  const router = useRouter();
+  const { resolvedTheme, setTheme } = useTheme();
+  const [isSigningOut, startSignOutTransition] = useTransition();
+
+  const handleSignOut = () => {
+    startSignOutTransition(async () => {
+      const result = await signOutAction(undefined);
+
+      if (result.success) {
+        customToast({
+          type: "success",
+          title: "Signed out",
+          description: "You have been signed out.",
+        });
+        router.push(PATHS.auth.signIn);
+      } else {
+        customToast({
+          type: "error",
+          title: "Sign out failed",
+          description: result.message || "Please try again.",
+        });
+      }
+    });
+  };
+
+  const handleThemeToggle = () => {
+    const nextTheme = resolvedTheme === "dark" ? "light" : "dark";
+    setTheme(nextTheme);
+  };
 
   return (
     <HeaderContainer className='justify-between'>
       <Breadcrumb>
         <BreadcrumbList className='items-center text-[14px] text-foreground sm:gap-0'>
           <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href='/' aria-label='Go to home'>
-                <HeaderLogo />
-              </Link>
-            </BreadcrumbLink>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <BreadcrumbLink asChild>
+                  <button
+                    type='button'
+                    aria-label='Open navigation menu'
+                    className='bg-transparent p-0 m-0 border-none outline-none focus-visible:ring-2 focus-visible:ring-border-highlight rounded-full'
+                  >
+                    <HeaderLogo />
+                  </button>
+                </BreadcrumbLink>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align='start'
+                sideOffset={6}
+                className='min-w-[160px] p-1'
+              >
+                <DropdownMenuItem
+                  disabled={isSigningOut}
+                  onSelect={() => {
+                    if (!isSigningOut) {
+                      handleSignOut();
+                    }
+                  }}
+                >
+                  <Icon name='HandWaveFillIcon' />
+                  Sign out
+                </DropdownMenuItem>
+                <DropdownMenuItem onSelect={handleThemeToggle}>
+                  <Icon name='CircleLeftHalfFilledRightHalfStripedHorizontalIcon' />
+                  Toggle theme
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </BreadcrumbItem>
-          <BreadcrumbSeparator className='text-neutral-400/50 pt-0.5 dark:text-neutral-700 [&>svg]:!size-5 ml-1 mr-[-4px] '>
+          <BreadcrumbSeparator className='text-neutral-400/50 pt-0.5 dark:text-neutral-700 [&>svg]:!size-5 ml-0.5 mr-[-4px] '>
             <Icon
               name='LineDiagonalIcon'
               className=' text-neutral-400/50 dark:text-neutral-700'
