@@ -263,7 +263,7 @@ const ControlledSubTaskRow = memo(function ControlledSubTaskRow({
   readOnly = false,
 }: ControlledSubTaskRowProps) {
   return (
-    <div className='relative flex items-center gap-2 group/subtask hover:bg-hover px-1 pl-2 pr-7'>
+    <div className='relative flex items-center gap-2 group/subtask hover:bg-hover px-1 pl-2 pr-2'>
       <Checkbox
         checked={!!subTask.completed}
         onCheckedChange={() => {
@@ -285,15 +285,21 @@ const ControlledSubTaskRow = memo(function ControlledSubTaskRow({
         )}
       />
       {onDelete && !readOnly && (
-        <Button
-          type='button'
-          variant='icon'
-          size='sm'
-          onClick={onDelete}
-          className='text-icon-light hover:text-icon-primary h-5 w-6 hover:bg-transparent hover:text-blue-500 opacity-0 group-hover/subtask:opacity-100 transition-opacity duration-150 absolute right-1 top-1/2 -translate-y-1/2'
-        >
-          <Icon name='XmarkIcon' className='size-3.5' />
-        </Button>
+        <>
+          <span
+            aria-hidden='true'
+            className='pointer-events-none absolute inset-y-0 right-0 w-14 bg-gradient-to-l from-background via-background/80 to-transparent opacity-80 transition-opacity duration-150 group-hover/subtask:opacity-100 z-10'
+          />
+          <Button
+            type='button'
+            variant='icon'
+            size='sm'
+            onClick={onDelete}
+            className='text-icon-light hover:text-icon-primary hover:bg-transparent hover:text-blue-500 opacity-0 group-hover/subtask:opacity-100 transition-opacity duration-150 absolute right-1 top-1/2 -translate-y-1/2 z-20'
+          >
+            <Icon name='XmarkIcon' className='size-3.5' />
+          </Button>
+        </>
       )}
     </div>
   );
@@ -324,7 +330,7 @@ const SubTaskRow = memo(function SubTaskRow({
   }) as boolean | undefined;
 
   return (
-    <div className='relative flex items-center gap-2 group/subtask hover:bg-hover px-1 pl-2 pr-7'>
+    <div className='relative flex items-center gap-2 group/subtask hover:bg-hover px-1 pl-2 pr-2'>
       <Controller
         name={completedFieldName}
         control={control}
@@ -356,12 +362,16 @@ const SubTaskRow = memo(function SubTaskRow({
           );
         }}
       />
+      <span
+        aria-hidden='true'
+        className='pointer-events-none absolute inset-y-0 right-0 w-14 bg-gradient-to-l from-background via-background/80 to-transparent opacity-80 transition-opacity duration-150 group-hover/subtask:opacity-100 z-10'
+      />
       <Button
         type='button'
         variant='icon'
         size='sm'
         onClick={() => remove(index)}
-        className='text-icon-light hover:text-icon-primary h-5 w-6 hover:bg-transparent hover:text-blue-500 opacity-0 group-hover/subtask:opacity-100 transition-opacity duration-150 absolute right-1 top-1/2 -translate-y-1/2'
+        className='text-icon-light hover:text-icon-primary hover:bg-transparent hover:text-blue-500 opacity-0 group-hover/subtask:opacity-100 transition-opacity duration-150 absolute right-1 top-1/2 -translate-y-1/2 z-20'
       >
         <Icon name='XmarkIcon' className='size-3.5' />
       </Button>

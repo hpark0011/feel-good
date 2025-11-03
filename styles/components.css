@@ -2,6 +2,8 @@
   --card: oklch(0.98 0 0 / 100%);
   --card-border: oklch(1 0 0 / 70%);
 
+  --dialog: oklch(95.84 0.001 286.37 / 100%);
+
   --popover: oklch(0.98 0 0 / 100%);
   --popover-border: oklch(1 0 0 / 70%);
 }
@@ -9,6 +11,8 @@
 .dark {
   --card: oklch(0.2 0 0 / 100%);
   --card-border: oklch(1 0 0 / 2%);
+
+  --dialog: oklch(16.84 0 0 / 100%);
 
   --popover: oklch(0.18 0 0 / 100%);
   --popover-border: oklch(1 0 0 / 2%);
