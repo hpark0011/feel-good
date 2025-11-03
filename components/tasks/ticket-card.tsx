@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useProjects } from "@/hooks/use-projects";
 import { cn } from "@/lib/utils";
-import { useStopWatchStore } from "@/store/stop-watch-store";
+import { StopWatchState, useStopWatchStore } from "@/store/stop-watch-store";
 import type { SubTask, Ticket } from "../../types/board.types";
 import { SubTasksInlineEditor } from "./sub-tasks/sub-tasks-inline-editor";
 
@@ -144,8 +144,21 @@ export function TicketCard({
     }
   };
 
-  const { startTimer, stopWatchState } = useStopWatchStore();
-  console.log("stopWatchState", stopWatchState);
+  const startTimer = useStopWatchStore((state) => state.startTimer);
+  const pauseTimer = useStopWatchStore((state) => state.pauseTimer);
+  const stopTimer = useStopWatchStore((state) => state.stopTimer);
+  const stopWatchState = useStopWatchStore((state) => state.stopWatchState);
+
+  useEffect(() => {
+    if (ticket.status !== "in-progress") {
+      const { stopWatchState: currentStopWatchState } =
+        useStopWatchStore.getState();
+
+      if (currentStopWatchState !== StopWatchState.Stopped) {
+        stopTimer();
+      }
+    }
+  }, [ticket.status, stopTimer]);
 
   const ProjectTag = () => {
     if (!project) return null;
@@ -204,18 +217,31 @@ export function TicketCard({
                   <TooltipTrigger asChild>
                     <button
                       type='button'
-                      className='items-center relative justify-center p-0.5 dark:bg-neutral-900 rounded-full min-w-4 h-4 w-fit top-[1px] left-[-1px] group-hover hidden group-hover:inline-flex shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6),_0_0_0_2px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6),_0_0_0_2px_rgba(255,255,255,0.1)] bg-neutral-50 mr-[4px]'
+                      className='items-center relative justify-center p-0.5 dark:bg-neutral-900 rounded-[6px] min-w-4 h-4 w-fit left-[-1px] group-hover inline-flex group-hover:inline-flex shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6),_0_0_0_2px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6),_0_0_0_2px_rgba(255,255,255,0.1)] bg-neutral-50 mr-[4px]'
                       onClick={() => {
+                        if (stopWatchState === StopWatchState.Running) {
+                          pauseTimer();
+                          return;
+                        }
+
                         startTimer();
                       }}
                     >
                       <Icon
-                        name='PlayFillIcon'
+                        name={
+                          stopWatchState === StopWatchState.Running
+                            ? "PauseFillIcon"
+                            : "PlayFillIcon"
+                        }
                         className='size-3 text-icon-extra-light dark:text-neutral-500'
                       />
                     </button>
                   </TooltipTrigger>
-                  <TooltipContent>Start Timer</TooltipContent>
+                  <TooltipContent>
+                    {stopWatchState === StopWatchState.Running
+                      ? "Pause Timer"
+                      : "Start Timer"}
+                  </TooltipContent>
                 </Tooltip>
               )}
               {ticket.title}

@@ -54,6 +54,7 @@ import { PATHS } from "@/config/paths.config";
 import { useNavigation } from "@/hooks/use-navigation";
 import { useTodayFocus } from "@/hooks/use-today-focus";
 import { cn } from "@/lib/utils";
+import { useStopWatchStore } from "@/store/stop-watch-store";
 import { FocusFormDialog } from "./focus-form-dialog";
 import { ProjectFilter } from "./project-filter";
 
@@ -71,6 +72,7 @@ export function TasksHeader({ onImport, onClear }: HeaderProps) {
   const router = useRouter();
   const { resolvedTheme, setTheme } = useTheme();
   const [isSigningOut, startSignOutTransition] = useTransition();
+  const { stopWatchState } = useStopWatchStore();
 
   const handleSignOut = () => {
     startSignOutTransition(async () => {
@@ -128,11 +130,14 @@ export function TasksHeader({ onImport, onClear }: HeaderProps) {
                     }
                   }}
                 >
-                  <Icon name='HandWaveFillIcon' />
+                  <Icon name='HandWaveFillIcon' className='text-icon-light' />
                   Sign out
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={handleThemeToggle}>
-                  <Icon name='CircleLeftHalfFilledRightHalfStripedHorizontalIcon' />
+                  <Icon
+                    name='CircleLeftHalfFilledRightHalfStripedHorizontalIcon'
+                    className='text-icon-light'
+                  />
                   Toggle theme
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -173,30 +178,40 @@ export function TasksHeader({ onImport, onClear }: HeaderProps) {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <button
-        type='button'
-        onClick={() => setFocusDialogOpen(true)}
-        className='bg-card shadow-xs border-border-highlight dark:border-white/2 border rounded-sm h-[24px] hover:bg-base  transition-all duration-200 ease-out cursor-pointer scale-100 absolute left-1/2 -translate-x-1/2 flex items-center translate-y-[0px] hover:translate-y-[-1px] hover:shadow-lg overflow-hidden text-[14px]'
-      >
-        <div className='text-text-muted font-medium px-2 h-full flex items-center'>
-          {new Date().toLocaleDateString(undefined, {
-            weekday: "short",
-            month: "short",
-            day: "numeric",
-          })}
-        </div>
-        <div className='w-px self-stretch mx-0 bg-border-light' />
-        <span
-          className={cn(
-            "hover:bg-neutral-100 dark:hover:bg-neutral-700 px-2 h-full flex items-center dark:hover:text-white/70",
-            todayFocus
-              ? "text-text-primary font-medium"
-              : "text-text-muted font-[480]"
-          )}
+      {stopWatchState === "stopped" ? (
+        <button
+          type='button'
+          onClick={() => setFocusDialogOpen(true)}
+          className='bg-card shadow-xs border-border-highlight dark:border-white/2 border rounded-sm h-[24px] hover:bg-base  transition-all duration-200 ease-out cursor-pointer scale-100 absolute left-1/2 -translate-x-1/2 flex items-center translate-y-[0px] hover:translate-y-[-1px] hover:shadow-lg overflow-hidden text-[14px]'
         >
-          {todayFocus || "Set today's focus"}
-        </span>
-      </button>
+          <div className='text-text-muted font-medium px-2 h-full flex items-center'>
+            {new Date().toLocaleDateString(undefined, {
+              weekday: "short",
+              month: "short",
+              day: "numeric",
+            })}
+          </div>
+          <div className='w-px self-stretch mx-0 bg-border-light' />
+          <span
+            className={cn(
+              "hover:bg-neutral-100 dark:hover:bg-neutral-700 px-2 h-full flex items-center dark:hover:text-white/70",
+              todayFocus
+                ? "text-text-primary font-medium"
+                : "text-text-muted font-[480]"
+            )}
+          >
+            {todayFocus || "Set today's focus"}
+          </span>
+        </button>
+      ) : (
+        <button
+          type='button'
+          className='bg-card shadow-xs border-border-highlight dark:border-white/2 border rounded-sm h-[24px] hover:bg-base  transition-all duration-200 ease-out cursor-pointer scale-100 absolute left-1/2 -translate-x-1/2 flex items-center translate-y-[0px] hover:translate-y-[-1px] hover:shadow-lg overflow-hidden text-[14px] px-1 pr-2 gap-1'
+        >
+          <Icon name='PlayFillIcon' className='size-4 text-icon-light' />
+          Stop watch running
+        </button>
+      )}
       <HeaderMenu>
         <ProjectFilter />
 
