@@ -37,6 +37,8 @@ import {
   serializeBoardData,
 } from "@/lib/storage";
 import { getStorageKey } from "@/lib/storage-keys";
+import { handleTimerOnStatusChange } from "@/lib/timer-utils";
+import { useStopWatchStore } from "@/store/stop-watch-store";
 import type {
   BoardState,
   ColumnId,
@@ -254,6 +256,21 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
         }
         return board;
       });
+    } else {
+      // Status changed via drag - handle timer logic
+      const ticketId = active.id as string;
+      const oldStatus = activeColumn as ColumnId;
+      const newStatus = overColumn as ColumnId;
+
+      // Apply timer rules after drag completes
+      handleTimerOnStatusChange(
+        ticketId,
+        oldStatus,
+        newStatus,
+        useStopWatchStore.getState(),
+        board,
+        setBoard
+      );
     }
 
     setActiveId(null);
@@ -339,6 +356,9 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
       const oldColumn = findColumn(editingTicket.id);
       if (!oldColumn) return;
 
+      const oldStatus = editingTicket.status;
+      const newStatus = data.status;
+
       setBoard((board) => {
         const updatedTicket: Ticket = {
           ...editingTicket,
@@ -367,6 +387,18 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
           };
         }
       });
+
+      // Handle timer logic if status changed
+      if (oldStatus !== newStatus) {
+        handleTimerOnStatusChange(
+          editingTicket.id,
+          oldStatus,
+          newStatus,
+          useStopWatchStore.getState(),
+          board,
+          setBoard
+        );
+      }
     } else {
       const newTicket: Ticket = {
         id: `ticket-${Date.now()}`,

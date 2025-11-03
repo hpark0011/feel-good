@@ -107,6 +107,7 @@ function isValidTicket(ticket: unknown): ticket is Ticket {
     typeof t.status === "string" &&
     (t.projectId === undefined || typeof t.projectId === "string") &&
     hasValidSubTasks &&
+    (t.duration === undefined || typeof t.duration === "number") &&
     (t.createdAt instanceof Date ||
       typeof t.createdAt === "string") &&
     (t.updatedAt instanceof Date || typeof t.updatedAt === "string")

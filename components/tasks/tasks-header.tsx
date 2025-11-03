@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import type React from "react";
-import { useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { signOutAction } from "@/app/_actions/auth-actions";
 import { customToast } from "@/components/custom-toast";
 import {
@@ -72,7 +72,14 @@ export function TasksHeader({ onImport, onClear }: HeaderProps) {
   const router = useRouter();
   const { resolvedTheme, setTheme } = useTheme();
   const [isSigningOut, startSignOutTransition] = useTransition();
-  const { stopWatchState } = useStopWatchStore();
+  const activeTicketId = useStopWatchStore((state) => state.activeTicketId);
+  const timerState = useStopWatchStore((state) => state.state);
+  const hydrate = useStopWatchStore((state) => state._hydrate);
+
+  // Hydrate timer state from localStorage after mount (prevents hydration errors)
+  useEffect(() => {
+    hydrate();
+  }, [hydrate]);
 
   const handleSignOut = () => {
     startSignOutTransition(async () => {
@@ -178,7 +185,7 @@ export function TasksHeader({ onImport, onClear }: HeaderProps) {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      {stopWatchState === "stopped" ? (
+      {!activeTicketId || timerState === "stopped" ? (
         <button
           type='button'
           onClick={() => setFocusDialogOpen(true)}

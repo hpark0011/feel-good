@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useProjects } from "@/hooks/use-projects";
 import { cn } from "@/lib/utils";
+import { formatDuration } from "@/lib/timer-utils";
 import { StopWatchState, useStopWatchStore } from "@/store/stop-watch-store";
 import type { SubTask, Ticket } from "../../types/board.types";
 import { SubTasksInlineEditor } from "./sub-tasks/sub-tasks-inline-editor";
@@ -147,18 +148,17 @@ export function TicketCard({
   const startTimer = useStopWatchStore((state) => state.startTimer);
   const pauseTimer = useStopWatchStore((state) => state.pauseTimer);
   const stopTimer = useStopWatchStore((state) => state.stopTimer);
-  const stopWatchState = useStopWatchStore((state) => state.stopWatchState);
+
+  // Check if this specific ticket has an active timer (reactive selectors)
+  const isThisTicketActive = useStopWatchStore((state) => state.isTimerActive(ticket.id));
+  const timerState = useStopWatchStore((state) => state.getTimerState(ticket.id));
+  const elapsedTime = useStopWatchStore((state) => state.getElapsedTime(ticket.id));
 
   useEffect(() => {
-    if (ticket.status !== "in-progress") {
-      const { stopWatchState: currentStopWatchState } =
-        useStopWatchStore.getState();
-
-      if (currentStopWatchState !== StopWatchState.Stopped) {
-        stopTimer();
-      }
+    if (ticket.status !== "in-progress" && isThisTicketActive) {
+      stopTimer();
     }
-  }, [ticket.status, stopTimer]);
+  }, [ticket.status, isThisTicketActive, stopTimer]);
 
   const ProjectTag = () => {
     if (!project) return null;
@@ -213,36 +213,47 @@ export function TicketCard({
           <div className='flex-1 min-w-0 flex items-start'>
             <CardTitle className='text-[15px] font-medium leading-[1.2] relative gap-0.5'>
               {ticket.status === "in-progress" && (
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type='button'
-                      className='items-center relative justify-center p-0.5 dark:bg-neutral-900 rounded-[6px] min-w-4 h-4 w-fit left-[-1px] group-hover inline-flex group-hover:inline-flex shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6),_0_0_0_2px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6),_0_0_0_2px_rgba(255,255,255,0.1)] bg-neutral-50 mr-[4px]'
-                      onClick={() => {
-                        if (stopWatchState === StopWatchState.Running) {
-                          pauseTimer();
-                          return;
-                        }
+                <>
+                  {/* Timer Display */}
+                  {(isThisTicketActive || ticket.duration) && (
+                    <span className='text-xs text-text-tertiary font-mono mr-1'>
+                      {isThisTicketActive
+                        ? formatDuration(elapsedTime)
+                        : formatDuration(ticket.duration || 0)}
+                    </span>
+                  )}
+                  {/* Play/Pause Button */}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type='button'
+                        className='items-center relative justify-center p-0.5 dark:bg-neutral-900 rounded-[6px] min-w-4 h-4 w-fit left-[-1px] group-hover inline-flex group-hover:inline-flex shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6),_0_0_0_2px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6),_0_0_0_2px_rgba(255,255,255,0.1)] bg-neutral-50 mr-[4px]'
+                        onClick={() => {
+                          if (timerState === StopWatchState.Running) {
+                            pauseTimer();
+                            return;
+                          }
 
-                        startTimer();
-                      }}
-                    >
-                      <Icon
-                        name={
-                          stopWatchState === StopWatchState.Running
-                            ? "PauseFillIcon"
-                            : "PlayFillIcon"
-                        }
-                        className='size-3 text-icon-extra-light dark:text-neutral-500'
-                      />
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {stopWatchState === StopWatchState.Running
-                      ? "Pause Timer"
-                      : "Start Timer"}
-                  </TooltipContent>
-                </Tooltip>
+                          startTimer(ticket.id);
+                        }}
+                      >
+                        <Icon
+                          name={
+                            timerState === StopWatchState.Running
+                              ? "PauseFillIcon"
+                              : "PlayFillIcon"
+                          }
+                          className='size-3 text-icon-extra-light dark:text-neutral-500'
+                        />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {timerState === StopWatchState.Running
+                        ? "Pause Timer"
+                        : "Start Timer"}
+                    </TooltipContent>
+                  </Tooltip>
+                </>
               )}
               {ticket.title}
             </CardTitle>
