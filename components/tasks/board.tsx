@@ -262,13 +262,12 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
       const oldStatus = activeColumn as ColumnId;
       const newStatus = overColumn as ColumnId;
 
-      // Apply timer rules after drag completes
+      // Apply timer rules after drag completes (uses functional setBoard to avoid race conditions)
       handleTimerOnStatusChange(
         ticketId,
         oldStatus,
         newStatus,
         useStopWatchStore.getState(),
-        board,
         setBoard
       );
     }
@@ -388,14 +387,13 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
         }
       });
 
-      // Handle timer logic if status changed
+      // Handle timer logic if status changed (uses functional setBoard to avoid race conditions)
       if (oldStatus !== newStatus) {
         handleTimerOnStatusChange(
           editingTicket.id,
           oldStatus,
           newStatus,
           useStopWatchStore.getState(),
-          board,
           setBoard
         );
       }
