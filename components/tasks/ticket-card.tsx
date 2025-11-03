@@ -14,6 +14,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useProjects } from "@/hooks/use-projects";
+import { formatDuration } from "@/lib/timer-utils";
 import { cn } from "@/lib/utils";
 import { StopWatchState, useStopWatchStore } from "@/store/stop-watch-store";
 import type { SubTask, Ticket } from "../../types/board.types";
@@ -216,26 +217,18 @@ export function TicketCard({
       >
         <div className='flex items-center gap-1.5'>
           <div className='flex-1 min-w-0 flex items-start'>
-            <CardTitle className='text-[15px] font-medium leading-[1.2] relative gap-0.5 flex'>
+            <CardTitle className='text-[14px] font-medium leading-[1.2] relative gap-[1px] flex'>
               {ticket.status === "in-progress" && (
                 <>
-                  {/* Timer Display */}
-                  {/* {(isThisTicketActive || ticket.duration) && (
-                    <span className='text-xs text-text-tertiary font-mono mr-1'>
-                      {isThisTicketActive
-                        ? formatDuration(elapsedTime)
-                        : formatDuration(ticket.duration || 0)}
-                    </span>
-                  )} */}
                   {/* Play/Pause Button */}
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <button
                         type='button'
                         className={cn(
-                          "items-center relative justify-center p-0.5 dark:bg-neutral-900 rounded-[5px] w-3.5 h-3.5 top-[2px] left-[-1px] group-hover flex shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6),_0_0_0_2px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6),_0_0_0_2px_rgba(255,255,255,0.1)] bg-neutral-50 mr-[4px]",
+                          "items-center relative justify-center dark:bg-neutral-900 rounded-[5px] min-w-3.5 w-fit h-3.5 top-[1px] left-[-1px] group-hover flex shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6),_0_0_0_2px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6),_0_0_0_2px_rgba(255,255,255,0.1)] bg-neutral-50 mr-[4px]",
                           timerState === StopWatchState.Running &&
-                            "pulse-shadow"
+                            "pulse-shadow gap-0.5"
                         )}
                         onClick={() => {
                           if (timerState === StopWatchState.Running) {
@@ -252,8 +245,17 @@ export function TicketCard({
                               ? "PauseFillIcon"
                               : "PlayFillIcon"
                           }
-                          className='size-3 text-icon-extra-light dark:text-neutral-500'
+                          className='size-3 min-w-3 text-icon-extra-light dark:text-neutral-500'
                         />
+
+                        {/* Timer Display */}
+                        {/* {(isThisTicketActive || ticket.duration) && (
+                          <span className='text-[11px] text-orange-400 font-mono mr-1'>
+                            {isThisTicketActive
+                              ? formatDuration(elapsedTime)
+                              : formatDuration(ticket.duration || 0)}
+                          </span>
+                        )} */}
                       </button>
                     </TooltipTrigger>
                     <TooltipContent>
