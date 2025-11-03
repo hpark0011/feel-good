@@ -200,7 +200,7 @@ export function TicketCard({
                   <TooltipTrigger asChild>
                     <button
                       type='button'
-                      className='items-center absolute justify-center p-0.5 bg-neutral-800 rounded-full min-w-4.5 h-4.5 w-fit left-[-2px] group-hover hidden group-hover:flex shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6)]'
+                      className='items-center absolute justify-center p-0.5 bg-neutral-800 rounded-full min-w-4.5 h-4.5 w-fit left-[-2px] group-hover hidden group-hover:flex shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6)] dark:bg-neutral-200'
                     >
                       <Icon
                         name='PlayFillIcon'
