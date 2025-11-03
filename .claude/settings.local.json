@@ -26,17 +26,12 @@
       "Bash(pnpm test:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(tree:*)"
+      "Bash(pnpm tsc:*)"
     ],
     "deny": [],
     "ask": []
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "shadcn"
-  ],
-  "disabledMcpjsonServers": [
-    "supabase",
-    "Context7"
-  ]
+  "enabledMcpjsonServers": ["shadcn"],
+  "disabledMcpjsonServers": ["supabase", "Context7"]
 }
