@@ -14,7 +14,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useProjects } from "@/hooks/use-projects";
+import { formatDuration } from "@/lib/timer-utils";
 import { cn } from "@/lib/utils";
+import { StopWatchState, useStopWatchStore } from "@/store/stop-watch-store";
 import type { SubTask, Ticket } from "../../types/board.types";
 import { SubTasksInlineEditor } from "./sub-tasks/sub-tasks-inline-editor";
 
@@ -143,6 +145,14 @@ export function TicketCard({
     }
   };
 
+  const startTimer = useStopWatchStore((state) => state.startTimer);
+  const pauseTimer = useStopWatchStore((state) => state.pauseTimer);
+
+  // Check if this specific ticket has an active timer (reactive selectors)
+  const timerState = useStopWatchStore((state) =>
+    state.getTimerState(ticket.id)
+  );
+
   const ProjectTag = () => {
     if (!project) return null;
     return (
@@ -184,28 +194,88 @@ export function TicketCard({
     event.stopPropagation();
   };
 
+  const durationInSeconds =
+    ticket.status === "complete" &&
+    typeof ticket.duration === "number" &&
+    ticket.duration > 0
+      ? ticket.duration
+      : null;
+
+  const durationLabel =
+    durationInSeconds !== null ? formatDuration(durationInSeconds) : null;
+
   const cardContent = (
     <>
       <CardHeader
         className={cn(
-          "p-3.5 py-2.5 flex",
+          "p-2.5 py-2 flex",
           (ticket.description || isSubTaskEditorOpen) && "pb-2 h-fit"
         )}
       >
         <div className='flex items-center gap-1.5'>
-          <div className='flex-1 min-w-0'>
-            <CardTitle className='text-[15px] font-medium leading-[1.2]'>
-              {ticket.title}
+          <div className='flex-1 min-w-0 flex items-start'>
+            <CardTitle
+              className={cn(
+                "text-[14px] font-medium leading-[1.2] relative gap-[1px] flex",
+                durationLabel && "block"
+              )}
+            >
+              {ticket.status === "in-progress" && (
+                <>
+                  {/* Play/Pause Button */}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type='button'
+                        className={cn(
+                          "items-center relative justify-center dark:bg-neutral-900 rounded-[5px] min-w-3.5 w-fit h-3.5 top-[1px] left-[-1px] group-hover flex shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6),_0_0_0_2px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6),_0_0_0_2px_rgba(255,255,255,0.1)] bg-neutral-50 mr-[4px]",
+                          timerState === StopWatchState.Running &&
+                            "pulse-shadow gap-0.5"
+                        )}
+                        onClick={() => {
+                          if (timerState === StopWatchState.Running) {
+                            pauseTimer();
+                            return;
+                          }
+
+                          startTimer(ticket.id, ticket.title);
+                        }}
+                      >
+                        <Icon
+                          name={
+                            timerState === StopWatchState.Running
+                              ? "PauseFillIcon"
+                              : "PlayFillIcon"
+                          }
+                          className='size-3 min-w-3 text-icon-extra-light dark:text-neutral-500'
+                        />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {timerState === StopWatchState.Running
+                        ? "Pause Timer"
+                        : "Start Timer"}
+                    </TooltipContent>
+                  </Tooltip>
+                </>
+              )}
+              {durationLabel && (
+                <span className='inline-flex items-center text-orange-300 text-[11px] mr-[5px] relative bottom-[1px] '>
+                  <span className='font-mono'>{durationLabel}</span>
+                </span>
+              )}
+
+              <span>{ticket.title}</span>
             </CardTitle>
           </div>
           {!isDragging && (
-            <div className='absolute top-[6px] right-[6px] flex opacity-0 group-hover:opacity-100 flex-row items-center transition-opacity pointer-events-none group-hover:pointer-events-auto border rounded-md border-border-light bg-white dark:bg-neutral-800'>
+            <div className='absolute top-[5px] right-[5px] flex opacity-0 group-hover:opacity-100 flex-row items-center transition-opacity pointer-events-none group-hover:pointer-events-auto border rounded-md border-border-light bg-white dark:bg-neutral-800'>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     size='sm'
                     variant='ghost'
-                    className='h-[23px] w-7 bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-none cursor-pointer hover:shadow-lg rounded-l-[7px] flex items-center justify-center has-[svg]:pl-0 has-[svg]:pr-0'
+                    className='h-[22px] w-7 bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-none cursor-pointer hover:shadow-lg rounded-l-[7px] flex items-center justify-center has-[svg]:pl-0 has-[svg]:pr-0'
                     onClick={(e) => {
                       e.stopPropagation();
                       setIsSubTaskEditorOpen((prev) => !prev);
@@ -230,7 +300,7 @@ export function TicketCard({
                   <Button
                     size='sm'
                     variant='ghost'
-                    className='h-[23px] w-7 bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-none cursor-pointer hover:shadow-lg flex items-center justify-center has-[svg]:pl-0 has-[svg]:pr-0'
+                    className='h-[22px] w-7 bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-none cursor-pointer hover:shadow-lg flex items-center justify-center has-[svg]:pl-0 has-[svg]:pr-0'
                     onClick={(e) => {
                       e.stopPropagation();
                       onEdit?.();
@@ -250,7 +320,7 @@ export function TicketCard({
                   <Button
                     size='sm'
                     variant='ghost'
-                    className='h-[23px] w-7 bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-none cursor-pointer hover:shadow-lg rounded-r-[7px] has-[svg]:pl-0 has-[svg]:pr-0'
+                    className='h-[22px] w-7 bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-none cursor-pointer hover:shadow-lg rounded-r-[7px] has-[svg]:pl-0 has-[svg]:pr-0'
                     onClick={(e) => {
                       e.stopPropagation();
                       onDelete?.();
@@ -267,7 +337,7 @@ export function TicketCard({
       </CardHeader>
 
       {isSubTaskEditorOpen ? (
-        <CardContent className='border-border-light mt-0.5 rounded-b-[11px] p-0 overflow-hidden bg-[#f1f1f2] dark:bg-[#0F0F0F]'>
+        <CardContent className='border-border-light mt-0.5 rounded-b-[11px] p-0 overflow-hidden bg-[#f1f1f2] dark:bg-[#0F0F0F] '>
           <div
             data-subtasks-area='true'
             onPointerDown={stopSubTaskAreaPropagation}
@@ -285,7 +355,7 @@ export function TicketCard({
         </CardContent>
       ) : (
         ticket.description && (
-          <CardContent className='p-3.5 pt-0'>
+          <CardContent className='p-2.5 pt-0'>
             <p className='text-sm line-clamp-6 w-full leading-[120%] text-text-tertiary whitespace-pre-wrap'>
               {ticket.description}
             </p>

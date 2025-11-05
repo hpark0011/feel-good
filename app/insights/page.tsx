@@ -1,22 +1,21 @@
 "use client";
 
-import { Icon } from "@/components/ui/icon";
-import React, { useEffect, useState, useRef } from "react";
-import { InsightCard } from "./_components/insight-card";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion, type Variants } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/ui/icon";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { InsightCard } from "./_components/insight-card";
 import {
-  TrendGroupWrapper,
-  InsightsCardWrapper,
-  InsightsCardLabel,
-  InsightsCardValueWrapper,
-  InsightsCardValue,
   GrowthRate,
+  InsightsCardLabel,
+  InsightsCardValue,
+  InsightsCardValueWrapper,
+  InsightsCardWrapper,
   TrendBodyWrapper,
+  TrendGroupWrapper,
 } from "./_components/insight-components";
 import { insights } from "./data";
-import { FeedbackDialog } from "./_components/feedback-dialog";
 
 const groupVariants: Variants = {
   hidden: {
@@ -169,7 +168,7 @@ export default function InsightsPage() {
                     <div className='flex flex-col gap-2 w-[calc(100%+16px)] -ml-2'>
                       {insights.map((insight, index) => (
                         <InsightCard
-                          key={index}
+                          key={insight.actionType}
                           user={insight.user ?? ""}
                           match={insight.match ?? 0}
                           actionType={
@@ -241,7 +240,7 @@ export default function InsightsPage() {
             <div className='flex flex-col gap-2 w-[calc(100%+16px)] -ml-2'>
               {insights.map((insight, index) => (
                 <InsightCard
-                  key={index}
+                  key={insight.actionType}
                   user={insight.user ?? ""}
                   match={insight.match ?? 0}
                   actionType={
@@ -275,7 +274,7 @@ export default function InsightsPage() {
             <div className='flex flex-col gap-2 w-[calc(100%+16px)] -ml-2'>
               {insights.map((insight, index) => (
                 <InsightCard
-                  key={index}
+                  key={insight.actionType}
                   user={insight.user ?? ""}
                   match={insight.match ?? 0}
                   actionType={
@@ -294,16 +293,6 @@ export default function InsightsPage() {
         </TabsContent>
       </Tabs>
       <div ref={bottomRef} className='h-1' />
-      <FeedbackDialog
-        open={isDrawerOpen}
-        onOpenChange={(open) => {
-          setIsDrawerOpen(open);
-          if (!open) {
-            setStartOnSecondPage(false);
-          }
-        }}
-        startOnSecondPage={startOnSecondPage}
-      />
     </div>
   );
 }

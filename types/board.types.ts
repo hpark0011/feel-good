@@ -13,6 +13,7 @@ export interface Ticket {
   status: ColumnId;
   projectId?: string;
   subTasks?: SubTask[];
+  duration?: number; // Total accumulated time in seconds
   createdAt: Date;
   updatedAt: Date;
 }

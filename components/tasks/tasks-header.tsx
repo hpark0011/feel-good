@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import type React from "react";
-import { useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { signOutAction } from "@/app/_actions/auth-actions";
 import { customToast } from "@/components/custom-toast";
 import {
@@ -27,8 +27,8 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
+  // BreadcrumbPage,
+  // BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,22 +38,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icon } from "@/components/ui/icon";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { PATHS } from "@/config/paths.config";
-import { useNavigation } from "@/hooks/use-navigation";
+// import { useNavigation } from "@/hooks/use-navigation";
 import { useTodayFocus } from "@/hooks/use-today-focus";
+import { formatDuration } from "@/lib/timer-utils";
 import { cn } from "@/lib/utils";
+import { StopWatchState, useStopWatchStore } from "@/store/stop-watch-store";
 import { FocusFormDialog } from "./focus-form-dialog";
 import { ProjectFilter } from "./project-filter";
 
@@ -67,10 +69,27 @@ export function TasksHeader({ onImport, onClear }: HeaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [focusDialogOpen, setFocusDialogOpen] = useState(false);
   const [todayFocus, setTodayFocus] = useTodayFocus();
-  const { getCurrentValue, handleNavigate, navItems } = useNavigation();
+  // const { getCurrentValue, handleNavigate, navItems } = useNavigation();
   const router = useRouter();
   const { resolvedTheme, setTheme } = useTheme();
   const [isSigningOut, startSignOutTransition] = useTransition();
+  const activeTicketId = useStopWatchStore((state) => state.activeTicketId);
+  const activeTicketTitle = useStopWatchStore(
+    (state) => state.activeTicketTitle
+  );
+  const timerState = useStopWatchStore((state) => state.state);
+  const activeElapsedSeconds = useStopWatchStore((state) => {
+    if (!state.activeTicketId) {
+      return 0;
+    }
+    return state.getElapsedTime(state.activeTicketId);
+  });
+  const hydrate = useStopWatchStore((state) => state._hydrate);
+
+  // Hydrate timer state from localStorage after mount (prevents hydration errors)
+  useEffect(() => {
+    hydrate();
+  }, [hydrate]);
 
   const handleSignOut = () => {
     startSignOutTransition(async () => {
@@ -128,17 +147,20 @@ export function TasksHeader({ onImport, onClear }: HeaderProps) {
                     }
                   }}
                 >
-                  <Icon name='HandWaveFillIcon' />
+                  <Icon name='HandWaveFillIcon' className='text-icon-light' />
                   Sign out
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={handleThemeToggle}>
-                  <Icon name='CircleLeftHalfFilledRightHalfStripedHorizontalIcon' />
+                  <Icon
+                    name='CircleLeftHalfFilledRightHalfStripedHorizontalIcon'
+                    className='text-icon-light'
+                  />
                   Toggle theme
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </BreadcrumbItem>
-          <BreadcrumbSeparator className='text-neutral-400/50 pt-0.5 dark:text-neutral-700 [&>svg]:!size-5 ml-0.5 mr-[-4px] '>
+          {/* <BreadcrumbSeparator className='text-neutral-400/50 pt-0.5 dark:text-neutral-700 [&>svg]:!size-5 ml-0.5 mr-[-4px] '>
             <Icon
               name='LineDiagonalIcon'
               className=' text-neutral-400/50 dark:text-neutral-700'
@@ -170,33 +192,59 @@ export function TasksHeader({ onImport, onClear }: HeaderProps) {
                 </SelectContent>
               </Select>
             </BreadcrumbPage>
-          </BreadcrumbItem>
+          </BreadcrumbItem> */}
         </BreadcrumbList>
       </Breadcrumb>
-      <button
-        type='button'
-        onClick={() => setFocusDialogOpen(true)}
-        className='bg-card shadow-xs border-border-highlight dark:border-white/2 border rounded-sm h-[24px] hover:bg-base  transition-all duration-200 ease-out cursor-pointer scale-100 absolute left-1/2 -translate-x-1/2 flex items-center translate-y-[0px] hover:translate-y-[-1px] hover:shadow-lg overflow-hidden text-[14px]'
-      >
-        <div className='text-text-muted font-medium px-2 h-full flex items-center'>
-          {new Date().toLocaleDateString(undefined, {
-            weekday: "short",
-            month: "short",
-            day: "numeric",
-          })}
-        </div>
-        <div className='w-px self-stretch mx-0 bg-border-light' />
-        <span
-          className={cn(
-            "hover:bg-neutral-100 dark:hover:bg-neutral-700 px-2 h-full flex items-center dark:hover:text-white/70",
-            todayFocus
-              ? "text-text-primary font-medium"
-              : "text-text-muted font-[480]"
-          )}
+      {!activeTicketId || timerState === "stopped" ? (
+        <button
+          type='button'
+          onClick={() => setFocusDialogOpen(true)}
+          className='bg-card shadow-xs border-border-highlight dark:border-white/2 border rounded-sm h-[24px] hover:bg-base  transition-all duration-200 ease-out cursor-pointer scale-100 absolute left-1/2 -translate-x-1/2 flex items-center translate-y-[0px] hover:translate-y-[-1px] hover:shadow-lg overflow-hidden text-[14px]'
         >
-          {todayFocus || "Set today's focus"}
-        </span>
-      </button>
+          <div className='text-text-muted font-medium px-2 h-full flex items-center'>
+            {new Date().toLocaleDateString(undefined, {
+              weekday: "short",
+              month: "short",
+              day: "numeric",
+            })}
+          </div>
+          <div className='w-px self-stretch mx-0 bg-border-light' />
+          <span
+            className={cn(
+              "hover:bg-neutral-100 dark:hover:bg-neutral-700 px-2 h-full flex items-center dark:hover:text-white/70",
+              todayFocus
+                ? "text-text-primary font-medium"
+                : "text-text-muted font-[480]"
+            )}
+          >
+            {todayFocus || "Set today's focus"}
+          </span>
+        </button>
+      ) : (
+        <button
+          type='button'
+          className='bg-card shadow-xs border-border-highlight dark:border-white/2 border rounded-sm h-[24px] hover:bg-base transition-all duration-200 ease-out cursor-pointer scale-100 absolute left-1/2 -translate-x-1/2 flex items-center translate-y-[0px] hover:translate-y-[-1px] hover:shadow-lg overflow-hidden text-[14px] px-1 pr-2 gap-1 max-w-full'
+        >
+          <Icon
+            name={
+              timerState === StopWatchState.Paused
+                ? "PlayFillIcon"
+                : "PauseFillIcon"
+            }
+            className='size-3.5 text-icon-light'
+          />
+          <span className='text-[12px] font-mono text-orange-400 text-left pr-0.5 w-fit'>
+            {formatDuration(activeElapsedSeconds)}
+          </span>
+          <div className='w-px self-stretch mx-1 bg-border-light' />
+          <span
+            className='max-w-[220px] truncate text-left'
+            title={activeTicketTitle ?? undefined}
+          >
+            {activeTicketTitle || "Stop watch running"}
+          </span>
+        </button>
+      )}
       <HeaderMenu>
         <ProjectFilter />
 

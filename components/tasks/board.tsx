@@ -23,6 +23,7 @@ import {
   useCallback,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { COLUMNS, INITIAL_BOARD_STATE } from "@/config/board.config";
@@ -37,6 +38,8 @@ import {
   serializeBoardData,
 } from "@/lib/storage";
 import { getStorageKey } from "@/lib/storage-keys";
+import { handleTimerOnStatusChange } from "@/lib/timer-utils";
+import { useStopWatchStore } from "@/store/stop-watch-store";
 import type {
   BoardState,
   ColumnId,
@@ -84,6 +87,7 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
     [setRawBoard]
   );
   const [activeId, setActiveId] = useState<string | null>(null);
+  const dragSourceColumnRef = useRef<ColumnId | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTicket, setEditingTicket] = useState<Ticket | null>(null);
   const [formColumnId, setFormColumnId] = useState<ColumnId>("backlog");
@@ -156,7 +160,16 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
   };
 
   const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(event.active.id as string);
+    const ticketId = event.active.id as string;
+    const sourceColumn = findColumn(ticketId);
+    if (!sourceColumn) {
+      // Reset drag state if we can't find the source column
+      setActiveId(null);
+      dragSourceColumnRef.current = null;
+      return;
+    }
+    setActiveId(ticketId);
+    dragSourceColumnRef.current = sourceColumn as ColumnId;
   };
 
   const handleDragOver = (event: DragOverEvent) => {
@@ -206,7 +219,18 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
         updatedAt: new Date(),
       };
 
-      overItems.push(updatedActiveItem);
+      // Calculate insertion position based on what we're hovering over
+      const isOverColumn = !!board[over.id as string];
+      const overIndex = isOverColumn
+        ? overItems.length // Hovering over empty column space → append to end
+        : overItems.findIndex((t) => t.id === over.id); // Hovering over a ticket → insert at that position
+
+      if (overIndex >= 0) {
+        overItems.splice(overIndex, 0, updatedActiveItem);
+      } else {
+        // Fallback: append to end if index not found (shouldn't happen in normal use)
+        overItems.push(updatedActiveItem);
+      }
 
       return {
         ...board,
@@ -221,6 +245,7 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
 
     if (!over) {
       setActiveId(null);
+      dragSourceColumnRef.current = null;
       return;
     }
 
@@ -237,10 +262,11 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
 
     if (!activeColumn || !overColumn) {
       setActiveId(null);
+      dragSourceColumnRef.current = null;
       return;
     }
 
-    if (activeColumn === overColumn) {
+    if (dragSourceColumnRef.current === overColumn) {
       setBoard((board) => {
         const items = [...board[activeColumn]];
         const activeIndex = items.findIndex((t) => t.id === active.id);
@@ -254,9 +280,26 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
         }
         return board;
       });
+    } else {
+      // Status changed via drag - handle timer logic
+      const ticketId = active.id as string;
+      const oldStatus = dragSourceColumnRef.current;
+      const newStatus = overColumn as ColumnId;
+
+      // Defensive: only call timer handler if we have a valid source column
+      if (oldStatus) {
+        handleTimerOnStatusChange(
+          ticketId,
+          oldStatus,
+          newStatus,
+          useStopWatchStore.getState(),
+          setBoard
+        );
+      }
     }
 
     setActiveId(null);
+    dragSourceColumnRef.current = null;
   };
 
   const handleAddTicket = (columnId: ColumnId) => {
@@ -274,6 +317,12 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
   const handleDeleteTicket = (ticketId: string) => {
     const column = findColumn(ticketId);
     if (!column) return;
+
+    // Stop timer if this ticket has an active timer
+    const stopWatchStore = useStopWatchStore.getState();
+    if (stopWatchStore.isTimerActive(ticketId)) {
+      stopWatchStore.stopTimer();
+    }
 
     setBoard((board) => ({
       ...board,
@@ -339,6 +388,9 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
       const oldColumn = findColumn(editingTicket.id);
       if (!oldColumn) return;
 
+      const oldStatus = editingTicket.status;
+      const newStatus = data.status;
+
       setBoard((board) => {
         const updatedTicket: Ticket = {
           ...editingTicket,
@@ -367,6 +419,17 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
           };
         }
       });
+
+      // Handle timer logic if status changed (uses functional setBoard to avoid race conditions)
+      if (oldStatus !== newStatus) {
+        handleTimerOnStatusChange(
+          editingTicket.id,
+          oldStatus,
+          newStatus,
+          useStopWatchStore.getState(),
+          setBoard
+        );
+      }
     } else {
       const newTicket: Ticket = {
         id: `ticket-${Date.now()}`,
@@ -389,17 +452,33 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
   };
 
   const handleClearBoard = useCallback(() => {
+    // Stop any active timer before clearing board
+    const stopWatchStore = useStopWatchStore.getState();
+    if (stopWatchStore.activeTicketId) {
+      stopWatchStore.stopTimer();
+    }
+
     setBoard(INITIAL_BOARD_STATE);
   }, [setBoard]);
 
   const handleClearColumn = useCallback(
     (columnId: ColumnId) => {
+      // Stop timer if any ticket in this column has an active timer
+      const stopWatchStore = useStopWatchStore.getState();
+      const ticketsInColumn = board[columnId] || [];
+      for (const ticket of ticketsInColumn) {
+        if (stopWatchStore.isTimerActive(ticket.id)) {
+          stopWatchStore.stopTimer();
+          break; // Only one timer can be active at a time
+        }
+      }
+
       setBoard((board) => ({
         ...board,
         [columnId]: [],
       }));
     },
-    [setBoard]
+    [setBoard, board]
   );
 
   const handleExportBoard = useCallback(() => {
