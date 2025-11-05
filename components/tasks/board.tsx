@@ -23,6 +23,7 @@ import {
   useCallback,
   useImperativeHandle,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { COLUMNS, INITIAL_BOARD_STATE } from "@/config/board.config";
@@ -86,7 +87,7 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
     [setRawBoard]
   );
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [dragSourceColumn, setDragSourceColumn] = useState<ColumnId | null>(null);
+  const dragSourceColumnRef = useRef<ColumnId | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingTicket, setEditingTicket] = useState<Ticket | null>(null);
   const [formColumnId, setFormColumnId] = useState<ColumnId>("backlog");
@@ -160,12 +161,15 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
 
   const handleDragStart = (event: DragStartEvent) => {
     const ticketId = event.active.id as string;
-    setActiveId(ticketId);
     const sourceColumn = findColumn(ticketId);
     if (!sourceColumn) {
+      // Reset drag state if we can't find the source column
+      setActiveId(null);
+      dragSourceColumnRef.current = null;
       return;
     }
-    setDragSourceColumn(sourceColumn as ColumnId);
+    setActiveId(ticketId);
+    dragSourceColumnRef.current = sourceColumn as ColumnId;
   };
 
   const handleDragOver = (event: DragOverEvent) => {
@@ -230,7 +234,7 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
 
     if (!over) {
       setActiveId(null);
-      setDragSourceColumn(null);
+      dragSourceColumnRef.current = null;
       return;
     }
 
@@ -247,11 +251,11 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
 
     if (!activeColumn || !overColumn) {
       setActiveId(null);
-      setDragSourceColumn(null);
+      dragSourceColumnRef.current = null;
       return;
     }
 
-    if (dragSourceColumn === overColumn) {
+    if (dragSourceColumnRef.current === overColumn) {
       setBoard((board) => {
         const items = [...board[activeColumn]];
         const activeIndex = items.findIndex((t) => t.id === active.id);
@@ -268,21 +272,23 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
     } else {
       // Status changed via drag - handle timer logic
       const ticketId = active.id as string;
-      const oldStatus = dragSourceColumn as ColumnId;
+      const oldStatus = dragSourceColumnRef.current;
       const newStatus = overColumn as ColumnId;
 
-      // Apply timer rules after drag completes (uses functional setBoard to avoid race conditions)
-      handleTimerOnStatusChange(
-        ticketId,
-        oldStatus,
-        newStatus,
-        useStopWatchStore.getState(),
-        setBoard
-      );
+      // Defensive: only call timer handler if we have a valid source column
+      if (oldStatus) {
+        handleTimerOnStatusChange(
+          ticketId,
+          oldStatus,
+          newStatus,
+          useStopWatchStore.getState(),
+          setBoard
+        );
+      }
     }
 
     setActiveId(null);
-    setDragSourceColumn(null);
+    dragSourceColumnRef.current = null;
   };
 
   const handleAddTicket = (columnId: ColumnId) => {
