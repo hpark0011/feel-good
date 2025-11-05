@@ -247,8 +247,7 @@ export function TicketCard({
               {ticket.status === "complete" &&
                 ticket.duration &&
                 ticket.duration > 0 && (
-                  <span className='inline-flex items-center gap-1 text-muted-foreground text-xs mr-1.5'>
-                    <Icon name='ClockFillIcon' className='size-3 min-w-3' />
+                  <span className='inline-flex items-center gap-1 text-orange-400 text-[11px] mr-1'>
                     <span className='font-mono'>
                       {formatDuration(ticket.duration)}
                     </span>
