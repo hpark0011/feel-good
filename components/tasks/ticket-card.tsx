@@ -260,7 +260,7 @@ export function TicketCard({
                 </>
               )}
               {durationLabel && (
-                <span className='inline-flex items-center text-orange-400 text-[11px] mr-[5px] relative bottom-[1px] '>
+                <span className='inline-flex items-center text-orange-300 text-[11px] mr-[5px] relative bottom-[1px] '>
                   <span className='font-mono'>{durationLabel}</span>
                 </span>
               )}
