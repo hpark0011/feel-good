@@ -68,7 +68,7 @@ type HeaderProps = {
   onClear: () => void;
 };
 
-export function TasksHeader({ onImport, onClear }: HeaderProps) {
+export function TasksHeader({ onImport, onExport, onClear }: HeaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [focusDialogOpen, setFocusDialogOpen] = useState(false);
   const [todayFocus, setTodayFocus] = useTodayFocus();
@@ -250,6 +250,38 @@ export function TasksHeader({ onImport, onClear }: HeaderProps) {
       )}
       <HeaderMenu>
         <ProjectFilter />
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant='icon'
+              className='h-6 w-6 cursor-pointer rounded-[6px]'
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Icon
+                name='ArrowUpToLineCompactIcon'
+                className='size-5.5 text-icon-light'
+              />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Import Tasks</TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant='icon'
+              className='h-6 w-6 cursor-pointer rounded-[6px]'
+              onClick={onExport}
+            >
+              <Icon
+                name='ArrowDownToLineCompactIcon'
+                className='size-5.5 text-icon-light'
+              />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Export Tasks</TooltipContent>
+        </Tooltip>
 
         <AlertDialog>
           <Tooltip>
