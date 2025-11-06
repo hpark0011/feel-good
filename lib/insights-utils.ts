@@ -34,38 +34,90 @@ export function getTasksCompletedOnDate(
   date: Date
 ): Ticket[] {
   return tickets.filter((ticket) => {
-    if (!ticket.completedAt || !ticket.duration) return false;
+    if (!ticket.completedAt) return false;
     const completedDate = new Date(ticket.completedAt);
     return isSameDay(completedDate, date);
   });
 }
 
 /**
- * Calculates total duration across multiple tickets
+ * Gets time entries for a ticket that occurred on a specific date
  *
- * @param tickets - Array of tickets to sum durations from
- * @returns Total duration in seconds
- *
- * @example
- * const totalSeconds = calculateTotalDuration(completedTickets);
+ * @param ticket - Ticket to get entries from
+ * @param date - Target date to filter by
+ * @returns Array of time entries that occurred on the specified date
  */
-export function calculateTotalDuration(tickets: Ticket[]): number {
-  return tickets.reduce((sum, ticket) => sum + (ticket.duration || 0), 0);
+export function getTimeEntriesForDate(
+  ticket: Ticket,
+  date: Date
+): import("@/types/board.types").TimeEntry[] {
+  if (!ticket.timeEntries || ticket.timeEntries.length === 0) {
+    return [];
+  }
+
+  return ticket.timeEntries.filter((entry) => {
+    const entryDate = new Date(entry.end);
+    return isSameDay(entryDate, date);
+  });
 }
 
 /**
- * Groups completed tasks by project and calculates aggregate metrics
+ * Calculates total duration for tickets on a specific date
+ *
+ * Only includes time from entries that occurred on the selected date,
+ * not the lifetime total duration of the ticket.
+ *
+ * @param tickets - Array of tickets
+ * @param date - Target date to calculate duration for
+ * @returns Total duration in seconds for the specified date
+ *
+ * @example
+ * const todaySeconds = calculateTotalDuration(allTickets, new Date());
+ */
+export function calculateTotalDuration(
+  tickets: Ticket[],
+  date: Date
+): number {
+  return tickets.reduce((sum, ticket) => {
+    const entriesForDate = getTimeEntriesForDate(ticket, date);
+    const dailyDuration = entriesForDate.reduce(
+      (entrySum, entry) => entrySum + entry.duration,
+      0
+    );
+    return sum + dailyDuration;
+  }, 0);
+}
+
+/**
+ * Calculates duration for a specific ticket on a specific date
+ *
+ * @param ticket - Ticket to calculate duration for
+ * @param date - Target date
+ * @returns Duration in seconds for the specified date
+ */
+export function getTicketDurationForDate(
+  ticket: Ticket,
+  date: Date
+): number {
+  const entries = getTimeEntriesForDate(ticket, date);
+  return entries.reduce((sum, entry) => sum + entry.duration, 0);
+}
+
+/**
+ * Groups completed tasks by project and calculates aggregate metrics for a specific date
  *
  * @param tickets - Array of tickets to group
  * @param projects - Array of available projects
+ * @param date - Target date to calculate durations for
  * @returns Array of project summaries with task counts and durations
  *
  * @example
- * const projectStats = groupByProject(completedTasks, allProjects);
+ * const projectStats = groupByProject(completedTasks, allProjects, new Date());
  */
 export function groupByProject(
   tickets: Ticket[],
-  projects: Project[]
+  projects: Project[],
+  date: Date
 ): {
   projectId: string | null;
   projectName: string;
@@ -85,10 +137,15 @@ export function groupByProject(
   for (const ticket of tickets) {
     const projectId = ticket.projectId || null;
     const current = projectMap.get(projectId) || { duration: 0, taskCount: 0 };
-    projectMap.set(projectId, {
-      duration: current.duration + (ticket.duration || 0),
-      taskCount: current.taskCount + 1,
-    });
+    const dailyDuration = getTicketDurationForDate(ticket, date);
+
+    // Only count tasks that have duration on this date
+    if (dailyDuration > 0) {
+      projectMap.set(projectId, {
+        duration: current.duration + dailyDuration,
+        taskCount: current.taskCount + 1,
+      });
+    }
   }
 
   // Convert to array with project details

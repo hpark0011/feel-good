@@ -58,7 +58,11 @@ import { PATHS } from "@/config/paths.config";
 import { useTodayFocus } from "@/hooks/use-today-focus";
 import { useProjects } from "@/hooks/use-projects";
 import { formatDuration } from "@/lib/timer-utils";
-import { safelyDeserializeBoard, BOARD_STORAGE_KEY } from "@/lib/board-storage";
+import {
+  safelyDeserializeBoard,
+  BOARD_STORAGE_KEY,
+  getInitialSerializedBoard,
+} from "@/lib/board-storage";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { cn } from "@/lib/utils";
 import { StopWatchState, useStopWatchStore } from "@/store/stop-watch-store";
@@ -83,7 +87,10 @@ export function TasksHeader({ onImport, onClear }: HeaderProps) {
   const [isSigningOut, startSignOutTransition] = useTransition();
 
   // Get board data and projects for insights
-  const [rawBoard] = useLocalStorage<string>(BOARD_STORAGE_KEY, "{}");
+  const [rawBoard] = useLocalStorage<string>(
+    BOARD_STORAGE_KEY,
+    getInitialSerializedBoard()
+  );
   const board = safelyDeserializeBoard(rawBoard);
   const allTickets = Object.values(board).flat();
   const { projects } = useProjects();
