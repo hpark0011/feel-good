@@ -54,16 +54,16 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { PATHS } from "@/config/paths.config";
+import { useLocalStorage } from "@/hooks/use-local-storage";
+import { useProjects } from "@/hooks/use-projects";
 // import { useNavigation } from "@/hooks/use-navigation";
 import { useTodayFocus } from "@/hooks/use-today-focus";
-import { useProjects } from "@/hooks/use-projects";
-import { formatDuration } from "@/lib/timer-utils";
 import {
-  safelyDeserializeBoard,
   BOARD_STORAGE_KEY,
   getInitialSerializedBoard,
+  safelyDeserializeBoard,
 } from "@/lib/board-storage";
-import { useLocalStorage } from "@/hooks/use-local-storage";
+import { formatDuration } from "@/lib/timer-utils";
 import { cn } from "@/lib/utils";
 import { StopWatchState, useStopWatchStore } from "@/store/stop-watch-store";
 import { FocusFormDialog } from "./focus-form-dialog";
@@ -286,71 +286,72 @@ export function TasksHeader({ onImport, onExport, onClear }: HeaderProps) {
 
         <ProjectFilter />
 
-        <Tooltip>
-          <TooltipTrigger asChild>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
             <Button
               variant='icon'
               className='h-6 w-6 cursor-pointer rounded-[6px]'
-              onClick={() => fileInputRef.current?.click()}
+              aria-label='Board actions'
+            >
+              <Icon name='EllipsisIcon' className='size-4.5 text-icon-light' />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align='end' className='w-[180px]'>
+            <DropdownMenuItem
+              onSelect={(event) => {
+                event.preventDefault();
+                fileInputRef.current?.click();
+              }}
             >
               <Icon
                 name='ArrowUpToLineCompactIcon'
-                className='size-5.5 text-icon-light'
+                className='size-4.5 text-icon-light'
               />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Import Tasks</TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant='icon'
-              className='h-6 w-6 cursor-pointer rounded-[6px]'
-              onClick={onExport}
+              Import tasks
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={(event) => {
+                event.preventDefault();
+                onExport();
+              }}
             >
               <Icon
                 name='ArrowDownToLineCompactIcon'
-                className='size-5.5 text-icon-light'
+                className='size-4.5 text-icon-light'
               />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Export Tasks</TooltipContent>
-        </Tooltip>
-
-        <AlertDialog>
-          <Tooltip>
-            <TooltipTrigger asChild>
+              Export tasks
+            </DropdownMenuItem>
+            <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button
-                  variant='icon'
-                  className='h-6 w-6 cursor-pointer rounded-[6px]'
+                <DropdownMenuItem
+                  onSelect={(event) => event.preventDefault()}
+                  variant='destructive'
                 >
                   <Icon
                     name='XmarkCircleFillIcon'
-                    className='size-5.5 text-icon-light'
+                    className='size-4.5 text-destructive'
                   />
-                </Button>
+                  Clear all board
+                </DropdownMenuItem>
               </AlertDialogTrigger>
-            </TooltipTrigger>
-            <TooltipContent>Clear All Board</TooltipContent>
-          </Tooltip>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Clear Board</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will permanently delete all tickets and reset the board to
-                empty state. This action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={onClear}>
-                Clear Board
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Clear Board</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will permanently delete all tickets and reset the board
+                    to empty state. This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={onClear}>
+                    Clear Board
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </HeaderMenu>
       <input
         ref={fileInputRef}
