@@ -249,6 +249,16 @@ export function TasksHeader({ onImport, onClear }: HeaderProps) {
         </button>
       )}
       <HeaderMenu>
+        <Button
+          variant='icon'
+          className='h-6 w-6 cursor-pointer rounded-[6px] gap-0.5'
+        >
+          <Icon
+            name='WaveformPathEcgIcon'
+            className='size-5.5 text-icon-light'
+          />
+        </Button>
+
         <ProjectFilter />
 
         <AlertDialog>

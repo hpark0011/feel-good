@@ -156,6 +156,7 @@ export { default as UnderlineIcon } from "@/icons/underline.svg";
 export { default as UpvoteIcon } from "@/icons/upvote.svg";
 export { default as VideoFillIcon } from "@/icons/video.fill.svg";
 export { default as VideoSlashFillIcon } from "@/icons/video.slash.fill.svg";
+export { default as WaveformPathEcgIcon } from "@/icons/waveform.path.ecg.svg";
 export { default as WonSignIcon } from "@/icons/won.sign.svg";
 export { default as XCircleFillIcon } from "@/icons/x.circle.fill.svg";
 export { default as XMarkBoldIcon } from "@/icons/x.mark.bold.svg";
