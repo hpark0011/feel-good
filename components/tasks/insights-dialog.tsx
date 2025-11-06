@@ -84,16 +84,16 @@ export function InsightsDialog({
             <Button
               variant='icon'
               size='sm'
-              className='absolute right-1 top-1 h-7 w-7 p-0'
+              className='absolute right-2 top-2 h-6 w-6 p-0'
             >
-              <Icon name='XmarkIcon' className='size-4' />
+              <Icon name='XmarkIcon' className='size-3.5' />
             </Button>
           </DialogClose>
         </DialogHeader>
-        <DialogBody className='space-y-6'>
+        <DialogBody className='space-y-6 px-0'>
           {/* Stats Section */}
           <div className='space-y-4'>
-            <div className='flex items-center justify-between gap-2'>
+            <div className='flex items-center justify-between gap-2 pl-4 pr-2'>
               <h3 className='text-sm font-medium text-muted-foreground'>
                 {isToday ? "Today" : formattedDate}
               </h3>
@@ -107,9 +107,9 @@ export function InsightsDialog({
                 <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
                   <PopoverTrigger asChild>
                     <Button
-                      variant='outline'
+                      variant='ghost'
                       size='sm'
-                      className='h-8 gap-2 rounded-md border-border-highlight px-2.5'
+                      className='gap-2 rounded-md border-border-highlight'
                     >
                       <Icon name='CalendarFillIcon' className='size-4' />
                       <span className='text-xs font-medium'>
@@ -147,13 +147,13 @@ export function InsightsDialog({
             ) : (
               <>
                 {/* Total Duration Card */}
-                <div className='rounded-lg border bg-accent/50 p-4'>
+                <div className='p-0 mb-8 px-4'>
                   <div className='flex items-center gap-3'>
-                    <div>
+                    <div className='flex flex-col gap-1'>
                       <p className='text-xs text-muted-foreground'>
                         Total Focus Time
                       </p>
-                      <p className='text-2xl font-semibold'>
+                      <p className='text-2xl font-semibold text-text-primary'>
                         {formatDuration(totalDuration)}
                       </p>
                     </div>
@@ -162,7 +162,7 @@ export function InsightsDialog({
 
                 {/* Project Breakdown */}
                 {projectBreakdown.length > 0 && (
-                  <div className='space-y-2 mb-8'>
+                  <div className='space-y-2 mb-8 px-4'>
                     <h4 className='text-xs font-medium text-muted-foreground'>
                       By Project
                     </h4>
@@ -204,7 +204,7 @@ export function InsightsDialog({
                 )}
 
                 {/* Task List */}
-                <div className='space-y-2'>
+                <div className='space-y-2 px-4'>
                   <h4 className='text-xs font-medium text-muted-foreground'>
                     Completed Tasks
                   </h4>
