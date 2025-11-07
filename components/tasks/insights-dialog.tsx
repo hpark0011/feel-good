@@ -23,11 +23,14 @@ import {
   getTasksCompletedOnDate,
   getTicketDurationForDate,
   getTimeEntriesForDate,
+  // getTimelineData,
   groupByProject,
 } from "@/lib/insights-utils";
 import { formatDuration } from "@/lib/timer-utils";
 import { cn } from "@/lib/utils";
 import type { Project, Ticket } from "@/types/board.types";
+
+// import { FocusTimelineChart } from "./focus-timeline-chart";
 
 interface InsightsDialogProps {
   open: boolean;
@@ -63,6 +66,12 @@ export function InsightsDialog({
     [completedTasks, projects, selectedDate]
   );
 
+  // Get 7-day timeline data for visualization
+  // const timelineData = useMemo(
+  // 	() => getTimelineData(tickets, projects, selectedDate, 7),
+  // 	[tickets, projects, selectedDate],
+  // );
+
   const formattedDate = selectedDate.toLocaleDateString("en-US", {
     weekday: "short",
     month: "short",
@@ -74,9 +83,9 @@ export function InsightsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className='sm:max-w-2xl pb-4'>
-        <DialogHeader className='relative space-y-1 pr-12'>
-          <DialogTitle>Insights</DialogTitle>
+      <DialogContent className='sm:max-w-xl pb-4 h-[calc(100vh-64px)] translate-y-[-50%]'>
+        <DialogHeader className='relative pr-12 py-3 flex items-center w-full flex-row'>
+          <DialogTitle className='text-sm'>Insights</DialogTitle>
           <DialogDescription className='sr-only'>
             View your focus time and completed tasks
           </DialogDescription>
@@ -84,13 +93,13 @@ export function InsightsDialog({
             <Button
               variant='icon'
               size='sm'
-              className='absolute right-2 top-2 h-6 w-6 p-0'
+              className='absolute right-2 top-2 h-6 w-6 p-0 [&_svg]:text-icon-light'
             >
               <Icon name='XmarkIcon' className='size-3.5' />
             </Button>
           </DialogClose>
         </DialogHeader>
-        <DialogBody className='space-y-6 px-0'>
+        <DialogBody className='px-0'>
           {/* Stats Section */}
           <div className='space-y-4'>
             <div className='flex items-center justify-between gap-2 pl-4 pr-2'>
@@ -127,7 +136,6 @@ export function InsightsDialog({
                         setDatePickerOpen(false);
                       }}
                       disabled={(date) => date > new Date()}
-                      initialFocus
                     />
                   </PopoverContent>
                 </Popover>
@@ -160,10 +168,21 @@ export function InsightsDialog({
                   </div>
                 </div>
 
+                {/* <div className='border-b border-border mb-6' /> */}
+
+                {/* Timeline Chart */}
+                {/* <div className='mb-8 px-4'>
+                  <h4 className='text-xs font-medium text-muted-foreground mb-4'>
+                    7-Day Focus Timeline
+                  </h4>
+                  <FocusTimelineChart data={timelineData} />
+                </div> */}
+
+                <div className='border-b border-border mb-6' />
                 {/* Project Breakdown */}
                 {projectBreakdown.length > 0 && (
                   <div className='space-y-2 mb-8 px-4'>
-                    <h4 className='text-xs font-medium text-muted-foreground'>
+                    <h4 className='text-xs font-medium text-muted-foreground mb-3'>
                       By Project
                     </h4>
                     <div className='space-y-2'>
@@ -203,12 +222,13 @@ export function InsightsDialog({
                   </div>
                 )}
 
+                <div className='border-b border-border mb-6' />
                 {/* Task List */}
                 <div className='space-y-2 px-4'>
-                  <h4 className='text-xs font-medium text-muted-foreground'>
+                  <h4 className='text-xs font-medium text-muted-foreground mb-3'>
                     Completed Tasks
                   </h4>
-                  <div className='max-h-64 space-y-2 overflow-y-auto'>
+                  <div className='max-h-64 space-y-1.5 2overflow-y-auto'>
                     {completedTasks.map((task) => {
                       const project = task.projectId
                         ? projects.find((p) => p.id === task.projectId)
@@ -227,9 +247,9 @@ export function InsightsDialog({
                         <div key={task.id} className='px-0.5 text-sm space-y-2'>
                           <div className='flex items-center justify-between w-full'>
                             <div className='flex-1 space-y-1'>
-                              <div className='flex items-center gap-2'>
+                              <div className='flex items-center gap-2.5'>
                                 {project && (
-                                  <div className='flex items-center gap-1.5'>
+                                  <div className='flex items-center gap-1'>
                                     <div
                                       className='size-1.5 rounded-full'
                                       style={{
