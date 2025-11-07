@@ -23,13 +23,14 @@ import {
   getTasksCompletedOnDate,
   getTicketDurationForDate,
   getTimeEntriesForDate,
-  getTimelineData,
+  // getTimelineData,
   groupByProject,
 } from "@/lib/insights-utils";
 import { formatDuration } from "@/lib/timer-utils";
 import { cn } from "@/lib/utils";
 import type { Project, Ticket } from "@/types/board.types";
-import { FocusTimelineChart } from "./focus-timeline-chart";
+
+// import { FocusTimelineChart } from "./focus-timeline-chart";
 
 interface InsightsDialogProps {
   open: boolean;
@@ -66,10 +67,10 @@ export function InsightsDialog({
   );
 
   // Get 7-day timeline data for visualization
-  const timelineData = useMemo(
-    () => getTimelineData(tickets, projects, selectedDate, 7),
-    [tickets, projects, selectedDate]
-  );
+  // const timelineData = useMemo(
+  // 	() => getTimelineData(tickets, projects, selectedDate, 7),
+  // 	[tickets, projects, selectedDate],
+  // );
 
   const formattedDate = selectedDate.toLocaleDateString("en-US", {
     weekday: "short",
