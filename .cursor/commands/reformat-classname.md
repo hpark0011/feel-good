@@ -1,0 +1,1 @@
+Reformat the className into multiple lines grouped by purpose (layout, shape, background, sizing, positioning, alignment, interactive states) with comments. This improves readability and maintainability. 
