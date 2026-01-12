@@ -32,6 +32,14 @@
     "ask": []
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": ["shadcn"],
-  "disabledMcpjsonServers": ["supabase", "Context7"]
+  "enabledMcpjsonServers": [
+    "supabase",
+    "Context7",
+    "shadcn",
+    "chrome-devtools"
+  ],
+  "disabledMcpjsonServers": [
+    "supabase",
+    "Context7"
+  ]
 }
