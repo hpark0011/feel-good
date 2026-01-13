@@ -26,7 +26,13 @@
       "Bash(pnpm test:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(pnpm tsc:*)"
+      "Bash(pnpm tsc:*)",
+      "mcp__plugin_compound-engineering_context7__resolve-library-id",
+      "Bash(tree:*)",
+      "mcp__plugin_compound-engineering_context7__query-docs",
+      "Bash(find:*)",
+      "Bash(du:*)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": []
