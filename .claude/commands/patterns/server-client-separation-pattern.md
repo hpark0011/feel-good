@@ -1,3 +1,11 @@
+---
+name: Server-Client Separation Pattern
+category: Architecture
+applies_to: [pages, components]
+updated: 2025-01-13
+documented_in: CLAUDE.md
+---
+
 # Refactor Page: Data Fetching Separation Pattern
 
 This command refactors a Next.js page to follow the **Server Component + Client View Pattern**, ensuring clean separation between data fetching and UI rendering.

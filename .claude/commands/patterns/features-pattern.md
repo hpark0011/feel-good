@@ -1,3 +1,11 @@
+---
+name: Features Pattern
+category: Component Organization
+applies_to: [features, shared]
+updated: 2025-01-13
+documented_in: CLAUDE.md
+---
+
 # Features Pattern
 
 This document outlines the features pattern for organizing shared functionality in the Delphi codebase.

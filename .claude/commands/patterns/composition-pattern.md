@@ -1,3 +1,11 @@
+---
+name: Composition Pattern
+category: Component Organization
+applies_to: [components, features]
+updated: 2025-01-13
+documented_in: CLAUDE.md
+---
+
 # Feature Component Organization Pattern
 
 This document defines the standard organization pattern for feature components in the Delphi codebase. This pattern promotes maintainability, discoverability, and consistency across all features.

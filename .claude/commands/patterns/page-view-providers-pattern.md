@@ -1,3 +1,11 @@
+---
+name: Page-View-Providers Pattern
+category: Architecture
+applies_to: [pages, features]
+updated: 2025-01-13
+documented_in: CLAUDE.md
+---
+
 # Page-View-Providers Pattern
 
 This document defines the standard three-layer architecture pattern for organizing feature pages in the Delphi codebase. This pattern ensures clean separation between server-side data fetching, client-side providers, and view composition.
