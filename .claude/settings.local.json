@@ -32,7 +32,8 @@
       "mcp__plugin_compound-engineering_context7__query-docs",
       "Bash(find:*)",
       "Bash(du:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(npx jscpd:*)"
     ],
     "deny": [],
     "ask": []
