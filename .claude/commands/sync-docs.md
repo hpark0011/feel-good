@@ -293,3 +293,10 @@ documented_in: CLAUDE.md
 2. Display a summary to the user
 3. Highlight the most critical issues
 4. Provide the first 2-3 actionable steps they should take
+5. **Suggest next step**: If status is NEEDS_UPDATE or OUT_OF_SYNC, recommend:
+
+   > 💡 **Next Step**: Run the context-guardian agent to identify improvement opportunities and automation suggestions.
+   >
+   > The guardian will analyze codebase patterns, git history, and conversation context to suggest new commands, skills, or documentation improvements.
+   >
+   > Invoke with: "Run context guardian to check for opportunities"
