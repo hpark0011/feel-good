@@ -50,8 +50,7 @@ import type {
 } from "../../types/board.types";
 import { BodyContainer } from "../layout/layout-ui";
 import { BoardColumn } from "./board-column";
-import { TicketCard } from "./ticket-card";
-import { TicketFormDialog } from "./ticket-form-dialog";
+import { TicketCard, TicketFormDialog } from "./ticket-card";
 
 export type BoardHandle = {
   importFromInput: (event: React.ChangeEvent<HTMLInputElement>) => void;

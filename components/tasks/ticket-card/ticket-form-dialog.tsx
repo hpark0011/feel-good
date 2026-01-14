@@ -37,11 +37,11 @@ import {
   useTicketForm,
 } from "@/app/(protected)/dashboard/tasks/_hooks";
 import { cn } from "@/lib/utils";
-import { AutoResizingTextarea } from "../ui/auto-resizing-textarea";
-import { Icon } from "../ui/icon";
-import { ProjectSelect } from "./project-select/project-select";
-import { StatusSelect } from "./status-select";
-import { SubTasksListForm } from "./sub-tasks/sub-tasks-list";
+import { AutoResizingTextarea } from "../../ui/auto-resizing-textarea";
+import { Icon } from "../../ui/icon";
+import { ProjectSelect } from "../project-select/project-select";
+import { StatusSelect } from "../status-select";
+import { SubTasksListForm } from "../sub-tasks/sub-tasks-list";
 
 interface TicketFormProps {
   open: boolean;

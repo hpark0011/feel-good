@@ -8,249 +8,161 @@ documented_in: CLAUDE.md
 
 # Feature Component Organization Pattern
 
-This document defines the standard organization pattern for feature components in the Delphi codebase. This pattern promotes maintainability, discoverability, and consistency across all features.
-
-## Overview
-
-Features should organize their components using an **atomic component architecture** with **feature-based naming**. Each component is a single, focused piece of UI that handles one specific aspect of the feature.
+Atomic component architecture with feature-based naming. Each component handles one specific aspect of the feature.
 
 ## Core Principles
 
-1. **Single Responsibility**: Each component handles one specific aspect of the feature
-2. **Flat Structure**: All components exist at the same directory level (no nested component folders)
-3. **Composition Over Nesting**: Components are composed in parent views rather than deeply nested
-4. **Type Safety**: All components use strong TypeScript interfaces for props
-5. **Client/Server Separation**: Use `"use client"` only when necessary (state, hooks, DOM manipulation)
+1. **Single Responsibility**: One component = one purpose
+2. **Smart Structure**: Flat for standalone; folders for 3+ related files
+3. **Composition Over Nesting**: Compose in parent views, not nested folders
+4. **Type Safety**: Strong TypeScript interfaces for all props
+5. **Client/Server Separation**: `"use client"` only when needed (state, hooks, DOM)
 
 ## Naming Convention
 
-### Standard Pattern
-```
-{feature}-{component-name}.tsx
-```
+**Pattern**: `{feature}-{component-name}.tsx`
 
-### Examples
-- `profile-name.tsx` → `ProfileName` component
-- `profile-bio.tsx` → `ProfileBio` component
-- `profile-header.tsx` → `ProfileHeader` component
-- `mind-widget.tsx` → `MindWidget` component
-- `mind-training-status.tsx` → `MindTrainingStatus` component
+**Examples**:
 
-### Edit/Form Components
-For components that handle editing or forms, prefix with `edit-`:
-- `edit-profile-form.tsx` → `EditProfileForm` component
-- `edit-profile-socials.tsx` → `EditProfileSocials` component
-- `edit-mind-settings.tsx` → `EditMindSettings` component
-
-### Utility/Helper Components
-For shared utility components within a feature, use descriptive names:
-- `social-icon-links.tsx` → `SocialIconLinks` component
-- `profile-custom-input.tsx` → `ProfileCustomInput` component
+- `profile-name.tsx` → `ProfileName`
+- `profile-header.tsx` → `ProfileHeader`
+- `edit-profile-form.tsx` → `EditProfileForm` (forms/editing)
+- `social-icon-links.tsx` → `SocialIconLinks` (utilities)
 
 ## Component Categories
 
-### 1. Presentational Components
-**Purpose**: Simple, display-only components with minimal logic
+### 1. Presentational
 
-**Characteristics**:
-- No state management
-- No side effects
-- Pure rendering based on props
-- Can be server components (no `"use client"`)
+Display-only, no state/side effects. Can be server components.
 
-**Example**:
 ```typescript
 interface ProfileNameProps {
   name: string;
 }
 
 export function ProfileName({ name }: ProfileNameProps) {
-  return (
-    <h1 className="text-[52px] mt-6 mb-3 font-semibold text-sand-12">
-      {name}
-    </h1>
-  );
+  return <h1>{name}</h1>;
 }
 ```
 
-**When to use**: Displaying static or prop-driven content
+### 2. Container/Composite
 
----
+Composes multiple child components. May have minimal UI state (dialogs, etc.). Often client components.
 
-### 2. Container/Composite Components
-**Purpose**: Components that compose other components together
-
-**Characteristics**:
-- Imports and uses multiple child components
-- Handles layout and composition
-- May include minimal state for UI concerns (e.g., dialog open/close)
-- Often client components due to interactivity
-
-**Example**:
 ```typescript
 "use client";
 
-import { ProfileHistory } from "./profile-history";
-import { ProfileShareSheet } from "./profile-share-sheet";
-import { ProfileWarning } from "./profile-warning";
-
-interface ProfileHeaderProps {
-  slug: string;
-  name: string;
-}
-
 export function ProfileHeader({ slug, name }: ProfileHeaderProps) {
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
-  
   return (
     <>
       <ProfileWarning slug={slug} />
-      <header>
-        <ProfileHistory slug={slug} />
-        <button onClick={() => setShareSheetOpen(true)}>Share</button>
-      </header>
+      <ProfileHistory slug={slug} />
       <ProfileShareSheet open={shareSheetOpen} onOpenChange={setShareSheetOpen} />
     </>
   );
 }
 ```
 
-**When to use**: Combining multiple components into a cohesive UI section
+### 3. Interactive/Form
 
----
+State management, user input, side effects. Always client components.
 
-### 3. Interactive/Form Components
-**Purpose**: Components with state management and user interactions
-
-**Characteristics**:
-- Uses React hooks (useState, useEffect, etc.)
-- Handles form state or user input
-- Manages side effects
-- Always client components (`"use client"`)
-
-**Example**:
 ```typescript
 "use client";
-
-import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
-
-interface EditProfileFormProps {
-  profile: Profile;
-  slug: string;
-}
 
 export function EditProfileForm({ profile, slug }: EditProfileFormProps) {
   const form = useForm({ defaultValues: { name: profile.name } });
-  const mutation = useMutation(/* ... */);
-  
-  return (
-    <Form {...form}>
-      {/* form fields */}
-    </Form>
-  );
+  return <Form {...form}>{/* fields */}</Form>;
 }
 ```
 
-**When to use**: Forms, inputs, interactive elements requiring state
+### 4. Utility/Wrapper
 
----
+Cross-cutting functionality (DOM manipulation, analytics, providers). Uses useEffect. Client components.
 
-### 4. Utility/Wrapper Components
-**Purpose**: Components that provide cross-cutting functionality
-
-**Characteristics**:
-- Handles side effects (DOM manipulation, analytics, etc.)
-- Wraps other components
-- Often uses useEffect for lifecycle management
-- Client components
-
-**Example**:
 ```typescript
 "use client";
 
-import { useEffect } from "react";
-
-interface ProfileBackgroundWrapperProps {
-  children: React.ReactNode;
-}
-
-export function ProfileBackgroundWrapper({ children }: ProfileBackgroundWrapperProps) {
+export function ProfileBackgroundWrapper({ children }: Props) {
   useEffect(() => {
     document.documentElement.classList.add("profile-page-bg");
-    return () => {
-      document.documentElement.classList.remove("profile-page-bg");
-    };
+    return () => document.documentElement.classList.remove("profile-page-bg");
   }, []);
-
   return <>{children}</>;
 }
 ```
 
-**When to use**: Analytics tracking, DOM manipulation, theme/context providers
-
----
-
 ## Directory Structure
 
+**Flat structure** for: standalone components, cross-feature components, single-purpose utilities
+
+**Folder structure** for: component families (3+ files), shared configs, parent-child relationships
+
 ```
-features/
-  {feature-name}/
-    components/
-      {feature}-{component-name}.tsx
-      {feature}-{another-component}.tsx
-      edit-{feature}-{form-name}.tsx
-    views/
-      {feature}-view.tsx  # Main composition component
-    hooks/
-      use-{feature}-{hook-name}.tsx
-    lib/
-      utils.ts  # Feature-specific utilities
-    styles/
-      theme.css  # Feature-specific styles
+features/{feature-name}/
+  components/
+    {feature}-{component-name}.tsx      # Flat
+    feature-family/                     # Folder (3+ files)
+      feature-family.tsx
+      feature-family-item.tsx
+      feature-family.config.ts
+  views/
+    {feature}-view.tsx                  # Main composition
+  hooks/
+    use-{feature}-{hook-name}.tsx
 ```
+
+## Folder Organization
+
+**Create a folder when you have 3+ of:**
+- Main component + sub-components used exclusively by it
+- Configuration file (*.config.ts)
+- Type definitions (*.types.ts)
+- Related hooks
+
+**Folder pattern:**
+```
+component-family/
+  component-family.tsx           # Main
+  component-family-item.tsx      # Sub-components
+  component-family.config.ts     # Config
+  index.ts                       # export { ComponentFamily } from "./component-family"
+```
+
+**Real examples:**
+- `project-select/` - Main + menu items + dialogs + color indicator
+- `sub-tasks/` - List + rows + editor + 10 specialized sub-components + types
+- `ticket-card/` - Card + timer button + toolbar + tag + form dialog + config
 
 ## Composition Pattern
 
-Components should be composed in a parent view component located in `views/{feature}-view.tsx`:
+Compose components in `views/{feature}-view.tsx`:
 
 ```typescript
 import { FeatureComponentA } from "../components/feature-component-a";
 import { FeatureComponentB } from "../components/feature-component-b";
-import { FeatureComponentC } from "../components/feature-component-c";
-
-interface FeatureViewProps {
-  data: FeatureData;
-  // other props
-}
 
 export default function FeatureView({ data }: FeatureViewProps) {
   return (
-    <div className="feature-container">
+    <div>
       <FeatureComponentA prop={data.propA} />
       <FeatureComponentB prop={data.propB} />
-      <FeatureComponentC prop={data.propC} />
     </div>
   );
 }
 ```
 
-**Key Points**:
-- Import components directly from `components/`
-- Compose them in a logical order
-- Pass props down from the view component
-- Keep the view component focused on composition, not business logic
+**Key**: Import from `components/`, compose in view, pass props down, keep view focused on composition.
 
 ## Component Structure Template
 
 ```typescript
-// 1. Imports (external libraries first, then internal)
-import { SomeExternalLib } from "external-lib";
-import { ComponentFromUI } from "@delphi/ui";
+// 1. Imports (external → internal)
+import { ExternalLib } from "external-lib";
 import { LocalComponent } from "./local-component";
-import { utilityFunction } from "../lib/utils";
 
-// 2. Type definitions (if needed)
+// 2. Types (if needed)
 type SomeType = RouterOutputs["feature"]["getData"];
 
 // 3. Props interface
@@ -259,153 +171,73 @@ interface ComponentNameProps {
   optionalProp?: number;
 }
 
-// 4. Component implementation
-export function ComponentName({ 
-  requiredProp, 
-  optionalProp 
-}: ComponentNameProps) {
-  // Early returns for null/empty states
-  if (!requiredProp) return null;
+// 4. Component
+export function ComponentName({ requiredProp, optionalProp }: ComponentNameProps) {
+  if (!requiredProp) return null; // Early return
 
-  // Component logic
   const processedData = processData(requiredProp);
 
-  // Render
-  return (
-    <div className="component-wrapper">
-      {/* JSX */}
-    </div>
-  );
+  return <div>{/* JSX */}</div>;
 }
 ```
 
 ## Guidelines for AI Agents
 
-When creating or refactoring components following this pattern:
+### Creating Components
 
-### Creating New Components
+1. **Determine Type**: Presentational (no client) → Interactive (client + hooks) → Container (composes) → Utility (side effects)
+2. **Naming**: `{feature}-{name}.tsx`, function matches file (PascalCase), prefix `edit-` for forms
+3. **Structure**: Props interface first, early returns, single responsibility, named export
+4. **Type Safety**: Always `ComponentNameProps` interface, use tRPC types, avoid `any`
 
-1. **Determine Component Type**: 
-   - Is it presentational? → No `"use client"`, simple props
-   - Does it need state/interactivity? → Add `"use client"`, use hooks
-   - Does it compose others? → Import child components
-   - Does it handle side effects? → Use useEffect, mark as client
+### Refactoring
 
-2. **Naming**:
-   - Use `{feature}-{descriptive-name}.tsx` format
-   - Component function name should match file name (PascalCase)
-   - For edit forms, prefix with `edit-`
-
-3. **Structure**:
-   - Define props interface first
-   - Add early returns for null/empty states
-   - Keep component focused on single responsibility
-   - Export as named export: `export function ComponentName`
-
-4. **Type Safety**:
-   - Always define `ComponentNameProps` interface
-   - Use TypeScript types from tRPC outputs when possible
-   - Avoid `any` types
-
-### Refactoring Existing Components
-
-1. **Check Naming**: Ensure it follows `{feature}-{name}.tsx` pattern
-2. **Extract Logic**: Move complex logic to hooks or utility functions
-3. **Split Large Components**: Break down components that do multiple things
-4. **Add Type Safety**: Ensure all props are properly typed
-5. **Optimize Client/Server**: Only mark as client if necessary
+1. Check naming follows pattern
+2. Extract logic to hooks/utils
+3. Split multi-purpose components
+4. Add type safety
+5. Optimize client/server usage
 
 ### Common Patterns
 
-**Conditional Rendering**:
-```typescript
-export function Component({ data }: ComponentProps) {
-  if (!data) return null; // Early return
-  
-  return <div>{data}</div>;
-}
-```
+**Conditional**: `if (!data) return null;`
 
-**Composing Components**:
-```typescript
-export function ContainerComponent({ items }: Props) {
-  return (
-    <div>
-      {items.map(item => (
-        <ChildComponent key={item.id} data={item} />
-      ))}
-    </div>
-  );
-}
-```
+**Composing**: `{items.map(item => <ChildComponent key={item.id} data={item} />)}`
 
-**Client Component with State**:
-```typescript
-"use client";
+**State**: `"use client"` + `useState`/`useForm`/hooks
 
-import { useState } from "react";
+## Examples
 
-export function InteractiveComponent({ initialValue }: Props) {
-  const [value, setValue] = useState(initialValue);
-  
-  return (
-    <input 
-      value={value} 
-      onChange={(e) => setValue(e.target.value)} 
-    />
-  );
-}
-```
+See `apps/frontend/src/features/profile/components/`:
 
-## Examples from Codebase
-
-### Reference Implementation
-See `apps/frontend/src/features/profile/components/` for a complete implementation of this pattern:
-
-- **Presentational**: `profile-name.tsx`, `profile-bio.tsx`, `profile-image.tsx`
+- **Presentational**: `profile-name.tsx`, `profile-bio.tsx`
 - **Container**: `profile-header.tsx`, `profile-socials.tsx`
-- **Interactive**: `profile-chat-input.tsx`, `profile-custom-input.tsx`
-- **Form**: `edit-profile-form.tsx`, `edit-profile-socials.tsx`
-- **Utility**: `profile-background-wrapper.tsx`, `profile-tracker.tsx`
+- **Interactive**: `profile-chat-input.tsx`
+- **Form**: `edit-profile-form.tsx`
+- **Utility**: `profile-background-wrapper.tsx`
 
-### Composition Example
-See `apps/frontend/src/features/profile/views/profile-view.tsx` for how components are composed together.
+Composition: `apps/frontend/src/features/profile/views/profile-view.tsx`
 
-## Benefits
+## Benefits & Anti-Patterns
 
-1. **Discoverability**: Easy to find components by feature name
-2. **Reusability**: Small, focused components are easier to reuse
-3. **Maintainability**: Changes are isolated to specific components
-4. **Testability**: Each component can be tested independently
-5. **Scalability**: New features can be added without affecting existing ones
-6. **AI-Friendly**: Clear patterns make it easier for AI agents to generate consistent code
+**Benefits**: Discoverability, reusability, maintainability, testability, scalability, AI-friendly
 
-## Anti-Patterns to Avoid
+**Avoid**:
 
-❌ **Don't nest component folders**: `components/profile/header/header.tsx`
-✅ **Do use flat structure**: `components/profile-header.tsx`
+- ❌ Single-file folders: `profile/header/header.tsx` → ✅ Flat: `profile-header.tsx` OR ✅ Folder with 3+ files: `profile-header/`
+- ❌ Generic names: `button.tsx` → ✅ Feature prefix: `profile-button.tsx`
+- ❌ Mixed concerns: display + edit → ✅ Separate: `profile-bio.tsx` + `edit-profile-bio.tsx`
+- ❌ Skipped types: `props: any` → ✅ Interface: `interface ComponentProps`
+- ❌ Unnecessary client → ✅ Client only for state/hooks/DOM
 
-❌ **Don't create generic names**: `components/button.tsx` (unless it's truly shared)
-✅ **Do use feature prefix**: `components/profile-button.tsx`
+## Checklist
 
-❌ **Don't mix concerns**: A component that both displays and edits
-✅ **Do separate concerns**: `profile-bio.tsx` and `edit-profile-bio.tsx`
-
-❌ **Don't skip type definitions**: `function Component(props: any)`
-✅ **Do define interfaces**: `interface ComponentProps { ... }`
-
-❌ **Don't mark everything as client**: `"use client"` on presentational components
-✅ **Do use client only when needed**: State, hooks, DOM manipulation
-
-## Checklist for New Components
-
-- [ ] Component name follows `{feature}-{name}.tsx` pattern
-- [ ] Component function name matches file name (PascalCase)
-- [ ] Props interface is defined (`ComponentNameProps`)
-- [ ] Component has single responsibility
-- [ ] `"use client"` is only added if necessary
-- [ ] Early returns for null/empty states
-- [ ] Exported as named export
-- [ ] TypeScript types are properly defined
-- [ ] Component is composed in parent view (not nested)
-
+- [ ] Name: `{feature}-{name}.tsx` pattern
+- [ ] Function name matches file (PascalCase)
+- [ ] Props interface defined (`ComponentNameProps`)
+- [ ] Single responsibility
+- [ ] `"use client"` only if needed
+- [ ] Early returns for null/empty
+- [ ] Named export
+- [ ] Types properly defined
+- [ ] Composed in parent view (not nested)

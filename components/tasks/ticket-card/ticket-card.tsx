@@ -11,7 +11,7 @@ import { formatDuration } from "@/app/(protected)/dashboard/tasks/_utils";
 import { cn } from "@/lib/utils";
 import { useStopWatchStore } from "@/store/stop-watch-store";
 import type { SubTask, Ticket } from "@/types/board.types";
-import { SubTasksInlineEditor } from "./sub-tasks/sub-tasks-inline-editor";
+import { SubTasksInlineEditor } from "../sub-tasks/sub-tasks-inline-editor";
 import { cardVariants, statusStyles } from "./ticket-card.config";
 import { TicketProjectTag } from "./ticket-project-tag";
 import { TicketTimerButton } from "./ticket-timer-button";
@@ -285,7 +285,7 @@ export function TicketCard({
   // Regular non-animated card for all other cases
   return (
     <div {...commonWrapperProps}>
-      <ProjectTag project={project} isDragging={isDragging} />
+      <TicketProjectTag project={project} isDragging={isDragging} />
       <Card className={cardClassName}>{cardContent}</Card>
     </div>
   );
