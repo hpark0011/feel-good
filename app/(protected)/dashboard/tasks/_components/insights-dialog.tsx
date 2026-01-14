@@ -40,10 +40,7 @@ interface InsightsDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function InsightsDialog({
-  open,
-  onOpenChange,
-}: InsightsDialogProps) {
+export function InsightsDialog({ open, onOpenChange }: InsightsDialogProps) {
   // Fetch data only when dialog is rendered
   const [rawBoard] = useLocalStorage<string>(
     BOARD_STORAGE_KEY,
@@ -174,16 +171,6 @@ export function InsightsDialog({
                     </div>
                   </div>
                 </div>
-
-                {/* <div className='border-b border-border mb-6' /> */}
-
-                {/* Timeline Chart */}
-                {/* <div className='mb-8 px-4'>
-                  <h4 className='text-xs font-medium text-muted-foreground mb-4'>
-                    7-Day Focus Timeline
-                  </h4>
-                  <FocusTimelineChart data={timelineData} />
-                </div> */}
 
                 <div className='border-b border-border mb-6' />
                 {/* Project Breakdown */}
