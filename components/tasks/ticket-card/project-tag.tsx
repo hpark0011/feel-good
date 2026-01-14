@@ -16,30 +16,110 @@ export function ProjectTag({ project, isDragging }: ProjectTagProps) {
   if (!project) return null;
 
   return (
-    <div className='relative ml-[12px] w-fit cursor-grab active:cursor-grabbing'>
-      <div className='flex items-center gap-[3px] bg-neutral-100 dark:bg-neutral-900 w-fit px-2 pl-2 py-[1px] rounded-t-md after:content-[""] after:absolute after:bottom-[-12px] after:left-0 after:w-full after:h-[12px] after:bg-neutral-100 dark:after:bg-neutral-900 relative border-card-border dark:border-neutral-900 border hover:bg-hover'>
+    <div
+      className={cn(
+        // Positioning
+        "relative",
+        // Sizing
+        "w-fit",
+        // Spacing
+        "ml-[12px]",
+        // Interactive States
+        "cursor-grab active:cursor-grabbing"
+      )}
+    >
+      <div
+        className={cn(
+          // Layout & Alignment
+          "flex items-center",
+          // Sizing
+          "w-fit",
+          // Spacing
+          "gap-[3px] px-2 pl-2 py-[1px]",
+          // Positioning
+          "relative",
+          // Shape
+          "rounded-t-md",
+          // Background
+          "bg-neutral-100 dark:bg-neutral-900",
+          // Border
+          "border border-card-border dark:border-neutral-900",
+          // Interactive States
+          "hover:bg-hover",
+          // Pseudo-elements (after)
+          'after:content-[""]',
+          "after:absolute after:bottom-[-12px] after:left-0",
+          "after:w-full after:h-[12px]",
+          "after:bg-neutral-100 dark:after:bg-neutral-900"
+        )}
+      >
         <div className='flex items-center justify-center'>
           <div
             className={cn(
-              "size-[5px] mr-[1px] rounded-full",
+              // Sizing
+              "size-[5px]",
+              // Spacing
+              "mr-[1px]",
+              // Shape
+              "rounded-full",
+              // Background (project color)
               getProjectColorBgClass(project.color)
             )}
           />
         </div>
-        <span className='text-xs text-text-tertiary'>{project.name}</span>
+        <span
+          className={cn(
+            // Typography
+            "text-xs text-text-tertiary"
+          )}
+        >
+          {project.name}
+        </span>
       </div>
-      <div className='absolute bottom-[-3px] left-[-6px] bg-neutral-100 dark:bg-neutral-900'>
+      {/* Left corner ornament */}
+      <div
+        className={cn(
+          // Positioning
+          "absolute bottom-[-3px] left-[-6px]",
+          // Background
+          "bg-neutral-100 dark:bg-neutral-900"
+        )}
+      >
         <div
           className={cn(
-            "w-[7px] h-[8px] bg-background rounded-br-full border-r border-b border-white dark:border-neutral-900",
+            // Sizing
+            "w-[7px] h-[8px]",
+            // Shape
+            "rounded-br-full",
+            // Background
+            "bg-background",
+            // Border
+            "border-r border-b border-white dark:border-neutral-900",
+            // Conditional: Hide when dragging
             isDragging && "hidden"
           )}
         />
       </div>
-      <div className='absolute bottom-[-1px] right-[-7px] bg-neutral-100 dark:bg-neutral-900'>
+      {/* Right corner ornament */}
+      <div
+        className={cn(
+          // Positioning
+          "absolute bottom-[-1px] right-[-7px]",
+          // Background
+          "bg-neutral-100 dark:bg-neutral-900"
+        )}
+      >
         <div
           className={cn(
-            "w-[8px] h-[8px] bg-background rounded-bl-[6px] border-l border-b border-white dark:border-neutral-900",
+            // Sizing
+            "w-[8px] h-[8px]",
+            // Shape
+            "rounded-bl-[6px]",
+            // Background
+            "bg-background",
+            // Border
+            "border-l border-b border-white dark:border-neutral-900",
+            // Conditional: Hide when dragging
             isDragging && "hidden"
           )}
         />

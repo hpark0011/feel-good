@@ -31,13 +31,46 @@ export function TicketActionToolbar({
   if (isDragging) return null;
 
   return (
-    <div className='absolute top-[5px] right-[5px] flex opacity-0 group-hover:opacity-100 flex-row items-center transition-opacity pointer-events-none group-hover:pointer-events-auto border rounded-md border-border-light bg-white dark:bg-neutral-800'>
+    <div
+      className={cn(
+        // Layout & Alignment
+        "flex flex-row items-center",
+        // Positioning
+        "absolute top-[5px] right-[5px]",
+        // Shape
+        "rounded-md",
+        // Background
+        "bg-white dark:bg-neutral-800",
+        // Border
+        "border border-border-light",
+        // Interactive States
+        "opacity-0 group-hover:opacity-100",
+        "pointer-events-none group-hover:pointer-events-auto",
+        "transition-opacity"
+      )}
+    >
+      {/* Sub-tasks toggle button */}
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
             size='sm'
             variant='ghost'
-            className='h-[22px] w-7 bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-none cursor-pointer hover:shadow-lg rounded-l-[7px] flex items-center justify-center has-[svg]:pl-0 has-[svg]:pr-0'
+            className={cn(
+              // Layout & Alignment
+              "flex items-center justify-center",
+              // Sizing
+              "h-[22px] w-7",
+              // Spacing (SVG children)
+              "has-[svg]:pl-0 has-[svg]:pr-0",
+              // Shape
+              "rounded-none rounded-l-[7px]",
+              // Background
+              "bg-transparent",
+              // Interactive States
+              "cursor-pointer",
+              "hover:bg-neutral-100 dark:hover:bg-neutral-700",
+              "hover:shadow-lg"
+            )}
             onClick={(e) => {
               e.stopPropagation();
               onToggleSubTasks();
@@ -46,7 +79,9 @@ export function TicketActionToolbar({
             <Icon
               name='ChecklistIcon'
               className={cn(
+                // Sizing
                 "size-4.5",
+                // Typography (conditional color)
                 isSubTaskEditorOpen ? "text-blue-500" : "text-icon-dark"
               )}
             />
@@ -57,39 +92,107 @@ export function TicketActionToolbar({
         </TooltipContent>
       </Tooltip>
 
-      <div className='self-stretch w-px bg-border-light' />
+      {/* Divider */}
+      <div
+        className={cn(
+          // Layout
+          "self-stretch",
+          // Sizing
+          "w-px",
+          // Background
+          "bg-border-light"
+        )}
+      />
 
+      {/* Edit button */}
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
             size='sm'
             variant='ghost'
-            className='h-[22px] w-7 bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-none cursor-pointer hover:shadow-lg flex items-center justify-center has-[svg]:pl-0 has-[svg]:pr-0'
+            className={cn(
+              // Layout & Alignment
+              "flex items-center justify-center",
+              // Sizing
+              "h-[22px] w-7",
+              // Spacing (SVG children)
+              "has-[svg]:pl-0 has-[svg]:pr-0",
+              // Shape
+              "rounded-none",
+              // Background
+              "bg-transparent",
+              // Interactive States
+              "cursor-pointer",
+              "hover:bg-neutral-100 dark:hover:bg-neutral-700",
+              "hover:shadow-lg"
+            )}
             onClick={(e) => {
               e.stopPropagation();
               onEdit?.();
             }}
           >
-            <Icon name='PencilIcon' className='size-4.5 text-icon-dark' />
+            <Icon
+              name='PencilIcon'
+              className={cn(
+                // Sizing
+                "size-4.5",
+                // Typography
+                "text-icon-dark"
+              )}
+            />
           </Button>
         </TooltipTrigger>
         <TooltipContent>Edit Ticket</TooltipContent>
       </Tooltip>
 
-      <div className='self-stretch w-px bg-border-light' />
+      {/* Divider */}
+      <div
+        className={cn(
+          // Layout
+          "self-stretch",
+          // Sizing
+          "w-px",
+          // Background
+          "bg-border-light"
+        )}
+      />
 
+      {/* Delete button */}
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
             size='sm'
             variant='ghost'
-            className='h-[22px] w-7 bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-none cursor-pointer hover:shadow-lg rounded-r-[7px] has-[svg]:pl-0 has-[svg]:pr-0'
+            className={cn(
+              // Layout & Alignment
+              "flex items-center justify-center",
+              // Sizing
+              "h-[22px] w-7",
+              // Spacing (SVG children)
+              "has-[svg]:pl-0 has-[svg]:pr-0",
+              // Shape
+              "rounded-none rounded-r-[7px]",
+              // Background
+              "bg-transparent",
+              // Interactive States
+              "cursor-pointer",
+              "hover:bg-neutral-100 dark:hover:bg-neutral-700",
+              "hover:shadow-lg"
+            )}
             onClick={(e) => {
               e.stopPropagation();
               onDelete?.();
             }}
           >
-            <Icon name='TrashIcon' className='size-4 text-icon-dark' />
+            <Icon
+              name='TrashIcon'
+              className={cn(
+                // Sizing
+                "size-4",
+                // Typography
+                "text-icon-dark"
+              )}
+            />
           </Button>
         </TooltipTrigger>
         <TooltipContent>Delete Ticket</TooltipContent>

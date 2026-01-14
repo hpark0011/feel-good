@@ -32,7 +32,24 @@ export function TicketTimerButton({
         <button
           type='button'
           className={cn(
-            "items-center relative justify-center dark:bg-neutral-900 rounded-[5px] min-w-3.5 w-fit h-3.5 top-[1px] left-[-1px] group-hover flex shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6),_0_0_0_2px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6),_0_0_0_2px_rgba(255,255,255,0.1)] bg-neutral-50 mr-[4px]",
+            // Layout & Alignment
+            "flex items-center justify-center",
+            // Sizing
+            "min-w-3.5 w-fit h-3.5",
+            // Spacing
+            "mr-[4px]",
+            // Positioning
+            "relative top-[1px] left-[-1px]",
+            // Shape
+            "rounded-[5px]",
+            // Background
+            "bg-neutral-50 dark:bg-neutral-900",
+            // Shadow
+            "shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6),_0_0_0_2px_rgba(0,0,0,0.1)]",
+            "dark:shadow-[0_4px_12px_-4px_rgba(0,0,0,0.6),_0_0_0_2px_rgba(255,255,255,0.1)]",
+            // Interactive States
+            "group-hover",
+            // Conditional: Running state
             timerState === StopWatchState.Running && "pulse-shadow gap-0.5"
           )}
           onClick={() => {
@@ -50,7 +67,12 @@ export function TicketTimerButton({
                 ? "PauseFillIcon"
                 : "PlayFillIcon"
             }
-            className='size-3 min-w-3 text-icon-extra-light dark:text-neutral-500'
+            className={cn(
+              // Sizing
+              "size-3 min-w-3",
+              // Typography
+              "text-icon-extra-light dark:text-neutral-500"
+            )}
           />
         </button>
       </TooltipTrigger>

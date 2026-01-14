@@ -73,12 +73,37 @@ export function TicketCard({
   }, [ticketSubTaskCount]);
 
   const cardWrapperClassName = cn(
-    "relative scale-100 hover:scale-[1.02] transition-all duration-200 ease-out",
+    // Positioning
+    "relative",
+    // Transform & Animation
+    "scale-100 hover:scale-[1.02]",
+    "transition-all duration-200 ease-out",
+    // Conditional: Dragging state
     isDragging && "rotate-5 scale-105"
   );
 
   const cardClassName = cn(
-    "bg-card border-card-border hover:bg-base dark:hover:bg-neutral-900 relative border transition-all duration-200 translate-y-0 hover:translate-y-[-1px] ease-out group cursor-grab active:cursor-grabbing p-0 gap-0 hover:border-opacity-100 inset-shadow-none shadow-xs hover:shadow-[0_12px_12px_-6px_rgba(255,255,255,0.9),_0_14px_14px_-6px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_12px_12px_-6px_rgba(255,255,255,0.15),_0_14px_14px_-6px_rgba(0,0,0,0.9)] relative rounded-[12px]",
+    // Layout & Spacing
+    "p-0 gap-0",
+    // Positioning
+    "relative",
+    // Shape
+    "rounded-[12px]",
+    // Background
+    "bg-card",
+    // Border
+    "border border-card-border hover:border-opacity-100",
+    // Shadow
+    "inset-shadow-none shadow-xs",
+    "hover:shadow-[0_12px_12px_-6px_rgba(255,255,255,0.9),_0_14px_14px_-6px_rgba(0,0,0,0.3)]",
+    "dark:hover:shadow-[0_12px_12px_-6px_rgba(255,255,255,0.15),_0_14px_14px_-6px_rgba(0,0,0,0.9)]",
+    // Transform & Animation
+    "translate-y-0 hover:translate-y-[-1px]",
+    "transition-all duration-200 ease-out",
+    // Interactive States
+    "group cursor-grab active:cursor-grabbing",
+    "hover:bg-base dark:hover:bg-neutral-900",
+    // Conditional: Status-specific styles
     statusStyles[ticket.status]
   );
 
@@ -119,7 +144,9 @@ export function TicketCard({
     <>
       <CardHeader
         className={cn(
+          // Layout & Spacing
           "p-2.5 py-2 flex",
+          // Conditional: Adjust height when content below
           (ticket.description || isSubTaskEditorOpen) && "pb-2 h-fit"
         )}
       >
@@ -127,7 +154,13 @@ export function TicketCard({
           <div className='flex-1 min-w-0 flex items-start'>
             <CardTitle
               className={cn(
-                "text-[14px] font-medium leading-[1.2] relative gap-[1px] flex",
+                // Layout & Spacing
+                "flex gap-[1px]",
+                // Positioning
+                "relative",
+                // Typography
+                "text-[14px] font-medium leading-[1.2]",
+                // Conditional: Block display when duration shown
                 durationLabel && "block"
               )}
             >
@@ -139,7 +172,18 @@ export function TicketCard({
                 />
               )}
               {durationLabel && (
-                <span className='inline-flex items-center text-orange-300 text-[11px] mr-[5px] relative bottom-[1px] '>
+                <span
+                  className={cn(
+                    // Layout & Alignment
+                    "inline-flex items-center",
+                    // Spacing
+                    "mr-[5px]",
+                    // Positioning
+                    "relative bottom-[1px]",
+                    // Typography
+                    "text-[11px] text-orange-300"
+                  )}
+                >
                   <span className='font-mono'>{durationLabel}</span>
                 </span>
               )}
@@ -158,7 +202,20 @@ export function TicketCard({
       </CardHeader>
 
       {isSubTaskEditorOpen ? (
-        <CardContent className='border-border-light mt-0.5 rounded-b-[11px] p-0 overflow-hidden bg-[#f1f1f2] dark:bg-[#0F0F0F] '>
+        <CardContent
+          className={cn(
+            // Layout & Spacing
+            "p-0 overflow-hidden",
+            // Spacing
+            "mt-0.5",
+            // Shape
+            "rounded-b-[11px]",
+            // Background
+            "bg-[#f1f1f2] dark:bg-[#0F0F0F]",
+            // Border
+            "border-border-light"
+          )}
+        >
           <div
             data-subtasks-area='true'
             onPointerDown={stopSubTaskAreaPropagation}
@@ -176,8 +233,22 @@ export function TicketCard({
         </CardContent>
       ) : (
         ticket.description && (
-          <CardContent className='p-2.5 pt-0'>
-            <p className='text-sm line-clamp-6 w-full leading-[120%] text-text-tertiary whitespace-pre-wrap'>
+          <CardContent
+            className={cn(
+              // Layout & Spacing
+              "p-2.5 pt-0"
+            )}
+          >
+            <p
+              className={cn(
+                // Layout & Sizing
+                "w-full line-clamp-6",
+                // Typography
+                "text-sm text-text-tertiary leading-[120%]",
+                // Text Formatting
+                "whitespace-pre-wrap"
+              )}
+            >
               {ticket.description}
             </p>
           </CardContent>
