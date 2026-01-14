@@ -168,10 +168,6 @@ function isValidTicket(ticket: unknown): ticket is Ticket {
   );
 }
 
-export function exportBoardAsJson(boardState: BoardState): string {
-  return serializeBoardData(boardState);
-}
-
 export function importBoardFromJson(jsonData: string): BoardState {
   const parsed = JSON.parse(jsonData);
 
@@ -197,7 +193,7 @@ export function downloadJsonFile(data: string, filename: string): void {
 }
 
 // ============================================================================
-// Board Storage Helper Functions
+// Board Storage Helpers
 // ============================================================================
 
 export function getInitialSerializedBoard(): string {
@@ -245,6 +241,27 @@ export function formatDuration(seconds: number): string {
   return `${minutes}:${secs.toString().padStart(2, "0")}`;
 }
 
+type BoardUpdater = (updater: (board: BoardState) => BoardState) => void;
+
+/**
+ * Finds a ticket by ID and applies an update function to it
+ */
+function updateTicketInBoard(
+  board: BoardState,
+  ticketId: string,
+  updateFn: (ticket: Ticket) => Ticket
+): BoardState {
+  for (const [columnId, tickets] of Object.entries(board)) {
+    const ticketIndex = tickets.findIndex((t) => t.id === ticketId);
+    if (ticketIndex !== -1) {
+      const updatedTickets = [...tickets];
+      updatedTickets[ticketIndex] = updateFn(updatedTickets[ticketIndex]);
+      return { ...board, [columnId]: updatedTickets };
+    }
+  }
+  return board;
+}
+
 /**
  * Records the final duration to a ticket in the board state
  *
@@ -257,69 +274,32 @@ export function formatDuration(seconds: number): string {
 export function recordDuration(
   ticketId: string,
   duration: number,
-  setBoard: (updater: (board: BoardState) => BoardState) => void
+  setBoard: BoardUpdater
 ): void {
-  if (duration <= 0) {
-    setBoard((currentBoard) => {
-      const updatedBoard = { ...currentBoard };
-
-      for (const [columnId, tickets] of Object.entries(updatedBoard)) {
-        const ticketIndex = tickets.findIndex((t) => t.id === ticketId);
-        if (ticketIndex !== -1) {
-          const updatedTickets = [...tickets];
-          const ticket = updatedTickets[ticketIndex];
-          const now = new Date();
-          updatedTickets[ticketIndex] = {
-            ...ticket,
-            completedAt: now,
-            updatedAt: now,
-          };
-          updatedBoard[columnId] = updatedTickets;
-          return updatedBoard;
-        }
-      }
-
-      return currentBoard;
-    });
-    return;
-  }
-
   setBoard((currentBoard) => {
-    const updatedBoard = { ...currentBoard };
+    const now = new Date();
 
-    // Find the ticket and update its duration
-    for (const [columnId, tickets] of Object.entries(updatedBoard)) {
-      const ticketIndex = tickets.findIndex((t) => t.id === ticketId);
-      if (ticketIndex !== -1) {
-        const updatedTickets = [...tickets];
-        const ticket = updatedTickets[ticketIndex];
-        const now = new Date();
-        const normalizedDuration = Math.max(0, Math.round(duration));
-        const totalDuration = (ticket.duration || 0) + normalizedDuration;
-        const sessionStart = new Date(now.getTime() - normalizedDuration * 1000);
-        const nextTimeEntries: TimeEntry[] = [
-          ...(ticket.timeEntries ?? []),
-          {
-            start: sessionStart,
-            end: now,
-            duration: normalizedDuration,
-          },
-        ];
-
-        updatedTickets[ticketIndex] = {
-          ...ticket,
-          duration: totalDuration,
-          timeEntries: nextTimeEntries,
-          completedAt: now,
-          updatedAt: now,
-        };
-        updatedBoard[columnId] = updatedTickets;
-        return updatedBoard;
-      }
+    if (duration <= 0) {
+      return updateTicketInBoard(currentBoard, ticketId, (ticket) => ({
+        ...ticket,
+        completedAt: now,
+        updatedAt: now,
+      }));
     }
 
-    // Ticket not found, return unchanged board
-    return currentBoard;
+    const normalizedDuration = Math.max(0, Math.round(duration));
+    const sessionStart = new Date(now.getTime() - normalizedDuration * 1000);
+
+    return updateTicketInBoard(currentBoard, ticketId, (ticket) => ({
+      ...ticket,
+      duration: (ticket.duration || 0) + normalizedDuration,
+      timeEntries: [
+        ...(ticket.timeEntries ?? []),
+        { start: sessionStart, end: now, duration: normalizedDuration },
+      ],
+      completedAt: now,
+      updatedAt: now,
+    }));
   });
 }
 
@@ -335,40 +315,23 @@ export function recordDuration(
 export function resetTimerForTicket(
   ticketId: string,
   stopWatchStore: StopWatchStore,
-  setBoard: (updater: (board: BoardState) => BoardState) => void
+  setBoard: BoardUpdater
 ): void {
-  // Reset timer in store
   stopWatchStore.resetTimer(ticketId);
 
-  // Clear duration in board using functional update
-  setBoard((currentBoard) => {
-    const updatedBoard = { ...currentBoard };
-
-    for (const [columnId, tickets] of Object.entries(updatedBoard)) {
-      const ticketIndex = tickets.findIndex((t) => t.id === ticketId);
-      if (ticketIndex !== -1) {
-        const updatedTickets = [...tickets];
-        updatedTickets[ticketIndex] = {
-          ...updatedTickets[ticketIndex],
-          duration: 0,
-          timeEntries: [],
-          completedAt: null,
-          updatedAt: new Date(),
-        };
-        updatedBoard[columnId] = updatedTickets;
-        return updatedBoard;
-      }
-    }
-
-    // Ticket not found, return unchanged board
-    return currentBoard;
-  });
+  setBoard((currentBoard) =>
+    updateTicketInBoard(currentBoard, ticketId, (ticket) => ({
+      ...ticket,
+      duration: 0,
+      timeEntries: [],
+      completedAt: null,
+      updatedAt: new Date(),
+    }))
+  );
 }
 
 /**
  * Handles timer state changes triggered by ticket status transitions
- *
- * Uses functional state updates to avoid race conditions with concurrent board updates.
  *
  * Business rules:
  * - Moving to "complete" → record accumulated duration to ticket
@@ -386,35 +349,22 @@ export function handleTimerOnStatusChange(
   oldStatus: ColumnId,
   newStatus: ColumnId,
   stopWatchStore: StopWatchStore,
-  setBoard: (updater: (board: BoardState) => BoardState) => void
+  setBoard: BoardUpdater
 ): void {
-  // No change, nothing to do
   if (oldStatus === newStatus) return;
 
   const isTimerActive = stopWatchStore.isTimerActive(ticketId);
+  if (!isTimerActive) return;
 
-  // Case 1: Moving to "complete" - record duration
   if (newStatus === "complete") {
-    if (isTimerActive) {
-      const elapsedTime = stopWatchStore.getElapsedTime(ticketId);
-      if (elapsedTime > 0) {
-        recordDuration(ticketId, elapsedTime, setBoard);
-      }
-      stopWatchStore.stopTimer();
+    const elapsedTime = stopWatchStore.getElapsedTime(ticketId);
+    if (elapsedTime > 0) {
+      recordDuration(ticketId, elapsedTime, setBoard);
     }
-  }
-
-  // Case 2: Moving to "backlog" or "to-do" - reset timer
-  else if (newStatus === "backlog" || newStatus === "to-do") {
-    if (isTimerActive) {
-      resetTimerForTicket(ticketId, stopWatchStore, setBoard);
-    }
-  }
-
-  // Case 3: Moving away from "in-progress" (but not to complete/backlog/to-do)
-  // This case is handled above, but included for clarity
-  else if (oldStatus === "in-progress" && isTimerActive) {
-    // Auto-stop timer when leaving in-progress
+    stopWatchStore.stopTimer();
+  } else if (newStatus === "backlog" || newStatus === "to-do") {
+    resetTimerForTicket(ticketId, stopWatchStore, setBoard);
+  } else if (oldStatus === "in-progress") {
     stopWatchStore.stopTimer();
   }
 }

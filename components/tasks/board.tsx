@@ -34,7 +34,6 @@ import {
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import {
   downloadJsonFile,
-  exportBoardAsJson,
   importBoardFromJson,
   serializeBoardData,
   safelyDeserializeBoard,
@@ -498,8 +497,7 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
   const handleExportBoard = useCallback(() => {
     const timestamp = new Date().toISOString().split("T")[0];
     const filename = `task-board-${timestamp}.json`;
-    const data = exportBoardAsJson(board);
-    downloadJsonFile(data, filename);
+    downloadJsonFile(serializeBoardData(board), filename);
   }, [board]);
 
   const handleImportBoard = useCallback(

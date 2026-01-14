@@ -76,13 +76,9 @@ export function useTicketForm({
     prevOpen.current = open ?? false;
   }, [open, defaultValues, form]);
 
-  const handleSubmit = (data: TicketFormOutput) => {
-    onSubmit(data);
-  };
-
   return {
     form,
-    handleSubmit,
+    handleSubmit: onSubmit,
     ticketSchema,
   };
 }
@@ -119,13 +115,11 @@ export function useProjectFilter() {
   );
 
   const toggleProject = (projectId: string) => {
-    setSelectedProjectIds((prev) => {
-      if (prev.includes(projectId)) {
-        return prev.filter((id) => id !== projectId);
-      } else {
-        return [...prev, projectId];
-      }
-    });
+    setSelectedProjectIds((prev) =>
+      prev.includes(projectId)
+        ? prev.filter((id) => id !== projectId)
+        : [...prev, projectId]
+    );
   };
 
   const clearFilter = () => {
@@ -229,40 +223,22 @@ function cleanupOldEntries(data: FocusData): FocusData {
 export function useTodayFocus(): [string, (focus: string) => void] {
   const [focusData, setFocusData] = useLocalStorage<FocusData>(TODAY_FOCUS_STORAGE_KEY, {});
   const hasCleanedRef = useRef(false);
-
   const todayKey = getTodayDateString();
 
-  // Clean up old entries only once when component mounts
+  // Clean up old entries once on mount
   useEffect(() => {
-    // Only run cleanup once
-    if (hasCleanedRef.current) {
-      return;
-    }
-
-    // Mark as cleaned to prevent re-running
+    if (hasCleanedRef.current) return;
     hasCleanedRef.current = true;
 
-    // Delay cleanup to ensure localStorage has loaded
-    const timeoutId = setTimeout(() => {
-      setFocusData((current) => {
-        // Don't clean empty initial state
-        if (Object.keys(current).length === 0) {
-          return current;
-        }
+    setFocusData((current) => {
+      if (Object.keys(current).length === 0) return current;
 
-        const cleaned = cleanupOldEntries(current);
-        // Only update if something was actually cleaned
-        if (Object.keys(cleaned).length !== Object.keys(current).length) {
-          return cleaned;
-        }
-        return current;
-      });
-    }, 100); // Small delay to ensure localStorage is loaded
-
-    return () => clearTimeout(timeoutId);
-    // Only run once on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+      const cleaned = cleanupOldEntries(current);
+      return Object.keys(cleaned).length !== Object.keys(current).length
+        ? cleaned
+        : current;
+    });
+  }, [setFocusData]);
 
   const todaysFocus = focusData[todayKey] || "";
 
