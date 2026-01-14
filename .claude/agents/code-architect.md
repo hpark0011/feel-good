@@ -108,9 +108,11 @@ features/{feature-name}/
 - [Decision 2]: [Rationale]
 
 #### Pattern Alignment
-- Component Organization: [Composition Pattern details]
-- Feature Organization: [Features Pattern details if applicable]
-- Page Architecture: [Pattern A or B with justification]
+- Page Architecture: [Reference page-composition.md - 2-layer or 3-layer]
+- Component Organization: [Reference composition.md]
+- Feature Organization: [Reference features.md if applicable]
+- Data Fetching: [Reference data-fetching.md]
+- State Management: [Reference state-management.md if needed]
 
 #### File/Component Structure
 [Proposed directory structure or component hierarchy]
@@ -155,7 +157,18 @@ If the requested feature requires architecture that would be significantly more 
 ## Reference Files
 
 All pattern definitions are in `.claude/commands/patterns/`:
-- `composition.md` - Component organization
+
+### Core Architecture
+- `page-composition.md` - Page structure (server/client/provider layers)
+- `data-fetching.md` - Data layer patterns and decision tree
+  - See `data-fetching/` subdirectory for detailed guides
+
+### Component & Feature Patterns
+- `composition.md` - Component organization and naming
 - `features.md` - Shared functionality organization
-- `page-view-providers-pattern.md` - 3-layer page architecture
-- `server-client-separation-pattern.md` - 2-layer page architecture
+
+### Implementation Patterns
+- `server-actions.md` - Type-safe server mutations
+- `forms.md` - React Hook Form + Zod validation
+- `hooks.md` - Custom hook conventions and documentation
+- `state-management.md` - State layer decision framework
