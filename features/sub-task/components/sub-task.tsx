@@ -1,5 +1,9 @@
 "use client";
 
+import type { TicketFormInput } from "@/app/(protected)/dashboard/tasks/_hooks";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { memo } from "react";
 import {
   type Control,
@@ -8,14 +12,10 @@ import {
   type FieldPath,
   useWatch,
 } from "react-hook-form";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import type { TicketFormInput } from "@/app/(protected)/dashboard/tasks/_hooks";
-import { cn } from "@/lib/utils";
-import { SubTasksDeleteAction } from "./sub-tasks-delete-action";
-import { SubTasksListItem } from "./sub-tasks-list-item";
+import { SubTaskDeleteButton } from "./sub-task-delete-button";
+import { SubTaskWrapper } from "./sub-task-wrapper";
 
-interface SubTasksRowProps {
+interface SubTaskProps {
   control: Control<TicketFormInput>;
   name: FieldArrayPath<TicketFormInput>;
   index: number;
@@ -26,12 +26,12 @@ interface SubTasksRowProps {
  * Individual subtask row for form variant.
  * Integrates with React Hook Form for state management.
  */
-export const SubTasksRow = memo(function SubTasksRow({
+export const SubTask = memo(function SubTask({
   control,
   name,
   index,
   remove,
-}: SubTasksRowProps) {
+}: SubTaskProps) {
   const textFieldName = `${name}.${index}.text` as FieldPath<TicketFormInput>;
   const completedFieldName =
     `${name}.${index}.completed` as FieldPath<TicketFormInput>;
@@ -42,7 +42,7 @@ export const SubTasksRow = memo(function SubTasksRow({
   }) as boolean | undefined;
 
   return (
-    <SubTasksListItem>
+    <SubTaskWrapper>
       <Controller
         name={completedFieldName}
         control={control}
@@ -74,9 +74,9 @@ export const SubTasksRow = memo(function SubTasksRow({
           );
         }}
       />
-      <SubTasksDeleteAction onDelete={() => remove(index)} />
-    </SubTasksListItem>
+      <SubTaskDeleteButton onDelete={() => remove(index)} />
+    </SubTaskWrapper>
   );
 });
 
-SubTasksRow.displayName = "SubTasksRow";
+SubTask.displayName = "SubTask";

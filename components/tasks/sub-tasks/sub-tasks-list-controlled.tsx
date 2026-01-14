@@ -5,7 +5,7 @@ import { SubTasksControlledRow } from "./sub-tasks-controlled-row";
 import { SubTasksListAddItem } from "./sub-tasks-list-add-item";
 import { SubTasksListHeader } from "./sub-tasks-list-header";
 import { SubTasksListRoot } from "./sub-tasks-list-root";
-import type { SubTask } from "./sub-tasks.types";
+import type { SubTask } from "../../../features/sub-task/types/sub-task.types";
 
 interface SubTasksListControlledProps {
   subTasks: SubTask[];

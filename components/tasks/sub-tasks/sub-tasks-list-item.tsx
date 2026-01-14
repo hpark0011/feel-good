@@ -1,7 +1,7 @@
 import type React from "react";
 import { cn } from "@/lib/utils";
 
-interface SubTasksListItemProps extends React.ComponentProps<"div"> {}
+type SubTasksListItemProps = React.ComponentProps<"div">;
 
 /**
  * Individual subtask item container.

@@ -4,12 +4,12 @@ import { memo } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { SubTasksDeleteAction } from "./sub-tasks-delete-action";
+import { SubTaskDeleteButton } from "@/features/sub-task/components/sub-task-delete-button";
 import { SubTasksListItem } from "./sub-tasks-list-item";
-import type { SubTask } from "./sub-tasks.types";
+import type { SubTask as SubTaskType } from "@/features/sub-task/types/sub-task.types";
 
 interface SubTasksControlledRowProps {
-  subTask: SubTask;
+  subTask: SubTaskType;
   onToggle: () => void;
   onTextChange?: (value: string) => void;
   onDelete?: () => void;
@@ -49,7 +49,7 @@ export const SubTasksControlledRow = memo(function SubTasksControlledRow({
           readOnly && "cursor-default"
         )}
       />
-      {onDelete && !readOnly && <SubTasksDeleteAction onDelete={onDelete} />}
+      {onDelete && !readOnly && <SubTaskDeleteButton onDelete={onDelete} />}
     </SubTasksListItem>
   );
 });

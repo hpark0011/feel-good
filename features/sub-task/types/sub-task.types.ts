@@ -1,5 +1,5 @@
 /**
- * Represents a single sub-task item.
+ * Single sub-task item.
  */
 export interface SubTask {
   id: string;

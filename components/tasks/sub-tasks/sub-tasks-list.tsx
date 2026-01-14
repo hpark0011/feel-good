@@ -4,10 +4,10 @@ import type { Control, FieldArrayPath } from "react-hook-form";
 import type { TicketFormInput } from "@/app/(protected)/dashboard/tasks/_hooks";
 import { SubTasksListControlled } from "./sub-tasks-list-controlled";
 import { SubTasksListForm } from "./sub-tasks-list-form";
-import type { SubTask } from "./sub-tasks.types";
+import type { SubTask } from "../../../features/sub-task/types/sub-task.types";
 
 // Re-export types and components for backward compatibility
-export type { SubTask } from "./sub-tasks.types";
+export type { SubTask } from "../../../features/sub-task/types/sub-task.types";
 export { SubTasksListRoot } from "./sub-tasks-list-root";
 export { SubTasksListHeader } from "./sub-tasks-list-header";
 export { SubTasksListItem } from "./sub-tasks-list-item";

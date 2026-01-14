@@ -1,5 +1,5 @@
 // Types
-export type { SubTask } from "./sub-tasks.types";
+export type { SubTask } from "../../../features/sub-task/types/sub-task.types";
 
 // Primitive components
 export { SubTasksListRoot } from "./sub-tasks-list-root";

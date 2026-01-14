@@ -66,10 +66,12 @@ export function TicketCard({
 
   const ticketSubTaskCount = ticket.subTasks?.length ?? 0;
 
+  // Auto-open sub-tasks editor when sub-tasks exist (conditional to prevent cascading renders)
   useEffect(() => {
-    if (ticketSubTaskCount > 0) {
+    if (ticketSubTaskCount > 0 && !isSubTaskEditorOpen) {
       setIsSubTaskEditorOpen(true);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ticketSubTaskCount]);
 
   const cardWrapperClassName = cn(

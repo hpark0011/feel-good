@@ -3,38 +3,24 @@
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
+import { SubTaskDeleteGradientOverlay } from "./sub-task-delete-gradient-overlay";
 
-interface SubTasksDeleteActionProps {
+interface SubTaskDeleteButtonProps {
   onDelete: () => void;
   className?: string;
 }
 
 /**
- * Delete action with gradient fade overlay.
+ * Delete button with gradient fade overlay.
  * Reveals on hover within parent group/subtask.
  */
-export function SubTasksDeleteAction({
+export function SubTaskDeleteButton({
   onDelete,
   className,
-}: SubTasksDeleteActionProps) {
+}: SubTaskDeleteButtonProps) {
   return (
     <>
-      {/* Gradient fade overlay */}
-      <span
-        aria-hidden='true'
-        className={cn(
-          // Positioning
-          "absolute inset-y-0 right-0 z-10",
-          // Sizing
-          "w-4",
-          // Background - gradient fade
-          "bg-gradient-to-l from-dialog via-dialog/90 to-transparent",
-          // Interactive states - hover background
-          "group-hover/subtask:from-hover group-hover/subtask:via-hover group-hover/subtask:to-transparent",
-          // Behavior
-          "pointer-events-none"
-        )}
-      />
+      <SubTaskDeleteGradientOverlay />
 
       {/* Delete button container */}
       <div
@@ -48,11 +34,11 @@ export function SubTasksDeleteAction({
           // Sizing
           "h-5",
           // Spacing
-          "pl-0 group-hover/subtask:pl-2",
+          "pl-0 group-hover/sub-task:pl-2",
           // Background - gradient fade
           "bg-gradient-to-r from-transparent via-dialog to-dialog",
           // Interactive states - hover background
-          "group-hover/subtask:via-hover group-hover/subtask:to-hover",
+          "group-hover/sub-task:via-hover group-hover/sub-task:to-hover",
           className
         )}
       >
@@ -69,7 +55,7 @@ export function SubTasksDeleteAction({
             // Typography / Icon color
             "text-icon-light",
             // Visibility
-            "opacity-0 group-hover/subtask:opacity-100",
+            "opacity-0 group-hover/sub-task:opacity-100",
             // Interactive states
             "hover:text-icon-primary hover:text-blue-500 hover:bg-transparent"
           )}

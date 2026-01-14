@@ -64,9 +64,12 @@ export function ProjectFilter() {
     project.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Reset highlighted index when search changes
+  // Reset highlighted index when search changes (only if currently highlighted)
   useEffect(() => {
-    setHighlightedIndex(-1);
+    if (highlightedIndex !== -1) {
+      setHighlightedIndex(-1);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery]);
 
   const handleClearFilter = () => {
