@@ -1,13 +1,22 @@
+/**
+ * @fileoverview Board Import/Export Functions
+ *
+ * Utilities for importing board state from JSON and exporting/downloading files.
+ */
+
 import { BoardState } from "@/types/board.types";
 import {
   validateBoardData,
   deserializeBoardData,
 } from "./board-serialization.utils";
 
-// ============================================================================
-// Board Import/Export Functions
-// ============================================================================
-
+/**
+ * Imports and validates board state from a JSON string.
+ *
+ * @param jsonData - Raw JSON string containing board data
+ * @returns Parsed and validated BoardState
+ * @throws Error if JSON is invalid or board data format is incorrect
+ */
 export function importBoardFromJson(jsonData: string): BoardState {
   const parsed = JSON.parse(jsonData);
 
@@ -18,6 +27,14 @@ export function importBoardFromJson(jsonData: string): BoardState {
   return deserializeBoardData(jsonData);
 }
 
+/**
+ * Downloads data as a JSON file in the browser.
+ *
+ * Creates a temporary blob URL and triggers a download. No-op in SSR context.
+ *
+ * @param data - String content to download as JSON
+ * @param filename - Name for the downloaded file
+ */
 export function downloadJsonFile(data: string, filename: string): void {
   if (typeof window === "undefined") return;
 
