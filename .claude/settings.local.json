@@ -33,7 +33,8 @@
       "Bash(find:*)",
       "Bash(du:*)",
       "Bash(grep:*)",
-      "Bash(npx jscpd:*)"
+      "Bash(npx jscpd:*)",
+      "Bash(wc -l *.md)"
     ],
     "deny": [],
     "ask": []

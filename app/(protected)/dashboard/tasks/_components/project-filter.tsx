@@ -108,10 +108,11 @@ export function ProjectFilter() {
               )}
             />
           </div>
-          <div className='w-px self-stretch mx-0 bg-border-light' />
 
           {hasActiveFilters && (
-            <div className='h-full'>
+            <>
+              <div className='w-px self-stretch mx-0 bg-border-light' />
+              <div className='h-full'>
               {selectedProjectIds.length === 1 ? (
                 <div className='flex items-center relative h-full'>
                   <div className='px-1.5 flex items-center gap-1.5'>
@@ -179,7 +180,8 @@ export function ProjectFilter() {
                   </button>
                 </div>
               )}
-            </div>
+              </div>
+            </>
           )}
         </div>
       </PopoverTrigger>
