@@ -10,7 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useProjectFilter } from "@/hooks/use-project-filter";
+import { useProjectFilter } from "../_lib/tasks.hooks";
 import { useProjects } from "@/hooks/use-projects";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/types/board.types";

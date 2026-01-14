@@ -27,21 +27,21 @@ import {
   useState,
 } from "react";
 import { COLUMNS, INITIAL_BOARD_STATE } from "@/config/board.config";
-import { useLastSelectedProject } from "@/hooks/use-last-selected-project";
+import {
+  useLastSelectedProject,
+  useProjectFilter,
+} from "@/app/(protected)/dashboard/tasks/_lib/tasks.hooks";
 import { useLocalStorage } from "@/hooks/use-local-storage";
-import { useProjectFilter } from "@/hooks/use-project-filter";
 import {
   downloadJsonFile,
   exportBoardAsJson,
   importBoardFromJson,
   serializeBoardData,
-} from "@/lib/storage";
-import {
   safelyDeserializeBoard,
   BOARD_STORAGE_KEY,
   getInitialSerializedBoard,
-} from "@/lib/board-storage";
-import { handleTimerOnStatusChange } from "@/lib/timer-utils";
+  handleTimerOnStatusChange,
+} from "@/app/(protected)/dashboard/tasks/_lib/tasks.utils";
 import { useStopWatchStore } from "@/store/stop-watch-store";
 import type {
   BoardState,

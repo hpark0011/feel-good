@@ -7,7 +7,7 @@ import {
   HeaderMenu,
 } from "@/components/header/header-ui";
 import { PATHS } from "@/config/paths.config";
-import { useTodayFocus } from "@/hooks/use-today-focus";
+import { useTodayFocus } from "../_lib/tasks.hooks";
 import { useStopWatchStore } from "@/store/stop-watch-store";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";

@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { render, screen, renderHook, act } from '@testing-library/react';
-import { useProjectFilter } from '../use-project-filter';
+import { useProjectFilter } from '@/app/(protected)/dashboard/tasks/_lib/tasks.hooks';
 import React from 'react';
 
 // DO NOT mock useLocalStorage - we want to test the real implementation

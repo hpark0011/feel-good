@@ -14,7 +14,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useProjects } from "@/hooks/use-projects";
-import { formatDuration } from "@/lib/timer-utils";
+import { formatDuration } from "@/app/(protected)/dashboard/tasks/_lib/tasks.utils";
 import { cn } from "@/lib/utils";
 import { StopWatchState, useStopWatchStore } from "@/store/stop-watch-store";
 import type { SubTask, Ticket } from "../../types/board.types";

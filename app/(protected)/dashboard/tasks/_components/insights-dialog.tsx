@@ -24,7 +24,8 @@ import {
   BOARD_STORAGE_KEY,
   getInitialSerializedBoard,
   safelyDeserializeBoard,
-} from "@/lib/board-storage";
+  formatDuration,
+} from "../_lib/tasks.utils";
 import {
   calculateTotalDuration,
   getTasksCompletedOnDate,
@@ -32,7 +33,6 @@ import {
   getTimeEntriesForDate,
   groupByProject,
 } from "@/lib/insights-utils";
-import { formatDuration } from "@/lib/timer-utils";
 import { cn } from "@/lib/utils";
 
 interface InsightsDialogProps {

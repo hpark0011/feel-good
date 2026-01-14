@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import type { TimelineDay } from "@/lib/insights-utils";
-import { formatDuration } from "@/lib/timer-utils";
+import { formatDuration } from "@/app/(protected)/dashboard/tasks/_lib/tasks.utils";
 
 interface FocusTimelineChartProps {
   data: TimelineDay[];
