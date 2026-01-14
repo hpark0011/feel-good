@@ -1,4 +1,4 @@
-import { TasksView } from "./_components/tasks-view";
+import { TasksView } from "./_view/tasks-view";
 
 export default function TasksPage() {
   return <TasksView />;
