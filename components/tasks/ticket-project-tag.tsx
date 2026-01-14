@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { getProjectColorBgClass } from "@/config/tasks.config";
 import type { Project } from "@/types/board.types";
 
-interface ProjectTagProps {
+interface TicketProjectTagProps {
   project: Project | undefined;
   isDragging: boolean;
 }
@@ -12,7 +12,7 @@ interface ProjectTagProps {
 /**
  * Displays a project tag above the ticket card with color indicator
  */
-export function ProjectTag({ project, isDragging }: ProjectTagProps) {
+export function TicketProjectTag({ project, isDragging }: TicketProjectTagProps) {
   if (!project) return null;
 
   return (

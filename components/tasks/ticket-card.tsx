@@ -9,11 +9,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useProjects } from "@/hooks/use-projects";
 import { formatDuration } from "@/app/(protected)/dashboard/tasks/_utils";
 import { cn } from "@/lib/utils";
-import { StopWatchState, useStopWatchStore } from "@/store/stop-watch-store";
+import { useStopWatchStore } from "@/store/stop-watch-store";
 import type { SubTask, Ticket } from "@/types/board.types";
-import { SubTasksInlineEditor } from "../sub-tasks/sub-tasks-inline-editor";
+import { SubTasksInlineEditor } from "./sub-tasks/sub-tasks-inline-editor";
 import { cardVariants, statusStyles } from "./ticket-card.config";
-import { ProjectTag } from "./project-tag";
+import { TicketProjectTag } from "./ticket-project-tag";
 import { TicketTimerButton } from "./ticket-timer-button";
 import { TicketActionToolbar } from "./ticket-action-toolbar";
 
@@ -276,7 +276,7 @@ export function TicketCard({
         custom={index}
         {...commonWrapperProps}
       >
-        <ProjectTag project={project} isDragging={isDragging} />
+        <TicketProjectTag project={project} isDragging={isDragging} />
         <Card className={cardClassName}>{cardContent}</Card>
       </MotionWrapper>
     );
