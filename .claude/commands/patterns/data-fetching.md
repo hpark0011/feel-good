@@ -219,7 +219,7 @@ export function FeatureView({ data }: FeatureViewProps) {
 ┌─────────────────────────────────────────────────────────┐
 │ feature-actions.ts (Server Actions)                     │
 │ - Mutations (POST/PUT/DELETE)                           │
-│ - See server-actions-pattern.md                         │
+│ - See server-actions.md                                 │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -631,7 +631,7 @@ export function FeatureView({ initialData }) {
 - **Server Actions** → Data mutations (user actions)
 - **View** → Optimistic updates + action calls
 
-**See:** `server-actions-pattern.md` for detailed mutation patterns.
+**See:** `server-actions.md` for detailed mutation patterns.
 
 **Example Integration:**
 ```typescript
@@ -817,10 +817,10 @@ export async function loadApiKeys() {
 
 ## Related Patterns
 
-- **page-composition-pattern.md** - How to structure page/view/providers layers
-- **server-actions-pattern.md** - How to handle data mutations
-- **hooks-pattern.md** - Guidelines for creating custom hooks
-- **state-management-pattern.md** - When to use different state approaches
+- **page-composition.md** - How to structure page/view/providers layers
+- **server-actions.md** - How to handle data mutations
+- **hooks.md** - Guidelines for creating custom hooks
+- **state-management.md** - When to use different state approaches
 
 ---
 

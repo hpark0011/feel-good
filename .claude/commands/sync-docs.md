@@ -237,8 +237,8 @@ Use this logic to determine overall status:
 
 ### 3. Patterns
 
-⚠️ `composition-pattern.md` - Missing frontmatter
-⚠️ `features-pattern.md` - Missing frontmatter
+⚠️ `composition.md` - Missing frontmatter
+⚠️ `features.md` - Missing frontmatter
 
 ### 4. Custom Hooks
 
@@ -259,7 +259,7 @@ Use this logic to determine overall status:
 + **Next.js 15.4.10** with App Router
 \```
 
-### Add Frontmatter to composition-pattern.md
+### Add Frontmatter to composition.md
 
 \```yaml
 ---

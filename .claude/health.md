@@ -37,8 +37,8 @@
 ### 3. Patterns
 
 ✅ **All pattern files have valid frontmatter**:
-- `composition-pattern.md` - Valid (name, category, applies_to, updated, documented_in)
-- `features-pattern.md` - Valid (name, category, applies_to, updated, documented_in)
+- `composition.md` - Valid (name, category, applies_to, updated, documented_in)
+- `features.md` - Valid (name, category, applies_to, updated, documented_in)
 - `page-view-providers-pattern.md` - Valid (name, category, applies_to, updated, documented_in)
 - `server-client-separation-pattern.md` - Valid (name, category, applies_to, updated, documented_in)
 

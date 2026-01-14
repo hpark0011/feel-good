@@ -155,7 +155,7 @@ If the requested feature requires architecture that would be significantly more 
 ## Reference Files
 
 All pattern definitions are in `.claude/commands/patterns/`:
-- `composition-pattern.md` - Component organization
-- `features-pattern.md` - Shared functionality organization
+- `composition.md` - Component organization
+- `features.md` - Shared functionality organization
 - `page-view-providers-pattern.md` - 3-layer page architecture
 - `server-client-separation-pattern.md` - 2-layer page architecture
