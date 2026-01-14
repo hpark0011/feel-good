@@ -10,6 +10,122 @@ documented_in: CLAUDE.md
 
 This document defines comprehensive patterns for data fetching in the Greyboard codebase. It covers server-side loaders, client-side localStorage hooks, and when to use each approach.
 
+## ⚠️ Next.js 15 Breaking Change
+
+**Critical:** Default caching behavior has changed in Next.js 15.
+
+```typescript
+// Next.js 13-14 (old behavior)
+fetch(url) // Cached by default
+
+// Next.js 15 (new behavior)
+fetch(url) // NOT cached (equivalent to { cache: 'no-store' })
+```
+
+**You must explicitly opt-in to caching:**
+
+```typescript
+// Option 1: 'use cache' directive (recommended)
+export async function getData() {
+  'use cache'
+  const res = await fetch('https://api.example.com/data')
+  return res.json()
+}
+
+// Option 2: fetch with cache option
+fetch(url, { cache: 'force-cache' }) // Cache indefinitely
+
+// Option 3: Time-based revalidation
+fetch(url, { next: { revalidate: 3600 } }) // Revalidate every hour
+
+// Option 4: Tag-based revalidation
+fetch(url, { next: { tags: ['products'] } })
+```
+
+**Why this matters:**
+- Your data fetching code may need updates if migrating from Next.js 13-14
+- Always explicitly choose your caching strategy
+- See [Caching Strategies](#caching-strategies-nextjs-15) section below for details
+
+---
+
+## Table of Contents
+
+- [⚠️ Next.js 15 Breaking Change](#️-nextjs-15-breaking-change)
+- [Quick Start](#quick-start)
+- [Overview](#overview)
+- [Approach 1: Server-Side Data Fetching](#approach-1-server-side-data-fetching)
+  - [Loader Pattern](#loader-pattern)
+  - [Streaming & Suspense](#streaming--suspense-patterns)
+  - [Caching Strategies](#caching-strategies-nextjs-15)
+  - [Error Handling](#error-handling-patterns)
+  - [Performance](#performance-best-practices)
+- [Approach 2: Client-Side (localStorage)](#approach-2-client-side-data-fetching-localstorage)
+- [Approach 3: Hybrid](#approach-3-hybrid-server--client)
+- [Server Actions vs Route Handlers](#server-actions-vs-route-handlers)
+- [Performance & Observability](#performance--observability)
+- [Reference](#reference)
+  - [Naming Conventions](#naming-conventions)
+  - [When to Use Which](#when-to-use-which-approach)
+  - [Examples from Codebase](#examples-from-codebase)
+  - [Anti-Patterns](#anti-patterns)
+  - [Checklists](#checklist)
+
+---
+
+## Quick Start
+
+### Core Principles
+
+1. **Server-First**: Fetch data in Server Components by default
+2. **Explicit Caching**: Always specify cache behavior in Next.js 15
+3. **Colocation**: Fetch data where it's used (no prop drilling)
+4. **Parallel Fetching**: Use `Promise.all` for independent data
+5. **Streaming**: Use Suspense for progressive rendering
+6. **Serializable Data**: Only pass JSON-serializable data to Client Components
+7. **Server Actions**: Use for internal mutations, Route Handlers for external APIs
+
+### Quick Decision Tree
+
+```
+Need to fetch data?
+│
+├─ Server persistence required? (Supabase)
+│  └─ YES → Use Server-Side approach (Loader Pattern)
+│           ├─ page.tsx → loader.ts → service.ts → Supabase
+│           └─ Pass data as props to view component
+│
+└─ NO → Client-only state?
+    └─ YES → Use Client-Side approach (localStorage)
+             ├─ Component → useFeatureData hook → useLocalStorage
+             └─ All CRUD in hook, component only renders
+```
+
+### Common Patterns
+
+```typescript
+// Server Component: Fetch data
+export default async function Page() {
+  // Parallel fetching for independent data
+  const [user, posts] = await Promise.all([
+    getUser(),    // Automatically deduped
+    getPosts()    // if called elsewhere
+  ])
+
+  // Pass to Client Component
+  return <View user={user} posts={posts} />
+}
+
+// Client Component: Receive data
+'use client'
+export function View({ user, posts }) {
+  // Handle interactivity, call Server Actions for mutations
+  return <div>{/* UI */}</div>
+}
+```
+
+---
+
 ## Overview
 
 The application uses **two complementary data fetching approaches**:
@@ -171,6 +287,434 @@ export function FeatureView({ data }: FeatureViewProps) {
   );
 }
 ```
+
+### Streaming & Suspense Patterns
+
+Next.js supports progressive rendering through streaming and Suspense boundaries. This allows you to show UI immediately while data loads in the background.
+
+#### Route-Level Streaming (loading.tsx)
+
+Create a `loading.tsx` file next to your `page.tsx` to show a loading state while the entire route loads:
+
+```typescript
+// app/(protected)/dashboard/files/loading.tsx
+export default function Loading() {
+  return <FilesSkeleton />
+}
+```
+
+Next.js automatically wraps your `page.tsx` in a Suspense boundary when `loading.tsx` exists.
+
+#### Component-Level Streaming (Granular Suspense)
+
+For better performance, wrap independent async components in their own Suspense boundaries so they can load concurrently:
+
+```typescript
+// app/(protected)/dashboard/artist/[id]/page.tsx
+import { Suspense } from 'react'
+
+export default async function ArtistPage({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params
+  const artist = await getArtist(id) // Loads first (critical data)
+
+  return (
+    <div>
+      <h1>{artist.name}</h1>
+
+      {/* Each section streams independently */}
+      <Suspense fallback={<PlaylistsSkeleton />}>
+        <Playlists artistId={artist.id} />
+      </Suspense>
+
+      <Suspense fallback={<AlbumsSkeleton />}>
+        <Albums artistId={artist.id} />
+      </Suspense>
+
+      <Suspense fallback={<ConcertsSkeleton />}>
+        <Concerts artistId={artist.id} />
+      </Suspense>
+    </div>
+  )
+}
+
+// Each component fetches its own data
+async function Playlists({ artistId }: { artistId: string }) {
+  const playlists = await getArtistPlaylists(artistId)
+  return <PlaylistsGrid playlists={playlists} />
+}
+
+async function Albums({ artistId }: { artistId: string }) {
+  const albums = await getArtistAlbums(artistId)
+  return <AlbumsGrid albums={albums} />
+}
+
+async function Concerts({ artistId }: { artistId: string }) {
+  const concerts = await getArtistConcerts(artistId)
+  return <ConcertsList concerts={concerts} />
+}
+```
+
+**Benefits:**
+- Critical data (artist name) loads first
+- Independent sections stream in as they're ready
+- Faster perceived performance
+- Better user experience (no "all or nothing" loading)
+
+#### Parallel vs Sequential Data Fetching
+
+**Parallel (Recommended for independent data):**
+
+```typescript
+// GOOD: Both requests start simultaneously
+export default async function Page() {
+  const artistPromise = getArtist()
+  const albumsPromise = getAlbums()
+
+  // Wait for both in parallel
+  const [artist, albums] = await Promise.all([artistPromise, albumsPromise])
+  // Total time = max(artist, albums)
+
+  return <div>{/* render */}</div>
+}
+```
+
+**Sequential (Use only for dependent data):**
+
+```typescript
+// GOOD: albums depends on artist.id
+export default async function Page() {
+  const artist = await getArtist()
+  const albums = await getAlbums(artist.id) // Needs artist first
+  // Total time = artist + albums
+
+  return <div>{/* render */}</div>
+}
+```
+
+**⚠️ Anti-Pattern (Sequential without dependency):**
+
+```typescript
+// BAD: Creates unnecessary waterfall
+const user = await getUser()    // Waits
+const posts = await getPosts()  // Waits for user (unnecessary!)
+const tags = await getTags()    // Waits for posts (unnecessary!)
+// Total time = user + posts + tags (SLOW!)
+
+// Should be:
+const [user, posts, tags] = await Promise.all([
+  getUser(),
+  getPosts(),
+  getTags()
+])
+// Total time = max(user, posts, tags) (FAST!)
+```
+
+---
+
+### Caching Strategies (Next.js 15)
+
+Next.js 15 changed the default caching behavior. You must **explicitly** choose your caching strategy.
+
+#### Option 1: 'use cache' Directive (Recommended)
+
+The newest and cleanest approach:
+
+```typescript
+// lib/data/categories.ts
+export async function getCategories() {
+  'use cache' // Caches the entire function result
+  const res = await fetch('https://api.example.com/categories')
+  return res.json()
+}
+```
+
+#### Option 2: Fetch with Cache Options
+
+```typescript
+// Force cache (cache indefinitely)
+const data = await fetch('https://api.example.com/data', {
+  cache: 'force-cache'
+})
+
+// No caching (always fresh) - DEFAULT in Next.js 15
+const data = await fetch('https://api.example.com/data', {
+  cache: 'no-store'
+})
+
+// Time-based revalidation (ISR)
+const data = await fetch('https://api.example.com/data', {
+  next: { revalidate: 3600 } // Revalidate every hour
+})
+
+// Tag-based revalidation
+const data = await fetch('https://api.example.com/data', {
+  next: { tags: ['products'] }
+})
+```
+
+#### Option 3: unstable_cache for Database Queries
+
+For direct database queries (not using fetch), use `unstable_cache`:
+
+```typescript
+import { unstable_cache } from 'next/cache'
+import { db } from '@/lib/db'
+
+export const getPosts = unstable_cache(
+  async () => {
+    return await db.select().from(posts)
+  },
+  ['posts'], // Cache key
+  {
+    tags: ['posts'],
+    revalidate: 3600 // 1 hour
+  }
+)
+```
+
+#### On-Demand Revalidation
+
+Use in Server Actions to invalidate caches after mutations:
+
+```typescript
+'use server'
+
+import { revalidatePath, revalidateTag } from 'next/cache'
+
+export async function updateProduct(formData: FormData) {
+  // Update database
+  await db.products.update(/* ... */)
+
+  // Revalidate specific path
+  revalidatePath('/products')
+
+  // OR revalidate by tag
+  revalidateTag('products')
+
+  return { success: true }
+}
+```
+
+#### Automatic Request Deduplication
+
+**Important:** Next.js automatically deduplicates identical `fetch` requests within a single render pass. You don't need manual memoization or context providers.
+
+```typescript
+// These three components make the same fetch call
+async function ComponentA() {
+  const data = await fetch('https://api.example.com/data')
+  return <div>{data.title}</div>
+}
+
+async function ComponentB() {
+  const data = await fetch('https://api.example.com/data') // Deduplicated!
+  return <div>{data.description}</div>
+}
+
+async function ComponentC() {
+  const data = await fetch('https://api.example.com/data') // Deduplicated!
+  return <div>{data.author}</div>
+}
+
+// Result: Only ONE network request, all three components get the same data
+```
+
+**This means:**
+- No need to fetch at the top level and prop drill
+- Each component can fetch what it needs
+- Next.js handles deduplication automatically
+- Cleaner, more maintainable code
+
+---
+
+### Error Handling Patterns
+
+#### error.tsx (Segment-Level Error Boundary)
+
+Create an `error.tsx` file next to your route segment to handle errors:
+
+```typescript
+// app/(protected)/dashboard/files/error.tsx
+'use client' // Error components must be Client Components
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
+  return (
+    <div className="error-container">
+      <h2>Something went wrong!</h2>
+      <p>{error.message}</p>
+      <button onClick={() => reset()}>Try again</button>
+    </div>
+  )
+}
+```
+
+**How it works:**
+- Catches errors in page.tsx and nested components
+- Provides a way to recover (reset function)
+- Scoped to the route segment
+
+#### Inline Error Handling
+
+For expected errors during data fetching:
+
+```typescript
+export default async function Page() {
+  const res = await fetch('https://api.example.com/data')
+
+  if (!res.ok) {
+    return (
+      <div className="error">
+        <p>Failed to load data</p>
+        <p>Status: {res.status}</p>
+      </div>
+    )
+  }
+
+  const data = await res.json()
+  return <DataDisplay data={data} />
+}
+```
+
+#### Combining Suspense + Error Boundaries
+
+**Best Practice:** Always wrap streamed components in error boundaries:
+
+```typescript
+import { Suspense } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
+
+export default function Page() {
+  return (
+    <ErrorBoundary fallback={<ErrorFallback />}>
+      <Suspense fallback={<Loading />}>
+        <AsyncDataComponent />
+      </Suspense>
+    </ErrorBoundary>
+  )
+}
+```
+
+**Why both?**
+- Suspense handles loading states
+- Error boundaries handle failures
+- Provides complete UX coverage
+
+---
+
+### Performance Best Practices
+
+#### 1. Avoid Request Waterfalls
+
+```typescript
+// BAD: Sequential (slow)
+const user = await getUser()
+const posts = await getPosts()
+const comments = await getComments()
+// Total: user + posts + comments
+
+// GOOD: Parallel (fast)
+const [user, posts, comments] = await Promise.all([
+  getUser(),
+  getPosts(),
+  getComments()
+])
+// Total: max(user, posts, comments)
+```
+
+#### 2. Leverage Automatic Deduplication
+
+```typescript
+// Don't do this (manual memoization)
+const dataCache = new Map()
+
+function getData() {
+  if (dataCache.has('key')) return dataCache.get('key')
+  const data = fetch(...)
+  dataCache.set('key', data)
+  return data
+}
+
+// Next.js does this automatically!
+// Just fetch directly in components
+```
+
+#### 3. Select Only Required Fields
+
+```typescript
+// BAD: Fetching entire objects
+const users = await db.users.findMany()
+
+// GOOD: Select only what you need
+const users = await db.users.findMany({
+  select: {
+    id: true,
+    name: true,
+    email: true
+    // Don't include large fields if not needed
+  }
+})
+```
+
+#### 4. Paginate Early
+
+```typescript
+// For lists, always paginate
+export async function loadPaginatedData(
+  page: number = 1,
+  pageSize: number = 20
+) {
+  const supabase = await getSupabaseServerClient()
+
+  const { data, error } = await supabase
+    .from('items')
+    .select('*')
+    .range((page - 1) * pageSize, page * pageSize - 1)
+
+  return data
+}
+```
+
+#### 5. Log Slow Queries
+
+```typescript
+// Add timing to loaders
+export async function loadFeatureData() {
+  const start = Date.now()
+
+  const data = await fetchData()
+
+  const duration = Date.now() - start
+  if (duration > 100) {
+    console.warn(`Slow query: loadFeatureData took ${duration}ms`)
+  }
+
+  return data
+}
+```
+
+#### 6. Cache Expensive Computations
+
+```typescript
+import { cache } from 'react'
+
+// Memoize expensive operations
+export const getProcessedData = cache(async () => {
+  const data = await getRawData()
+  return expensiveTransformation(data)
+})
+```
+
+---
 
 ### Data Flow: Server-Side
 
@@ -622,13 +1166,96 @@ export function FeatureView({ initialData }) {
 
 ---
 
-## Integration with Server Actions
+## Server Actions vs Route Handlers
 
-**Server actions handle mutations** (POST/PUT/DELETE), while loaders handle queries (GET).
+A common question: "When should I use Server Actions vs Route Handlers (API routes)?"
+
+### Quick Decision
+
+**Use Server Actions when:**
+- ✅ Internal app operations (forms, mutations within your Next.js app)
+- ✅ Direct component integration (called from Client Components)
+- ✅ Type-safe function calls (TypeScript end-to-end)
+- ✅ Simple data mutations (create, update, delete)
+- ✅ Automatic POST handling
+
+**Use Route Handlers when:**
+- ✅ External API access (webhooks, third-party integrations)
+- ✅ Public endpoints (need explicit URL)
+- ✅ Non-Next.js clients (mobile apps, external services)
+- ✅ Need explicit HTTP control (GET, POST, PUT, DELETE, custom headers)
+- ✅ Multiple HTTP methods on same endpoint
+
+### Rule of Thumb
+
+```
+Internal operations → Server Actions
+External access → Route Handlers
+```
+
+### Examples
+
+**Server Action (Internal Mutation):**
+
+```typescript
+// app/_actions/product-actions.ts
+'use server'
+
+import { revalidatePath } from 'next/cache'
+import { db } from '@/lib/db'
+
+export async function createProduct(formData: FormData) {
+  const name = formData.get('name') as string
+  const price = parseFloat(formData.get('price') as string)
+
+  const product = await db.products.create({ name, price })
+
+  revalidatePath('/products')
+
+  return { success: true, product }
+}
+
+// In component
+import { createProduct } from '@/app/_actions/product-actions'
+
+export default function ProductForm() {
+  return (
+    <form action={createProduct}>
+      <input name="name" required />
+      <input name="price" type="number" required />
+      <button type="submit">Create</button>
+    </form>
+  )
+}
+```
+
+**Route Handler (External API):**
+
+```typescript
+// app/api/products/route.ts
+import { NextResponse } from 'next/server'
+import { db } from '@/lib/db'
+
+// GET handler
+export async function GET(request: Request) {
+  const products = await db.products.findMany()
+  return NextResponse.json(products)
+}
+
+// POST handler
+export async function POST(request: Request) {
+  const body = await request.json()
+  const product = await db.products.create(body)
+  return NextResponse.json(product, { status: 201 })
+}
+```
+
+### Integration Pattern
 
 **Pattern:**
 - **Loaders** → Initial data fetching (page load)
 - **Server Actions** → Data mutations (user actions)
+- **Route Handlers** → External API access
 - **View** → Optimistic updates + action calls
 
 **See:** `server-actions.md` for detailed mutation patterns.
@@ -648,7 +1275,118 @@ const initialFiles = await loadFiles();
 
 ---
 
-## Examples from Codebase
+## Performance & Observability
+
+Beyond individual data fetching patterns, consider these system-wide practices:
+
+### 1. Request Deduplication (Automatic)
+
+Next.js automatically deduplicates identical fetch requests within a single render pass. **You don't need to do anything** - just fetch where you need data.
+
+```typescript
+// All three components fetch the same data
+// Result: Only ONE network request
+<UserProfile />  {/* fetch('/api/user') */}
+<UserSettings /> {/* fetch('/api/user') - deduplicated */}
+<UserStats />    {/* fetch('/api/user') - deduplicated */}
+```
+
+### 2. Monitoring Slow Queries
+
+Add timing instrumentation to loaders:
+
+```typescript
+export async function loadFeatureData() {
+  const start = Date.now()
+  const data = await fetchData()
+  const duration = Date.now() - start
+
+  if (duration > 100) {
+    console.warn(`[Performance] loadFeatureData took ${duration}ms`)
+  }
+
+  return data
+}
+```
+
+### 3. Pagination Strategy
+
+Always paginate lists early. Prefer cursor-based pagination for scalability:
+
+```typescript
+export async function loadPaginatedItems(
+  cursor?: string,
+  limit: number = 20
+) {
+  const supabase = await getSupabaseServerClient()
+
+  let query = supabase
+    .from('items')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(limit)
+
+  if (cursor) {
+    query = query.lt('created_at', cursor)
+  }
+
+  const { data } = await query
+
+  return {
+    items: data,
+    nextCursor: data[data.length - 1]?.created_at
+  }
+}
+```
+
+### 4. Field Selection
+
+Only select the fields you need:
+
+```typescript
+// BAD: Fetching everything
+const users = await db.users.findMany()
+
+// GOOD: Select only required fields
+const users = await db.users.findMany({
+  select: {
+    id: true,
+    name: true,
+    email: true
+    // Exclude large fields (bio, avatar_url, etc.)
+  }
+})
+```
+
+### 5. Cache Expensive Operations
+
+Use React's `cache` for expensive transformations:
+
+```typescript
+import { cache } from 'react'
+
+export const getProcessedData = cache(async () => {
+  const raw = await getRawData()
+  return expensiveTransformation(raw) // Only runs once per request
+})
+```
+
+### 6. Observability Checklist
+
+- [ ] Log slow queries (>100ms threshold)
+- [ ] Monitor cache hit rates
+- [ ] Track data fetching errors
+- [ ] Measure page load times
+- [ ] Alert on performance regressions
+- [ ] Profile production queries periodically
+
+---
+
+## Reference
+
+This section provides practical examples, anti-patterns, and checklists for implementing data fetching patterns.
+
+### Examples from Codebase
 
 ### Example 1: Tasks Module (localStorage)
 
@@ -826,20 +1564,72 @@ export async function loadApiKeys() {
 
 ## Summary
 
-**Key Takeaways:**
+### Core Principles (Next.js 15)
 
-1. ✅ **Two approaches:** Server-side (Supabase) and Client-side (localStorage)
-2. ✅ **Server-side:** Use loaders in `_lib/server/`, call services, pass props
-3. ✅ **Client-side:** Use hooks in `_lib/`, encapsulate CRUD, delegate operations
-4. ✅ **When in doubt:** Server-side for authenticated data, client-side for UI state
-5. ✅ **Never mix:** Choose one approach per feature
-6. ✅ **Loaders ≠ Actions:** Loaders = queries, Actions = mutations
-7. ✅ **Type safety:** Export types from services, use in loaders/hooks
-8. ✅ **File naming:** Consistent conventions across all files
+1. ⚠️ **Explicit Caching**: Next.js 15 does NOT cache by default - always specify cache behavior
+2. ✅ **Server-First**: Fetch data in Server Components by default
+3. ✅ **Colocation**: Fetch data where it's used (automatic deduplication)
+4. ✅ **Parallel Fetching**: Use `Promise.all` for independent data
+5. ✅ **Streaming**: Use Suspense for progressive rendering
+6. ✅ **Server Actions**: Use for internal mutations, Route Handlers for external APIs
 
-This pattern ensures:
-- Clear separation between data fetching and UI rendering
-- Consistent file organization across features
-- Type-safe data flow from source to UI
-- Easy discovery of data fetching logic
-- Scalable architecture for new features
+### This Codebase: Two Approaches
+
+1. ✅ **Server-Side (Supabase)**: For authenticated data requiring persistence
+   - Use loaders in `_lib/server/`, call services, pass props
+   - Streaming with Suspense for better UX
+   - Explicit caching strategies
+   - Error handling with error.tsx
+
+2. ✅ **Client-Side (localStorage)**: For UI-only state
+   - Use hooks in `_lib/`, encapsulate CRUD, delegate operations
+   - No business logic in components
+   - Storage keys in `lib/storage-keys.ts`
+
+### Quick Decision Guide
+
+```
+Need data persistence? → Server-Side approach
+Need authentication? → Server-Side approach
+Need cross-device sync? → Server-Side approach
+Client-only UI state? → Client-Side (localStorage)
+Need mutations? → Server Actions (internal) or Route Handlers (external)
+```
+
+### What This Pattern Ensures
+
+- ✅ Clear separation between data fetching and UI rendering
+- ✅ Consistent file organization across features
+- ✅ Type-safe data flow from source to UI
+- ✅ Easy discovery of data fetching logic
+- ✅ Scalable architecture for new features
+- ✅ Performance-optimized with streaming and caching
+- ✅ Modern Next.js 15 best practices
+
+### Key Rules
+
+1. ⚠️ **Always explicitly choose caching strategy** in Next.js 15
+2. ✅ **Never mix approaches** - choose one per feature
+3. ✅ **Loaders ≠ Actions** - Loaders = queries, Actions = mutations
+4. ✅ **Parallel > Sequential** - avoid request waterfalls
+5. ✅ **Stream with Suspense** - better perceived performance
+6. ✅ **Type safety** - export types from services, use in loaders/hooks
+7. ✅ **File naming** - consistent conventions across all files
+
+### Common Mistakes to Avoid
+
+❌ Forgetting to specify cache behavior (Next.js 15)
+❌ Sequential fetching when parallel is possible
+❌ Prop drilling instead of colocation
+❌ Mixing server-side and localStorage for same data
+❌ Manual memoization (Next.js does it automatically)
+❌ Business logic in components (should be in hooks/services)
+
+---
+
+## Resources
+
+- [Next.js 15 Data Fetching Docs](https://nextjs.org/docs/app/building-your-application/data-fetching)
+- [Next.js Caching Documentation](https://nextjs.org/docs/app/building-your-application/caching)
+- [React Server Components](https://react.dev/reference/rsc/server-components)
+- Related patterns: `page-composition.md`, `server-actions.md`, `hooks.md`, `state-management.md`
