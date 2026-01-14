@@ -8,12 +8,11 @@ import {
   type FieldPath,
   useWatch,
 } from "react-hook-form";
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Icon } from "@/components/ui/icon";
 import { Input } from "@/components/ui/input";
 import type { TicketFormInput } from "@/app/(protected)/dashboard/tasks/_hooks";
 import { cn } from "@/lib/utils";
+import { SubTasksDeleteAction } from "./sub-tasks-delete-action";
 import { SubTasksListItem } from "./sub-tasks-list-item";
 
 interface SubTasksRowProps {
@@ -75,21 +74,7 @@ export const SubTasksRow = memo(function SubTasksRow({
           );
         }}
       />
-      <span
-        aria-hidden='true'
-        className='pointer-events-none absolute inset-y-0 right-0 w-4 bg-gradient-to-l from-dialog via-dialog/90 to-transparent group-hover/subtask:from-hover group-hover/subtask:via-hover group-hover/subtask:to-transparent z-10'
-      />
-      <div className='absolute top-1/2 -translate-y-1/2 z-20 flex items-center justify-end bg-gradient-to-r from-transparent via-dialog group-hover/subtask:via-hover group-hover/subtask:to-hover to-dialog pl-0 group-hover/subtask:pl-2 h-5 right-0'>
-        <Button
-          type='button'
-          variant='icon'
-          size='sm'
-          onClick={() => remove(index)}
-          className='text-icon-light hover:text-icon-primary bg-gradient-to-r from-transparent via-hover to-hover h-5 hover:text-blue-500 opacity-0 group-hover/subtask:opacity-100  rounded-none'
-        >
-          <Icon name='XmarkIcon' className='size-3.5' />
-        </Button>
-      </div>
+      <SubTasksDeleteAction onDelete={() => remove(index)} />
     </SubTasksListItem>
   );
 });
