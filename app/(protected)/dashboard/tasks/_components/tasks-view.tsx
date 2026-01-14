@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { Board, type BoardHandle } from "@/components/tasks/board";
-import { TasksHeader } from "@/components/tasks/tasks-header";
+import { TasksHeader } from "./tasks-header";
 
 export function TasksView() {
   const boardRef = useRef<BoardHandle>(null);
