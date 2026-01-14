@@ -1,11 +1,11 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { SubTasksControlledRow } from "./sub-tasks-controlled-row";
+import { SubTasksControlledRow } from "@/features/sub-task";
 import { SubTasksListAddItem } from "./sub-tasks-list-add-item";
 import { SubTasksListHeader } from "./sub-tasks-list-header";
 import { SubTasksListRoot } from "./sub-tasks-list-root";
-import type { SubTask } from "../../../features/sub-task/types/sub-task.types";
+import type { SubTask } from "@/types/board.types";
 
 interface SubTasksListControlledProps {
   subTasks: SubTask[];

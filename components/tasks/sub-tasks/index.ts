@@ -1,16 +1,13 @@
 // Types
-export type { SubTask } from "../../../features/sub-task/types/sub-task.types";
+export type { SubTask } from "@/types/board.types";
 
 // Primitive components
 export { SubTasksListRoot } from "./sub-tasks-list-root";
 export { SubTasksListHeader } from "./sub-tasks-list-header";
-export { SubTasksListItem } from "./sub-tasks-list-item";
 export { SubTasksListAddItem } from "./sub-tasks-list-add-item";
 
-// Row components
-export { SubTasksRow } from "./sub-tasks-row";
-export { SubTasksControlledRow } from "./sub-tasks-controlled-row";
-export { SubTasksDeleteAction } from "./sub-tasks-delete-action";
+// Row components (imported from features)
+export { SubTasksControlledRow } from "@/features/sub-task";
 
 // Composition components
 export { SubTasksListForm } from "./sub-tasks-list-form";

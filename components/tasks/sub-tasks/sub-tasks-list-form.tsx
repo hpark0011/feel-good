@@ -12,7 +12,7 @@ import { SubTasksListAddItem } from "./sub-tasks-list-add-item";
 import { SubTasksListHeader } from "./sub-tasks-list-header";
 import { SubTasksListRoot } from "./sub-tasks-list-root";
 import { SubTask } from "@/features/sub-task/components/sub-task";
-import type { SubTask as SubTaskType } from "@/features/sub-task/types/sub-task.types";
+import type { SubTask as SubTaskType } from "@/types/board.types";
 
 interface SubTasksListFormProps {
   control: Control<TicketFormInput>;

@@ -4,9 +4,9 @@ import { memo } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { SubTaskDeleteButton } from "@/features/sub-task/components/sub-task-delete-button";
-import { SubTasksListItem } from "./sub-tasks-list-item";
-import type { SubTask as SubTaskType } from "@/features/sub-task/types/sub-task.types";
+import { SubTaskDeleteButton } from "./sub-task-delete-button";
+import { SubTaskWrapper } from "./sub-task-wrapper";
+import type { SubTask as SubTaskType } from "@/types/board.types";
 
 interface SubTasksControlledRowProps {
   subTask: SubTaskType;
@@ -28,7 +28,7 @@ export const SubTasksControlledRow = memo(function SubTasksControlledRow({
   readOnly = false,
 }: SubTasksControlledRowProps) {
   return (
-    <SubTasksListItem>
+    <SubTaskWrapper>
       <Checkbox
         checked={!!subTask.completed}
         onCheckedChange={() => {
@@ -50,7 +50,7 @@ export const SubTasksControlledRow = memo(function SubTasksControlledRow({
         )}
       />
       {onDelete && !readOnly && <SubTaskDeleteButton onDelete={onDelete} />}
-    </SubTasksListItem>
+    </SubTaskWrapper>
   );
 });
 

@@ -37,7 +37,8 @@
       "Bash(wc -l *.md)",
       "Bash(npx tsc:*)",
       "Bash(done)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(test:*)"
     ],
     "deny": [],
     "ask": []

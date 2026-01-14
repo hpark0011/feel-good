@@ -4,6 +4,7 @@ import type { TicketFormInput } from "@/app/(protected)/dashboard/tasks/_hooks";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import type { SubTask as SubTaskType } from "@/types/board.types";
 import { memo } from "react";
 import {
   type Control,
