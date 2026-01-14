@@ -10,7 +10,7 @@ import {
   useFieldArray,
   useWatch,
 } from "react-hook-form";
-import { RingPercentage } from "@/app/insights/_components/ring-percentage";
+import { RingPercentage } from "@/components/ring-percentage";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Icon } from "@/components/ui/icon";

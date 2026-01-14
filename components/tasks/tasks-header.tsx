@@ -1,14 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useTheme } from "next-themes";
-import {
-  type ChangeEvent,
-  useEffect,
-  useRef,
-  useState,
-  useTransition,
-} from "react";
 import { signOutAction } from "@/app/_actions/auth-actions";
 import { customToast } from "@/components/custom-toast";
 import {
@@ -41,6 +32,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Icon } from "@/components/ui/icon";
+import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
+import {
+  type ChangeEvent,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 // import {
 //   Select,
 //   SelectContent,
@@ -181,39 +181,6 @@ export function TasksHeader({ onImport, onExport, onClear }: HeaderProps) {
               </DropdownMenuContent>
             </DropdownMenu>
           </BreadcrumbItem>
-          {/* <BreadcrumbSeparator className='text-neutral-400/50 pt-0.5 dark:text-neutral-700 [&>svg]:!size-5 ml-0.5 mr-[-4px] '>
-            <Icon
-              name='LineDiagonalIcon'
-              className=' text-neutral-400/50 dark:text-neutral-700'
-            />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbPage className='text-[14px]'>
-              <Select value={getCurrentValue()} onValueChange={handleNavigate}>
-                <SelectTrigger className='outline-none hover:bg-hover rounded-sm border-none data-[size=default]:h-6 data-[size=sm]:h-6 focus-visible:bg-extra-light focus-visible:ring-0'>
-                  <div className='flex items-center gap-1.5 pr-0.5 py-0.5 rounded-sm leading-[1.0] '>
-                    <SelectValue />
-                    <Icon
-                      name='TriangleFillDownIcon'
-                      className='size-2 text-icon-extra-light'
-                    />
-                  </div>{" "}
-                </SelectTrigger>
-                <SelectContent
-                  side='bottom'
-                  align='start'
-                  sideOffset={0}
-                  className='rounded-[11px]'
-                >
-                  {navItems.map((item) => (
-                    <SelectItem key={item.href} value={item.label}>
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </BreadcrumbPage>
-          </BreadcrumbItem> */}
         </BreadcrumbList>
       </Breadcrumb>
       {!activeTicketId || timerState === "stopped" ? (
