@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { SubTasksControlledRow } from "@/features/sub-task";
+import { SubTaskRowControlled } from "@/features/sub-task";
 import { SubTasksListAddItem } from "./sub-tasks-list-add-item";
 import { SubTasksListHeader } from "./sub-tasks-list-header";
 import { SubTasksListRoot } from "./sub-tasks-list-root";
@@ -54,7 +54,7 @@ export function SubTasksListControlled({
       <SubTasksListHeader completed={completedCount} total={totalCount} />
       <div className='flex flex-col w-full'>
         {subTasks.map((subTask) => (
-          <SubTasksControlledRow
+          <SubTaskRowControlled
             key={subTask.id}
             subTask={subTask}
             onToggle={() => onToggle(subTask.id)}

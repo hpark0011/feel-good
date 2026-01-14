@@ -11,7 +11,7 @@ import type { TicketFormInput } from "@/app/(protected)/dashboard/tasks/_hooks";
 import { SubTasksListAddItem } from "./sub-tasks-list-add-item";
 import { SubTasksListHeader } from "./sub-tasks-list-header";
 import { SubTasksListRoot } from "./sub-tasks-list-root";
-import { SubTask } from "@/features/sub-task/components/sub-task";
+import { SubTaskRowForm } from "@/features/sub-task";
 import type { SubTask as SubTaskType } from "@/types/board.types";
 
 interface SubTasksListFormProps {
@@ -62,7 +62,7 @@ export function SubTasksListForm({ control, name }: SubTasksListFormProps) {
       <SubTasksListHeader completed={completedCount} total={totalCount} />
       <div className='flex flex-col w-full'>
         {fields.map((field, index) => (
-          <SubTask
+          <SubTaskRowForm
             key={field.id ?? `${fieldName}-${index}`}
             control={control}
             name={fieldName}
