@@ -26,6 +26,30 @@ const PROJECT_COLOR_CLASSES: Record<string, string> = {
   pink: "bg-pink-500",
 };
 
+interface ClearFilterButtonProps {
+  onClick: () => void;
+  className?: string;
+}
+
+function ClearFilterButton({ onClick, className }: ClearFilterButtonProps) {
+  return (
+    <button
+      type='button'
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
+      className={cn(
+        "flex items-center justify-center transition-colors cursor-pointer px-1 group h-full hover:shadow-lg",
+        className
+      )}
+      aria-label='Clear filters'
+    >
+      <XIcon className='size-3.5 text-icon-light group-hover:text-blue-500' />
+    </button>
+  );
+}
+
 export function ProjectFilter() {
   const { projects } = useProjects();
   const { selectedProjectIds, toggleProject, clearFilter } = useProjectFilter();
@@ -43,7 +67,7 @@ export function ProjectFilter() {
   // Reset highlighted index when search changes
   useEffect(() => {
     setHighlightedIndex(-1);
-  }, []);
+  }, [searchQuery]);
 
   const handleClearFilter = () => {
     clearFilter();
@@ -60,28 +84,32 @@ export function ProjectFilter() {
   };
 
   const handleSearchKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setHighlightedIndex((prev) =>
-        prev < filteredProjects.length - 1 ? prev + 1 : prev
-      );
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : -1));
-    } else if (e.key === "Enter") {
-      e.preventDefault();
-      if (highlightedIndex >= 0 && filteredProjects[highlightedIndex]) {
-        // Toggle highlighted project
-        toggleProject(filteredProjects[highlightedIndex].id);
-      }
-    } else if (e.key === "Escape") {
-      e.preventDefault();
-      if (searchQuery) {
-        setSearchQuery("");
-        setHighlightedIndex(-1);
-      } else {
-        setOpen(false);
-      }
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        setHighlightedIndex((prev) =>
+          prev < filteredProjects.length - 1 ? prev + 1 : prev
+        );
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        setHighlightedIndex((prev) => (prev > 0 ? prev - 1 : -1));
+        break;
+      case "Enter":
+        e.preventDefault();
+        if (highlightedIndex >= 0 && filteredProjects[highlightedIndex]) {
+          toggleProject(filteredProjects[highlightedIndex].id);
+        }
+        break;
+      case "Escape":
+        e.preventDefault();
+        if (searchQuery) {
+          setSearchQuery("");
+          setHighlightedIndex(-1);
+        } else {
+          setOpen(false);
+        }
+        break;
     }
   };
 
@@ -129,25 +157,10 @@ export function ProjectFilter() {
                       ?.name || "Filter"}
                   </div>
                   <div className='w-px self-stretch mx-0 bg-border-light' />
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleClearFilter();
-                    }}
-                    className='flex items-center justify-center transition-colors hover:text-blue-500 cursor-pointer px-1 group h-full hover:bg-base hover:shadow-lg'
-                    aria-label='Clear filters'
-                    type='button'
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleClearFilter();
-                      }
-                    }}
-                  >
-                    <XIcon className='size-3.5 text-icon-light group-hover:text-blue-500' />
-                  </button>
+                  <ClearFilterButton
+                    onClick={handleClearFilter}
+                    className='hover:bg-base'
+                  />
                 </div>
               ) : (
                 <div className='flex items-center relative h-full pl-1.5'>
@@ -159,25 +172,10 @@ export function ProjectFilter() {
                     {selectedProjectIds.length} projects
                   </div>
                   <div className='w-px self-stretch mx-0 bg-border-light' />
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleClearFilter();
-                    }}
-                    className='flex items-center justify-center transition-colors cursor-pointer px-1 group hover:bg-hover h-full hover:shadow-lg'
-                    aria-label='Clear filters'
-                    type='button'
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleClearFilter();
-                      }
-                    }}
-                  >
-                    <XIcon className='size-3.5 text-icon-light group-hover:text-blue-500' />
-                  </button>
+                  <ClearFilterButton
+                    onClick={handleClearFilter}
+                    className='hover:bg-hover'
+                  />
                 </div>
               )}
               </div>

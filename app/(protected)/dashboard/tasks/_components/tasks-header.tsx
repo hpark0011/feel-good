@@ -7,14 +7,7 @@ import {
   HeaderMenu,
 } from "@/components/header/header-ui";
 import { PATHS } from "@/config/paths.config";
-import { useLocalStorage } from "@/hooks/use-local-storage";
-import { useProjects } from "@/hooks/use-projects";
 import { useTodayFocus } from "@/hooks/use-today-focus";
-import {
-  BOARD_STORAGE_KEY,
-  getInitialSerializedBoard,
-  safelyDeserializeBoard,
-} from "@/lib/board-storage";
 import { useStopWatchStore } from "@/store/stop-watch-store";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
@@ -47,23 +40,14 @@ export function TasksHeader({ onImport, onExport, onClear }: HeaderProps) {
   const { resolvedTheme, setTheme } = useTheme();
   const [isSigningOut, startSignOutTransition] = useTransition();
 
-  // Get board data and projects for insights
-  const [rawBoard] = useLocalStorage<string>(
-    BOARD_STORAGE_KEY,
-    getInitialSerializedBoard()
-  );
-  const board = safelyDeserializeBoard(rawBoard);
-  const allTickets = Object.values(board).flat();
-  const { projects } = useProjects();
+  // Timer state selectors
   const activeTicketId = useStopWatchStore((state) => state.activeTicketId);
   const activeTicketTitle = useStopWatchStore(
     (state) => state.activeTicketTitle
   );
   const timerState = useStopWatchStore((state) => state.state);
   const activeElapsedSeconds = useStopWatchStore((state) => {
-    if (!state.activeTicketId) {
-      return 0;
-    }
+    if (!state.activeTicketId) return 0;
     return state.getElapsedTime(state.activeTicketId);
   });
   const hydrate = useStopWatchStore((state) => state._hydrate);
@@ -113,7 +97,6 @@ export function TasksHeader({ onImport, onExport, onClear }: HeaderProps) {
         />
       ) : (
         <TasksHeaderTimerDisplay
-          activeTicketId={activeTicketId}
           activeTicketTitle={activeTicketTitle}
           timerState={timerState}
           activeElapsedSeconds={activeElapsedSeconds}
@@ -140,8 +123,6 @@ export function TasksHeader({ onImport, onExport, onClear }: HeaderProps) {
       <InsightsDialog
         open={insightsDialogOpen}
         onOpenChange={setInsightsDialogOpen}
-        tickets={allTickets}
-        projects={projects}
       />
     </HeaderContainer>
   );

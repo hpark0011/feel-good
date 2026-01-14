@@ -18,33 +18,40 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useLocalStorage } from "@/hooks/use-local-storage";
+import { useProjects } from "@/hooks/use-projects";
+import {
+  BOARD_STORAGE_KEY,
+  getInitialSerializedBoard,
+  safelyDeserializeBoard,
+} from "@/lib/board-storage";
 import {
   calculateTotalDuration,
   getTasksCompletedOnDate,
   getTicketDurationForDate,
   getTimeEntriesForDate,
-  // getTimelineData,
   groupByProject,
 } from "@/lib/insights-utils";
 import { formatDuration } from "@/lib/timer-utils";
 import { cn } from "@/lib/utils";
-import type { Project, Ticket } from "@/types/board.types";
-
-// import { FocusTimelineChart } from "./focus-timeline-chart";
 
 interface InsightsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  tickets: Ticket[];
-  projects: Project[];
 }
 
 export function InsightsDialog({
   open,
   onOpenChange,
-  tickets,
-  projects,
 }: InsightsDialogProps) {
+  // Fetch data only when dialog is rendered
+  const [rawBoard] = useLocalStorage<string>(
+    BOARD_STORAGE_KEY,
+    getInitialSerializedBoard()
+  );
+  const board = safelyDeserializeBoard(rawBoard);
+  const tickets = Object.values(board).flat();
+  const { projects } = useProjects();
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [datePickerOpen, setDatePickerOpen] = useState(false);
 

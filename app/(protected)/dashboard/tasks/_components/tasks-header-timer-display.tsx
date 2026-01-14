@@ -3,22 +3,20 @@ import { formatDuration } from "@/lib/timer-utils";
 import { StopWatchState } from "@/store/stop-watch-store";
 
 interface TasksHeaderTimerDisplayProps {
-  activeTicketId: string | null;
   activeTicketTitle: string | null;
   timerState: StopWatchState;
   activeElapsedSeconds: number;
 }
 
+/**
+ * Displays the active timer in the header with elapsed time and ticket title.
+ * Only renders when a timer is running or paused (parent handles visibility).
+ */
 export function TasksHeaderTimerDisplay({
-  activeTicketId,
   activeTicketTitle,
   timerState,
   activeElapsedSeconds,
 }: TasksHeaderTimerDisplayProps) {
-  if (!activeTicketId || timerState === "stopped") {
-    return null;
-  }
-
   return (
     <button
       type='button'

@@ -51,11 +51,7 @@ export function TasksHeaderLogo({
             >
               <DropdownMenuItem
                 disabled={isSigningOut}
-                onSelect={() => {
-                  if (!isSigningOut) {
-                    onSignOut();
-                  }
-                }}
+                onSelect={onSignOut}
               >
                 <Icon name='HandWaveFillIcon' className='text-icon-light' />
                 Sign out

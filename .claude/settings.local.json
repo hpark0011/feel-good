@@ -34,7 +34,9 @@
       "Bash(du:*)",
       "Bash(grep:*)",
       "Bash(npx jscpd:*)",
-      "Bash(wc -l *.md)"
+      "Bash(wc -l *.md)",
+      "Bash(npx tsc:*)",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []
