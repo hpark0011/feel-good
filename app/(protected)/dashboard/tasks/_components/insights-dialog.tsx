@@ -25,7 +25,7 @@ import {
   getInitialSerializedBoard,
   safelyDeserializeBoard,
   formatDuration,
-} from "../_lib/tasks.utils";
+} from "../_utils";
 import {
   calculateTotalDuration,
   getTasksCompletedOnDate,

@@ -35,7 +35,7 @@ import {
   type TicketFormInput,
   type TicketFormOutput,
   useTicketForm,
-} from "@/app/(protected)/dashboard/tasks/_lib/tasks.hooks";
+} from "@/app/(protected)/dashboard/tasks/_hooks";
 import { cn } from "@/lib/utils";
 import { AutoResizingTextarea } from "../ui/auto-resizing-textarea";
 import { Icon } from "../ui/icon";

@@ -2,12 +2,9 @@
 
 import { signOutAction } from "@/app/_actions/auth-actions";
 import { customToast } from "@/components/custom-toast";
-import {
-  HeaderContainer,
-  HeaderMenu,
-} from "@/components/header/header-ui";
+import { HeaderContainer, HeaderMenu } from "@/components/header/header-ui";
 import { PATHS } from "@/config/paths.config";
-import { useTodayFocus } from "../_lib/tasks.hooks";
+import { useTodayFocus } from "../_hooks";
 import { useStopWatchStore } from "@/store/stop-watch-store";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";

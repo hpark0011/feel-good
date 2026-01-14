@@ -30,7 +30,7 @@ import { COLUMNS, INITIAL_BOARD_STATE } from "@/config/board.config";
 import {
   useLastSelectedProject,
   useProjectFilter,
-} from "@/app/(protected)/dashboard/tasks/_lib/tasks.hooks";
+} from "@/app/(protected)/dashboard/tasks/_hooks";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import {
   downloadJsonFile,
@@ -40,7 +40,7 @@ import {
   BOARD_STORAGE_KEY,
   getInitialSerializedBoard,
   handleTimerOnStatusChange,
-} from "@/app/(protected)/dashboard/tasks/_lib/tasks.utils";
+} from "@/app/(protected)/dashboard/tasks/_utils";
 import { useStopWatchStore } from "@/store/stop-watch-store";
 import type {
   BoardState,
@@ -387,19 +387,19 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
       const newStatus = data.status;
 
       setBoard((board) => {
-      const now = new Date();
-      const updatedTicket: Ticket = {
+        const now = new Date();
+        const updatedTicket: Ticket = {
           ...editingTicket,
           title: data.title,
           description: data.description,
           status: data.status,
           projectId: data.projectId,
           subTasks: data.subTasks,
-        updatedAt: now,
-        completedAt:
-          data.status === "complete"
-            ? editingTicket.completedAt ?? now
-            : null,
+          updatedAt: now,
+          completedAt:
+            data.status === "complete"
+              ? (editingTicket.completedAt ?? now)
+              : null,
         };
 
         if (oldColumn === data.status) {

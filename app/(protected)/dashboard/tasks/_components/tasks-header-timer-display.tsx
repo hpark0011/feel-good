@@ -1,5 +1,5 @@
 import { Icon } from "@/components/ui/icon";
-import { formatDuration } from "../_lib/tasks.utils";
+import { formatDuration } from "../_utils";
 import { StopWatchState } from "@/store/stop-watch-store";
 
 interface TasksHeaderTimerDisplayProps {

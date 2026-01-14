@@ -10,7 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useProjectFilter } from "../_lib/tasks.hooks";
+import { useProjectFilter } from "../_hooks";
 import { useProjects } from "@/hooks/use-projects";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/types/board.types";
@@ -141,43 +141,43 @@ export function ProjectFilter() {
             <>
               <div className='w-px self-stretch mx-0 bg-border-light' />
               <div className='h-full'>
-              {selectedProjectIds.length === 1 ? (
-                <div className='flex items-center relative h-full'>
-                  <div className='px-1.5 flex items-center gap-1.5'>
-                    <span
-                      className={cn(
-                        "size-1.5 rounded-full flex-shrink-0",
-                        PROJECT_COLOR_CLASSES[
-                          projects.find((p) => p.id === selectedProjectIds[0])
-                            ?.color || "gray"
-                        ]
-                      )}
+                {selectedProjectIds.length === 1 ? (
+                  <div className='flex items-center relative h-full'>
+                    <div className='px-1.5 flex items-center gap-1.5'>
+                      <span
+                        className={cn(
+                          "size-1.5 rounded-full flex-shrink-0",
+                          PROJECT_COLOR_CLASSES[
+                            projects.find((p) => p.id === selectedProjectIds[0])
+                              ?.color || "gray"
+                          ]
+                        )}
+                      />
+                      {projects.find((p) => p.id === selectedProjectIds[0])
+                        ?.name || "Filter"}
+                    </div>
+                    <div className='w-px self-stretch mx-0 bg-border-light' />
+                    <ClearFilterButton
+                      onClick={handleClearFilter}
+                      className='hover:bg-base'
                     />
-                    {projects.find((p) => p.id === selectedProjectIds[0])
-                      ?.name || "Filter"}
                   </div>
-                  <div className='w-px self-stretch mx-0 bg-border-light' />
-                  <ClearFilterButton
-                    onClick={handleClearFilter}
-                    className='hover:bg-base'
-                  />
-                </div>
-              ) : (
-                <div className='flex items-center relative h-full pl-1.5'>
-                  <Icon
-                    name='FolderFillIcon'
-                    className='size-4 text-icon-light'
-                  />
-                  <div className='pr-1.5 pl-1 text-text-primary'>
-                    {selectedProjectIds.length} projects
+                ) : (
+                  <div className='flex items-center relative h-full pl-1.5'>
+                    <Icon
+                      name='FolderFillIcon'
+                      className='size-4 text-icon-light'
+                    />
+                    <div className='pr-1.5 pl-1 text-text-primary'>
+                      {selectedProjectIds.length} projects
+                    </div>
+                    <div className='w-px self-stretch mx-0 bg-border-light' />
+                    <ClearFilterButton
+                      onClick={handleClearFilter}
+                      className='hover:bg-hover'
+                    />
                   </div>
-                  <div className='w-px self-stretch mx-0 bg-border-light' />
-                  <ClearFilterButton
-                    onClick={handleClearFilter}
-                    className='hover:bg-hover'
-                  />
-                </div>
-              )}
+                )}
               </div>
             </>
           )}
