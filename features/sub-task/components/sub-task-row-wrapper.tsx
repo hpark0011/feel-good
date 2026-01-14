@@ -1,13 +1,13 @@
 import type React from "react";
 import { cn } from "@/lib/utils";
 
-type SubTaskWrapperProps = React.ComponentProps<"div">;
+type SubTaskRowWrapperProps = React.ComponentProps<"div">;
 
 /**
  * Sub-task wrapper container.
  * Provides layout and hover states.
  */
-export function SubTaskWrapper({ className, ...props }: SubTaskWrapperProps) {
+export function SubTaskRowWrapper({ ...props }: SubTaskRowWrapperProps) {
   return (
     <div
       data-slot='sub-task-wrapper'
@@ -18,8 +18,7 @@ export function SubTaskWrapper({ className, ...props }: SubTaskWrapperProps) {
         "gap-2",
         "pl-2 pr-1",
         "group/sub-task",
-        "hover:bg-hover",
-        className
+        "hover:bg-hover"
       )}
       {...props}
     />

@@ -9,9 +9,8 @@ export { SubTaskRowForm } from "./components/sub-task-row-form";
 export { SubTaskRowControlled } from "./components/sub-task-row-controlled";
 
 // Shared building blocks (for advanced customization)
-export { SubTaskWrapper } from "./components/sub-task-wrapper";
+export { SubTaskRowWrapper } from "./components/sub-task-row-wrapper";
 export { SubTaskDeleteButton } from "./components/sub-task-delete-button";
-export { SubTaskDeleteGradientOverlay } from "./components/sub-task-delete-gradient-overlay";
 
 // Backwards compatibility aliases (deprecated)
 /** @deprecated Use SubTaskRowForm instead */

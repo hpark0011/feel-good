@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
-import { SubTaskDeleteGradientOverlay } from "./sub-task-delete-gradient-overlay";
 
 interface SubTaskDeleteButtonProps {
   onDelete: () => void;
@@ -20,8 +19,6 @@ export function SubTaskDeleteButton({
 }: SubTaskDeleteButtonProps) {
   return (
     <>
-      <SubTaskDeleteGradientOverlay />
-
       {/* Delete button container */}
       <div
         className={cn(

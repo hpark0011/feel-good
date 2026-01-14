@@ -5,7 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { SubTaskDeleteButton } from "./sub-task-delete-button";
-import { SubTaskWrapper } from "./sub-task-wrapper";
+import { SubTaskRowWrapper } from "./sub-task-row-wrapper";
 
 interface SubTaskRowProps {
   /** Current text value */
@@ -20,8 +20,6 @@ interface SubTaskRowProps {
   onDelete?: () => void;
   /** Disables all interactions */
   disabled?: boolean;
-  /** Additional className for the wrapper */
-  className?: string;
 }
 
 /**
@@ -40,15 +38,14 @@ export const SubTaskRow = memo(function SubTaskRow({
   onTextChange,
   onDelete,
   disabled = false,
-  className,
 }: SubTaskRowProps) {
   return (
-    <SubTaskWrapper className={className}>
+    <SubTaskRowWrapper>
       <Checkbox
         checked={completed}
         onCheckedChange={(checked) => onCompletedChange(!!checked)}
         disabled={disabled}
-        className="border-border-medium"
+        className='border-border-medium'
       />
       <Input
         value={text}
@@ -61,7 +58,7 @@ export const SubTaskRow = memo(function SubTaskRow({
         )}
       />
       {onDelete && !disabled && <SubTaskDeleteButton onDelete={onDelete} />}
-    </SubTaskWrapper>
+    </SubTaskRowWrapper>
   );
 });
 
