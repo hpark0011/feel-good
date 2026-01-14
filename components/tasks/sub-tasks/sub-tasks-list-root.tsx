@@ -14,10 +14,7 @@ export function SubTasksListRoot({
   return (
     <div
       data-slot='subtasks-list'
-      className={cn(
-        "group hover:bg-hover/30 flex flex-col",
-        className
-      )}
+      className={cn("group hover:bg-hover/30 flex flex-col", className)}
       {...props}
     />
   );
