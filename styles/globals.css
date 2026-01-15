@@ -6,6 +6,8 @@
 @import "./background-colors.css";
 @import "./shadows.css";
 @import "./components.css";
+@import "@radix-ui/colors/gray.css";
+@import "@radix-ui/colors/gray-dark.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -99,6 +101,7 @@
   --color-border-light: var(--border-light);
   --color-border-medium: var(--border-medium);
   --color-hover: var(--hover);
+  --color-hover-subtle: var(--hover-subtle);
   --color-badge-background: var(--badge-background);
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
@@ -142,6 +145,7 @@
   --border-highlight: oklch(1 0 0 / 95%);
   --input: oklch(0.95 0 0);
   --hover: var(--color-white);
+  --hover-subtle: var(--color-dq-gray-50);
   --badge-background: oklch(0.95 0 0);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.646 0.222 41.116);
@@ -178,6 +182,7 @@
   --border-highlight: oklch(1 0 0 / 3%);
   --input: oklch(1 0 0 / 15%);
   --hover: oklch(0.269 0 0);
+  --hover-subtle: var(--color-dq-gray-950);
   --badge-background: oklch(0.269 0 0);
   --ring: oklch(0.556 0 0);
   --chart-1: oklch(0.488 0.243 264.376);

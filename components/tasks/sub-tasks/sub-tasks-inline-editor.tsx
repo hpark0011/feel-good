@@ -4,7 +4,8 @@ import { LoaderCircle } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 import { cn } from "@/lib/utils";
-import { type SubTask, SubTasksListControlled } from "./sub-tasks-list";
+import type { SubTask } from "@/types/board.types";
+import { SubTasksListControlled } from "./sub-tasks-list-controlled";
 
 interface SubTasksInlineEditorProps {
   initialSubTasks: SubTask[];
@@ -84,11 +85,13 @@ export function SubTasksInlineEditor({
     [handleMutate]
   );
 
+  // Sync external changes only when not dirty (conditional to prevent cascading renders)
   useEffect(() => {
     if (!isDirty) {
       setDraft(initialSubTasks);
     }
-  }, [initialSubTasks, isDirty]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialSubTasks]);
 
   useEffect(() => () => debouncedSave.cancel(), [debouncedSave]);
 

@@ -19,8 +19,9 @@ export class FileService {
     const fileName = `${userId}/${timestamp}-${randomId}.${fileExt}`;
 
     // Upload to storage bucket
-    const { data: storageData, error: storageError } =
-      await this.supabase.storage.from("documents").upload(fileName, file, {
+    const { error: storageError } = await this.supabase.storage
+      .from("documents")
+      .upload(fileName, file, {
         cacheControl: "3600",
         upsert: false,
       });

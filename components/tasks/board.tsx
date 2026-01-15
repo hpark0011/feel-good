@@ -27,21 +27,20 @@ import {
   useState,
 } from "react";
 import { COLUMNS, INITIAL_BOARD_STATE } from "@/config/board.config";
-import { useLastSelectedProject } from "@/hooks/use-last-selected-project";
+import {
+  useLastSelectedProject,
+  useProjectFilter,
+} from "@/app/(protected)/dashboard/tasks/_hooks";
 import { useLocalStorage } from "@/hooks/use-local-storage";
-import { useProjectFilter } from "@/hooks/use-project-filter";
 import {
   downloadJsonFile,
-  exportBoardAsJson,
   importBoardFromJson,
   serializeBoardData,
-} from "@/lib/storage";
-import {
   safelyDeserializeBoard,
   BOARD_STORAGE_KEY,
   getInitialSerializedBoard,
-} from "@/lib/board-storage";
-import { handleTimerOnStatusChange } from "@/lib/timer-utils";
+  handleTimerOnStatusChange,
+} from "@/app/(protected)/dashboard/tasks/_utils";
 import { useStopWatchStore } from "@/store/stop-watch-store";
 import type {
   BoardState,
@@ -52,7 +51,7 @@ import type {
 import { BodyContainer } from "../layout/layout-ui";
 import { BoardColumn } from "./board-column";
 import { TicketCard } from "./ticket-card";
-import { TicketFormDialog } from "./ticket-form-dialog";
+import { TicketFormDialog } from "./ticket-card/ticket-form-dialog";
 
 export type BoardHandle = {
   importFromInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -388,19 +387,19 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
       const newStatus = data.status;
 
       setBoard((board) => {
-      const now = new Date();
-      const updatedTicket: Ticket = {
+        const now = new Date();
+        const updatedTicket: Ticket = {
           ...editingTicket,
           title: data.title,
           description: data.description,
           status: data.status,
           projectId: data.projectId,
           subTasks: data.subTasks,
-        updatedAt: now,
-        completedAt:
-          data.status === "complete"
-            ? editingTicket.completedAt ?? now
-            : null,
+          updatedAt: now,
+          completedAt:
+            data.status === "complete"
+              ? (editingTicket.completedAt ?? now)
+              : null,
         };
 
         if (oldColumn === data.status) {
@@ -498,8 +497,7 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
   const handleExportBoard = useCallback(() => {
     const timestamp = new Date().toISOString().split("T")[0];
     const filename = `task-board-${timestamp}.json`;
-    const data = exportBoardAsJson(board);
-    downloadJsonFile(data, filename);
+    downloadJsonFile(serializeBoardData(board), filename);
   }, [board]);
 
   const handleImportBoard = useCallback(
