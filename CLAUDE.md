@@ -30,15 +30,15 @@ pnpm supabase:deploy      # Deploy to production
 
 ## Tech Stack
 
-| Category | Technology |
-|----------|------------|
+| Category  | Technology                                                    |
+| --------- | ------------------------------------------------------------- |
 | Framework | Next.js 15.4.10 (App Router, Turbopack), React 19, TypeScript |
-| Backend | Supabase (auth, database) |
-| Styling | Tailwind CSS 4, CSS variables, shadcn/ui (New York) |
-| State | Zustand (global), localStorage (persistence), React Context |
-| Forms | React Hook Form + Zod |
-| DnD | @dnd-kit |
-| Charts | Recharts, Framer Motion |
+| Backend   | Supabase (auth, database)                                     |
+| Styling   | Tailwind CSS 4, CSS variables, shadcn/ui (New York)           |
+| State     | Zustand (global), localStorage (persistence), React Context   |
+| Forms     | React Hook Form + Zod                                         |
+| DnD       | @dnd-kit                                                      |
+| Charts    | Recharts, Framer Motion                                       |
 
 ## Project Structure
 
@@ -79,13 +79,13 @@ features/              # Shared features (sub-task/)
 
 ## State Management
 
-| Type | Use Case |
-|------|----------|
-| useState/useReducer | Component-local state |
-| localStorage (useLocalStorage) | UI prefs, board state, projects (cross-tab sync) |
-| Zustand | Timer/stopwatch, shared state |
-| React Context | Theme, auth |
-| Supabase | User auth, files (Note: Tasks use localStorage only) |
+| Type                           | Use Case                                             |
+| ------------------------------ | ---------------------------------------------------- |
+| useState/useReducer            | Component-local state                                |
+| localStorage (useLocalStorage) | UI prefs, board state, projects (cross-tab sync)     |
+| Zustand                        | Timer/stopwatch, shared state                        |
+| React Context                  | Theme, auth                                          |
+| Supabase                       | User auth, files (Note: Tasks use localStorage only) |
 
 ## Key Features
 
@@ -117,7 +117,7 @@ Color-coded categorization (8 colors), CRUD via `useProjects`, localStorage pers
 ```tsx
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-<Button data-slot="submit-button" className={cn("custom-class")} />
+<Button data-slot='submit-button' className={cn("custom-class")} />;
 ```
 
 ### Forms (React Hook Form + Zod)
@@ -134,9 +134,12 @@ type FormData = z.infer<typeof schema>;
 ### Zustand
 
 ```typescript
-import { create } from 'zustand';
+import { create } from "zustand";
 
-interface Store { isRunning: boolean; start: () => void; }
+interface Store {
+  isRunning: boolean;
+  start: () => void;
+}
 export const useStore = create<Store>((set) => ({
   isRunning: false,
   start: () => set({ isRunning: true }),
@@ -172,8 +175,12 @@ Store callbacks in refs to avoid re-running effects:
 
 ```typescript
 const callbackRef = useRef(onSubmit);
-useEffect(() => { callbackRef.current = onSubmit; }, [onSubmit]);
-useEffect(() => { /* use callbackRef.current */ }, [enabled]);
+useEffect(() => {
+  callbackRef.current = onSubmit;
+}, [onSubmit]);
+useEffect(() => {
+  /* use callbackRef.current */
+}, [enabled]);
 ```
 
 ### JSDoc Required
@@ -211,7 +218,9 @@ Simplest solution that works. No over-engineering, unnecessary abstractions, or 
 
 ```typescript
 // ❌ Over-engineered
-class StorageManager<T> { constructor(config, middleware, plugins) {} }
+class StorageManager<T> {
+  constructor(config, middleware, plugins) {}
+}
 
 // ✅ Simple
 function getStorageKey(category: string, key: string): string {
@@ -221,16 +230,17 @@ function getStorageKey(category: string, key: string): string {
 
 ### Separation of Concerns
 
-| Layer | Location | Responsibility |
-|-------|----------|----------------|
-| UI | `components/`, `features/**/components/` | Rendering, props, minimal UI state (~100 lines max) |
-| Hooks | `hooks/`, `features/**/hooks/` | Stateful logic, data fetching, side effects |
-| Logic | `lib/`, `**/utils/` | Pure functions, no React deps, testable |
-| Data | `_actions/`, hooks with storage | Isolated from presentation |
+| Layer | Location                                 | Responsibility                                      |
+| ----- | ---------------------------------------- | --------------------------------------------------- |
+| UI    | `components/`, `features/**/components/` | Rendering, props, minimal UI state (~100 lines max) |
+| Hooks | `hooks/`, `features/**/hooks/`           | Stateful logic, data fetching, side effects         |
+| Logic | `lib/`, `**/utils/`                      | Pure functions, no React deps, testable             |
+| Data  | `_actions/`, hooks with storage          | Isolated from presentation                          |
 
 **Extract when:** Component >100 lines, 3+ useMemo/useCallback for business logic, reusable logic, needs unit testing.
 
 **Before:**
+
 ```tsx
 function InsightsDialog() {
   const [rawBoard] = useLocalStorage(...);
@@ -241,6 +251,7 @@ function InsightsDialog() {
 ```
 
 **After:**
+
 ```tsx
 // hooks/use-insights-data.ts
 function useInsightsData(date: Date) {
@@ -266,23 +277,26 @@ function InsightsDialog() {
 ```typescript
 // lib/storage-keys.ts
 const STORAGE_KEYS = {
-  TASKS: { BOARD_STATE: "docgen.v1.tasks.board-state", PROJECTS: "docgen.v1.tasks.projects" },
+  TASKS: {
+    BOARD_STATE: "docgen.v1.tasks.board-state",
+    PROJECTS: "docgen.v1.tasks.projects",
+  },
   UI: { TODAY_FOCUS: "docgen.v1.ui.today-focus", THEME: "theme" },
 };
 ```
 
 ## Naming & Organization
 
-| Type | Convention |
-|------|------------|
-| Pages | `page.tsx` |
-| Loaders | `{feature}-page.loader.ts` |
-| Actions | `{feature}-server-actions.ts` |
-| Schemas | `{feature}.schema.ts` |
-| Constants | `{feature}.config.ts` |
-| Components | `kebab-case.tsx` |
-| Route UI | `_components/` |
-| Route utils | `_lib/`, `_lib/server/` |
+| Type        | Convention                    |
+| ----------- | ----------------------------- |
+| Pages       | `page.tsx`                    |
+| Loaders     | `{feature}-page.loader.ts`    |
+| Actions     | `{feature}-server-actions.ts` |
+| Schemas     | `{feature}.schema.ts`         |
+| Constants   | `{feature}.config.ts`         |
+| Components  | `kebab-case.tsx`              |
+| Route UI    | `_components/`                |
+| Route utils | `_lib/`, `_lib/server/`       |
 
 **Path aliases:** `@/*` maps to root (`@/components/ui/*`, `@/lib/utils`, `@/hooks/*`, `@/types/*`, `@/config/*`)
 

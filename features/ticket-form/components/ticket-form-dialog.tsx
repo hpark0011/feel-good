@@ -40,7 +40,7 @@ import { cn } from "@/lib/utils";
 import { AutoResizingTextarea } from "../../../components/ui/auto-resizing-textarea";
 import { Icon } from "../../../components/ui/icon";
 import { ProjectSelect } from "@/features/project-select";
-import { StatusSelect } from "../../../components/tasks/status-select";
+import { StatusSelect } from "../../../app/(protected)/dashboard/tasks/_components/status-select";
 import { SubTasksListForm } from "../../sub-task-list/components/sub-tasks-list";
 
 interface TicketFormProps {

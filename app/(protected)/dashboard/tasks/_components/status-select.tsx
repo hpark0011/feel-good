@@ -11,7 +11,7 @@ import {
 import { COLUMNS } from "@/config/board.config";
 import { cn } from "@/lib/utils";
 import { ChevronDownIcon } from "lucide-react";
-import { Icon, IconName } from "../ui/icon";
+import { Icon, IconName } from "../../../../../components/ui/icon";
 import { ColumnId } from "@/types/board.types";
 
 interface StatusSelectProps {
