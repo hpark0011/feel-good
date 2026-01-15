@@ -23,6 +23,7 @@ Component Tokens (Component-Specific)
 **Usage**: **Only in CSS files** to build semantic tokens. Never use directly in components.
 
 **Examples**:
+
 - `--color-dq-gray-500`
 - `--spacing-4`
 - `--font-size-base`
@@ -36,6 +37,7 @@ Component Tokens (Component-Specific)
 **Usage**: **Primary choice** for component styling.
 
 **Examples**:
+
 - `--color-text-primary` (text)
 - `--color-base` (background)
 - `--color-icon-medium` (icons)
@@ -49,6 +51,7 @@ Component Tokens (Component-Specific)
 **Usage**: When styling specific component types.
 
 **Examples**:
+
 - `--card` (card background)
 - `--dialog` (dialog background)
 - `--border` (border color)
@@ -192,30 +195,30 @@ Is it a general background?
 ### ✅ DO
 
 **Use semantic tokens**:
+
 ```tsx
-<div className="bg-base text-text-primary">
-  <Icon className="text-icon-medium" />
+<div className='bg-base text-text-primary'>
+  <Icon className='text-icon-medium' />
 </div>
 ```
 
 **Use Tailwind classes** that map to tokens:
+
 ```tsx
-<div className="p-4 gap-2 rounded-lg shadow-md">
-  Content
-</div>
+<div className='p-4 gap-2 rounded-lg shadow-md'>Content</div>
 ```
 
 **Use component tokens** for specific components:
+
 ```tsx
-<Card className="bg-card border-card-border">
-  ...
-</Card>
+<Card className='bg-card border-card-border'>...</Card>
 ```
 
 **Let dark mode work automatically**:
+
 ```tsx
 // No manual dark: classes needed for semantic tokens
-<div className="bg-base text-text-primary">
+<div className='bg-base text-text-primary'>
   {/* Automatically adapts to dark mode */}
 </div>
 ```
@@ -223,6 +226,7 @@ Is it a general background?
 ### ❌ DON'T
 
 **Don't use primitive tokens directly**:
+
 ```tsx
 // ❌ Bad
 <div className="bg-[var(--color-dq-gray-100)]">...</div>
@@ -232,6 +236,7 @@ Is it a general background?
 ```
 
 **Don't use hardcoded colors**:
+
 ```tsx
 // ❌ Bad
 <div className="bg-[#f1f1f2]">...</div>
@@ -243,6 +248,7 @@ Is it a general background?
 ```
 
 **Don't use standard Tailwind color classes**:
+
 ```tsx
 // ❌ Bad
 <div className="bg-red-500 text-blue-500">...</div>
@@ -252,6 +258,7 @@ Is it a general background?
 ```
 
 **Don't use arbitrary spacing/typography**:
+
 ```tsx
 // ❌ Bad
 <div className="p-[12px] text-[18px]">...</div>
@@ -261,6 +268,7 @@ Is it a general background?
 ```
 
 **Don't manually handle dark mode** for semantic tokens:
+
 ```tsx
 // ❌ Bad
 <div className="bg-white dark:bg-black">...</div>
@@ -274,6 +282,7 @@ Is it a general background?
 ### Step 1: Identify Hardcoded Values
 
 Look for:
+
 - Hex colors: `#f1f1f2`, `#0F0F0F`
 - RGB/RGBA: `rgba(255, 255, 255, 0.9)`
 - Standard Tailwind: `bg-red-500`, `text-blue-500`
@@ -306,33 +315,35 @@ Verify the change works in both light and dark modes.
 ### Example 1: Card Component
 
 **Before**:
+
 ```tsx
-<div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4 rounded-lg">
-  <h3 className="text-gray-900 dark:text-gray-100">Title</h3>
-  <p className="text-gray-600 dark:text-gray-400">Content</p>
+<div className='bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 p-4 rounded-lg'>
+  <h3 className='text-gray-900 dark:text-gray-100'>Title</h3>
+  <p className='text-gray-600 dark:text-gray-400'>Content</p>
 </div>
 ```
 
 **After**:
+
 ```tsx
-<Card className="bg-card border-card-border p-4 rounded-lg">
-  <h3 className="text-text-primary">Title</h3>
-  <p className="text-text-secondary">Content</p>
+<Card className='bg-card border-card-border p-4 rounded-lg'>
+  <h3 className='text-text-primary'>Title</h3>
+  <p className='text-text-secondary'>Content</p>
 </Card>
 ```
 
 ### Example 2: Button with Status
 
 **Before**:
+
 ```tsx
-<button className="bg-blue-500 hover:bg-blue-600 text-white">
-  Submit
-</button>
+<button className='bg-blue-500 hover:bg-blue-600 text-white'>Submit</button>
 ```
 
 **After**:
+
 ```tsx
-<button className="bg-[var(--color-dq-blue-500)] hover:bg-[var(--color-dq-blue-600)] text-primary-foreground">
+<button className='bg-[var(--color-dq-blue-500)] hover:bg-[var(--color-dq-blue-600)] text-primary-foreground'>
   Submit
 </button>
 ```
@@ -340,18 +351,20 @@ Verify the change works in both light and dark modes.
 ### Example 3: Icon with Text
 
 **Before**:
+
 ```tsx
-<div className="flex items-center gap-2">
-  <Icon className="text-gray-500" />
-  <span className="text-gray-700">Label</span>
+<div className='flex items-center gap-2'>
+  <Icon className='text-gray-500' />
+  <span className='text-gray-700'>Label</span>
 </div>
 ```
 
 **After**:
+
 ```tsx
-<div className="flex items-center gap-2">
-  <Icon className="text-icon-medium" />
-  <span className="text-text-secondary">Label</span>
+<div className='flex items-center gap-2'>
+  <Icon className='text-icon-medium' />
+  <span className='text-text-secondary'>Label</span>
 </div>
 ```
 
