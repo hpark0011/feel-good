@@ -12,7 +12,6 @@ export { SubTaskRowControlled } from "./components/sub-task-row-controlled";
 export { SubTaskRowWrapper } from "./components/sub-task-row-wrapper";
 export { SubTaskDeleteButton } from "./components/sub-task-delete-button";
 export { SubTaskFadeOverlay } from "./components/sub-task-fade-overlay";
-export { SubTaskFadeOverlayPosition } from "./components/sub-task-fade-overlay-position";
 
 // Backwards compatibility aliases (deprecated)
 /** @deprecated Use SubTaskRowForm instead */

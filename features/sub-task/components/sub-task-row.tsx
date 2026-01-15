@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { SubTaskDeleteButton } from "./sub-task-delete-button";
 import { SubTaskFadeOverlay } from "./sub-task-fade-overlay";
-import { SubTaskFadeOverlayPosition } from "./sub-task-fade-overlay-position";
 import { SubTaskRowWrapper } from "./sub-task-row-wrapper";
 
 interface SubTaskRowProps {
@@ -60,11 +59,9 @@ export const SubTaskRow = memo(function SubTaskRow({
         )}
       />
       {onDelete && !disabled && (
-        <SubTaskFadeOverlayPosition>
-          <SubTaskFadeOverlay>
-            <SubTaskDeleteButton onDelete={onDelete} />
-          </SubTaskFadeOverlay>
-        </SubTaskFadeOverlayPosition>
+        <SubTaskFadeOverlay>
+          <SubTaskDeleteButton onDelete={onDelete} />
+        </SubTaskFadeOverlay>
       )}
     </SubTaskRowWrapper>
   );
