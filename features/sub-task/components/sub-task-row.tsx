@@ -5,6 +5,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { SubTaskDeleteButton } from "./sub-task-delete-button";
+import { SubTaskFadeOverlay } from "./sub-task-fade-overlay";
+import { SubTaskFadeOverlayPosition } from "./sub-task-fade-overlay-position";
 import { SubTaskRowWrapper } from "./sub-task-row-wrapper";
 
 interface SubTaskRowProps {
@@ -57,7 +59,13 @@ export const SubTaskRow = memo(function SubTaskRow({
           disabled && "cursor-default"
         )}
       />
-      {onDelete && !disabled && <SubTaskDeleteButton onDelete={onDelete} />}
+      {onDelete && !disabled && (
+        <SubTaskFadeOverlayPosition>
+          <SubTaskFadeOverlay>
+            <SubTaskDeleteButton onDelete={onDelete} />
+          </SubTaskFadeOverlay>
+        </SubTaskFadeOverlayPosition>
+      )}
     </SubTaskRowWrapper>
   );
 });
