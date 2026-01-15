@@ -12,8 +12,8 @@ interface SubTaskFadeOverlayPositionProps {
 
 /**
  * Positioning wrapper for sub-task fade overlay.
- * Handles absolute positioning, transform, layout, sizing, and spacing.
- * Positions content at the right edge of the row, vertically centered.
+ * Handles absolute positioning, layout, sizing, and spacing.
+ * Positions content at the right edge of the row, vertically aligned with input.
  */
 export function SubTaskFadeOverlayPosition({
   children,
@@ -22,14 +22,10 @@ export function SubTaskFadeOverlayPosition({
   return (
     <div
       className={cn(
-        // Positioning
-        "absolute top-1/2 right-0 z-20",
-        // Transform
-        "-translate-y-1/2",
-        // Layout
+        // Positioning - fill vertical space and align to right
+        "absolute inset-y-0 right-0 z-20",
+        // Layout - center content vertically within the overlay
         "flex items-center justify-end",
-        // Sizing
-        "h-5",
         // Spacing
         "pl-0 group-hover/sub-task:pl-2",
         className

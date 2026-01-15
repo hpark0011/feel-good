@@ -13,7 +13,7 @@ interface SubTaskFadeOverlayProps {
 /**
  * Fade overlay component for sub-task rows.
  * Creates a gradient fade-out effect for overflowing text.
- * Reveals on hover within parent group/sub-task.
+ * Uses --sub-task-bg CSS variable to match parent/row background contextually.
  */
 export function SubTaskFadeOverlay({
   children,
@@ -22,10 +22,12 @@ export function SubTaskFadeOverlay({
   return (
     <div
       className={cn(
-        // Background - gradient fade
-        "bg-gradient-to-r from-transparent via-dialog to-dialog",
-        // Interactive states - hover background
-        "group-hover/sub-task:via-hover group-hover/sub-task:to-hover",
+        // Sizing - match input height
+        "h-5",
+        // Layout - center content vertically
+        "flex items-center",
+        // Background - gradient fade using CSS variable for contextual awareness
+        "bg-gradient-to-r from-transparent via-[var(--sub-task-bg)] to-[var(--sub-task-bg)]",
         className
       )}
     >

@@ -6,6 +6,7 @@ type SubTaskRowWrapperProps = React.ComponentProps<"div">;
 /**
  * Sub-task wrapper container.
  * Provides layout and hover states.
+ * Overrides --sub-task-bg CSS variable on hover for contextual background matching.
  */
 export function SubTaskRowWrapper({ ...props }: SubTaskRowWrapperProps) {
   return (
@@ -18,6 +19,8 @@ export function SubTaskRowWrapper({ ...props }: SubTaskRowWrapperProps) {
         "gap-2",
         "pl-2 pr-1",
         "group/sub-task",
+        // Override parent's --sub-task-bg variable on row hover
+        "hover:[--sub-task-bg:var(--color-hover)]",
         "hover:bg-hover"
       )}
       {...props}
