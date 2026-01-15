@@ -1,36 +1,25 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { CSSProperties, ReactNode } from "react";
-import { cardVariants, getWrapperClassName } from "../utils/ticket-card.config";
+import type { CSSProperties, MouseEvent, ReactNode } from "react";
 
-const MotionWrapper = motion.div;
+import { cardVariants, getWrapperClassName } from "../utils/ticket-card.config";
 
 interface AnimatedTicketCardWrapperProps {
   children: ReactNode;
-  /** Whether this is the initial page load (enables animation) */
   isInitialLoad: boolean;
-  /** Whether the card is currently being dragged */
   isDragging: boolean;
-  /** Card index for staggered animation delay */
   index: number;
-  /** Ref callback for drag-and-drop */
   setNodeRef: (node: HTMLElement | null) => void;
-  /** Inline styles from drag-and-drop */
   style: CSSProperties;
-  /** Click handler for the card */
-  onClick: (e: React.MouseEvent) => void;
-  /** Drag handle props (attributes + listeners) */
+  onClick: (e: MouseEvent) => void;
   dragHandleProps: Record<string, unknown>;
 }
 
 /**
- * Wrapper component that conditionally applies entrance animations
- * to ticket cards based on initial load state.
- *
- * Uses Framer Motion for staggered entrance animations on page load,
- * but renders a plain div during normal interactions to avoid
- * animation overhead.
+ * Wrapper that conditionally applies entrance animations to ticket cards.
+ * Uses Framer Motion for staggered entrance on page load,
+ * plain div during normal interactions to avoid overhead.
  */
 export function AnimatedTicketCardWrapper({
   children,
@@ -43,30 +32,35 @@ export function AnimatedTicketCardWrapper({
   dragHandleProps,
 }: AnimatedTicketCardWrapperProps) {
   const className = getWrapperClassName(isDragging);
+  const shouldAnimate = isInitialLoad && !isDragging;
 
-  const commonProps = {
-    ref: setNodeRef,
-    style,
-    className,
-    onClick,
-    ...dragHandleProps,
-  } as const;
-
-  // Only use animated wrapper for initial load (not during drag)
-  if (isInitialLoad && !isDragging) {
+  if (shouldAnimate) {
     return (
-      <MotionWrapper
+      <motion.div
+        ref={setNodeRef}
+        style={style}
+        className={className}
+        onClick={onClick}
         variants={cardVariants}
         initial="hidden"
         animate="visible"
         custom={index}
-        {...commonProps}
+        {...dragHandleProps}
       >
         {children}
-      </MotionWrapper>
+      </motion.div>
     );
   }
 
-  // Regular non-animated wrapper for all other cases
-  return <div {...commonProps}>{children}</div>;
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={className}
+      onClick={onClick}
+      {...dragHandleProps}
+    >
+      {children}
+    </div>
+  );
 }

@@ -1,12 +1,13 @@
 "use client";
 
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { useCallback, useState, type CSSProperties, type MouseEvent } from "react";
+
 import { Card } from "@/components/ui/card";
 import { useProjects } from "@/hooks/use-projects";
 import { useStopWatchStore } from "@/store/stop-watch-store";
 import type { SubTask, Ticket } from "@/types/board.types";
-import { useSubTaskEditorVisibility } from "../hooks/use-sub-task-editor-visibility";
-import { useTicketCardClick } from "../hooks/use-ticket-card-click";
-import { useTicketCardDragDrop } from "../hooks/use-ticket-card-drag-drop";
 import { getCardClassName } from "../utils/ticket-card.config";
 import { AnimatedTicketCardWrapper } from "./animated-ticket-card-wrapper";
 import { TicketCardContent } from "./ticket-card-content";
@@ -27,7 +28,7 @@ interface TicketCardProps {
 /**
  * Main ticket card component for the Kanban board.
  *
- * Orchestrates drag-and-drop, timer state, sub-task visibility,
+ * Handles drag-and-drop, timer state, sub-task visibility,
  * and renders the card structure with header and content sections.
  */
 export function TicketCard({
@@ -46,29 +47,51 @@ export function TicketCard({
     ? getProjectById(ticket.projectId)
     : undefined;
 
-  // Drag-and-drop integration
+  // Drag-and-drop via @dnd-kit
   const {
+    attributes,
+    listeners,
     setNodeRef,
-    style,
+    transform,
+    transition,
     isDragging: isSortableDragging,
-    dragHandleProps,
-  } = useTicketCardDragDrop({ ticketId: ticket.id });
+  } = useSortable({ id: ticket.id });
 
-  // Sub-task editor visibility
-  const [isSubTaskEditorOpen, toggleSubTaskEditor] = useSubTaskEditorVisibility({
-    subTaskCount: ticket.subTasks?.length ?? 0,
-  });
+  const style: CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    transition: isSortableDragging ? transition : undefined,
+    opacity: isSortableDragging ? 0.5 : 1,
+  };
+
+  // Sub-task editor visibility - open by default if sub-tasks exist
+  const [isSubTaskEditorOpen, setIsSubTaskEditorOpen] = useState(
+    () => (ticket.subTasks?.length ?? 0) > 0
+  );
+
+  const toggleSubTaskEditor = useCallback(() => {
+    setIsSubTaskEditorOpen((prev) => !prev);
+  }, []);
 
   // Timer state for in-progress tickets
   const timerState = useStopWatchStore((state) =>
     state.getTimerState(ticket.id)
   );
 
-  // Click handler with button/sub-task area exclusion
-  const handleClick = useTicketCardClick({
-    isDragging: isSortableDragging,
-    onClick,
-  });
+  // Click handler - excludes buttons and sub-task area
+  const handleClick = useCallback(
+    (e: MouseEvent) => {
+      if (isSortableDragging || !onClick) return;
+
+      const target = e.target as HTMLElement;
+      const isButton = target.closest("button");
+      const isSubTaskArea = target.closest('[data-subtasks-area="true"]');
+
+      if (!isButton && !isSubTaskArea) {
+        onClick();
+      }
+    },
+    [isSortableDragging, onClick]
+  );
 
   return (
     <AnimatedTicketCardWrapper
@@ -78,7 +101,7 @@ export function TicketCard({
       setNodeRef={setNodeRef}
       style={style}
       onClick={handleClick}
-      dragHandleProps={dragHandleProps}
+      dragHandleProps={{ ...attributes, ...listeners }}
     >
       <TicketProjectTag project={project} isDragging={isDragging} />
       <Card className={getCardClassName(ticket.status)}>

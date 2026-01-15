@@ -1,9 +1,10 @@
 import type { Variants } from "framer-motion";
-import type { TicketStatus } from "@/types/board.types";
+
+import type { ColumnId } from "@/types/board.types";
 import { cn } from "@/lib/utils";
 
 /**
- * Animation variants for ticket card entrance/exit animations
+ * Animation variants for ticket card entrance animations
  */
 export const cardVariants: Variants = {
   hidden: {
@@ -17,26 +18,17 @@ export const cardVariants: Variants = {
     scale: 1,
     transition: {
       delay: index * 0.05,
-      type: "spring" as const,
+      type: "spring",
       damping: 20,
       stiffness: 300,
     },
   }),
-  exit: {
-    opacity: 0,
-    scale: 0.95,
-    y: -10,
-    transition: {
-      duration: 0.2,
-      ease: "easeOut",
-    },
-  },
 };
 
 /**
  * Status-specific styling for ticket cards
  */
-export const statusStyles: Record<TicketStatus, string> = {
+export const statusStyles: Record<ColumnId, string> = {
   backlog: "",
   "to-do": "",
   "in-progress":
@@ -104,7 +96,7 @@ export const subTaskContainerStyles = cn(
 /**
  * Generates the complete card className based on status
  */
-export function getCardClassName(status: TicketStatus): string {
+export function getCardClassName(status: ColumnId): string {
   return cn(cardBaseStyles, statusStyles[status]);
 }
 

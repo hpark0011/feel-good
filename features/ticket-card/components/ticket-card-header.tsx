@@ -31,32 +31,17 @@ export function TicketCardHeader({
   onEdit,
   onDelete,
 }: TicketCardHeaderProps) {
-  const hasDuration =
-    ticket.status === "complete" &&
-    typeof ticket.duration === "number" &&
-    ticket.duration > 0;
+  const hasContentBelow = ticket.description || isSubTaskEditorOpen;
+  const isComplete = ticket.status === "complete";
 
   return (
-    <CardHeader
-      className={cn(
-        // Layout & Spacing
-        "p-2.5 py-2 flex",
-        // Conditional: Adjust height when content below
-        (ticket.description || isSubTaskEditorOpen) && "pb-2 h-fit"
-      )}
-    >
+    <CardHeader className={cn("p-2.5 py-2 flex", hasContentBelow && "pb-2 h-fit")}>
       <div className="flex items-center gap-1.5">
         <div className="flex-1 min-w-0 flex items-start">
           <CardTitle
             className={cn(
-              // Layout & Spacing
-              "flex gap-[1px]",
-              // Positioning
-              "relative",
-              // Typography
-              "text-[14px] font-medium leading-[1.2]",
-              // Conditional: Block display when duration shown
-              hasDuration && "block"
+              "flex gap-px relative text-[14px] font-medium leading-[1.2]",
+              isComplete && "block"
             )}
           >
             {ticket.status === "in-progress" && (
