@@ -5,19 +5,18 @@ import { Fragment, forwardRef, useCallback, useImperativeHandle } from "react";
 import { closestCenter, DndContext } from "@dnd-kit/core";
 import { COLUMNS } from "@/config/board.config";
 import { BodyContainer } from "@/components/layout/layout-ui";
-import { TicketFormDialog } from "@/features/ticket-form";
+import {
+  TicketFormDialog,
+  createTicketFromFormData,
+  updateTicketFromFormData,
+} from "@/features/ticket-form";
 import type { ColumnId } from "@/types/board.types";
 import { useBoardState } from "../hooks/use-board-state";
 import { useBoardDnd } from "../hooks/use-board-dnd";
 import { useBoardForm, type TicketFormValues } from "../hooks/use-board-form";
 import { BoardColumn } from "./board-column";
 import { BoardDragOverlay } from "./board-drag-overlay";
-import {
-  createTicketFromFormData,
-  updateTicketFromFormData,
-  updateBoardWithTicket,
-  syncTimerOnTicketUpdate,
-} from "../utils/ticket-form.utils";
+import { updateBoardWithTicket, syncTimerOnTicketUpdate } from "../utils";
 
 export type BoardHandle = {
   importFromInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
