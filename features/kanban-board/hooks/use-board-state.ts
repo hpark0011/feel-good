@@ -237,6 +237,16 @@ export function useBoardState(): UseBoardStateReturn {
     [setBoard]
   );
 
+  // Memoize to prevent unnecessary store registrations
+  const imperativeActions = useMemo(
+    () => ({
+      exportBoard,
+      importBoard,
+      clearBoard,
+    }),
+    [exportBoard, importBoard, clearBoard]
+  );
+
   return {
     board,
     filteredBoard,
@@ -252,10 +262,6 @@ export function useBoardState(): UseBoardStateReturn {
     findColumn,
     findTicket,
     lastSelectedProjectId,
-    imperativeActions: {
-      exportBoard,
-      importBoard,
-      clearBoard,
-    },
+    imperativeActions,
   };
 }

@@ -1,7 +1,6 @@
 "use client";
 
-import type React from "react";
-import { Fragment, forwardRef, useCallback, useImperativeHandle } from "react";
+import { Fragment, useCallback, useEffect } from "react";
 import { closestCenter, DndContext } from "@dnd-kit/core";
 import { COLUMNS } from "@/config/board.config";
 import { BodyContainer } from "@/components/layout/layout-ui";
@@ -11,6 +10,7 @@ import {
   updateTicketFromFormData,
 } from "@/features/ticket-form";
 import type { ColumnId } from "@/types/board.types";
+import { useBoardActionsStore } from "@/store/board-actions-store";
 import { useBoardState } from "../hooks/use-board-state";
 import { useBoardDnd } from "../hooks/use-board-dnd";
 import { useBoardForm, type TicketFormValues } from "../hooks/use-board-form";
@@ -18,13 +18,7 @@ import { BoardColumn } from "./board-column";
 import { BoardDragOverlay } from "./board-drag-overlay";
 import { updateBoardWithTicket, syncTimerOnTicketUpdate } from "../utils";
 
-export type BoardHandle = {
-  importFromInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  exportBoard: () => void;
-  clearBoard: () => void;
-};
-
-export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
+export function Board() {
   const {
     board,
     filteredBoard,
@@ -51,6 +45,15 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
     onBoardUpdate: actions.setBoard,
     onStatusChange: actions.handleStatusChange,
   });
+
+  // Register board actions to global store for header actions
+  useEffect(() => {
+    useBoardActionsStore.getState()._registerActions({
+      importBoard: imperativeActions.importBoard,
+      exportBoard: imperativeActions.exportBoard,
+      clearBoard: imperativeActions.clearBoard,
+    });
+  }, [imperativeActions]);
 
   const handleFormSubmit = useCallback(
     (data: TicketFormValues) => {
@@ -99,36 +102,6 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
     [editingTicket, findColumn, actions, setIsFormOpen]
   );
 
-  const handleImportFromInput = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const content = e.target?.result as string;
-          imperativeActions.importBoard(content);
-        } catch (error) {
-          console.error("Failed to import board:", error);
-          alert("Failed to import board. Please check the file format.");
-        }
-      };
-      reader.readAsText(file);
-    },
-    [imperativeActions]
-  );
-
-  useImperativeHandle(
-    ref,
-    () => ({
-      importFromInput: handleImportFromInput,
-      exportBoard: imperativeActions.exportBoard,
-      clearBoard: imperativeActions.clearBoard,
-    }),
-    [handleImportFromInput, imperativeActions]
-  );
-
   return (
     <>
       <DndContext
@@ -170,4 +143,4 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
       />
     </>
   );
-});
+}

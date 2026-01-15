@@ -1,5 +1,5 @@
 // Components
-export { Board, type BoardHandle } from "./components/board";
+export { Board } from "./components/board";
 export { BoardColumn } from "./components/board-column";
 
 // Hooks
