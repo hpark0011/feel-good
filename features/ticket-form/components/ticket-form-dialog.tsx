@@ -41,7 +41,7 @@ import { AutoResizingTextarea } from "../../../components/ui/auto-resizing-texta
 import { Icon } from "../../../components/ui/icon";
 import { ProjectSelect } from "../../../components/tasks/project-select/project-select";
 import { StatusSelect } from "../../../components/tasks/status-select";
-import { SubTasksListForm } from "../../../components/tasks/sub-tasks/sub-tasks-list";
+import { SubTasksListForm } from "../../sub-task-list/components/sub-tasks-list";
 
 interface TicketFormProps {
   open: boolean;

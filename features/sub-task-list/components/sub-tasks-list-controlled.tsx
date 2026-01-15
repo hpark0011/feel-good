@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { SubTaskRowControlled } from "@/features/sub-task";
 import { SubTasksListAddItem } from "./sub-tasks-list-add-item";
 import { SubTasksListHeader } from "./sub-tasks-list-header";
-import { SubTasksListRoot } from "./sub-tasks-list-root";
+import { SubTasksListContainer } from "./sub-tasks-list-container";
 import type { SubTask } from "@/types/board.types";
 
 interface SubTasksListControlledProps {
@@ -50,7 +50,7 @@ export function SubTasksListControlled({
   const totalCount = subTasks.length;
 
   return (
-    <SubTasksListRoot>
+    <SubTasksListContainer>
       <SubTasksListHeader completed={completedCount} total={totalCount} />
       <div className='flex flex-col w-full'>
         {subTasks.map((subTask) => (
@@ -76,6 +76,6 @@ export function SubTasksListControlled({
           onSubmit={handleAdd}
         />
       )}
-    </SubTasksListRoot>
+    </SubTasksListContainer>
   );
 }

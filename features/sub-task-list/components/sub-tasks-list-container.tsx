@@ -1,17 +1,17 @@
 import type React from "react";
 import { cn } from "@/lib/utils";
 
-type SubTasksListRootProps = React.ComponentProps<"div">;
+type SubTasksListContainerProps = React.ComponentProps<"div">;
 
 /**
- * Root container for subtasks list.
+ * Container for subtasks list.
  * Provides hover states and layout structure.
  * Sets --sub-task-bg CSS variable for child components to reference.
  */
-export function SubTasksListRoot({
+export function SubTasksListContainer({
   className,
   ...props
-}: SubTasksListRootProps) {
+}: SubTasksListContainerProps) {
   return (
     <div
       data-slot='subtasks-list'

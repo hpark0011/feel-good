@@ -10,7 +10,7 @@ import {
 import type { TicketFormInput } from "@/app/(protected)/dashboard/tasks/_hooks";
 import { SubTasksListAddItem } from "./sub-tasks-list-add-item";
 import { SubTasksListHeader } from "./sub-tasks-list-header";
-import { SubTasksListRoot } from "./sub-tasks-list-root";
+import { SubTasksListContainer } from "./sub-tasks-list-container";
 import { SubTaskRowForm } from "@/features/sub-task";
 import type { SubTask as SubTaskType } from "@/types/board.types";
 
@@ -58,7 +58,7 @@ export function SubTasksListForm({ control, name }: SubTasksListFormProps) {
   const totalCount = subTasks.length;
 
   return (
-    <SubTasksListRoot>
+    <SubTasksListContainer>
       <SubTasksListHeader completed={completedCount} total={totalCount} />
       <div className='flex flex-col w-full'>
         {fields.map((field, index) => (
@@ -77,6 +77,6 @@ export function SubTasksListForm({ control, name }: SubTasksListFormProps) {
         onChange={setNewTaskText}
         onSubmit={addSubTask}
       />
-    </SubTasksListRoot>
+    </SubTasksListContainer>
   );
 }

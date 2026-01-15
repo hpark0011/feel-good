@@ -8,7 +8,7 @@ import type { SubTask } from "@/types/board.types";
 
 // Re-export types and components for backward compatibility
 export type { SubTask } from "@/types/board.types";
-export { SubTasksListRoot } from "./sub-tasks-list-root";
+export { SubTasksListContainer } from "./sub-tasks-list-container";
 export { SubTasksListHeader } from "./sub-tasks-list-header";
 export { SubTasksListAddItem } from "./sub-tasks-list-add-item";
 export { SubTasksListForm } from "./sub-tasks-list-form";
