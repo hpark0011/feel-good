@@ -2,14 +2,13 @@
 
 import { useCallback, useMemo, useState } from "react";
 import type { ColumnId, Ticket } from "@/types/board.types";
+import type { TicketFormData } from "@/features/ticket-form";
 
-export interface TicketFormValues {
-  title: string;
-  description: string;
-  status: ColumnId;
-  projectId?: string;
-  subTasks: Array<{ id: string; text: string; completed: boolean }>;
-}
+/**
+ * Re-export TicketFormData as TicketFormValues for backward compatibility.
+ * The canonical type is TicketFormData in features/ticket-form.
+ */
+export type TicketFormValues = TicketFormData;
 
 export interface UseBoardFormOptions {
   lastSelectedProjectId?: string;
