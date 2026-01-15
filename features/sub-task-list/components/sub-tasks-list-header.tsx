@@ -33,24 +33,25 @@ export function SubTasksListHeader({
       {...props}
     >
       {hasSubTasks ? (
-        <div className='flex items-center justify-center pt-[1px] pl-0.5'>
-          <RingPercentage
-            value={completionPercentage}
-            size={12}
-            strokeWidth={2}
-            ariaLabel='Sub-task completion'
-            showLabel={false}
-          />
-        </div>
+        <>
+          <div className='flex items-center justify-center pt-[1px] pl-0.5'>
+            <RingPercentage
+              value={completionPercentage}
+              size={12}
+              strokeWidth={2}
+              ariaLabel='Sub-task completion'
+              showLabel={false}
+            />
+          </div>
+          <span className='text-xs text-text-muted'>
+            {completed} / {total} Completed
+          </span>
+        </>
       ) : (
-        <Icon name='ChecklistIcon' className='size-3.5' />
-      )}
-      {hasSubTasks ? (
-        <span className='text-xs text-text-muted'>
-          {completed} / {total} Completed
-        </span>
-      ) : (
-        <span className='text-xs text-text-muted'>Sub-tasks</span>
+        <>
+          <Icon name='ChecklistIcon' className='size-3.5' />
+          <span className='text-xs text-text-muted'>Sub-tasks</span>
+        </>
       )}
     </div>
   );
