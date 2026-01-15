@@ -16,7 +16,7 @@ import {
   useTransition,
 } from "react";
 import { FocusFormDialog } from "./focus-form-dialog";
-import { InsightsDialog } from "./insights-dialog";
+import { InsightsDialog } from "../../../../../features/insights/insights-dialog";
 import { TasksHeaderActions } from "./tasks-header-actions";
 import { TasksHeaderFocusDisplay } from "./tasks-header-focus-display";
 import { TasksHeaderLogo } from "./tasks-header-logo";

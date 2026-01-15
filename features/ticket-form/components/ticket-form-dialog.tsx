@@ -39,7 +39,7 @@ import {
 import { cn } from "@/lib/utils";
 import { AutoResizingTextarea } from "../../../components/ui/auto-resizing-textarea";
 import { Icon } from "../../../components/ui/icon";
-import { ProjectSelect } from "../../../components/tasks/project-select/project-select";
+import { ProjectSelect } from "@/features/project-select";
 import { StatusSelect } from "../../../components/tasks/status-select";
 import { SubTasksListForm } from "../../sub-task-list/components/sub-tasks-list";
 

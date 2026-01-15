@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { ProjectColor } from "@/types/board.types";
+import type { ProjectColor } from "@/types/board.types";
 import { PROJECT_COLORS } from "@/config/tasks.config";
 
 interface ProjectCreateEditFormProps {

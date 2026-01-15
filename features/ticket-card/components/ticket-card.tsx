@@ -5,7 +5,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { useCallback, useState, type CSSProperties, type MouseEvent } from "react";
 
 import { Card } from "@/components/ui/card";
-import { useProjects } from "@/hooks/use-projects";
+import { useProjects } from "@/features/project-select";
 import { useStopWatchStore } from "@/store/stop-watch-store";
 import type { SubTask, Ticket } from "@/types/board.types";
 import { getCardClassName } from "../utils/ticket-card.config";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { Project } from "@/types/board.types";
+import type { Project } from "@/types/board.types";
 
 interface UseProjectSelectionProps {
   onValueChange: (projectId: string | undefined) => void;
