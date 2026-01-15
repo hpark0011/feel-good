@@ -1,4 +1,4 @@
-import { BoardState, Ticket, TimeEntry } from "@/types/board.types";
+import type { BoardState, Ticket, TimeEntry } from "@/types/board.types";
 
 // ============================================================================
 // Board Serialization Types
@@ -16,6 +16,16 @@ const CURRENT_VERSION = 1;
 // Board Serialization Functions
 // ============================================================================
 
+/**
+ * Serializes board state to a JSON string for export or storage.
+ *
+ * Converts all Date objects to ISO strings and wraps the data with versioning
+ * information for future compatibility.
+ *
+ * @param boardState - The current board state to serialize
+ * @returns JSON string representation of the board state
+ * @throws Error if serialization fails
+ */
 export function serializeBoardData(boardState: BoardState): string {
   try {
     const serializedData: SerializedBoardData = {
@@ -31,6 +41,15 @@ export function serializeBoardData(boardState: BoardState): string {
   }
 }
 
+/**
+ * Deserializes a JSON string back into board state.
+ *
+ * Converts ISO date strings back to Date objects and validates the data structure.
+ *
+ * @param data - JSON string containing serialized board data
+ * @returns Deserialized board state
+ * @throws Error if parsing or validation fails
+ */
 export function deserializeBoardData(data: string): BoardState {
   try {
     const parsed: SerializedBoardData = JSON.parse(data);

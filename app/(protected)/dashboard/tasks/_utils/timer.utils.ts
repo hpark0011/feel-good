@@ -1,4 +1,4 @@
-import { BoardState, Ticket, ColumnId } from "@/types/board.types";
+import type { BoardState, Ticket, ColumnId } from "@/types/board.types";
 import type { StopWatchStore } from "@/store/stop-watch-store";
 
 // ============================================================================

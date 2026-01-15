@@ -134,6 +134,9 @@ utils/supabase/      # Supabase utilities
    get-current-server-user.ts
 
 docs/                # Project documentation
+
+features/            # Shared features used across multiple pages
+   sub-task/         # Sub-task feature components
 ```
 
 ### State Management Strategy

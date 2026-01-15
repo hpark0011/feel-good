@@ -4,7 +4,7 @@
  * Utilities for importing board state from JSON and exporting/downloading files.
  */
 
-import { BoardState } from "@/types/board.types";
+import type { BoardState } from "@/types/board.types";
 import {
   validateBoardData,
   deserializeBoardData,

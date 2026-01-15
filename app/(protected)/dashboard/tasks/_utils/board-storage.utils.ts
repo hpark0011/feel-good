@@ -1,5 +1,5 @@
 import { INITIAL_BOARD_STATE } from "@/config/board.config";
-import { BoardState } from "@/types/board.types";
+import type { BoardState } from "@/types/board.types";
 import { getStorageKey } from "@/lib/storage-keys";
 import {
   serializeBoardData,
