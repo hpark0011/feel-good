@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type {
   DragEndEvent,
   DragOverEvent,
@@ -57,6 +57,12 @@ export function useBoardDnd({
   const [activeId, setActiveId] = useState<string | null>(null);
   const dragSourceColumnRef = useRef<ColumnId | null>(null);
 
+  // Track latest board in ref to avoid recreating callbacks on every board change
+  const boardRef = useRef(board);
+  useEffect(() => {
+    boardRef.current = board;
+  }, [board]);
+
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
@@ -101,7 +107,7 @@ export function useBoardDnd({
 
       const activeColumn = findColumn(active.id as string);
       let overColumn: string | null;
-      if (board[over.id as string]) {
+      if (boardRef.current[over.id as string]) {
         overColumn = over.id as string;
       } else {
         overColumn = findColumn(over.id as string);
@@ -157,7 +163,7 @@ export function useBoardDnd({
         };
       });
     },
-    [board, findColumn, onBoardUpdate]
+    [findColumn, onBoardUpdate]
   );
 
   const handleDragEnd = useCallback(
@@ -172,7 +178,7 @@ export function useBoardDnd({
 
       const activeColumn = findColumn(active.id as string);
       let overColumn: string | null;
-      if (board[over.id as string]) {
+      if (boardRef.current[over.id as string]) {
         overColumn = over.id as string;
       } else {
         overColumn = findColumn(over.id as string);
@@ -213,7 +219,7 @@ export function useBoardDnd({
       setActiveId(null);
       dragSourceColumnRef.current = null;
     },
-    [board, findColumn, onBoardUpdate, onStatusChange]
+    [findColumn, onBoardUpdate, onStatusChange]
   );
 
   const activeTicket = activeId ? findTicket(activeId) : null;
