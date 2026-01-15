@@ -7,7 +7,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { type StopWatchState, useStopWatchStore } from "@/store/stop-watch-store";
+import { StopWatchState, useStopWatchStore } from "@/store/stop-watch-store";
 
 interface TicketTimerButtonProps {
   ticketId: string;

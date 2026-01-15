@@ -1,6 +1,6 @@
 import { Icon } from "@/components/ui/icon";
 import { formatDuration } from "../_utils";
-import { type StopWatchState } from "@/store/stop-watch-store";
+import { StopWatchState } from "@/store/stop-watch-store";
 
 interface TasksHeaderTimerDisplayProps {
   activeTicketTitle: string | null;
