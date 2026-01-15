@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/tooltip";
 import type { Column, SubTask, Ticket } from "../../types/board.types";
 import { Icon } from "../ui/icon";
-import { TicketCard } from "./ticket-card";
+import { TicketCard } from "../../features/ticket-card/components";
 
 interface BoardColumnProps {
   column: Column;
