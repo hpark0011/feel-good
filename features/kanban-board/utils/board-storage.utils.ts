@@ -2,15 +2,7 @@ import type { BoardState, Ticket, TimeEntry } from "@/types/board.types";
 import { INITIAL_BOARD_STATE } from "@/config/board.config";
 import { getStorageKey } from "@/lib/storage-keys";
 
-// ============================================================================
-// Board Storage Constants
-// ============================================================================
-
 export const BOARD_STORAGE_KEY = getStorageKey("TASKS", "BOARD_STATE");
-
-// ============================================================================
-// Board Serialization Types
-// ============================================================================
 
 export interface SerializedBoardData {
   version: number;
@@ -19,10 +11,6 @@ export interface SerializedBoardData {
 }
 
 const CURRENT_VERSION = 1;
-
-// ============================================================================
-// Board Serialization Functions
-// ============================================================================
 
 /**
  * Serializes board state to a JSON string for export or storage.
@@ -115,10 +103,6 @@ function deserializeTickets(boardState: BoardState): BoardState {
   return deserialized;
 }
 
-// ============================================================================
-// Board Validation Functions
-// ============================================================================
-
 export function validateBoardData(data: unknown): data is SerializedBoardData {
   if (!data || typeof data !== "object" || data === null) return false;
 
@@ -140,7 +124,7 @@ export function validateBoardData(data: unknown): data is SerializedBoardData {
   return true;
 }
 
-function isValidTicket(ticket: unknown): ticket is Ticket {
+function isValidTicket(ticket: unknown): boolean {
   if (!ticket || typeof ticket !== "object" || ticket === null) return false;
 
   const t = ticket as Record<string, unknown>;
@@ -190,10 +174,6 @@ function isValidTicket(ticket: unknown): ticket is Ticket {
     (t.updatedAt instanceof Date || typeof t.updatedAt === "string")
   );
 }
-
-// ============================================================================
-// Board Storage Helpers
-// ============================================================================
 
 export function getInitialSerializedBoard(): string {
   return serializeBoardData(INITIAL_BOARD_STATE);

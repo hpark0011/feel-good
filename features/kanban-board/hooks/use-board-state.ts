@@ -21,38 +21,21 @@ import {
 } from "../utils/board-io.utils";
 import { handleTimerOnStatusChange } from "../utils/board-timer.utils";
 
-// ============================================================================
-// Types
-// ============================================================================
-
 export interface UseBoardStateReturn {
-  /** Full board state (all tickets across all columns) */
   board: BoardState;
-  /** Board state filtered by selected projects */
   filteredBoard: BoardState;
-  /** Actions for mutating board state */
   actions: {
-    /** Set board state directly or via updater function */
     setBoard: (newBoard: BoardState | ((prev: BoardState) => BoardState)) => void;
-    /** Delete a ticket by ID */
     deleteTicket: (ticketId: string) => void;
-    /** Update sub-tasks for a ticket */
     updateSubTasks: (ticketId: string, subTasks: SubTask[]) => void;
-    /** Clear all tickets from board */
     clearBoard: () => void;
-    /** Clear all tickets from a specific column */
     clearColumn: (columnId: ColumnId) => void;
-    /** Handle status change with timer integration */
     handleStatusChange: (ticketId: string, oldStatus: ColumnId, newStatus: ColumnId) => void;
-    /** Save last selected project ID */
     setLastSelectedProjectId: (projectId: string | undefined) => void;
   };
-  /** Utility functions for finding items */
   findColumn: (id: string, sourceBoard?: BoardState) => string | null;
   findTicket: (id: string) => Ticket | null;
-  /** Last selected project ID for form defaults */
   lastSelectedProjectId: string | undefined;
-  /** Imperative actions for BoardHandle */
   imperativeActions: {
     exportBoard: () => void;
     importBoard: (jsonContent: string) => void;
@@ -60,25 +43,15 @@ export interface UseBoardStateReturn {
   };
 }
 
-// ============================================================================
-// Hook Implementation
-// ============================================================================
-
 /**
  * Manages the Kanban board state including persistence, CRUD operations,
  * and timer integration.
- *
- * @returns Board state, filtered board, actions, and utility functions
  *
  * @example
  * const { board, filteredBoard, actions, findColumn } = useBoardState();
  * actions.deleteTicket("ticket-123");
  */
 export function useBoardState(): UseBoardStateReturn {
-  // ============================================================================
-  // Core State
-  // ============================================================================
-
   const [rawBoard, setRawBoard] = useLocalStorage<string>(
     BOARD_STORAGE_KEY,
     getInitialSerializedBoard()
@@ -97,10 +70,6 @@ export function useBoardState(): UseBoardStateReturn {
     },
     [setRawBoard]
   );
-
-  // ============================================================================
-  // Project Filter Integration
-  // ============================================================================
 
   const { selectedProjectIds } = useProjectFilter();
   const { lastSelectedProjectId, setLastSelectedProjectId } =
@@ -121,10 +90,6 @@ export function useBoardState(): UseBoardStateReturn {
     }
     return filtered;
   }, [board, selectedProjectIds]);
-
-  // ============================================================================
-  // Utility Functions
-  // ============================================================================
 
   const findColumn = useCallback(
     (id: string, sourceBoard: BoardState = board): string | null => {
@@ -148,10 +113,6 @@ export function useBoardState(): UseBoardStateReturn {
     },
     [board]
   );
-
-  // ============================================================================
-  // Actions
-  // ============================================================================
 
   const deleteTicket = useCallback(
     (ticketId: string) => {
@@ -262,10 +223,6 @@ export function useBoardState(): UseBoardStateReturn {
     [setBoard]
   );
 
-  // ============================================================================
-  // Imperative Actions (for BoardHandle)
-  // ============================================================================
-
   const exportBoard = useCallback(() => {
     const timestamp = new Date().toISOString().split("T")[0];
     const filename = `task-board-${timestamp}.json`;
@@ -279,10 +236,6 @@ export function useBoardState(): UseBoardStateReturn {
     },
     [setBoard]
   );
-
-  // ============================================================================
-  // Return
-  // ============================================================================
 
   return {
     board,

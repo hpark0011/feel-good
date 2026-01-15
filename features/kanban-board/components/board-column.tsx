@@ -5,7 +5,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { TicketCard } from "@/features/ticket-card";
 import type { Column, SubTask, Ticket } from "@/types/board.types";
@@ -34,20 +34,11 @@ export function BoardColumn({
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsInitialLoad(false);
-    }, 1000);
-
+    const timer = setTimeout(() => setIsInitialLoad(false), 1000);
     return () => clearTimeout(timer);
   }, []);
 
-  const { setNodeRef } = useDroppable({
-    id: column.id,
-  });
-
-  const handleTicketClick = (ticket: Ticket) => {
-    onEditTicket(ticket);
-  };
+  const { setNodeRef } = useDroppable({ id: column.id });
 
   return (
     <Card className="w-1/3 h-[calc(100vh-80px)] flex flex-col bg-transparent shadow-none rounded-2xl py-0 gap-0 border-none pb-0">
@@ -70,15 +61,17 @@ export function BoardColumn({
         >
           <div className="space-y-1.5 h-fit pb-4">
             {tickets.map((ticket, index) => (
-              <TicketCardWithStableCallbacks
+              <TicketCard
                 key={ticket.id}
                 ticket={ticket}
                 index={index}
                 isInitialLoad={isInitialLoad}
-                onEditTicket={onEditTicket}
-                onDeleteTicket={onDeleteTicket}
-                onClickTicket={handleTicketClick}
-                onUpdateSubTasks={onUpdateSubTasks}
+                onEdit={() => onEditTicket(ticket)}
+                onDelete={() => onDeleteTicket(ticket.id)}
+                onClick={() => onEditTicket(ticket)}
+                onSubTasksChange={(subTasks: SubTask[]) =>
+                  onUpdateSubTasks(ticket.id, subTasks)
+                }
               />
             ))}
             {column.id !== "complete" && (
@@ -90,52 +83,5 @@ export function BoardColumn({
         <div className="h-4 w-full bg-gradient-to-b from-transparent to-background fixed bottom-0 left-0" />
       </CardContent>
     </Card>
-  );
-}
-
-function TicketCardWithStableCallbacks({
-  ticket,
-  index,
-  isInitialLoad,
-  onEditTicket,
-  onDeleteTicket,
-  onClickTicket,
-  onUpdateSubTasks,
-}: {
-  ticket: Ticket;
-  index: number;
-  isInitialLoad: boolean;
-  onEditTicket: (t: Ticket) => void;
-  onDeleteTicket: (id: string) => void;
-  onClickTicket: (t: Ticket) => void;
-  onUpdateSubTasks: (ticketId: string, subTasks: SubTask[]) => void;
-}) {
-  const handleEdit = useCallback(
-    () => onEditTicket(ticket),
-    [onEditTicket, ticket]
-  );
-  const handleDelete = useCallback(
-    () => onDeleteTicket(ticket.id),
-    [onDeleteTicket, ticket.id]
-  );
-  const handleClick = useCallback(
-    () => onClickTicket(ticket),
-    [onClickTicket, ticket]
-  );
-  const handleSubTasksChange = useCallback(
-    (subTasks: SubTask[]) => onUpdateSubTasks(ticket.id, subTasks),
-    [onUpdateSubTasks, ticket.id]
-  );
-
-  return (
-    <TicketCard
-      ticket={ticket}
-      index={index}
-      isInitialLoad={isInitialLoad}
-      onEdit={handleEdit}
-      onDelete={handleDelete}
-      onClick={handleClick}
-      onSubTasksChange={handleSubTasksChange}
-    />
   );
 }

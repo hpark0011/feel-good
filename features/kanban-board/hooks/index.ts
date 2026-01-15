@@ -1,12 +1,12 @@
-export { useBoardState } from "./use-board-state";
-export type { UseBoardStateReturn } from "./use-board-state";
-
-export { useBoardDnd } from "./use-board-dnd";
-export type { UseBoardDndOptions, UseBoardDndReturn } from "./use-board-dnd";
-
-export { useBoardForm } from "./use-board-form";
-export type {
-  UseBoardFormOptions,
-  UseBoardFormReturn,
-  TicketFormValues,
+export { useBoardState, type UseBoardStateReturn } from "./use-board-state";
+export {
+  useBoardDnd,
+  type UseBoardDndOptions,
+  type UseBoardDndReturn,
+} from "./use-board-dnd";
+export {
+  useBoardForm,
+  type UseBoardFormOptions,
+  type UseBoardFormReturn,
+  type TicketFormValues,
 } from "./use-board-form";

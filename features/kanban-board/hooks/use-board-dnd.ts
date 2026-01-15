@@ -16,50 +16,27 @@ import {
 import { arrayMove } from "@dnd-kit/sortable";
 import type { BoardState, ColumnId, Ticket } from "@/types/board.types";
 
-// ============================================================================
-// Types
-// ============================================================================
-
 export interface UseBoardDndOptions {
-  /** Current board state */
   board: BoardState;
-  /** Function to find which column a ticket belongs to */
   findColumn: (id: string, sourceBoard?: BoardState) => string | null;
-  /** Function to find a ticket by ID */
   findTicket: (id: string) => Ticket | null;
-  /** Callback when board state needs to be updated */
   onBoardUpdate: (updater: (board: BoardState) => BoardState) => void;
-  /** Callback when ticket status changes (for timer integration) */
   onStatusChange: (ticketId: string, oldStatus: ColumnId, newStatus: ColumnId) => void;
 }
 
 export interface UseBoardDndReturn {
-  /** DnD sensors configuration */
   sensors: ReturnType<typeof useSensors>;
-  /** DnD event handlers */
   handlers: {
     onDragStart: (event: DragStartEvent) => void;
     onDragOver: (event: DragOverEvent) => void;
     onDragEnd: (event: DragEndEvent) => void;
   };
-  /** Currently dragged ticket ID */
   activeId: string | null;
-  /** Currently dragged ticket */
   activeTicket: Ticket | null;
 }
 
-// ============================================================================
-// Hook Implementation
-// ============================================================================
-
 /**
  * Manages drag-and-drop functionality for the Kanban board.
- *
- * Handles sensor configuration and drag event processing, delegating
- * state mutations to the provided callbacks.
- *
- * @param options - Configuration options including board state and callbacks
- * @returns DnD sensors, handlers, and active drag state
  *
  * @example
  * const { sensors, handlers, activeTicket } = useBoardDnd({
@@ -77,16 +54,8 @@ export function useBoardDnd({
   onBoardUpdate,
   onStatusChange,
 }: UseBoardDndOptions): UseBoardDndReturn {
-  // ============================================================================
-  // State
-  // ============================================================================
-
   const [activeId, setActiveId] = useState<string | null>(null);
   const dragSourceColumnRef = useRef<ColumnId | null>(null);
-
-  // ============================================================================
-  // Sensors
-  // ============================================================================
 
   const sensors = useSensors(
     useSensor(MouseSensor, {
@@ -106,10 +75,6 @@ export function useBoardDnd({
       },
     })
   );
-
-  // ============================================================================
-  // Event Handlers
-  // ============================================================================
 
   const handleDragStart = useCallback(
     (event: DragStartEvent) => {
@@ -251,15 +216,7 @@ export function useBoardDnd({
     [board, findColumn, onBoardUpdate, onStatusChange]
   );
 
-  // ============================================================================
-  // Active Ticket
-  // ============================================================================
-
   const activeTicket = activeId ? findTicket(activeId) : null;
-
-  // ============================================================================
-  // Return
-  // ============================================================================
 
   return {
     sensors,

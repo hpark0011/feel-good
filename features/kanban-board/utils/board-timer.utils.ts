@@ -1,15 +1,7 @@
 import type { BoardState, Ticket, ColumnId } from "@/types/board.types";
 import type { StopWatchStore } from "@/store/stop-watch-store";
 
-// ============================================================================
-// Timer Utility Types
-// ============================================================================
-
 export type BoardUpdater = (updater: (board: BoardState) => BoardState) => void;
-
-// ============================================================================
-// Timer Formatting
-// ============================================================================
 
 /**
  * Formats duration in seconds to a readable time string
@@ -36,13 +28,6 @@ export function formatDuration(seconds: number): string {
   return `${minutes}:${secs.toString().padStart(2, "0")}`;
 }
 
-// ============================================================================
-// Board Update Helpers
-// ============================================================================
-
-/**
- * Finds a ticket by ID and applies an update function to it
- */
 function updateTicketInBoard(
   board: BoardState,
   ticketId: string,
@@ -58,10 +43,6 @@ function updateTicketInBoard(
   }
   return board;
 }
-
-// ============================================================================
-// Timer Recording Functions
-// ============================================================================
 
 /**
  * Records the final duration to a ticket in the board state
@@ -131,23 +112,13 @@ export function resetTimerForTicket(
   );
 }
 
-// ============================================================================
-// Timer Status Change Handler
-// ============================================================================
-
 /**
- * Handles timer state changes triggered by ticket status transitions
+ * Handles timer state changes triggered by ticket status transitions.
  *
  * Business rules:
- * - Moving to "complete" → record accumulated duration to ticket
- * - Moving to "backlog" or "to-do" → reset timer and clear duration
- * - Moving to "in-progress" → no automatic action (user must manually start timer)
- *
- * @param ticketId - ID of the ticket whose status changed
- * @param oldStatus - Previous status
- * @param newStatus - New status
- * @param stopWatchStore - Zustand stopwatch store instance
- * @param setBoard - Board state setter function (functional update)
+ * - Moving to "complete": record accumulated duration to ticket
+ * - Moving to "backlog" or "to-do": reset timer and clear duration
+ * - Moving from "in-progress": stop timer (user must manually restart)
  */
 export function handleTimerOnStatusChange(
   ticketId: string,

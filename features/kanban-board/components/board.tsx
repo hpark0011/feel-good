@@ -14,25 +14,13 @@ import { useBoardForm } from "../hooks/use-board-form";
 import { BoardColumn } from "./board-column";
 import { BoardDragOverlay } from "./board-drag-overlay";
 
-// ============================================================================
-// Types
-// ============================================================================
-
 export type BoardHandle = {
   importFromInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
   exportBoard: () => void;
   clearBoard: () => void;
 };
 
-// ============================================================================
-// Component
-// ============================================================================
-
 export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
-  // ============================================================================
-  // Hooks
-  // ============================================================================
-
   const {
     board,
     filteredBoard,
@@ -59,10 +47,6 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
     onBoardUpdate: actions.setBoard,
     onStatusChange: actions.handleStatusChange,
   });
-
-  // ============================================================================
-  // Form Submit Handler
-  // ============================================================================
 
   const handleFormSubmit = useCallback(
     (data: {
@@ -157,10 +141,6 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
     [editingTicket, findColumn, actions, setIsFormOpen]
   );
 
-  // ============================================================================
-  // Imperative Handle
-  // ============================================================================
-
   const handleImportFromInput = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const file = event.target.files?.[0];
@@ -190,10 +170,6 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
     }),
     [handleImportFromInput, imperativeActions]
   );
-
-  // ============================================================================
-  // Render
-  // ============================================================================
 
   return (
     <>
