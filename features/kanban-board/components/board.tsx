@@ -4,15 +4,20 @@ import type React from "react";
 import { Fragment, forwardRef, useCallback, useImperativeHandle } from "react";
 import { closestCenter, DndContext } from "@dnd-kit/core";
 import { COLUMNS } from "@/config/board.config";
-import { useStopWatchStore } from "@/store/stop-watch-store";
 import { BodyContainer } from "@/components/layout/layout-ui";
 import { TicketFormDialog } from "@/features/ticket-form";
-import type { ColumnId, SubTask, Ticket } from "@/types/board.types";
+import type { ColumnId } from "@/types/board.types";
 import { useBoardState } from "../hooks/use-board-state";
 import { useBoardDnd } from "../hooks/use-board-dnd";
-import { useBoardForm } from "../hooks/use-board-form";
+import { useBoardForm, type TicketFormValues } from "../hooks/use-board-form";
 import { BoardColumn } from "./board-column";
 import { BoardDragOverlay } from "./board-drag-overlay";
+import {
+  createTicketFromFormData,
+  updateTicketFromFormData,
+  updateBoardWithTicket,
+  syncTimerOnTicketUpdate,
+} from "../utils/ticket-form.utils";
 
 export type BoardHandle = {
   importFromInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -49,91 +54,45 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
   });
 
   const handleFormSubmit = useCallback(
-    (data: {
-      title: string;
-      description: string;
-      status: ColumnId;
-      projectId?: string;
-      subTasks?: SubTask[];
-    }) => {
+    (data: TicketFormValues) => {
       // Save the selected project as the last selected
       actions.setLastSelectedProjectId(data.projectId);
 
       if (editingTicket) {
-        const oldColumn = findColumn(editingTicket.id);
-        if (!oldColumn) return;
+        const foundColumn = findColumn(editingTicket.id);
+        if (!foundColumn) return;
 
+        const oldColumn = foundColumn as ColumnId;
         const oldStatus = editingTicket.status;
         const newStatus = data.status;
 
-        actions.setBoard((board) => {
-          const now = new Date();
-          const updatedTicket: Ticket = {
-            ...editingTicket,
-            title: data.title,
-            description: data.description,
-            status: data.status,
-            projectId: data.projectId,
-            subTasks: data.subTasks,
-            updatedAt: now,
-            completedAt:
-              data.status === "complete"
-                ? (editingTicket.completedAt ?? now)
-                : null,
-          };
+        // Create updated ticket from form data
+        const updatedTicket = updateTicketFromFormData(editingTicket, data);
 
-          if (oldColumn === data.status) {
-            return {
-              ...board,
-              [oldColumn]: board[oldColumn].map((t) =>
-                t.id === editingTicket.id ? updatedTicket : t
-              ),
-            };
-          } else {
-            return {
-              ...board,
-              [oldColumn]: board[oldColumn].filter(
-                (t) => t.id !== editingTicket.id
-              ),
-              [data.status]: [...board[data.status], updatedTicket],
-            };
-          }
-        });
+        // Update board state (handles column movement)
+        actions.setBoard((board) =>
+          updateBoardWithTicket(board, updatedTicket, oldColumn, data.status)
+        );
 
-        // Update timer title if this ticket has active timer and title changed
-        const stopWatchStore = useStopWatchStore.getState();
-        if (
-          stopWatchStore.activeTicketId === editingTicket.id &&
-          data.title !== editingTicket.title
-        ) {
-          stopWatchStore.updateActiveTicketTitle(editingTicket.id, data.title);
-        }
+        // Sync timer title if changed
+        syncTimerOnTicketUpdate(
+          editingTicket.id,
+          editingTicket.title,
+          data.title
+        );
 
         // Handle timer logic if status changed
         if (oldStatus !== newStatus) {
           actions.handleStatusChange(editingTicket.id, oldStatus, newStatus);
         }
       } else {
-        // Create new ticket
-        const now = new Date();
-        const newTicket: Ticket = {
-          id: `ticket-${Date.now()}`,
-          title: data.title,
-          description: data.description,
-          status: data.status,
-          projectId: data.projectId,
-          subTasks: data.subTasks,
-          duration: 0,
-          timeEntries: [],
-          completedAt: data.status === "complete" ? now : null,
-          createdAt: now,
-          updatedAt: now,
-        };
+        // Create new ticket from form data
+        const newTicket = createTicketFromFormData(data);
 
-        actions.setBoard((board) => ({
-          ...board,
-          [data.status]: [...board[data.status], newTicket],
-        }));
+        // Add to board
+        actions.setBoard((board) =>
+          updateBoardWithTicket(board, newTicket, null, data.status)
+        );
       }
 
       setIsFormOpen(false);
@@ -196,7 +155,7 @@ export const Board = forwardRef<BoardHandle>(function Board(_props, ref) {
                 }
                 onUpdateSubTasks={actions.updateSubTasks}
               />
-              <div className="w-[1px] min-w-[1px] bg-neutral-200 dark:bg-neutral-900 last:hidden" />
+              <div className='w-[1px] min-w-[1px] bg-neutral-200 dark:bg-neutral-900 last:hidden' />
             </Fragment>
           ))}
         </BodyContainer>
