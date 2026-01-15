@@ -88,7 +88,7 @@ export const subTaskContainerStyles = cn(
   // Shape
   "rounded-b-[11px]",
   // Background
-  "bg-[#f1f1f2] dark:bg-[#0F0F0F]",
+  "bg-dialog",
   // Border
   "border-border-light"
 );

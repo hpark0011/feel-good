@@ -99,7 +99,7 @@ export function SubTasksInlineEditor({
     () =>
       cn(
         "relative border-border-light mt-0.5 rounded-b-[11px] p-0 overflow-hidden",
-        readOnly ? "bg-transparent" : "bg-[#f1f1f2] dark:bg-[#0F0F0F]"
+        readOnly ? "bg-transparent" : "bg-dialog"
       ),
     [readOnly]
   );

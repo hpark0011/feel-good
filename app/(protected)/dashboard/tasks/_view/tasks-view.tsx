@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { Board, type BoardHandle } from "@/components/tasks/board";
+import { Board, type BoardHandle } from "@/features/kanban-board";
 import { TasksHeader } from "../_components/tasks-header";
 
 export function TasksView() {
