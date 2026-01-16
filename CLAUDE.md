@@ -45,36 +45,48 @@ pnpm supabase:deploy      # Deploy to production
 ```
 app/
   (auth)/              # Auth flow (sign-in, sign-up, callback)
-  (protected)/dashboard/
-    files/             # Document management
-    tasks/             # Kanban board
-  insights/            # Analytics dashboard
+  (protected)/dashboard/tasks/  # Kanban board page
+    _components/       # Route-specific components
+    _hooks/            # Route-specific hooks (ticket-form, today-focus)
+    _utils/            # Route-specific utils (board-io, serialization)
+    _view/             # Main view component
   _actions/            # Server actions
 
 components/
   ui/                  # shadcn/ui components
-  tasks/               # Task board, ticket components
-    sub-tasks/         # Sub-task inline editing
-    project-select/    # Project CRUD dialogs
-  auth/, files/, header/, layout/, navigation/, providers/
+  auth/                # Authentication forms
+  header/              # Header UI
+  layout/              # Layout components
+  providers/           # Context providers
+
+features/              # Feature modules (primary code location)
+  kanban-board/        # Board, columns, drag-drop logic
+  ticket-card/         # Ticket display and actions
+  ticket-form/         # Ticket create/edit dialog
+  project-select/      # Project CRUD and selection
+  sub-task/            # Individual sub-task row
+  sub-task-list/       # Sub-task list container
+  insights/            # Analytics dialog
 
 config/                # *.config.ts files for constants
-  paths, routes, board, tasks, navs, auth, insight-variants
+  auth, board, insight-variants, navs, paths, routes, tasks
 
-hooks/                 # 18+ custom hooks (see Key Hooks below)
+hooks/                 # General-purpose hooks (9 hooks)
   __tests__/           # Jest + React Testing Library
 
 lib/
-  services/            # Business logic
-  schema/              # Zod schemas
+  services/            # Business logic (auth, file)
+  schema/              # Zod schemas (auth, file)
   storage-keys.ts      # Centralized localStorage keys
-  utils.ts, board-storage.ts, insights-utils.ts, timer-utils.ts
+  utils.ts, insights-utils.ts
 
 store/                 # Zustand stores
+  stop-watch-store.ts  # Timer/stopwatch state
+  board-actions-store.ts  # Board import/export/clear actions
+
 styles/                # CSS variables (primitives, components, colors, shadows)
 supabase/              # Migrations, schema
 types/                 # board.types.ts, file.types.ts, database.types.ts
-features/              # Shared features (sub-task/)
 ```
 
 ## State Management
@@ -83,7 +95,7 @@ features/              # Shared features (sub-task/)
 | ------------------------------ | ---------------------------------------------------- |
 | useState/useReducer            | Component-local state                                |
 | localStorage (useLocalStorage) | UI prefs, board state, projects (cross-tab sync)     |
-| Zustand                        | Timer/stopwatch, shared state                        |
+| Zustand                        | `useStopWatchStore` (timer), `useBoardActionsStore` (import/export/clear) |
 | React Context                  | Theme, auth                                          |
 | Supabase                       | User auth, files (Note: Tasks use localStorage only) |
 
@@ -93,14 +105,14 @@ features/              # Shared features (sub-task/)
 
 Kanban board with drag-and-drop (4 columns: Backlog, To Do, In Progress, Complete), projects, sub-tasks, timer, localStorage persistence, import/export, auto-save, keyboard shortcuts (Cmd+Enter).
 
-**Components:** `Board`, `BoardColumn`, `TicketCard`, `TicketFormDialog`
-**Hooks:** `useTicketForm`, `useProjects`, `usePersistedSubTasks`, `useDialogAutoSave`
+**Features:** `kanban-board`, `ticket-card`, `ticket-form`, `sub-task`, `sub-task-list`
+**Route hooks:** `useTicketForm`, `useProjectFilter`, `useTodayFocus`
 
-### Insights (`/insights`)
+### Insights (dialog)
 
 Analytics with Recharts visualization, task stats, project breakdown, Framer Motion animations.
 
-**Components:** `insight-card`, `insights-header`, `ring-percentage`, `insight-components`
+**Feature:** `features/insights/` with `InsightsDialog`, date picker, task list, project breakdown
 
 ### Projects
 
@@ -108,7 +120,11 @@ Color-coded categorization (8 colors), CRUD via `useProjects`, localStorage pers
 
 ### Key Hooks
 
-`use-local-storage` (SSR-safe, cross-tab), `use-projects`, `use-ticket-form`, `use-dialog-auto-save`, `use-focus-management`, `use-keyboard-submit`, `use-persisted-sub-tasks`, `use-stop-watch`, `use-debounced-callback`, `use-keyboard-navigation`, `use-project-filter`, `use-today-focus`
+**General (`/hooks/`):** `use-local-storage` (SSR-safe, cross-tab), `use-dialog-auto-save`, `use-focus-management`, `use-keyboard-submit`, `use-persisted-sub-tasks`, `use-debounced-callback`, `use-keyboard-navigation`
+
+**Feature-specific:** `use-board-state`, `use-board-dnd`, `use-board-form` (kanban-board), `use-projects`, `use-project-selection` (project-select)
+
+**Route-specific (`_hooks/`):** `use-ticket-form`, `use-project-filter`, `use-today-focus`
 
 ## Development Patterns
 
@@ -271,6 +287,23 @@ function InsightsDialog() {
 2. Start minimal, grow organically
 3. Don't add "maybe later" code
 4. Extract early when >100 lines
+
+### Features Pattern
+
+Feature modules in `/features/` are self-contained units:
+
+```
+features/feature-name/
+  components/      # Feature-specific UI components
+  hooks/           # Feature-specific hooks
+  utils/           # Feature-specific utilities
+  types/           # Feature-specific types (if needed)
+  index.ts         # Public API exports
+```
+
+**Current features:** `kanban-board`, `ticket-card`, `ticket-form`, `project-select`, `sub-task`, `sub-task-list`, `insights`
+
+**When to create a feature:** Cohesive functionality with 3+ components, needs isolated hooks/utils, reusable across routes.
 
 ### localStorage Keys
 
