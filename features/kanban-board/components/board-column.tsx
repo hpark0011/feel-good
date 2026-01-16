@@ -7,6 +7,7 @@ import {
 } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { TicketCard } from "@/features/ticket-card";
 import type { Column, SubTask, Ticket } from "@/types/board.types";
 import { AddTicketButton } from "./add-ticket-button";
@@ -15,6 +16,7 @@ import { BoardColumnHeader } from "./board-column-header";
 interface BoardColumnProps {
   column: Column;
   tickets: Ticket[];
+  isMobile?: boolean;
   onAddTicket: () => void;
   onEditTicket: (ticket: Ticket) => void;
   onDeleteTicket: (ticketId: string) => void;
@@ -25,6 +27,7 @@ interface BoardColumnProps {
 export function BoardColumn({
   column,
   tickets,
+  isMobile = false,
   onAddTicket,
   onEditTicket,
   onDeleteTicket,
@@ -32,6 +35,7 @@ export function BoardColumn({
   onUpdateSubTasks,
 }: BoardColumnProps) {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsInitialLoad(false), 1000);
@@ -41,18 +45,37 @@ export function BoardColumn({
   const { setNodeRef } = useDroppable({ id: column.id });
 
   return (
-    <Card className='w-1/3 h-[calc(100vh-80px)] flex flex-col bg-transparent shadow-none rounded-2xl py-0 gap-0 border-none pb-0'>
+    <Card
+      className={cn(
+        // Mobile: full width, auto height, border bottom
+        "w-full border-b border-neutral-200 dark:border-neutral-800",
+        // Desktop: fixed column width, full height
+        "md:w-1/4 md:h-[calc(100vh-80px)] md:border-b-0",
+        // Shared
+        "flex flex-col bg-transparent shadow-none rounded-none md:rounded-2xl py-0 gap-0 border-x-0 md:border-none"
+      )}
+    >
       <BoardColumnHeader
         column={column}
         ticketCount={tickets.length}
         onAddTicket={onAddTicket}
         onClearColumn={onClearColumn}
+        isMobile={isMobile}
+        isExpanded={isExpanded}
+        onToggleExpand={() => setIsExpanded(!isExpanded)}
       />
       <CardContent
         ref={setNodeRef}
-        className='flex-1 p-0 px-4 overflow-y-scroll relative'
+        className={cn(
+          "flex-1 p-0 px-4 overflow-hidden relative",
+          // Mobile: collapsible (no animation - instant toggle)
+          isMobile && !isExpanded && "max-h-0",
+          isMobile && isExpanded && "max-h-none",
+          // Desktop: always visible with scroll
+          "md:max-h-none md:overflow-y-scroll"
+        )}
       >
-        <div className='h-6 w-full bg-gradient-to-t from-transparent to-background sticky top-0 left-0 z-10' />
+        <div className='h-6 w-full bg-gradient-to-t from-transparent to-background sticky top-0 left-0 z-10 hidden md:block' />
 
         <SortableContext
           id={column.id}
@@ -80,7 +103,7 @@ export function BoardColumn({
           </div>
         </SortableContext>
 
-        <div className='h-4 w-full bg-gradient-to-b from-transparent to-background fixed bottom-0 left-0' />
+        <div className='h-4 w-full bg-gradient-to-b from-transparent to-background fixed bottom-0 left-0 hidden md:block' />
       </CardContent>
     </Card>
   );

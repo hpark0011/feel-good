@@ -1,6 +1,7 @@
 "use client";
 
-import { PlusIcon } from "lucide-react";
+import { ChevronDown, PlusIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -16,6 +17,9 @@ interface BoardColumnHeaderProps {
   ticketCount: number;
   onAddTicket: () => void;
   onClearColumn?: () => void;
+  isMobile?: boolean;
+  isExpanded?: boolean;
+  onToggleExpand?: () => void;
 }
 
 export function BoardColumnHeader({
@@ -23,9 +27,22 @@ export function BoardColumnHeader({
   ticketCount,
   onAddTicket,
   onClearColumn,
+  isMobile = false,
+  isExpanded = true,
+  onToggleExpand,
 }: BoardColumnHeaderProps) {
   return (
-    <CardHeader className="pl-4.5 pb-2 gap-0 pr-4">
+    <CardHeader
+      className={cn(
+        "pl-4.5 pb-2 gap-0 pr-4",
+        // Mobile: make header tappable for collapse
+        isMobile && "cursor-pointer active:bg-neutral-100 dark:active:bg-neutral-800 py-3"
+      )}
+      onClick={isMobile ? onToggleExpand : undefined}
+      role={isMobile ? "button" : undefined}
+      aria-expanded={isMobile ? isExpanded : undefined}
+      aria-label={isMobile ? `Toggle ${column.title} tickets` : undefined}
+    >
       <div className="flex items-center justify-between h-6">
         <div className="flex items-center gap-1">
           <Icon
@@ -47,7 +64,10 @@ export function BoardColumnHeader({
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
-                  onClick={onClearColumn}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onClearColumn();
+                  }}
                   className="p-0 w-6 h-6 rounded-md cursor-pointer active:scale-90 transition-all duration-200 ease-out"
                 >
                   <Icon
@@ -64,14 +84,30 @@ export function BoardColumnHeader({
               <TooltipTrigger asChild>
                 <Button
                   variant="icon"
-                  onClick={onAddTicket}
-                  className="p-2 w-6 h-6 rounded-md cursor-pointer active:scale-90 transition-all duration-200 ease-out"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onAddTicket();
+                  }}
+                  className={cn(
+                    "p-2 w-6 h-6 rounded-md cursor-pointer active:scale-90 transition-all duration-200 ease-out",
+                    // Hide add button on mobile (use bottom button instead)
+                    "hidden md:flex"
+                  )}
                 >
                   <PlusIcon className="h-3.5 w-3.5 text-icon-light" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Add Ticket</TooltipContent>
             </Tooltip>
+          )}
+          {/* Collapse chevron - mobile only */}
+          {isMobile && (
+            <ChevronDown
+              className={cn(
+                "h-4 w-4 text-muted-foreground transition-transform duration-200",
+                isExpanded && "rotate-180"
+              )}
+            />
           )}
         </div>
       </div>
