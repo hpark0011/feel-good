@@ -10,6 +10,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Icon } from "@/components/ui/icon";
+import { useIsMobile } from "@/hooks/use-mobile";
 import type { Column } from "@/types/board.types";
 
 interface BoardColumnHeaderProps {
@@ -17,7 +18,6 @@ interface BoardColumnHeaderProps {
   ticketCount: number;
   onAddTicket: () => void;
   onClearColumn?: () => void;
-  isMobile?: boolean;
   isExpanded?: boolean;
   onToggleExpand?: () => void;
 }
@@ -27,10 +27,11 @@ export function BoardColumnHeader({
   ticketCount,
   onAddTicket,
   onClearColumn,
-  isMobile = false,
   isExpanded = true,
   onToggleExpand,
 }: BoardColumnHeaderProps) {
+  const isMobile = useIsMobile();
+
   return (
     <CardHeader
       className={cn(

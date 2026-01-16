@@ -11,7 +11,6 @@ import {
 } from "@/features/ticket-form";
 import type { ColumnId } from "@/types/board.types";
 import { useBoardActionsStore } from "@/store/board-actions-store";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { useBoardState } from "../hooks/use-board-state";
 import { useBoardDnd } from "../hooks/use-board-dnd";
 import { useBoardForm, type TicketFormValues } from "../hooks/use-board-form";
@@ -20,8 +19,6 @@ import { BoardDragOverlay } from "./board-drag-overlay";
 import { updateBoardWithTicket, syncTimerOnTicketUpdate } from "../utils";
 
 export function Board() {
-  const isMobile = useIsMobile();
-
   const {
     board,
     filteredBoard,
@@ -120,7 +117,6 @@ export function Board() {
               <BoardColumn
                 column={column}
                 tickets={filteredBoard[column.id] || []}
-                isMobile={isMobile}
                 onAddTicket={() => openCreate(column.id)}
                 onEditTicket={openEdit}
                 onDeleteTicket={actions.deleteTicket}

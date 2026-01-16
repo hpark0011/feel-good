@@ -8,6 +8,7 @@ import {
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { TicketCard } from "@/features/ticket-card";
 import type { Column, SubTask, Ticket } from "@/types/board.types";
 import { AddTicketButton } from "./add-ticket-button";
@@ -16,7 +17,6 @@ import { BoardColumnHeader } from "./board-column-header";
 interface BoardColumnProps {
   column: Column;
   tickets: Ticket[];
-  isMobile?: boolean;
   onAddTicket: () => void;
   onEditTicket: (ticket: Ticket) => void;
   onDeleteTicket: (ticketId: string) => void;
@@ -27,13 +27,13 @@ interface BoardColumnProps {
 export function BoardColumn({
   column,
   tickets,
-  isMobile = false,
   onAddTicket,
   onEditTicket,
   onDeleteTicket,
   onClearColumn,
   onUpdateSubTasks,
 }: BoardColumnProps) {
+  const isMobile = useIsMobile();
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -60,7 +60,6 @@ export function BoardColumn({
         ticketCount={tickets.length}
         onAddTicket={onAddTicket}
         onClearColumn={onClearColumn}
-        isMobile={isMobile}
         isExpanded={isExpanded}
         onToggleExpand={() => setIsExpanded(!isExpanded)}
       />
