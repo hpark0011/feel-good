@@ -1,22 +1,22 @@
 "use client";
 
-import { useIsMobile } from "./use-mobile";
-import { useLocalStorage } from "./use-local-storage";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 import { getStorageKey } from "@/lib/storage-keys";
 
 export type LayoutPreference = "board" | "list";
 
 /**
- * Manages layout mode combining viewport detection and user preference.
+ * Manages task board/list layout mode combining viewport detection and user preference.
  * On mobile, always uses list layout. On desktop, respects user preference.
  * @returns Layout state and setters
  * @example
- * const { isListLayout, layoutPref, setLayoutPref, isMobile } = useLayoutMode();
+ * const { isListLayout, layoutPref, setLayoutPref, isMobile } = useTaskLayoutMode();
  * if (isListLayout) {
  *   // render collapsible column layout
  * }
  */
-export function useLayoutMode() {
+export function useTaskLayoutMode() {
   const isMobile = useIsMobile();
   const [layoutPref, setLayoutPref] = useLocalStorage<LayoutPreference>(
     getStorageKey("UI", "LAYOUT_PREFERENCE"),

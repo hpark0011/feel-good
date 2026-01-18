@@ -2,10 +2,13 @@
 
 import { LayoutGrid, Rows3 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useLayoutMode, type LayoutPreference } from "@/hooks/use-layout-mode";
+import {
+  useTaskLayoutMode,
+  type LayoutPreference,
+} from "../_hooks/use-task-layout-mode";
 
 export function LayoutToggle() {
-  const { layoutPref, setLayoutPref, isMobile } = useLayoutMode();
+  const { layoutPref, setLayoutPref, isMobile } = useTaskLayoutMode();
 
   if (isMobile) return null;
 

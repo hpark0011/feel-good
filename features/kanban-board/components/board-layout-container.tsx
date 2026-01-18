@@ -1,16 +1,20 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useLayoutMode } from "@/hooks/use-layout-mode";
+import { useTaskLayoutMode } from "@/app/(protected)/dashboard/tasks/_hooks/use-task-layout-mode";
 
-export const BodyContainer = ({
+/**
+ * Layout container for the kanban board that adapts between board and list views.
+ * Handles horizontal scroll for board view and vertical stacking for list view.
+ */
+export function BoardLayoutContainer({
   children,
   className,
 }: {
   children: React.ReactNode;
   className?: string;
-}) => {
-  const { isListLayout } = useLayoutMode();
+}) {
+  const { isListLayout } = useTaskLayoutMode();
 
   return (
     <div
@@ -27,4 +31,4 @@ export const BodyContainer = ({
       {children}
     </div>
   );
-};
+}

@@ -8,7 +8,7 @@ import {
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { useLayoutMode } from "@/hooks/use-layout-mode";
+import { useTaskLayoutMode } from "@/app/(protected)/dashboard/tasks/_hooks/use-task-layout-mode";
 import { TicketCard } from "@/features/ticket-card";
 import type { Column, SubTask, Ticket } from "@/types/board.types";
 import { AddTicketButton } from "./add-ticket-button";
@@ -33,7 +33,7 @@ export function BoardColumn({
   onClearColumn,
   onUpdateSubTasks,
 }: BoardColumnProps) {
-  const { isListLayout } = useLayoutMode();
+  const { isListLayout } = useTaskLayoutMode();
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [isExpanded, setIsExpanded] = useState(true);
 

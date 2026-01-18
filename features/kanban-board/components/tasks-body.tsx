@@ -3,7 +3,7 @@
 import { Fragment, useCallback, useEffect } from "react";
 import { closestCenter, DndContext } from "@dnd-kit/core";
 import { COLUMNS } from "@/config/board.config";
-import { BodyContainer } from "@/components/layout/layout-ui";
+import { BoardLayoutContainer } from "./board-layout-container";
 import {
   TicketFormDialog,
   createTicketFromFormData,
@@ -11,7 +11,7 @@ import {
 } from "@/features/ticket-form";
 import type { ColumnId } from "@/types/board.types";
 import { useBoardActionsStore } from "@/store/board-actions-store";
-import { useLayoutMode } from "@/hooks/use-layout-mode";
+import { useTaskLayoutMode } from "@/app/(protected)/dashboard/tasks/_hooks/use-task-layout-mode";
 import { useBoardState } from "../hooks/use-board-state";
 import { useBoardDnd } from "../hooks/use-board-dnd";
 import { useBoardForm, type TicketFormValues } from "../hooks/use-board-form";
@@ -20,7 +20,7 @@ import { BoardDragOverlay } from "./board-drag-overlay";
 import { updateBoardWithTicket, syncTimerOnTicketUpdate } from "../utils";
 
 export function TasksBody() {
-  const { isListLayout } = useLayoutMode();
+  const { isListLayout } = useTaskLayoutMode();
   const {
     board,
     filteredBoard,
@@ -113,7 +113,7 @@ export function TasksBody() {
         onDragOver={handlers.onDragOver}
         onDragEnd={handlers.onDragEnd}
       >
-        <BodyContainer>
+        <BoardLayoutContainer>
           {COLUMNS.map((column) => (
             <Fragment key={column.id}>
               <BoardColumn
@@ -134,7 +134,7 @@ export function TasksBody() {
               )}
             </Fragment>
           ))}
-        </BodyContainer>
+        </BoardLayoutContainer>
         <BoardDragOverlay activeTicket={activeTicket} />
       </DndContext>
 

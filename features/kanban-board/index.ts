@@ -1,6 +1,7 @@
 // Components
 export { TasksBody } from "./components/tasks-body";
 export { BoardColumn } from "./components/board-column";
+export { BoardLayoutContainer } from "./components/board-layout-container";
 
 // Hooks
 export {
