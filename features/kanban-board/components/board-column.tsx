@@ -8,7 +8,7 @@ import {
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useLayoutMode } from "@/hooks/use-layout-mode";
 import { TicketCard } from "@/features/ticket-card";
 import type { Column, SubTask, Ticket } from "@/types/board.types";
 import { AddTicketButton } from "./add-ticket-button";
@@ -33,7 +33,7 @@ export function BoardColumn({
   onClearColumn,
   onUpdateSubTasks,
 }: BoardColumnProps) {
-  const isMobile = useIsMobile();
+  const { isListLayout } = useLayoutMode();
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -47,12 +47,12 @@ export function BoardColumn({
   return (
     <Card
       className={cn(
-        // Mobile: full width, auto height, border bottom
-        "w-full border-b border-neutral-200 dark:border-neutral-800",
-        // Desktop: fixed column width, full height
-        "md:w-1/4 md:h-[calc(100vh-80px)] md:border-b-0",
-        // Shared
-        "flex flex-col bg-transparent shadow-none rounded-none md:rounded-2xl py-0 gap-0 border-x-0 md:border-none"
+        // Shared base
+        "flex flex-col bg-transparent shadow-none py-0 gap-0",
+        // List layout: full width, auto height, border bottom
+        isListLayout && "w-full border-b border-neutral-200 dark:border-neutral-800 rounded-none border-x-0",
+        // Board layout: fixed column width, full height
+        !isListLayout && "w-1/4 h-[calc(100vh-80px)] rounded-2xl border-none"
       )}
     >
       <BoardColumnHeader
@@ -67,14 +67,16 @@ export function BoardColumn({
         ref={setNodeRef}
         className={cn(
           "flex-1 p-0 px-4 overflow-hidden relative",
-          // Mobile: collapsible (no animation - instant toggle)
-          isMobile && !isExpanded && "max-h-0",
-          isMobile && isExpanded && "max-h-none",
-          // Desktop: always visible with scroll
-          "md:max-h-none md:overflow-y-scroll"
+          // List layout: collapsible (no animation - instant toggle)
+          isListLayout && !isExpanded && "max-h-0",
+          isListLayout && isExpanded && "max-h-none",
+          // Board layout: always visible with scroll
+          !isListLayout && "max-h-none overflow-y-scroll"
         )}
       >
-        <div className='h-6 w-full bg-gradient-to-t from-transparent to-background sticky top-0 left-0 z-10 hidden md:block' />
+        {!isListLayout && (
+          <div className='h-6 w-full bg-gradient-to-t from-transparent to-background sticky top-0 left-0 z-10' />
+        )}
 
         <SortableContext
           id={column.id}
@@ -102,7 +104,9 @@ export function BoardColumn({
           </div>
         </SortableContext>
 
-        <div className='h-4 w-full bg-gradient-to-b from-transparent to-background fixed bottom-0 left-0 hidden md:block' />
+        {!isListLayout && (
+          <div className='h-4 w-full bg-gradient-to-b from-transparent to-background fixed bottom-0 left-0' />
+        )}
       </CardContent>
     </Card>
   );

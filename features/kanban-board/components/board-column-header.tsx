@@ -10,7 +10,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Icon } from "@/components/ui/icon";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useLayoutMode } from "@/hooks/use-layout-mode";
 import type { Column } from "@/types/board.types";
 
 interface BoardColumnHeaderProps {
@@ -30,19 +30,19 @@ export function BoardColumnHeader({
   isExpanded = true,
   onToggleExpand,
 }: BoardColumnHeaderProps) {
-  const isMobile = useIsMobile();
+  const { isListLayout } = useLayoutMode();
 
   return (
     <CardHeader
       className={cn(
         "pl-4.5 pb-2 gap-0 pr-4",
-        // Mobile: make header tappable for collapse
-        isMobile && "cursor-pointer active:bg-neutral-100 dark:active:bg-neutral-800 py-3"
+        // List layout: make header tappable for collapse
+        isListLayout && "cursor-pointer active:bg-neutral-100 dark:active:bg-neutral-800 py-3"
       )}
-      onClick={isMobile ? onToggleExpand : undefined}
-      role={isMobile ? "button" : undefined}
-      aria-expanded={isMobile ? isExpanded : undefined}
-      aria-label={isMobile ? `Toggle ${column.title} tickets` : undefined}
+      onClick={isListLayout ? onToggleExpand : undefined}
+      role={isListLayout ? "button" : undefined}
+      aria-expanded={isListLayout ? isExpanded : undefined}
+      aria-label={isListLayout ? `Toggle ${column.title} tickets` : undefined}
     >
       <div className="flex items-center justify-between h-6">
         <div className="flex items-center gap-1">
@@ -91,8 +91,8 @@ export function BoardColumnHeader({
                   }}
                   className={cn(
                     "p-2 w-6 h-6 rounded-md cursor-pointer active:scale-90 transition-all duration-200 ease-out",
-                    // Hide add button on mobile (use bottom button instead)
-                    "hidden md:flex"
+                    // Hide add button in list layout (use bottom button instead)
+                    isListLayout ? "hidden" : "flex"
                   )}
                 >
                   <PlusIcon className="h-3.5 w-3.5 text-icon-light" />
@@ -101,8 +101,8 @@ export function BoardColumnHeader({
               <TooltipContent>Add Ticket</TooltipContent>
             </Tooltip>
           )}
-          {/* Collapse chevron - mobile only */}
-          {isMobile && (
+          {/* Collapse chevron - list layout only */}
+          {isListLayout && (
             <ChevronDown
               className={cn(
                 "h-4 w-4 text-muted-foreground transition-transform duration-200",

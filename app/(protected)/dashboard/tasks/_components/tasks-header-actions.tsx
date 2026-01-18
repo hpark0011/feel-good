@@ -27,6 +27,7 @@ import {
 import { customToast } from "@/components/custom-toast";
 import { useBoardActionsStore } from "@/store/board-actions-store";
 import { type ChangeEvent, useRef } from "react";
+import { LayoutToggle } from "./layout-toggle";
 import { ProjectFilter } from "./project-filter";
 
 interface TasksHeaderActionsProps {
@@ -66,6 +67,8 @@ export function TasksHeaderActions({
   };
   return (
     <>
+      <LayoutToggle />
+
       <Tooltip>
         <TooltipTrigger asChild>
           <Button

@@ -1,4 +1,7 @@
+"use client";
+
 import { cn } from "@/lib/utils";
+import { useLayoutMode } from "@/hooks/use-layout-mode";
 
 export const BodyContainer = ({
   children,
@@ -7,13 +10,17 @@ export const BodyContainer = ({
   children: React.ReactNode;
   className?: string;
 }) => {
+  const { isListLayout } = useLayoutMode();
+
   return (
     <div
       className={cn(
-        // Mobile: vertical stack with scroll
-        "flex flex-col overflow-y-auto min-h-screen pt-20 px-4 gap-0",
-        // Desktop: horizontal layout (existing behavior)
-        "md:flex-row md:overflow-x-auto md:p-0 md:pt-20",
+        // Shared base
+        "min-h-screen pt-20",
+        // List layout: vertical stack with scroll
+        isListLayout && "flex flex-col overflow-y-auto px-4 gap-0",
+        // Board layout: horizontal layout
+        !isListLayout && "flex flex-row overflow-x-auto p-0 pt-20",
         className
       )}
     >

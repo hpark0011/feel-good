@@ -11,6 +11,7 @@ import {
 } from "@/features/ticket-form";
 import type { ColumnId } from "@/types/board.types";
 import { useBoardActionsStore } from "@/store/board-actions-store";
+import { useLayoutMode } from "@/hooks/use-layout-mode";
 import { useBoardState } from "../hooks/use-board-state";
 import { useBoardDnd } from "../hooks/use-board-dnd";
 import { useBoardForm, type TicketFormValues } from "../hooks/use-board-form";
@@ -19,6 +20,7 @@ import { BoardDragOverlay } from "./board-drag-overlay";
 import { updateBoardWithTicket, syncTimerOnTicketUpdate } from "../utils";
 
 export function Board() {
+  const { isListLayout } = useLayoutMode();
   const {
     board,
     filteredBoard,
@@ -127,7 +129,9 @@ export function Board() {
                 }
                 onUpdateSubTasks={actions.updateSubTasks}
               />
-              <div className='hidden md:block w-[1px] min-w-[1px] bg-neutral-200 dark:bg-neutral-900 last:hidden' />
+              {!isListLayout && (
+                <div className='w-[1px] min-w-[1px] bg-neutral-200 dark:bg-neutral-900 last:hidden' />
+              )}
             </Fragment>
           ))}
         </BodyContainer>
