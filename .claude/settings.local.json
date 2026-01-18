@@ -62,7 +62,12 @@
       "WebFetch(domain:css-tricks.com)",
       "WebFetch(domain:blog.maximeheckel.com)",
       "WebFetch(domain:ibelick.com)",
-      "WebFetch(domain:www.seancdavis.com)"
+      "WebFetch(domain:www.seancdavis.com)",
+      "WebFetch(domain:react-spectrum.adobe.com)",
+      "WebFetch(domain:codepen.io)",
+      "WebFetch(domain:www.w3.org)",
+      "WebFetch(domain:base-ui.com)",
+      "WebFetch(domain:ninjarockstar.dev)"
     ],
     "deny": [],
     "ask": []

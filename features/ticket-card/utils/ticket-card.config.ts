@@ -1,5 +1,4 @@
 import type { Variants } from "framer-motion";
-
 import type { ColumnId } from "@/types/board.types";
 import { cn } from "@/lib/utils";
 
