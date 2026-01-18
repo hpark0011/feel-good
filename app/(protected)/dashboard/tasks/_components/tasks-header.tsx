@@ -10,7 +10,7 @@ import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { FocusFormDialog } from "./focus-form-dialog";
-import { InsightsDialog } from "../../../../../features/insights/insights-dialog";
+import { InsightsDialog } from "@/features/insights";
 import { TasksHeaderActions } from "./tasks-header-actions";
 import { TasksHeaderFocusDisplay } from "./tasks-header-focus-display";
 import { TasksHeaderLogo } from "./tasks-header-logo";
@@ -26,14 +26,9 @@ export function TasksHeader() {
 
   // Timer state selectors
   const activeTicketId = useStopWatchStore((state) => state.activeTicketId);
-  const activeTicketTitle = useStopWatchStore(
-    (state) => state.activeTicketTitle
-  );
+  const activeTicketTitle = useStopWatchStore((state) => state.activeTicketTitle);
   const timerState = useStopWatchStore((state) => state.state);
-  const activeElapsedSeconds = useStopWatchStore((state) => {
-    if (!state.activeTicketId) return 0;
-    return state.getElapsedTime(state.activeTicketId);
-  });
+  const getElapsedTime = useStopWatchStore((state) => state.getElapsedTime);
   const hydrate = useStopWatchStore((state) => state._hydrate);
 
   // Hydrate timer state from localStorage after mount (prevents hydration errors)
@@ -68,29 +63,35 @@ export function TasksHeader() {
   };
 
   return (
-    <HeaderContainer className='justify-between'>
-      <TasksHeaderLogo
-        onSignOut={handleSignOut}
-        onThemeToggle={handleThemeToggle}
-        isSigningOut={isSigningOut}
-      />
-      {!activeTicketId || timerState === "stopped" ? (
-        <TasksHeaderFocusDisplay
-          todayFocus={todayFocus}
-          onClick={() => setFocusDialogOpen(true)}
+    <HeaderContainer className='grid grid-cols-3 items-center'>
+      <div className='flex items-center justify-start'>
+        <TasksHeaderLogo
+          onSignOut={handleSignOut}
+          onThemeToggle={handleThemeToggle}
+          isSigningOut={isSigningOut}
         />
-      ) : (
-        <TasksHeaderTimerDisplay
-          activeTicketTitle={activeTicketTitle}
-          timerState={timerState}
-          activeElapsedSeconds={activeElapsedSeconds}
-        />
-      )}
-      <HeaderMenu>
-        <TasksHeaderActions
-          onInsightsClick={() => setInsightsDialogOpen(true)}
-        />
-      </HeaderMenu>
+      </div>
+      <div className='flex items-center justify-center'>
+        {!activeTicketId || timerState === "stopped" ? (
+          <TasksHeaderFocusDisplay
+            todayFocus={todayFocus}
+            onClick={() => setFocusDialogOpen(true)}
+          />
+        ) : (
+          <TasksHeaderTimerDisplay
+            activeTicketTitle={activeTicketTitle}
+            timerState={timerState}
+            activeElapsedSeconds={getElapsedTime(activeTicketId!)}
+          />
+        )}
+      </div>
+      <div className='flex items-center justify-end'>
+        <HeaderMenu>
+          <TasksHeaderActions
+            onInsightsClick={() => setInsightsDialogOpen(true)}
+          />
+        </HeaderMenu>
+      </div>
       <FocusFormDialog
         open={focusDialogOpen}
         onOpenChange={setFocusDialogOpen}

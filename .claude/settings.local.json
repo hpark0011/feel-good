@@ -57,7 +57,12 @@
       "Skill(code-review)",
       "Bash(git -C /Users/disquiet/Desktop/feel-good/greyboard diff --name-only HEAD)",
       "Bash(git -C /Users/disquiet/Desktop/feel-good/greyboard diff --name-only HEAD~1)",
-      "Bash(git -C /Users/disquiet/Desktop/feel-good/greyboard status --short)"
+      "Bash(git -C /Users/disquiet/Desktop/feel-good/greyboard status --short)",
+      "WebFetch(domain:buildui.com)",
+      "WebFetch(domain:css-tricks.com)",
+      "WebFetch(domain:blog.maximeheckel.com)",
+      "WebFetch(domain:ibelick.com)",
+      "WebFetch(domain:www.seancdavis.com)"
     ],
     "deny": [],
     "ask": []
