@@ -1,5 +1,5 @@
 // Components
-export { Board } from "./components/board";
+export { TasksBody } from "./components/tasks-body";
 export { BoardColumn } from "./components/board-column";
 
 // Hooks

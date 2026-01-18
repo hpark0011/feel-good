@@ -19,7 +19,7 @@ import { BoardColumn } from "./board-column";
 import { BoardDragOverlay } from "./board-drag-overlay";
 import { updateBoardWithTicket, syncTimerOnTicketUpdate } from "../utils";
 
-export function Board() {
+export function TasksBody() {
   const { isListLayout } = useLayoutMode();
   const {
     board,
