@@ -10,7 +10,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Icon } from "@/components/ui/icon";
-import { useTaskLayoutMode } from "@/app/(protected)/dashboard/tasks/_hooks/use-task-layout-mode";
+import { useLayoutMode } from "../context";
 import type { Column } from "@/types/board.types";
 
 interface BoardColumnHeaderProps {
@@ -30,7 +30,7 @@ export function BoardColumnHeader({
   isExpanded = true,
   onToggleExpand,
 }: BoardColumnHeaderProps) {
-  const { isListLayout } = useTaskLayoutMode();
+  const { isListLayout } = useLayoutMode();
 
   return (
     <CardHeader

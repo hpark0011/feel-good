@@ -1,3 +1,10 @@
+// Context
+export {
+  LayoutModeProvider,
+  useLayoutMode,
+  type LayoutPreference,
+} from "./context";
+
 // Components
 export { TasksBody } from "./components/tasks-body";
 export { BoardColumn } from "./components/board-column";

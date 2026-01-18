@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useTaskLayoutMode } from "@/app/(protected)/dashboard/tasks/_hooks/use-task-layout-mode";
+import { useLayoutMode } from "../context";
 
 /**
  * Layout container for the kanban board that adapts between board and list views.
@@ -14,7 +14,7 @@ export function BoardLayoutContainer({
   children: React.ReactNode;
   className?: string;
 }) {
-  const { isListLayout } = useTaskLayoutMode();
+  const { isListLayout } = useLayoutMode();
 
   return (
     <div

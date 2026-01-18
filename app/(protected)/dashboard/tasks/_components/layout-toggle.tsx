@@ -3,12 +3,12 @@
 import { LayoutGrid, Rows3 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  useTaskLayoutMode,
+  useLayoutMode,
   type LayoutPreference,
-} from "../_hooks/use-task-layout-mode";
+} from "@/features/kanban-board";
 
 export function LayoutToggle() {
-  const { layoutPref, setLayoutPref, isMobile } = useTaskLayoutMode();
+  const { layoutPref, setLayoutPref, isMobile } = useLayoutMode();
 
   if (isMobile) return null;
 

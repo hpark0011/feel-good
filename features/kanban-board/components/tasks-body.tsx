@@ -11,7 +11,7 @@ import {
 } from "@/features/ticket-form";
 import type { ColumnId } from "@/types/board.types";
 import { useBoardActionsStore } from "@/store/board-actions-store";
-import { useTaskLayoutMode } from "@/app/(protected)/dashboard/tasks/_hooks/use-task-layout-mode";
+import { useLayoutMode } from "../context";
 import { useBoardState } from "../hooks/use-board-state";
 import { useBoardDnd } from "../hooks/use-board-dnd";
 import { useBoardForm, type TicketFormValues } from "../hooks/use-board-form";
@@ -20,7 +20,7 @@ import { BoardDragOverlay } from "./board-drag-overlay";
 import { updateBoardWithTicket, syncTimerOnTicketUpdate } from "../utils";
 
 export function TasksBody() {
-  const { isListLayout } = useTaskLayoutMode();
+  const { isListLayout } = useLayoutMode();
   const {
     board,
     filteredBoard,
