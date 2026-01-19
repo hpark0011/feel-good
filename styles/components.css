@@ -21,7 +21,7 @@
   --popover-border: oklch(1 0 0 / 2%);
 
   /* Tabs */
-  --tab-active-background: var(--gray-2);
+  --tab-active-background: var(--gray-3);
 }
 
 /* Pulse shadow animation for task item index button*/

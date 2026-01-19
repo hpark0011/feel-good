@@ -182,7 +182,7 @@
   --border-medium: oklch(1 0 0 / 5%);
   --border-highlight: oklch(1 0 0 / 3%);
   --input: var(--gray-3);
-  --hover: var(--gray-1);
+  --hover: var(--gray-2);
   --hover-subtle: var(--color-dq-gray-950);
   --badge-background: oklch(0.269 0 0);
   --ring: oklch(0.556 0 0);

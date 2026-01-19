@@ -49,12 +49,13 @@ function TabsTrigger({
         "h-[calc(100%-1px)] px-2 py-1 text-[13px]",
         "whitespace-nowrap font-medium",
         "text-text-tertiary dark:text-muted-foreground",
-        "data-[state=active]:bg-tab-active-background data-[state=active]:text-[#F66B15] data-[state=active]:shadow-xs",
+        "data-[state=active]:bg-tab-active-background data-[state=active]:shadow-xs dark:data-[state=active]:text-orange-500",
         "transition-[color,box-shadow]",
         "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring focus-visible:ring-[3px] focus-visible:outline-1",
         "disabled:pointer-events-none disabled:opacity-50",
         "hover:bg-hover cursor-pointer",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "[&_svg]:text-icon-light data-[state=active]:[&_svg]:text-icon-medium",
         className
       )}
       {...props}
