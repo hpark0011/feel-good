@@ -58,6 +58,7 @@ export function ListSection({
       <ListSectionHeader
         column={column}
         ticketCount={tickets.length}
+        onAddTicket={onAddTicket}
         onClearColumn={onClearColumn}
         isExpanded={isExpanded}
         isLastSection={isLastSection}
