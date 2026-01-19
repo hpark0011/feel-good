@@ -1,7 +1,8 @@
 "use client";
 
 import type { MouseEvent } from "react";
-import { PlusIcon } from "lucide-react";
+import { ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { CardHeader } from "@/components/ui/card";
 import {
@@ -13,31 +14,27 @@ import { Icon } from "@/components/ui/icon";
 import { ColumnTitle } from "@/features/task-board-core";
 import type { Column } from "@/types/board.types";
 
-interface BoardColumnHeaderProps {
+interface ListSectionHeaderProps {
   column: Column;
   ticketCount: number;
-  onAddTicket: () => void;
   onClearColumn?: () => void;
+  isExpanded: boolean;
+  onToggleExpand: () => void;
 }
 
 /**
- * Header for board view columns showing title, count, and action buttons.
- * Always shows add button (no collapse functionality in board view).
+ * Clickable header for list sections with collapse/expand functionality.
+ * Shows column info and chevron indicator.
  */
-export function BoardColumnHeader({
+export function ListSectionHeader({
   column,
   ticketCount,
-  onAddTicket,
   onClearColumn,
-}: BoardColumnHeaderProps) {
+  isExpanded,
+  onToggleExpand,
+}: ListSectionHeaderProps) {
   const isCompleteColumn = column.id === "complete";
   const showClearButton = isCompleteColumn && onClearColumn && ticketCount > 0;
-  const showAddButton = !isCompleteColumn;
-
-  const handleAddTicketClick = (event: MouseEvent<HTMLButtonElement>) => {
-    event.stopPropagation();
-    onAddTicket();
-  };
 
   const handleClearColumnClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
@@ -45,7 +42,16 @@ export function BoardColumnHeader({
   };
 
   return (
-    <CardHeader className="pl-4.5 pb-2 gap-0 pr-4">
+    <CardHeader
+      className={cn(
+        "pl-4.5 pb-2 gap-0 pr-4",
+        "cursor-pointer active:bg-neutral-100 dark:active:bg-neutral-800 py-3"
+      )}
+      onClick={onToggleExpand}
+      role="button"
+      aria-expanded={isExpanded}
+      aria-label={`Toggle ${column.title} tickets`}
+    >
       <div className="flex items-center justify-between h-6">
         <ColumnTitle
           icon={column.icon}
@@ -72,20 +78,12 @@ export function BoardColumnHeader({
               <TooltipContent>Clear All Completed Tickets</TooltipContent>
             </Tooltip>
           )}
-          {showAddButton && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="icon"
-                  onClick={handleAddTicketClick}
-                  className="cursor-pointer active:scale-90 transition-all duration-200 ease-out size-6.5 flex"
-                >
-                  <PlusIcon className="h-3.5 w-3.5 text-icon-light" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Add Ticket</TooltipContent>
-            </Tooltip>
-          )}
+          <ChevronDown
+            className={cn(
+              "h-4 w-4 text-muted-foreground transition-transform duration-200",
+              isExpanded && "rotate-180"
+            )}
+          />
         </div>
       </div>
     </CardHeader>
