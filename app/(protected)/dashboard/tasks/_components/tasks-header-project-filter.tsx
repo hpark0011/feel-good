@@ -130,7 +130,7 @@ export function TasksHeaderProjectFilter() {
               "bg-card shadow-xs border-border-highlight dark:border-white/2 border rounded-sm h-[24px] transition-all duration-200 ease-out cursor-pointer scale-100 flex items-center translate-y-[0px] overflow-hidden text-[13px] mx-1.5"
           )}
         >
-          <div className='flex items-center justify-center hover:bg-hover h-6 w-6 rounded-sm relative'>
+          <div className='flex items-center justify-center hover:bg-hover size-7 rounded-sm relative'>
             <Icon
               name='Line3Icon'
               className={cn(
