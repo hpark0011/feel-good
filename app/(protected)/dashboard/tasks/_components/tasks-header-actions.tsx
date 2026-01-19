@@ -75,13 +75,13 @@ export function TasksHeaderActions({
         <TooltipTrigger asChild>
           <Button
             variant='icon'
-            className='size-7 cursor-pointer rounded-[6px] gap-0.5'
+            size='icon-sm'
             aria-label='Insights'
             onClick={onInsightsClick}
           >
             <Icon
               name='WaveformPathEcgIcon'
-              className='size-5.5 text-icon-light'
+              className='size-4.5 text-icon-light'
             />
           </Button>
         </TooltipTrigger>
@@ -94,7 +94,7 @@ export function TasksHeaderActions({
         <DropdownMenuTrigger asChild>
           <Button
             variant='icon'
-            className='size-7 cursor-pointer rounded-[6px]'
+            size='icon-sm'
             aria-label='Board actions'
           >
             <Icon name='EllipsisIcon' className='size-4.5 text-icon-light' />

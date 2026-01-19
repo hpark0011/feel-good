@@ -18,11 +18,11 @@ export function LayoutToggle() {
       onValueChange={(value) => setLayoutPref(value as LayoutPreference)}
     >
       <TabsList className="h-7 p-0.5">
-        <TabsTrigger value="list" className="h-6 w-7 p-0" aria-label="List view">
-          <Rows3 className="size-4" />
+        <TabsTrigger value="list" className="h-full w-8 p-0" aria-label="List view">
+          <Rows3 className="size-3.5 text-icon-light" />
         </TabsTrigger>
-        <TabsTrigger value="board" className="h-6 w-7 p-0" aria-label="Board view">
-          <LayoutGrid className="size-4" />
+        <TabsTrigger value="board" className="h-full w-8 p-0" aria-label="Board view">
+          <LayoutGrid className="size-3.5 text-icon-light" />
         </TabsTrigger>
       </TabsList>
     </Tabs>
