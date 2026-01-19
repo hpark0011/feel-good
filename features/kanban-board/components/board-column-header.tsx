@@ -1,5 +1,6 @@
 "use client";
 
+import type { MouseEvent } from "react";
 import { ChevronDown, PlusIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,19 @@ export function BoardColumnHeader({
   onToggleExpand,
 }: BoardColumnHeaderProps) {
   const { isListLayout } = useLayoutMode();
+  const isCompleteColumn = column.id === "complete";
+  const showClearButton = isCompleteColumn && onClearColumn && ticketCount > 0;
+  const showAddButton = !isCompleteColumn;
+
+  const handleAddTicketClick = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    onAddTicket();
+  };
+
+  const handleClearColumnClick = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+    onClearColumn?.();
+  };
 
   return (
     <CardHeader
@@ -60,15 +74,12 @@ export function BoardColumnHeader({
           </div>
         </div>
         <div className="flex items-center gap-1">
-          {column.id === "complete" && onClearColumn && ticketCount > 0 && (
+          {showClearButton && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   variant="icon"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onClearColumn();
-                  }}
+                  onClick={handleClearColumnClick}
                   className="cursor-pointer active:scale-90 transition-all duration-200 ease-out size-6.5"
                 >
                   <Icon
@@ -80,15 +91,12 @@ export function BoardColumnHeader({
               <TooltipContent>Clear All Completed Tickets</TooltipContent>
             </Tooltip>
           )}
-          {column.id !== "complete" && (
+          {showAddButton && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   variant="icon"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onAddTicket();
-                  }}
+                  onClick={handleAddTicketClick}
                   className={cn(
                     "cursor-pointer active:scale-90 transition-all duration-200 ease-out size-6.5",
                     // Hide add button in list layout (use bottom button instead)
