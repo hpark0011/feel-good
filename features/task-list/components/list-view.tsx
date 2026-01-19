@@ -34,7 +34,7 @@ export function ListView({
           key={column.id}
           column={column}
           tickets={board[column.id] || []}
-          onAddTicket={() => onAddTicket(column.id as ColumnId)}
+          onAddTicket={() => onAddTicket(column.id)}
           onEditTicket={onEditTicket}
           onDeleteTicket={onDeleteTicket}
           onClearColumn={

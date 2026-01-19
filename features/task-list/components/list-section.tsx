@@ -52,8 +52,7 @@ export function ListSection({
     <Card
       className={cn(
         "flex flex-col bg-transparent shadow-none py-0 gap-0",
-        "w-full rounded-none border-x-0 border-none",
-      
+        "w-full rounded-none border-x-0 border-none"
       )}
     >
       <ListSectionHeader

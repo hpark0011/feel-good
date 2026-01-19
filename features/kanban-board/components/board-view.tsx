@@ -35,7 +35,7 @@ export function BoardView({
           <BoardColumn
             column={column}
             tickets={board[column.id] || []}
-            onAddTicket={() => onAddTicket(column.id as ColumnId)}
+            onAddTicket={() => onAddTicket(column.id)}
             onEditTicket={onEditTicket}
             onDeleteTicket={onDeleteTicket}
             onClearColumn={
