@@ -2,15 +2,15 @@
 
 import { signOutAction } from "@/app/_actions/auth-actions";
 import { customToast } from "@/components/custom-toast";
-import { HeaderContainer, HeaderMenu } from "@/components/header/header-ui";
+import { HeaderContainer } from "@/components/header/header-ui";
 import { PATHS } from "@/config/paths.config";
-import { useTodayFocus } from "../_hooks";
+import { InsightsDialog } from "@/features/insights";
 import { useStopWatchStore } from "@/store/stop-watch-store";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
+import { useTodayFocus } from "../_hooks";
 import { FocusFormDialog } from "./focus-form-dialog";
-import { InsightsDialog } from "@/features/insights";
 import { TasksHeaderActions } from "./tasks-header-actions";
 import { TasksHeaderFocusDisplay } from "./tasks-header-focus-display";
 import { TasksHeaderLogo } from "./tasks-header-logo";
@@ -86,11 +86,9 @@ export function TasksHeader() {
         )}
       </div>
       <div className='flex items-center justify-end'>
-        <HeaderMenu>
           <TasksHeaderActions
             onInsightsClick={() => setInsightsDialogOpen(true)}
           />
-        </HeaderMenu>
       </div>
       <FocusFormDialog
         open={focusDialogOpen}
