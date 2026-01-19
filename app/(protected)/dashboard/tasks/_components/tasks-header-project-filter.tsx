@@ -127,6 +127,7 @@ export function TasksHeaderProjectFilter() {
         <Button
           variant='icon'
           size='icon-sm'
+          aria-label='Filter by project'
           className={cn(
             hasActiveFilters &&
               "bg-card shadow-xs border-border-highlight dark:border-white/2 border h-[24px] w-auto rounded-sm transition-all duration-200 ease-out scale-100 translate-y-[0px] overflow-hidden text-[13px] mx-1.5 hover:bg-card"

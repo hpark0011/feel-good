@@ -45,16 +45,15 @@ function TabsTrigger({
       data-slot='tabs-trigger'
       className={cn(
         "inline-flex flex-1 items-center justify-center gap-1.5",
-        "rounded-sm border border-transparent",
+        "rounded-[5px] border border-transparent",
         "h-[calc(100%-1px)] px-2 py-1 text-[13px]",
         "whitespace-nowrap font-medium",
         "text-text-tertiary dark:text-muted-foreground",
-        "data-[state=active]:bg-[#FFEED6] data-[state=active]:text-[#F66B15]",
-        "dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30",
+        "data-[state=active]:bg-tab-active-background data-[state=active]:text-[#F66B15] data-[state=active]:shadow-xs",
         "transition-[color,box-shadow]",
         "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring focus-visible:ring-[3px] focus-visible:outline-1",
         "disabled:pointer-events-none disabled:opacity-50",
-        "hover:bg-neutral-200 cursor-pointer",
+        "hover:bg-hover cursor-pointer",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
