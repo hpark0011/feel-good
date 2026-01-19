@@ -50,7 +50,7 @@ function ClearFilterButton({ onClick, className }: ClearFilterButtonProps) {
   );
 }
 
-export function ProjectFilter() {
+export function TasksHeaderProjectFilter() {
   const { projects } = useProjects();
   const { selectedProjectIds, toggleProject, clearFilter } = useProjectFilter();
   const [open, setOpen] = useState(false);
@@ -125,7 +125,7 @@ export function ProjectFilter() {
       <PopoverTrigger asChild>
         <div
           className={cn(
-            "flex items-center h-6 w-fit bg-transparent cursor-pointer relative",
+            "flex items-center size-7 bg-transparent cursor-pointer relative ",
             hasActiveFilters &&
               "bg-card shadow-xs border-border-highlight dark:border-white/2 border rounded-sm h-[24px] transition-all duration-200 ease-out cursor-pointer scale-100 flex items-center translate-y-[0px] overflow-hidden text-[13px] mx-1.5"
           )}
