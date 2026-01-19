@@ -26,7 +26,7 @@ export function TasksHeaderTimerDisplay({
         name={timerState === StopWatchState.Paused
           ? "PlayFillIcon"
           : "PauseFillIcon"}
-        className="size-3.5 text-icon-light"
+        className="size-3.5 text-icon-light min-w-3.5"
       />
       <span className="text-[12px] font-mono text-orange-400 text-left pr-0.5 w-fit">
         {formatDuration(activeElapsedSeconds)}
