@@ -64,16 +64,16 @@ export function BoardColumnHeader({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  variant="ghost"
+                  variant="icon"
                   onClick={(e) => {
                     e.stopPropagation();
                     onClearColumn();
                   }}
-                  className="p-0 w-6 h-6 rounded-md cursor-pointer active:scale-90 transition-all duration-200 ease-out"
+                  className="cursor-pointer active:scale-90 transition-all duration-200 ease-out size-6.5"
                 >
                   <Icon
                     name="XmarkIcon"
-                    className="h-6 w-6 text-icon-light"
+                    className="size-4.5 text-icon-light"
                   />
                 </Button>
               </TooltipTrigger>
@@ -90,7 +90,7 @@ export function BoardColumnHeader({
                     onAddTicket();
                   }}
                   className={cn(
-                    "p-2 w-6 h-6 rounded-md cursor-pointer active:scale-90 transition-all duration-200 ease-out",
+                    "cursor-pointer active:scale-90 transition-all duration-200 ease-out size-6.5",
                     // Hide add button in list layout (use bottom button instead)
                     isListLayout ? "hidden" : "flex"
                   )}
