@@ -15,8 +15,8 @@ export function ListLayout({ children, className }: ListLayoutProps) {
   return (
     <div
       className={cn(
-        "min-h-screen pt-20",
-        "flex flex-col overflow-y-auto px-4 gap-0",
+        "min-h-screen pt-[67px]",
+        "flex flex-col overflow-y-auto gap-0",
         className
       )}
     >

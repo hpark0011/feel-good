@@ -19,6 +19,7 @@ interface ListSectionHeaderProps {
   ticketCount: number;
   onClearColumn?: () => void;
   isExpanded: boolean;
+  isLastSection: boolean;
   onToggleExpand: () => void;
 }
 
@@ -31,6 +32,7 @@ export function ListSectionHeader({
   ticketCount,
   onClearColumn,
   isExpanded,
+  isLastSection,
   onToggleExpand,
 }: ListSectionHeaderProps) {
   const isCompleteColumn = column.id === "complete";
@@ -45,7 +47,10 @@ export function ListSectionHeader({
     <CardHeader
       className={cn(
         "pl-4.5 pb-2 gap-0 pr-4",
-        "cursor-pointer active:bg-neutral-100 dark:active:bg-neutral-800 py-3"
+        "cursor-pointer py-2",
+        "hover:bg-hover",
+        "border-y border-border-medium",
+        !isExpanded && !isLastSection && "border-b-0"
       )}
       onClick={onToggleExpand}
       role="button"

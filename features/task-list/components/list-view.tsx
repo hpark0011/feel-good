@@ -29,7 +29,7 @@ export function ListView({
 }: ListViewProps) {
   return (
     <ListLayout>
-      {columns.map((column) => (
+      {columns.map((column, index) => (
         <ListSection
           key={column.id}
           column={column}
@@ -43,6 +43,7 @@ export function ListView({
               : undefined
           }
           onUpdateSubTasks={onUpdateSubTasks}
+          isLastSection={index === columns.length - 1}
         />
       ))}
     </ListLayout>

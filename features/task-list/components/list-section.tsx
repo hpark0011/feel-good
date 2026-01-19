@@ -21,6 +21,7 @@ interface ListSectionProps {
   onDeleteTicket: (ticketId: string) => void;
   onClearColumn?: () => void;
   onUpdateSubTasks: (ticketId: string, subTasks: SubTask[]) => void;
+  isLastSection: boolean;
 }
 
 /**
@@ -35,6 +36,7 @@ export function ListSection({
   onDeleteTicket,
   onClearColumn,
   onUpdateSubTasks,
+  isLastSection,
 }: ListSectionProps) {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [isExpanded, setIsExpanded] = useState(true);
@@ -50,7 +52,8 @@ export function ListSection({
     <Card
       className={cn(
         "flex flex-col bg-transparent shadow-none py-0 gap-0",
-        "w-full border-b border-neutral-200 dark:border-neutral-800 rounded-none border-x-0"
+        "w-full rounded-none border-x-0 border-none",
+      
       )}
     >
       <ListSectionHeader
@@ -58,14 +61,15 @@ export function ListSection({
         ticketCount={tickets.length}
         onClearColumn={onClearColumn}
         isExpanded={isExpanded}
+        isLastSection={isLastSection}
         onToggleExpand={() => setIsExpanded(!isExpanded)}
       />
       <CardContent
         ref={setNodeRef}
         className={cn(
-          "flex-1 p-0 px-4 overflow-hidden relative",
+          "flex-1 px-4 overflow-hidden relative",
           !isExpanded && "max-h-0",
-          isExpanded && "max-h-none"
+          isExpanded && "max-h-none py-4"
         )}
       >
         <SortableContext
