@@ -3,7 +3,6 @@
 import { Fragment, useCallback, useEffect } from "react";
 import { closestCenter, DndContext } from "@dnd-kit/core";
 import { COLUMNS } from "@/config/board.config";
-import { BoardLayoutContainer } from "./board-layout-container";
 import {
   TicketFormDialog,
   createTicketFromFormData,
@@ -11,13 +10,18 @@ import {
 } from "@/features/ticket-form";
 import type { ColumnId } from "@/types/board.types";
 import { useBoardActionsStore } from "@/store/board-actions-store";
-import { useLayoutMode } from "../context";
-import { useBoardState } from "../hooks/use-board-state";
-import { useBoardDnd } from "../hooks/use-board-dnd";
-import { useBoardForm, type TicketFormValues } from "../hooks/use-board-form";
-import { BoardColumn } from "./board-column";
-import { BoardDragOverlay } from "./board-drag-overlay";
-import { updateBoardWithTicket, syncTimerOnTicketUpdate } from "../utils";
+import {
+  useLayoutMode,
+  useBoardState,
+  useBoardDnd,
+  useBoardForm,
+  type TicketFormValues,
+  BoardColumn,
+  BoardDragOverlay,
+  BoardLayoutContainer,
+  updateBoardWithTicket,
+  syncTimerOnTicketUpdate,
+} from "@/features/kanban-board";
 
 export function TasksBody() {
   const { isListLayout } = useLayoutMode();

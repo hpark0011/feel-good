@@ -6,9 +6,9 @@ export {
 } from "./context";
 
 // Components
-export { TasksBody } from "./components/tasks-body";
 export { BoardColumn } from "./components/board-column";
 export { BoardLayoutContainer } from "./components/board-layout-container";
+export { BoardDragOverlay } from "./components/board-drag-overlay";
 
 // Hooks
 export {
@@ -37,4 +37,6 @@ export {
   downloadJsonFile,
   formatDuration,
   handleTimerOnStatusChange,
+  updateBoardWithTicket,
+  syncTimerOnTicketUpdate,
 } from "./utils";
