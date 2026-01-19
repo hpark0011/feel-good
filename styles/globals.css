@@ -100,6 +100,7 @@
   --color-border-highlight: var(--border-highlight);
   --color-border-light: var(--border-light);
   --color-border-medium: var(--border-medium);
+  --color-border-extra-light: var(--border-extra-light);
   --color-hover: var(--hover);
   --color-hover-subtle: var(--hover-subtle);
   --color-badge-background: var(--badge-background);
