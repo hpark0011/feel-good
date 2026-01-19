@@ -52,7 +52,7 @@ export function ListSection({
     <Card
       className={cn(
         "flex flex-col bg-transparent shadow-none py-0 gap-0",
-        "w-full rounded-none border-x-0 border-none"
+        "w-full rounded-none border-x-0 border-none",
       )}
     >
       <ListSectionHeader
@@ -69,7 +69,7 @@ export function ListSection({
         className={cn(
           "flex-1 px-4 overflow-hidden relative",
           !isExpanded && "max-h-0",
-          isExpanded && "max-h-none py-4"
+          isExpanded && "max-h-none py-4",
         )}
       >
         <SortableContext
@@ -77,7 +77,7 @@ export function ListSection({
           items={tickets.map((t) => t.id)}
           strategy={verticalListSortingStrategy}
         >
-          <div className='space-y-1.5 h-fit pb-4'>
+          <div className="space-y-1.5 h-fit pb-0.5">
             {tickets.map((ticket, index) => (
               <TicketCard
                 key={ticket.id}
@@ -88,13 +88,9 @@ export function ListSection({
                 onDelete={() => onDeleteTicket(ticket.id)}
                 onClick={() => onEditTicket(ticket)}
                 onSubTasksChange={(subTasks: SubTask[]) =>
-                  onUpdateSubTasks(ticket.id, subTasks)
-                }
+                  onUpdateSubTasks(ticket.id, subTasks)}
               />
             ))}
-            {column.id !== "complete" && (
-              <AddTicketButton onAddTicket={onAddTicket} />
-            )}
           </div>
         </SortableContext>
       </CardContent>

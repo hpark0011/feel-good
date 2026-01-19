@@ -70,7 +70,7 @@ export function ListSectionHeader({
           <Icon
             name="TriangleFillDownIcon"
             className={cn(
-              "size-2 text-muted-foreground transition-transform duration-200",
+              "size-2 text-icon-light transition-transform duration-200",
               !isExpanded && "-rotate-90",
             )}
           />
