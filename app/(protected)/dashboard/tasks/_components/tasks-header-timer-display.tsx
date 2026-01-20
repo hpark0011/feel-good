@@ -31,7 +31,7 @@ export function TasksHeaderTimerDisplay({
       <span className="text-[12px] font-mono text-orange-400 text-left pr-0.5 w-fit">
         {formatDuration(activeElapsedSeconds)}
       </span>
-      <div className="w-px self-stretch mx-1 bg-border-medium/50 dark:bg-border-medium" />
+      <div className="w-px self-stretch mx-1 bg-border-light dark:bg-border-light" />
       <span
         className="max-w-[220px] truncate text-left"
         title={activeTicketTitle ?? undefined}

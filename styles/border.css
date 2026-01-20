@@ -1,13 +1,13 @@
 :root {
   --border: oklch(0.922 0 0);
-  --border-light: var(--gray-2);
+  --border-light: var(--gray-4);
   --border-medium: var(--gray-6);
   --border-highlight: oklch(1 0 0 / 95%);
 }
 
 .dark {
   --border: oklch(1 0 0 / 10%);
-  --border-light: var(--gray-2);
+  --border-light: var(--gray-3);
   --border-medium: var(--gray-3);
   --border-highlight: oklch(1 0 0 / 3%);
 }
