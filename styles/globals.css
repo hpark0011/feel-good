@@ -5,6 +5,7 @@
 @import "./icon-colors.css";
 @import "./background-colors.css";
 @import "./shadows.css";
+@import "./border.css";
 @import "./components.css";
 @import "@radix-ui/colors/gray.css";
 @import "@radix-ui/colors/gray-dark.css";
@@ -141,10 +142,6 @@
   --accent: oklch(0.95 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --border-light: var(--gray-2);
-  --border-medium: var(--gray-6);
-  --border-highlight: oklch(1 0 0 / 95%);
   --input: var(--gray-6);
   --hover: var(--gray-2);
   --hover-subtle: var(--gray-3);
@@ -178,10 +175,6 @@
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --border-light: var(--gray-2);
-  --border-medium: var(--gray-3);
-  --border-highlight: oklch(1 0 0 / 3%);
   --input: var(--gray-3);
   --hover: var(--gray-2);
   --hover-subtle: var(--color-dq-gray-950);
@@ -203,9 +196,6 @@
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
   body {
     @apply bg-background text-foreground font-sans tracking-[-0.04em] font-[480];
   }
