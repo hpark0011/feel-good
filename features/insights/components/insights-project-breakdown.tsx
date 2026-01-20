@@ -1,4 +1,4 @@
-import { formatDuration } from "@/app/(protected)/dashboard/tasks/_utils";
+import { formatDuration } from "@/features/timer";
 import { cn } from "@/lib/utils";
 import { getProjectColor } from "../insights.utils";
 

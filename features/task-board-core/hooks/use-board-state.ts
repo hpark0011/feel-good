@@ -6,7 +6,7 @@ import {
   useProjectFilter,
   useLastSelectedProject,
 } from "@/app/(protected)/dashboard/tasks/_hooks";
-import { useStopWatchStore } from "@/store/stop-watch-store";
+import { useStopWatchStore, handleTimerOnStatusChange } from "@/features/timer";
 import { INITIAL_BOARD_STATE } from "@/config/board.config";
 import type { BoardState, ColumnId, SubTask, Ticket } from "@/types/board.types";
 import {
@@ -19,7 +19,6 @@ import {
   downloadJsonFile,
   importBoardFromJson,
 } from "../utils/board-io.utils";
-import { handleTimerOnStatusChange } from "../utils/board-timer.utils";
 
 export interface UseBoardStateReturn {
   board: BoardState;

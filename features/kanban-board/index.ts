@@ -38,11 +38,15 @@ export {
   safelyDeserializeBoard,
   importBoardFromJson,
   downloadJsonFile,
+  updateBoardWithTicket,
+} from "@/features/task-board-core";
+
+// Re-export timer utils from timer feature
+export {
   formatDuration,
   handleTimerOnStatusChange,
-  updateBoardWithTicket,
   syncTimerOnTicketUpdate,
-} from "@/features/task-board-core";
+} from "@/features/timer";
 
 // Alias for backward compatibility
 export { DragOverlayWrapper as BoardDragOverlay } from "@/features/task-board-core";

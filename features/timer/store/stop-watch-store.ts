@@ -7,7 +7,7 @@ export enum StopWatchState {
   Paused = "paused",
 }
 
-interface TimerState {
+export interface TimerState {
   activeTicketId: string | null;
   activeTicketTitle: string | null;
   startTime: number | null; // Timestamp when timer started/resumed

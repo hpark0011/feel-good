@@ -2,7 +2,7 @@
 
 import { CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import type { StopWatchState } from "@/store/stop-watch-store";
+import type { StopWatchState } from "@/features/timer";
 import type { Ticket } from "@/types/board.types";
 import { TicketActionToolbar } from "./ticket-action-toolbar";
 import { TicketDurationBadge } from "./ticket-duration-badge";
