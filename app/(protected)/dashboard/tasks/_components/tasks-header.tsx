@@ -30,6 +30,8 @@ export function TasksHeader() {
   const timerState = useStopWatchStore((state) => state.state);
   const getElapsedTime = useStopWatchStore((state) => state.getElapsedTime);
   const hydrate = useStopWatchStore((state) => state._hydrate);
+  // Subscribe to _renderTick to trigger re-renders when timer ticks
+  useStopWatchStore((state) => state._renderTick);
 
   // Hydrate timer state from localStorage after mount (prevents hydration errors)
   useEffect(() => {
