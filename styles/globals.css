@@ -176,7 +176,7 @@
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --input: var(--gray-3);
-  --hover: var(--gray-2);
+  --hover: var(--gray-3);
   --hover-subtle: var(--color-dq-gray-950);
   --badge-background: oklch(0.269 0 0);
   --ring: oklch(0.556 0 0);

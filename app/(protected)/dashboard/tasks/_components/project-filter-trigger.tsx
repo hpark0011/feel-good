@@ -6,6 +6,7 @@ import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
 import { getProjectColorBgClass } from "@/config/tasks.config";
 import { ProjectFilterClearButton } from "./project-filter-clear-button";
+import { ProjectFilterDivider } from "./project-filter-divider";
 import type { Project } from "@/types/board.types";
 
 interface ProjectFilterTriggerProps extends ComponentProps<typeof Button> {
@@ -32,9 +33,13 @@ export function ProjectFilterTrigger({
   selectedProjectIds,
   projects,
   onClearFilter,
-  className,
   ...props
 }: ProjectFilterTriggerProps) {
+  // Find selected project for single project display
+  const selectedProject = selectedProjectIds.length === 1
+    ? projects.find((p) => p.id === selectedProjectIds[0])
+    : null;
+
   return (
     <Button
       variant="icon"
@@ -42,11 +47,11 @@ export function ProjectFilterTrigger({
       aria-label="Filter by project"
       className={cn(
         hasActiveFilters &&
-          "bg-card shadow-xs border-border-highlight dark:border-white/2 border h-[24px] w-auto rounded-sm transition-all duration-200 ease-out scale-100 translate-y-[0px] overflow-hidden text-[13px] mx-1.5 hover:bg-card",
-        className,
+          "bg-card shadow-xs border-border-highlight dark:border-white/2 border h-[24px] w-auto rounded-sm transition-all duration-200 ease-out scale-100 translate-y-[0px] overflow-hidden text-[13px] mx-1.5 hover:bg-card gap-0",
       )}
       {...props}
     >
+      {/* Filter icon button */}
       <div
         className={cn(
           "flex items-center justify-center size-7 relative",
@@ -64,48 +69,46 @@ export function ProjectFilterTrigger({
 
       {hasActiveFilters && (
         <>
-          <div className="w-px self-stretch mx-0 bg-border-light" />
-          <div className="h-full">
-            {selectedProjectIds.length === 1
-              ? (
-                <div className="flex items-center relative h-full">
-                  <div className="px-1.5 flex items-center gap-1.5">
-                    <span
-                      className={cn(
-                        "size-1.5 rounded-full flex-shrink-0",
-                        getProjectColorBgClass(
-                          projects.find((p) => p.id === selectedProjectIds[0])
-                            ?.color || "gray",
-                        ),
-                      )}
-                    />
-                    {projects.find((p) => p.id === selectedProjectIds[0])
-                      ?.name || "Filter"}
-                  </div>
-                  <div className="w-px self-stretch mx-0 bg-border-light" />
-                  <ProjectFilterClearButton
-                    onClick={onClearFilter}
-                    className="hover:bg-base"
+          {/* Divider */}
+          <ProjectFilterDivider />
+
+          {/* Filter indicator */}
+          {selectedProjectIds.length === 1
+            ? (
+              <div className="flex items-center relative h-full px-1 pl-0.5">
+                <div className="px-1.5 flex items-center gap-1.5">
+                  <span
+                    className={cn(
+                      "size-1.5 rounded-full flex-shrink-0",
+                      getProjectColorBgClass(selectedProject?.color || "gray"),
+                    )}
                   />
+                  {selectedProject?.name || "Filter"}
                 </div>
-              )
-              : (
-                <div className="flex items-center relative h-full pl-1.5">
-                  <Icon
-                    name="FolderFillIcon"
-                    className="size-4 text-icon-light"
-                  />
-                  <div className="pr-1.5 pl-1 text-text-primary">
-                    {selectedProjectIds.length} projects
-                  </div>
-                  <div className="w-px self-stretch mx-0 bg-border-light" />
-                  <ProjectFilterClearButton
-                    onClick={onClearFilter}
-                    className="hover:bg-hover"
-                  />
+              </div>
+            )
+            : (
+              <div className="flex items-center relative h-full pl-1.5 pr-0.5">
+                <Icon
+                  name="FolderFillIcon"
+                  className="size-4 text-icon-light"
+                />
+                <div className="pr-1.5 pl-1 text-text-primary">
+                  {selectedProjectIds.length} projects
                 </div>
-              )}
-          </div>
+              </div>
+            )}
+
+          {/* Divider */}
+          <ProjectFilterDivider />
+
+          {/* Clear button */}
+          <ProjectFilterClearButton
+            onClick={onClearFilter}
+            className={selectedProjectIds.length === 1
+              ? "hover:bg-base"
+              : "hover:bg-hover"}
+          />
         </>
       )}
     </Button>
