@@ -1,4 +1,4 @@
-import { useStopWatchStore } from "@/store/stop-watch-store";
+import { useStopWatchStore } from "../store/stop-watch-store";
 
 /**
  * Returns real-time elapsed seconds for a timer.

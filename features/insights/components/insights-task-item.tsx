@@ -1,5 +1,5 @@
 import { Icon } from "@/components/ui/icon";
-import { formatDuration } from "@/app/(protected)/dashboard/tasks/_utils";
+import { formatDuration } from "@/features/timer";
 import {
   getTimeEntriesForDate,
   getTicketDurationForDate,

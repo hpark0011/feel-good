@@ -1,8 +1,8 @@
 import { Icon } from "@/components/ui/icon";
-import { formatDuration } from "../_utils";
-import { StopWatchState } from "@/store/stop-watch-store";
+import { formatDuration } from "../utils/format-duration";
+import { StopWatchState } from "../store/stop-watch-store";
 
-interface TasksHeaderTimerDisplayProps {
+interface TimerDisplayProps {
   activeTicketTitle: string | null;
   timerState: StopWatchState;
   activeElapsedSeconds: number;
@@ -12,11 +12,11 @@ interface TasksHeaderTimerDisplayProps {
  * Displays the active timer in the header with elapsed time and ticket title.
  * Only renders when a timer is running or paused (parent handles visibility).
  */
-export function TasksHeaderTimerDisplay({
+export function TimerDisplay({
   activeTicketTitle,
   timerState,
   activeElapsedSeconds,
-}: TasksHeaderTimerDisplayProps) {
+}: TimerDisplayProps) {
   return (
     <button
       type="button"

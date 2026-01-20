@@ -6,7 +6,7 @@ import { useCallback, useState, type CSSProperties, type MouseEvent } from "reac
 
 import { Card } from "@/components/ui/card";
 import { useProjects } from "@/features/project-select";
-import { useStopWatchStore } from "@/store/stop-watch-store";
+import { useStopWatchStore } from "@/features/timer";
 import type { SubTask, Ticket } from "@/types/board.types";
 import { getCardClassName } from "../utils/ticket-card.config";
 import { AnimatedTicketCardWrapper } from "./animated-ticket-card-wrapper";

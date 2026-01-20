@@ -5,8 +5,7 @@ import { customToast } from "@/components/custom-toast";
 import { HeaderContainer } from "@/components/header/header-ui";
 import { PATHS } from "@/config/paths.config";
 import { InsightsDialog } from "@/features/insights";
-import { useTimerElapsedTime } from "@/hooks/use-timer-elapsed-time";
-import { useStopWatchStore } from "@/store/stop-watch-store";
+import { useTimerElapsedTime, useStopWatchStore, TimerDisplay } from "@/features/timer";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
@@ -15,7 +14,6 @@ import { FocusFormDialog } from "./focus-form-dialog";
 import { TasksHeaderActions } from "./tasks-header-actions";
 import { TasksHeaderFocusDisplay } from "./tasks-header-focus-display";
 import { TasksHeaderLogo } from "./tasks-header-logo";
-import { TasksHeaderTimerDisplay } from "./tasks-header-timer-display";
 
 export function TasksHeader() {
   const [focusDialogOpen, setFocusDialogOpen] = useState(false);
@@ -83,7 +81,7 @@ export function TasksHeader() {
             />
           )
           : (
-            <TasksHeaderTimerDisplay
+            <TimerDisplay
               activeTicketTitle={activeTicketTitle}
               timerState={timerState}
               activeElapsedSeconds={activeElapsedSeconds}

@@ -46,8 +46,12 @@ export {
   safelyDeserializeBoard,
   importBoardFromJson,
   downloadJsonFile,
+  updateBoardWithTicket,
+} from "./utils";
+
+// Re-export timer utils from timer feature
+export {
   formatDuration,
   handleTimerOnStatusChange,
-  updateBoardWithTicket,
   syncTimerOnTicketUpdate,
-} from "./utils";
+} from "@/features/timer";
