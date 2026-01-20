@@ -40,7 +40,7 @@ export function ProjectFilterClearButton({
       }}
       onKeyDown={handleKeyDown}
       className={cn(
-        "flex items-center justify-center transition-colors cursor-pointer px-1 group h-full hover:shadow-lg",
+        "flex items-center justify-center transition-colors cursor-pointer px-1.5 group h-full hover:shadow-lg",
         className,
       )}
       aria-label="Clear filters"
