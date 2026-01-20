@@ -1,5 +1,6 @@
 "use client";
 
+import { type ComponentProps } from "react";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
@@ -7,7 +8,7 @@ import { getProjectColorBgClass } from "@/config/tasks.config";
 import { ProjectFilterClearButton } from "./project-filter-clear-button";
 import type { Project } from "@/types/board.types";
 
-interface ProjectFilterTriggerProps {
+interface ProjectFilterTriggerProps extends ComponentProps<typeof Button> {
   hasActiveFilters: boolean;
   selectedProjectIds: string[];
   projects: Project[];
@@ -18,17 +19,21 @@ interface ProjectFilterTriggerProps {
  * Trigger button for the project filter popover.
  *
  * Displays filter icon and shows active filter state (single project name or count).
+ * Extends Button props to support Radix UI's asChild pattern for PopoverTrigger.
  *
  * @param hasActiveFilters - Whether any filters are currently active
  * @param selectedProjectIds - Array of selected project IDs
  * @param projects - All available projects
  * @param onClearFilter - Handler to clear all filters
+ * @param props - Additional button props forwarded from PopoverTrigger
  */
 export function ProjectFilterTrigger({
   hasActiveFilters,
   selectedProjectIds,
   projects,
   onClearFilter,
+  className,
+  ...props
 }: ProjectFilterTriggerProps) {
   return (
     <Button
@@ -38,7 +43,9 @@ export function ProjectFilterTrigger({
       className={cn(
         hasActiveFilters &&
           "bg-card shadow-xs border-border-highlight dark:border-white/2 border h-[24px] w-auto rounded-sm transition-all duration-200 ease-out scale-100 translate-y-[0px] overflow-hidden text-[13px] mx-1.5 hover:bg-card",
+        className,
       )}
+      {...props}
     >
       <div
         className={cn(

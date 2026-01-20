@@ -1,5 +1,6 @@
 "use client";
 
+import { type KeyboardEvent } from "react";
 import { XIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -11,7 +12,8 @@ interface ProjectFilterClearButtonProps {
 /**
  * Clear button component for project filter.
  *
- * Used in both the trigger button and badges section to clear active filters.
+ * Uses a span with role="button" to avoid invalid HTML nesting when used
+ * inside the PopoverTrigger's Button component.
  *
  * @param onClick - Handler function called when button is clicked
  * @param className - Optional additional CSS classes
@@ -20,13 +22,23 @@ export function ProjectFilterClearButton({
   onClick,
   className,
 }: ProjectFilterClearButtonProps) {
+  const handleKeyDown = (e: KeyboardEvent<HTMLSpanElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      e.stopPropagation();
+      onClick();
+    }
+  };
+
   return (
-    <button
-      type="button"
+    <span
+      role="button"
+      tabIndex={0}
       onClick={(e) => {
         e.stopPropagation();
         onClick();
       }}
+      onKeyDown={handleKeyDown}
       className={cn(
         "flex items-center justify-center transition-colors cursor-pointer px-1 group h-full hover:shadow-lg",
         className,
@@ -34,6 +46,6 @@ export function ProjectFilterClearButton({
       aria-label="Clear filters"
     >
       <XIcon className="size-3.5 text-icon-light group-hover:text-blue-500" />
-    </button>
+    </span>
   );
 }
