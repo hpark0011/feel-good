@@ -53,10 +53,9 @@ app/
   _actions/            # Server actions
 
 components/
-  ui/                  # shadcn/ui components
+  ui/                  # shadcn/ui components (51 components)
   auth/                # Authentication forms
   header/              # Header UI
-  layout/              # Layout components
   providers/           # Context providers
 
 features/              # Feature modules (primary code location)
@@ -67,11 +66,14 @@ features/              # Feature modules (primary code location)
   sub-task/            # Individual sub-task row
   sub-task-list/       # Sub-task list container
   insights/            # Analytics dialog
+  task-board-core/     # Shared board logic, context, hooks, utils
+  task-list/           # List view layout components
+  timer/               # Stopwatch store, display, utilities
 
 config/                # *.config.ts files for constants
   auth, board, insight-variants, navs, paths, routes, tasks
 
-hooks/                 # General-purpose hooks (9 hooks)
+hooks/                 # General-purpose hooks (10 hooks)
   __tests__/           # Jest + React Testing Library
 
 lib/
@@ -81,10 +83,12 @@ lib/
   utils.ts, insights-utils.ts
 
 store/                 # Zustand stores
-  stop-watch-store.ts  # Timer/stopwatch state
   board-actions-store.ts  # Board import/export/clear actions
 
-styles/                # CSS variables (primitives, components, colors, shadows)
+utils/                 # Shared utilities
+  supabase/            # Supabase client utilities
+
+styles/                # CSS variables (colors, shadows, components)
 supabase/              # Migrations, schema
 types/                 # board.types.ts, file.types.ts, database.types.ts
 ```
@@ -95,7 +99,7 @@ types/                 # board.types.ts, file.types.ts, database.types.ts
 | ------------------------------ | ---------------------------------------------------- |
 | useState/useReducer            | Component-local state                                |
 | localStorage (useLocalStorage) | UI prefs, board state, projects (cross-tab sync)     |
-| Zustand                        | `useStopWatchStore` (timer), `useBoardActionsStore` (import/export/clear) |
+| Zustand                        | `useStopWatchStore` (features/timer/store), `useBoardActionsStore` (store/) |
 | React Context                  | Theme, auth                                          |
 | Supabase                       | User auth, files (Note: Tasks use localStorage only) |
 
@@ -105,8 +109,8 @@ types/                 # board.types.ts, file.types.ts, database.types.ts
 
 Kanban board with drag-and-drop (4 columns: Backlog, To Do, In Progress, Complete), projects, sub-tasks, timer, localStorage persistence, import/export, auto-save, keyboard shortcuts (Cmd+Enter).
 
-**Features:** `kanban-board`, `ticket-card`, `ticket-form`, `sub-task`, `sub-task-list`
-**Route hooks:** `useTicketForm`, `useProjectFilter`, `useTodayFocus`
+**Features:** `kanban-board`, `ticket-card`, `ticket-form`, `sub-task`, `sub-task-list`, `task-board-core`, `task-list`, `timer`
+**Route hooks:** `useTicketForm`, `useProjectFilter`, `useTodayFocus`, `useLastSelectedProject`, `useProjectFilterKeyboard`
 
 ### Insights (dialog)
 
@@ -120,11 +124,11 @@ Color-coded categorization (8 colors), CRUD via `useProjects`, localStorage pers
 
 ### Key Hooks
 
-**General (`/hooks/`):** `use-local-storage` (SSR-safe, cross-tab), `use-dialog-auto-save`, `use-focus-management`, `use-keyboard-submit`, `use-persisted-sub-tasks`, `use-debounced-callback`, `use-keyboard-navigation`
+**General (`/hooks/`):** `use-local-storage` (SSR-safe, cross-tab), `use-dialog-auto-save`, `use-focus-management`, `use-keyboard-submit`, `use-persisted-sub-tasks`, `use-debounced-callback`, `use-keyboard-navigation`, `use-mobile`
 
-**Feature-specific:** `use-board-state`, `use-board-dnd`, `use-board-form` (kanban-board), `use-projects`, `use-project-selection` (project-select)
+**Feature-specific:** `use-board-state`, `use-board-dnd`, `use-board-form` (task-board-core), `use-projects`, `use-project-selection`, `use-search-state` (project-select), `use-timer-elapsed-time` (timer)
 
-**Route-specific (`_hooks/`):** `use-ticket-form`, `use-project-filter`, `use-today-focus`
+**Route-specific (`_hooks/`):** `use-ticket-form`, `use-project-filter`, `use-today-focus`, `use-last-selected-project`, `use-project-filter-keyboard`
 
 ## Development Patterns
 
@@ -301,20 +305,28 @@ features/feature-name/
   index.ts         # Public API exports
 ```
 
-**Current features:** `kanban-board`, `ticket-card`, `ticket-form`, `project-select`, `sub-task`, `sub-task-list`, `insights`
+**Current features:** `kanban-board`, `ticket-card`, `ticket-form`, `project-select`, `sub-task`, `sub-task-list`, `insights`, `task-board-core`, `task-list`, `timer`
 
 **When to create a feature:** Cohesive functionality with 3+ components, needs isolated hooks/utils, reusable across routes.
 
 ### localStorage Keys
 
 ```typescript
-// lib/storage-keys.ts
+// lib/storage-keys.ts - see file for full list
 const STORAGE_KEYS = {
   TASKS: {
     BOARD_STATE: "docgen.v1.tasks.board-state",
     PROJECTS: "docgen.v1.tasks.projects",
+    PROJECT_FILTER: "docgen.v1.tasks.project-filter",
+    LAST_SELECTED_PROJECT: "docgen.v1.tasks.last-selected-project",
+    TICKET_FORM_SUBTASKS: "docgen.v1.tasks.ticket-form-subtasks",
+    TIMER_STATE: "docgen.v1.tasks.timer-state",
   },
-  UI: { TODAY_FOCUS: "docgen.v1.ui.today-focus", THEME: "theme" },
+  UI: {
+    TODAY_FOCUS: "docgen.v1.ui.today-focus",
+    LAYOUT_PREFERENCE: "docgen.v1.ui.layout-preference",
+    THEME: "theme",
+  },
 };
 ```
 
