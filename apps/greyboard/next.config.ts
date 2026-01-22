@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
   output: process.env.ELECTRON_BUILD === "true" ? "standalone" : undefined,
   // Transpile workspace packages
   transpilePackages: ["@feel-good/ui", "@feel-good/utils"],
+  // Skip ESLint and TypeScript checks during production builds
+  // (these run in CI via separate lint/type-check commands)
+  eslint: { ignoreDuringBuilds: true },
+  typescript: { ignoreBuildErrors: true },
   webpack(config) {
     // Grab the existing rule that handles SVG imports
     const fileLoaderRule = config.module.rules.find((rule: RuleSetRule) => {
