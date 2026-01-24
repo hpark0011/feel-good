@@ -12,7 +12,6 @@
   },
   "devDependencies": {
     "@feel-good/typescript-config": "workspace:*",
-    "@svgr/core": "^8.1.0",
     "@types/react": "^19",
     "tsx": "^4.7.0",
     "typescript": "^5.3.0"

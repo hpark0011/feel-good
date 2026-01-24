@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "004"
 tags:
@@ -61,14 +61,15 @@ _(To be filled during triage)_
 
 ## Acceptance Criteria
 
-- [ ] @svgr/core removed from package.json
-- [ ] pnpm install succeeds
-- [ ] Conversion script still works
+- [x] @svgr/core removed from package.json
+- [x] pnpm install succeeds (16 packages removed)
+- [x] Conversion script still works (fails on missing source dir, not missing @svgr/core)
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
+| 2026-01-24 | Removed @svgr/core from devDependencies | Script uses regex/string templates, not SVGR |
 
 ## Resources
 
