@@ -12,7 +12,23 @@
       "Bash(npx tsc:*)",
       "Bash(pnpm --filter @feel-good/greyboard build:*)",
       "Bash(git checkout:*)",
-      "Bash(timeout 15 pnpm:*)"
+      "Bash(timeout 15 pnpm:*)",
+      "Bash(for f in *.tsx)",
+      "Bash(do grep -o 'viewBox=\"\"[^\"\"]*\"\"' \"$f\")",
+      "Bash(done)",
+      "Bash(wc:*)",
+      "Bash(ls:*)",
+      "Bash(grep:*)",
+      "Bash(while read f)",
+      "Bash(do basename \"$f\" .tsx)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm --filter @feel-good/greyboard analyze:*)",
+      "Bash(tr:*)",
+      "Bash(while read icon)",
+      "Bash(do grep -rq \"from \"\"@feel-good/icons\"\"\" --include=\"*.ts\" --include=\"*.tsx\" /Users/disquiet/Desktop/feel-good/apps/greyboard)",
+      "Bash(echo:*)",
+      "Bash(du:*)",
+      "Bash(open:*)"
     ]
   },
   "enabledMcpjsonServers": [
