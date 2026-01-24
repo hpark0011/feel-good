@@ -1,6 +1,6 @@
 import { forwardRef, type SVGProps } from "react";
 
-export const XMarkBoldIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
+export const XmarkBoldIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   ({ className, ...props }, ref) => (
     <svg
       ref={ref}
@@ -15,4 +15,4 @@ export const XMarkBoldIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
   )
 );
 
-XMarkBoldIcon.displayName = "XMarkBoldIcon";
+XmarkBoldIcon.displayName = "XmarkBoldIcon";

@@ -161,7 +161,7 @@ export { VideoSlashFillIcon } from "./components/video-slash-fill";
 export { WaveformPathEcgIcon } from "./components/waveform-path-ecg";
 export { WonSignIcon } from "./components/won-sign";
 export { XCircleFillIcon } from "./components/x-circle-fill";
-export { XMarkBoldIcon } from "./components/x-mark-bold";
+export { XmarkBoldIcon } from "./components/xmark-bold";
 export { XmarkCircleFillIcon } from "./components/xmark-circle-fill";
 export { XmarkIcon } from "./components/xmark";
 export { XmarkSmallIcon } from "./components/xmark-small";

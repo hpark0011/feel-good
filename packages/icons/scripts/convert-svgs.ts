@@ -180,7 +180,7 @@ const ICON_MAPPINGS: Record<string, string> = {
   "waveform.path.ecg.svg": "WaveformPathEcgIcon",
   "won.sign.svg": "WonSignIcon",
   "x.circle.fill.svg": "XCircleFillIcon",
-  "x.mark.bold.svg": "XMarkBoldIcon",
+  "x.mark.bold.svg": "XmarkBoldIcon",
   "xmark.circle.fill.svg": "XmarkCircleFillIcon",
   "xmark.small.svg": "XmarkSmallIcon",
   "xmark.svg": "XmarkIcon",

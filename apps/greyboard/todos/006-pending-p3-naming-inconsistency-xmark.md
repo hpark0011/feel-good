@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "006"
 tags:
@@ -15,69 +15,40 @@ dependencies: []
 
 Icon naming is inconsistent between `XMark` (PascalCase) and `Xmark` (mixed case), which can cause confusion when importing.
 
-## Findings
+## Resolution
 
-**Inconsistent naming:**
-- `XMarkBoldIcon` - uses "XMark" (proper PascalCase)
-- `XmarkIcon` - uses "Xmark" (mixed case)
-- `XmarkSmallIcon` - uses "Xmark"
-- `XmarkCircleFillIcon` - uses "Xmark"
+**Applied Option 1: Standardized to Xmark**
 
-**Also:**
-- `XCircleFillIcon` - uses "X" prefix
-- `XmarkCircleFillIcon` - uses "Xmark" prefix
+Renamed `XMarkBoldIcon` to `XmarkBoldIcon` for consistency with other Xmark variants.
 
-Both serve similar purposes but have different prefixes.
+### Changes Made
 
-## Proposed Solutions
+1. **`packages/icons/scripts/convert-svgs.ts`** - Updated ICON_MAPPINGS entry
+2. **`packages/icons/src/components/xmark-bold.tsx`** - Renamed from `x-mark-bold.tsx`, updated component name
+3. **`packages/icons/src/index.ts`** - Updated export
+4. **`packages/icons/src/types.ts`** - Updated IconName
 
-### Option 1: Standardize to Xmark (Recommended)
-- Rename `XMarkBoldIcon` to `XmarkBoldIcon`
-- Keep all other Xmark variants as-is
-- **Pros:** Minimal changes (1 icon), consistent
-- **Cons:** Minor breaking change
-- **Effort:** Small
-- **Risk:** Low
+### Current Naming (Consistent)
 
-### Option 2: Standardize to XMark
-- Rename all Xmark variants to use XMark
-- `XmarkIcon` -> `XMarkIcon`
-- `XmarkSmallIcon` -> `XMarkSmallIcon`
-- etc.
-- **Pros:** Proper PascalCase
-- **Cons:** More breaking changes
-- **Effort:** Medium
-- **Risk:** Low
+All xmark-related icons now use "Xmark" consistently:
+- `XmarkBoldIcon` (renamed from XMarkBoldIcon)
+- `XmarkIcon`
+- `XmarkSmallIcon`
+- `XmarkCircleFillIcon`
 
-### Option 3: Add Aliases
-- Keep both naming conventions with aliases
-- **Pros:** No breaking changes
-- **Cons:** Duplicate exports, confusion
-- **Effort:** Small
-- **Risk:** Low
-
-## Recommended Action
-
-_(To be filled during triage)_
-
-## Technical Details
-
-**Affected files:**
-- `packages/icons/scripts/convert-svgs.ts` - Update ICON_MAPPINGS
-- `packages/icons/src/components/x-mark-bold.tsx` - Rename component
-- `packages/icons/src/index.ts` - Update export
-- `packages/icons/src/types.ts` - Update IconName (if kept)
+Note: `XCircleFillIcon` uses "X" prefix (different icon family, not a naming inconsistency)
 
 ## Acceptance Criteria
 
-- [ ] All xmark variants use consistent naming
-- [ ] No TypeScript errors
-- [ ] Documentation updated
+- [x] All xmark variants use consistent naming
+- [x] No TypeScript errors
+- [x] Documentation updated
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
+| 2025-01-24 | Renamed XMarkBoldIcon to XmarkBoldIcon | Option 1 was correct - minimal change, icon was not used in app code |
 
 ## Resources
 

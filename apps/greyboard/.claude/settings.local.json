@@ -28,7 +28,8 @@
       "Bash(do grep -rq \"from \"\"@feel-good/icons\"\"\" --include=\"*.ts\" --include=\"*.tsx\" /Users/disquiet/Desktop/feel-good/apps/greyboard)",
       "Bash(echo:*)",
       "Bash(du:*)",
-      "Bash(open:*)"
+      "Bash(open:*)",
+      "Bash(pnpm tsc:*)"
     ]
   },
   "enabledMcpjsonServers": [

@@ -177,7 +177,7 @@ export type IconName =
   | "WaveformPathEcgIcon"
   | "WonSignIcon"
   | "XCircleFillIcon"
-  | "XMarkBoldIcon"
+  | "XmarkBoldIcon"
   | "XmarkCircleFillIcon"
   | "XmarkIcon"
   | "XmarkSmallIcon";
