@@ -19,7 +19,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Icon } from "@/components/ui/icon";
+import {
+  WaveformPathEcgIcon,
+  EllipsisIcon,
+  ArrowUpToLineCompactIcon,
+  ArrowDownToLineCompactIcon,
+  XmarkCircleFillIcon,
+} from "@feel-good/icons";
 import {
   Tooltip,
   TooltipContent,
@@ -79,10 +85,7 @@ export function TasksHeaderActions({
             aria-label='Insights'
             onClick={onInsightsClick}
           >
-            <Icon
-              name='WaveformPathEcgIcon'
-              className='size-4.5 text-icon-light'
-            />
+            <WaveformPathEcgIcon className='size-4.5 text-icon-light' />
           </Button>
         </TooltipTrigger>
         <TooltipContent>Total focus time</TooltipContent>
@@ -97,7 +100,7 @@ export function TasksHeaderActions({
             size='icon-sm'
             aria-label='Board actions'
           >
-            <Icon name='EllipsisIcon' className='size-4.5 text-icon-light' />
+            <EllipsisIcon className='size-4.5 text-icon-light' />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end' className='w-[180px]'>
@@ -107,10 +110,7 @@ export function TasksHeaderActions({
               fileInputRef.current?.click();
             }}
           >
-            <Icon
-              name='ArrowUpToLineCompactIcon'
-              className='size-4.5 text-icon-light'
-            />
+            <ArrowUpToLineCompactIcon className='size-4.5 text-icon-light' />
             Import tasks
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -119,10 +119,7 @@ export function TasksHeaderActions({
               exportBoard();
             }}
           >
-            <Icon
-              name='ArrowDownToLineCompactIcon'
-              className='size-4.5 text-icon-light'
-            />
+            <ArrowDownToLineCompactIcon className='size-4.5 text-icon-light' />
             Export tasks
           </DropdownMenuItem>
           <AlertDialog>
@@ -131,10 +128,7 @@ export function TasksHeaderActions({
                 onSelect={(event) => event.preventDefault()}
                 variant='destructive'
               >
-                <Icon
-                  name='XmarkCircleFillIcon'
-                  className='size-4.5 text-destructive'
-                />
+                <XmarkCircleFillIcon className='size-4.5 text-destructive' />
                 Clear all board
               </DropdownMenuItem>
             </AlertDialogTrigger>

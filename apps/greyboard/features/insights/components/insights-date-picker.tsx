@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Icon } from "@/components/ui/icon";
+import { CalendarFillIcon } from "@feel-good/icons";
 import {
   Popover,
   PopoverContent,
@@ -41,7 +41,7 @@ export function InsightsDatePicker({
           size="sm"
           className="gap-2 rounded-md border-border-highlight"
         >
-          <Icon name="CalendarFillIcon" className="size-4" />
+          <CalendarFillIcon className="size-4" />
           <span className="text-xs font-medium">
             {isToday ? "Today" : formattedDate}
           </span>

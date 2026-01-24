@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Icon } from "@/components/ui/icon";
+import { XmarkIcon } from "@feel-good/icons";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useProjects } from "@/features/project-select";
 import {
@@ -85,7 +85,7 @@ export function InsightsDialog({ open, onOpenChange }: InsightsDialogProps) {
               size="sm"
               className="absolute right-2 top-2 h-6 w-6 p-0 [&_svg]:text-icon-light"
             >
-              <Icon name="XmarkIcon" className="size-3.5" />
+              <XmarkIcon className="size-3.5" />
             </Button>
           </DialogClose>
         </DialogHeader>

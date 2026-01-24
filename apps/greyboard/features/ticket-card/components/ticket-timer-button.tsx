@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@/components/ui/icon";
+import { PlayFillIcon, PauseFillIcon } from "@feel-good/icons";
 import {
   Tooltip,
   TooltipContent,
@@ -61,19 +61,25 @@ export function TicketTimerButton({
             startTimer(ticketId, ticketTitle);
           }}
         >
-          <Icon
-            name={
-              timerState === StopWatchState.Running
-                ? "PauseFillIcon"
-                : "PlayFillIcon"
-            }
-            className={cn(
-              // Sizing
-              "size-3 min-w-3",
-              // Typography
-              "text-icon-extra-light dark:text-neutral-500"
-            )}
-          />
+          {timerState === StopWatchState.Running ? (
+            <PauseFillIcon
+              className={cn(
+                // Sizing
+                "size-3 min-w-3",
+                // Typography
+                "text-icon-extra-light dark:text-neutral-500"
+              )}
+            />
+          ) : (
+            <PlayFillIcon
+              className={cn(
+                // Sizing
+                "size-3 min-w-3",
+                // Typography
+                "text-icon-extra-light dark:text-neutral-500"
+              )}
+            />
+          )}
         </button>
       </TooltipTrigger>
       <TooltipContent>

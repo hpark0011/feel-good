@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Context7__resolve-library-id",
+      "mcp__plugin_compound-engineering_context7__resolve-library-id",
+      "WebSearch",
+      "mcp__Context7__query-docs",
+      "mcp__plugin_compound-engineering_context7__query-docs",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm --filter @feel-good/icons convert:*)",
+      "Bash(pnpm --filter @feel-good/icons tsc:*)",
+      "Bash(npx tsc:*)",
+      "Bash(pnpm --filter @feel-good/greyboard build:*)",
+      "Bash(git checkout:*)",
+      "Bash(timeout 15 pnpm:*)"
+    ]
+  },
+  "enabledMcpjsonServers": [
+    "supabase",
+    "Context7",
+    "shadcn",
+    "chrome-devtools"
+  ]
+}

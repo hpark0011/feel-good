@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { Icon } from "@/components/ui/icon";
+import { PencilIcon, TrashFillIcon } from "@feel-good/icons";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/types/board.types";
 import { CheckIcon } from "lucide-react";
@@ -85,7 +85,7 @@ export const ProjectMenuItem = memo(function ProjectMenuItem({
             onClick={handleEdit}
             aria-label='Edit project'
           >
-            <Icon name='PencilIcon' className='size-4 text-icon-light' />
+            <PencilIcon className='size-4 text-icon-light' />
           </Button>
           <Button
             size='sm'
@@ -94,7 +94,7 @@ export const ProjectMenuItem = memo(function ProjectMenuItem({
             onClick={handleDelete}
             aria-label='Delete project'
           >
-            <Icon name='TrashFillIcon' className='size-4 text-icon-light' />
+            <TrashFillIcon className='size-4 text-icon-light' />
           </Button>
         </div>
         {isSelected && (

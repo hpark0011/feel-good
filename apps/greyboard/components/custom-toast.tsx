@@ -1,9 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { type ComponentType, type SVGProps } from "react";
 import { toast as sonnerToast } from "sonner";
 import { Button } from "./ui/button";
-import { Icon } from "./ui/icon";
+import {
+  CheckedCircleFillIcon,
+  ExclamationmarkTriangleFillIcon,
+  InfoCircleFillIcon,
+} from "@feel-good/icons";
 import { cn } from "@/lib/utils";
 
 export function customToast(toast: Omit<ToastProps, "id">) {
@@ -18,15 +22,11 @@ export function customToast(toast: Omit<ToastProps, "id">) {
   ));
 }
 
-const getToastIcon = (type: ToastProps["type"]) => {
-  const iconMap = {
-    error: "ExclamationmarkTriangleFillIcon",
-    success: "CheckedCircleFillIcon",
-    warning: "ExclamationmarkTriangleFillIcon",
-    info: "InfoCircleFillIcon",
-  } as const;
-
-  return iconMap[type];
+const TOAST_ICONS: Record<ToastProps["type"], ComponentType<SVGProps<SVGSVGElement>>> = {
+  error: ExclamationmarkTriangleFillIcon,
+  success: CheckedCircleFillIcon,
+  warning: ExclamationmarkTriangleFillIcon,
+  info: InfoCircleFillIcon,
 };
 
 /** A fully custom toast that still maintains the animations and interactions. */
@@ -43,10 +43,9 @@ function Toast(props: ToastProps) {
       <div className='flex flex-1 items-center font-inter'>
         <div className='w-full'>
           <div className='flex items-center gap-0.5 -ml-0.5'>
-            <Icon
-              name={getToastIcon(type)}
-              className='w-5 h-5 text-text-primary'
-            />
+            {React.createElement(TOAST_ICONS[type], {
+              className: "w-5 h-5 text-text-primary",
+            })}
             <p className='text-sm font-[550] text-text-primary'>{title}</p>
           </div>
           {description && (

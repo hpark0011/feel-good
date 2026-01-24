@@ -1,8 +1,8 @@
 import { CardTitle } from "@/components/ui/card";
-import { Icon, type IconName } from "@/components/ui/icon";
+import type { ComponentType, SVGProps } from "react";
 
 interface ColumnTitleProps {
-  icon: IconName;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
   iconSize: string;
   iconColor: string;
   title: string;
@@ -14,7 +14,7 @@ interface ColumnTitleProps {
  * View-agnostic primitive used by both board and list views.
  */
 export function ColumnTitle({
-  icon,
+  icon: Icon,
   iconSize,
   iconColor,
   title,
@@ -22,7 +22,7 @@ export function ColumnTitle({
 }: ColumnTitleProps) {
   return (
     <div className="flex items-center gap-1">
-      <Icon name={icon} className={`${iconSize} ${iconColor}`} />
+      <Icon className={`${iconSize} ${iconColor}`} />
       <div className="flex items-baseline">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         <span className="text-[13px] text-primary px-1.5 min-w-[20px] h-[20px] rounded-full flex items-center justify-center">

@@ -15,7 +15,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Icon } from "@/components/ui/icon";
+import {
+  HandWaveFillIcon,
+  CircleLeftHalfFilledRightHalfStripedHorizontalIcon,
+} from "@feel-good/icons";
 
 interface TasksHeaderLogoProps {
   onSignOut: () => void;
@@ -53,14 +56,11 @@ export function TasksHeaderLogo({
                 disabled={isSigningOut}
                 onSelect={onSignOut}
               >
-                <Icon name='HandWaveFillIcon' className='text-icon-light' />
+                <HandWaveFillIcon className='text-icon-light' />
                 Sign out
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={onThemeToggle}>
-                <Icon
-                  name='CircleLeftHalfFilledRightHalfStripedHorizontalIcon'
-                  className='text-icon-light'
-                />
+                <CircleLeftHalfFilledRightHalfStripedHorizontalIcon className='text-icon-light' />
                 Toggle theme
               </DropdownMenuItem>
             </DropdownMenuContent>

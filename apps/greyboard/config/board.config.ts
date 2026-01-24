@@ -1,32 +1,37 @@
 import { BoardState, Column, ColumnId } from "@/types/board.types";
-import { IconName } from "@/components/ui/icon";
+import {
+  SquareStackFillIcon,
+  CircleDashedIcon,
+  CircleLeftHalfFilledIcon,
+  CheckedCircleFillIcon,
+} from "@feel-good/icons";
 
 export const COLUMNS: Column[] = [
   {
     id: "backlog",
     title: "Backlog",
-    icon: "SquareStackFillIcon" as IconName,
+    icon: SquareStackFillIcon,
     iconColor: "text-icon-light",
     iconSize: "h-5 w-5",
   },
   {
     id: "to-do",
     title: "To Do",
-    icon: "CircleDashedIcon" as IconName,
+    icon: CircleDashedIcon,
     iconColor: "text-icon-light",
     iconSize: "h-[22px] w-[22px]",
   },
   {
     id: "in-progress",
     title: "In Progress",
-    icon: "CircleLeftHalfFilledIcon" as IconName,
+    icon: CircleLeftHalfFilledIcon,
     iconColor: "text-[var(--color-text-info)]",
     iconSize: "h-[22px] w-[22px]",
   },
   {
     id: "complete",
     title: "Complete",
-    icon: "CheckedCircleFillIcon" as IconName,
+    icon: CheckedCircleFillIcon,
     iconColor: "text-[var(--color-text-success)]",
     iconSize: "h-[22px] w-[22px]",
   },

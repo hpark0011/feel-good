@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/ui/icon";
+import { XmarkIcon } from "@feel-good/icons";
 import { cn } from "@/lib/utils";
 
 interface SubTaskDeleteButtonProps {
@@ -37,7 +37,7 @@ export function SubTaskDeleteButton({
         className
       )}
     >
-      <Icon name='XmarkIcon' className='size-3.5' />
+      <XmarkIcon className='size-3.5' />
     </Button>
   );
 }

@@ -1,4 +1,4 @@
-import { Icon } from "@/components/ui/icon";
+import { InfoCircleIcon } from "@feel-good/icons";
 import { formatDuration } from "@/features/timer";
 import {
   getTimeEntriesForDate,
@@ -76,7 +76,7 @@ export function InsightsTaskItem({
             </div>
           ) : (
             <div className="ml-6 flex items-center gap-2 text-xs text-muted-foreground/60 italic">
-              <Icon name="InfoCircleIcon" className="size-3" />
+              <InfoCircleIcon className="size-3" />
               <span>No timer data recorded</span>
             </div>
           )}

@@ -2,7 +2,7 @@
 
 import { XIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Icon } from "@/components/ui/icon";
+import { XmarkCircleFillIcon } from "@feel-good/icons";
 import { cn } from "@/lib/utils";
 import { getProjectColorBgClass } from "@/config/tasks.config";
 import type { Project } from "@/types/board.types";
@@ -73,10 +73,7 @@ export function ProjectFilterBadges({
           className='flex items-center justify-center transition-colors [&_svg]:hover:text-blue-500 [&_svg]:text-icon-light border border-border-light rounded-sm px-1.5 pl-[1px] py-0.5 h-[22px] gap-[1px] group'
           aria-label='Clear filters'
         >
-          <Icon
-            name='XmarkCircleFillIcon'
-            className='size-4.5 text-icon-light group-hover:text-blue-500'
-          />
+          <XmarkCircleFillIcon className='size-4.5 text-icon-light group-hover:text-blue-500' />
           <span className='text-xs group-hover:text-blue-500 text-text-muted'>
             {" "}
             Clear{" "}

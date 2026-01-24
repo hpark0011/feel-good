@@ -11,8 +11,8 @@ import {
 import { COLUMNS } from "@/config/board.config";
 import { cn } from "@/lib/utils";
 import { ChevronDownIcon } from "lucide-react";
-import { Icon, IconName } from "../../../../../components/ui/icon";
-import { ColumnId } from "@/types/board.types";
+import type { ColumnId } from "@/types/board.types";
+import type { ComponentType, SVGProps } from "react";
 
 interface StatusSelectProps {
   value: ColumnId;
@@ -23,7 +23,7 @@ interface StatusSelectProps {
 const COLUMN_OPTIONS = COLUMNS.map((column) => ({
   value: column.id,
   label: column.title,
-  icon: column.icon as IconName,
+  Icon: column.icon as ComponentType<SVGProps<SVGSVGElement>>,
   iconColor: column.iconColor,
   iconSize: column.iconSize,
 }));
@@ -51,8 +51,7 @@ export function StatusSelect({
             className='pl-1.5'
           >
             <div className='flex items-center gap-1 px-1 pl-0'>
-              <Icon
-                name={option.icon}
+              <option.Icon
                 className={cn(option.iconColor, "min-h-5 min-w-5")}
               />
               <span>{option.label}</span>

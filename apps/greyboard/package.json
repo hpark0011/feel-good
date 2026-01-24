@@ -23,6 +23,7 @@
     "supabase:types": "supabase gen types --lang=typescript --local > ./types/database.types.ts"
   },
   "dependencies": {
+    "@feel-good/icons": "workspace:*",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
@@ -57,7 +58,6 @@
     "@radix-ui/react-visually-hidden": "^1.2.3",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.57.4",
-    "@svgr/webpack": "^8.1.0",
     "@tanstack/react-query": "^5.85.5",
     "@tanstack/react-table": "^8.21.3",
     "@vercel/analytics": "^1.5.0",

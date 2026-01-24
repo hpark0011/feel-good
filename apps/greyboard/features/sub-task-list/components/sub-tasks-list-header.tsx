@@ -1,6 +1,6 @@
 import type React from "react";
 import { RingPercentage } from "@/components/ring-percentage";
-import { Icon } from "@/components/ui/icon";
+import { ChecklistIcon } from "@feel-good/icons";
 import { cn } from "@/lib/utils";
 
 interface SubTasksListHeaderProps extends React.ComponentProps<"div"> {
@@ -49,7 +49,7 @@ export function SubTasksListHeader({
         </>
       ) : (
         <>
-          <Icon name='ChecklistIcon' className='size-3.5' />
+          <ChecklistIcon className='size-3.5' />
           <span className='text-xs text-text-muted'>Sub-tasks</span>
         </>
       )}

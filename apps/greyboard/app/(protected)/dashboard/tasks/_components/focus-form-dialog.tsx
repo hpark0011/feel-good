@@ -22,7 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Icon } from "@/components/ui/icon";
+import { TargetIcon } from "@feel-good/icons";
 import { Input } from "@/components/ui/input";
 
 const focusSchema = z.object({
@@ -93,10 +93,7 @@ export function FocusFormDialog({
                     </FormLabel>
                     <FormControl>
                       <div className='flex items-center hover:bg-hover rounded-lg w-[calc(100%+8px)] ml-[-4px] px-1 gap-0.5'>
-                        <Icon
-                          name='TargetIcon'
-                          className='size-6 text-icon-light'
-                        />
+                        <TargetIcon className='size-6 text-icon-light' />
                         <Input
                           placeholder="What's your focus for today?"
                           {...field}

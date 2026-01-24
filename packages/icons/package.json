@@ -1,0 +1,23 @@
+{
+  "name": "@feel-good/icons",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@feel-good/typescript-config": "workspace:*",
+    "@svgr/core": "^8.1.0",
+    "@types/react": "^19",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  },
+  "scripts": {
+    "convert": "tsx scripts/convert-svgs.ts"
+  }
+}

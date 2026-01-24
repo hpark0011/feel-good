@@ -1,6 +1,6 @@
 "use client";
 
-import { Icon } from "@/components/ui/icon";
+import { CheckmarkSmallIcon } from "@feel-good/icons";
 import { cn } from "@/lib/utils";
 import { getProjectColorBgClass } from "@/config/tasks.config";
 import type { Project } from "@/types/board.types";
@@ -65,10 +65,7 @@ export function ProjectFilterList({
               )}
             >
               {isSelected ? (
-                <Icon
-                  name='CheckmarkSmallIcon'
-                  className='min-w-4 size-4 text-white'
-                />
+                <CheckmarkSmallIcon className='min-w-4 size-4 text-white' />
               ) : null}
             </div>
             <label

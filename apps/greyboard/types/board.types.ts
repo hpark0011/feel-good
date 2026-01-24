@@ -1,4 +1,5 @@
-import type { IconName } from "@/components/ui/icon";
+import type { IconName } from "@feel-good/icons";
+import type { ComponentType, SVGProps } from "react";
 
 export interface SubTask {
   id: string;
@@ -45,7 +46,7 @@ export type ProjectColor =
 export interface Column {
   id: ColumnId;
   title: string;
-  icon: IconName;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
   iconColor: string;
   iconSize: string;
 }

@@ -9,7 +9,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Icon } from "@/components/ui/icon";
+import { XmarkIcon } from "@feel-good/icons";
 import { ColumnTitle } from "@/features/task-board-core";
 import type { Column } from "@/types/board.types";
 
@@ -63,10 +63,7 @@ export function BoardColumnHeader({
                   onClick={handleClearColumnClick}
                   className="cursor-pointer active:scale-90 transition-all duration-200 ease-out size-6.5"
                 >
-                  <Icon
-                    name="XmarkIcon"
-                    className="size-4.5 text-icon-light"
-                  />
+                  <XmarkIcon className="size-4.5 text-icon-light" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Clear All Completed Tickets</TooltipContent>

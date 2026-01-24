@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { CardHeader } from "@/components/ui/card";
-import { Icon } from "@/components/ui/icon";
 import {
   Tooltip,
   TooltipContent,
@@ -11,6 +10,7 @@ import {
 import { ColumnTitle } from "@/features/task-board-core";
 import { cn } from "@/lib/utils";
 import type { Column } from "@/types/board.types";
+import { TriangleFillDownIcon, XmarkIcon } from "@feel-good/icons";
 import { PlusIcon } from "lucide-react";
 import type { MouseEvent } from "react";
 
@@ -67,8 +67,7 @@ export function ListSectionHeader({
     >
       <div className="flex items-center justify-between h-6">
         <div className="flex items-center gap-1">
-          <Icon
-            name="TriangleFillDownIcon"
+          <TriangleFillDownIcon
             className={cn(
               "size-2 text-icon-light transition-transform duration-200",
               !isExpanded && "-rotate-90",
@@ -91,10 +90,7 @@ export function ListSectionHeader({
                   onClick={handleClearColumnClick}
                   className="cursor-pointer active:scale-90 transition-all duration-200 ease-out size-6.5"
                 >
-                  <Icon
-                    name="XmarkIcon"
-                    className="size-4.5 text-icon-light"
-                  />
+                  <XmarkIcon className="size-4.5 text-icon-light" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>Clear All Completed Tickets</TooltipContent>

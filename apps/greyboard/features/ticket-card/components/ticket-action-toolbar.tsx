@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/ui/icon";
+import { ChecklistIcon, PencilIcon, TrashIcon } from "@feel-good/icons";
 import {
   Tooltip,
   TooltipContent,
@@ -79,8 +79,7 @@ export function TicketActionToolbar({
               onToggleSubTasks();
             }}
           >
-            <Icon
-              name='ChecklistIcon'
+            <ChecklistIcon
               className={cn(
                 // Sizing
                 "size-4.5",
@@ -134,8 +133,7 @@ export function TicketActionToolbar({
               onEdit?.();
             }}
           >
-            <Icon
-              name='PencilIcon'
+            <PencilIcon
               className={cn(
                 // Sizing
                 "size-4.5",
@@ -187,8 +185,7 @@ export function TicketActionToolbar({
               onDelete?.();
             }}
           >
-            <Icon
-              name='TrashIcon'
+            <TrashIcon
               className={cn(
                 // Sizing
                 "size-4",

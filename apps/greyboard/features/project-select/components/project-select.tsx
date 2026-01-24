@@ -10,7 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Icon } from "@/components/ui/icon";
+import { FolderFillIcon, PlusIcon } from "@feel-good/icons";
 import { Input } from "@/components/ui/input";
 import { PROJECT_COLORS } from "@/config/tasks.config";
 import { useKeyboardNavigation } from "@/hooks/use-keyboard-navigation";
@@ -218,10 +218,7 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
               />
             ) : (
               <>
-                <Icon
-                  name='FolderFillIcon'
-                  className='size-4 text-icon-light'
-                />{" "}
+                <FolderFillIcon className='size-4 text-icon-light' />{" "}
                 <span className='text-text-muted'>Project</span>
               </>
             )}
@@ -305,10 +302,7 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                       toggleColorPicker();
                     }}
                   >
-                    <Icon
-                      name='PlusIcon'
-                      className='size-4.5 text-icon-light'
-                    />
+                    <PlusIcon className='size-4.5 text-icon-light' />
                     Create &apos;{searchQuery.trim()}&apos;
                   </DropdownMenuItem>
                   {showColorPicker && (
@@ -357,7 +351,7 @@ export function ProjectSelect({ value, onValueChange }: ProjectSelectProps) {
                     resetSearch();
                   }}
                 >
-                  <Icon name='PlusIcon' className='size-4.5 text-icon-light' />
+                  <PlusIcon className='size-4.5 text-icon-light' />
                   Create new project
                 </DropdownMenuItem>
               )}

@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/ui/icon";
+import { PlusCircleFillIcon } from "@feel-good/icons";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -60,7 +60,7 @@ export function SubTasksListAddItem({
         disabled={disabled ?? !value.trim()}
         className="text-[13px] font-regular h-8 rounded-l-none hover:text-blue-500 text-text-muted p-0"
       >
-        <Icon name="PlusCircleFillIcon" className="size-[22px]" />
+        <PlusCircleFillIcon className="size-[22px]" />
       </Button>
     </div>
   );

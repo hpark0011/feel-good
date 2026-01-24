@@ -2,7 +2,7 @@
 
 import { type ComponentProps } from "react";
 import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/ui/icon";
+import { Line3Icon, FolderFillIcon } from "@feel-good/icons";
 import { cn } from "@/lib/utils";
 import { getProjectColorBgClass } from "@/config/tasks.config";
 import { ProjectFilterClearButton } from "./project-filter-clear-button";
@@ -58,8 +58,7 @@ export function ProjectFilterTrigger({
           hasActiveFilters && "hover:bg-hover rounded-sm",
         )}
       >
-        <Icon
-          name="Line3Icon"
+        <Line3Icon
           className={cn(
             "size-4.5",
             hasActiveFilters ? "text-blue-400" : "text-icon-light",
@@ -89,10 +88,7 @@ export function ProjectFilterTrigger({
             )
             : (
               <div className="flex items-center relative h-full pl-1.5 pr-0.5">
-                <Icon
-                  name="FolderFillIcon"
-                  className="size-4 text-icon-light"
-                />
+                <FolderFillIcon className="size-4 text-icon-light" />
                 <div className="pr-1.5 pl-1 text-text-primary">
                   {selectedProjectIds.length} projects
                 </div>

@@ -38,7 +38,7 @@ import {
 } from "@/app/(protected)/dashboard/tasks/_hooks";
 import { cn } from "@/lib/utils";
 import { AutoResizingTextarea } from "../../../components/ui/auto-resizing-textarea";
-import { Icon } from "../../../components/ui/icon";
+import { ChecklistIcon } from "@feel-good/icons";
 import { ProjectSelect } from "@/features/project-select";
 import { StatusSelect } from "../../../app/(protected)/dashboard/tasks/_components/status-select";
 import { SubTasksListForm } from "../../sub-task-list/components/sub-tasks-list";
@@ -297,8 +297,7 @@ export function TicketFormDialog({
                       variant='icon'
                       onClick={toggleSubTasks}
                     >
-                      <Icon
-                        name='ChecklistIcon'
+                      <ChecklistIcon
                         className={cn(
                           "size-4.5",
                           showSubTasks ? "text-blue-500" : "text-icon-light"
