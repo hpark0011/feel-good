@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "001"
 tags:
@@ -15,14 +15,22 @@ dependencies: []
 
 All 167 icon components use the `forwardRef` pattern, but no icons in the codebase actually receive refs. This adds unnecessary complexity and ~1,670 lines of code that could be simplified.
 
-## Findings
+## Resolution
 
-**Evidence:**
-- Search for `ref={` usage on icons returns 0 results
-- Each icon component uses ~19 lines with forwardRef pattern
-- Simple function components would need ~9 lines each
+**Applied Option 1: Updated conversion script and transformed all components**
 
-**Current pattern:**
+All 165 icon components have been converted from `forwardRef` to simple function components.
+
+### Changes Made
+
+1. **`packages/icons/scripts/convert-svgs.ts`** - Updated template to generate simple function components
+2. **`packages/icons/scripts/simplify-components.ts`** - New one-time script to transform existing components
+3. **`packages/icons/src/components/*.tsx`** - 161 files transformed
+4. **`packages/icons/src/doc-icons/*.tsx`** - 4 files transformed
+
+### Before/After
+
+**Before (~19 lines per icon):**
 ```tsx
 import { forwardRef, type SVGProps } from "react";
 
@@ -34,55 +42,43 @@ export const CheckmarkIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
 CheckmarkIcon.displayName = "CheckmarkIcon";
 ```
 
-**Simpler pattern:**
+**After (~15 lines per icon):**
 ```tsx
 import type { SVGProps } from "react";
 
 export function CheckmarkIcon({ className, ...props }: SVGProps<SVGSVGElement>) {
-  return <svg viewBox="0 0 28 28" className={className} {...props} />;
+  return (
+    <svg viewBox="0 0 28 28" className={className} {...props}>
+      ...
+    </svg>
+  );
 }
 ```
 
-## Proposed Solutions
+### Results
 
-### Option 1: Update Conversion Script (Recommended)
-- Modify `packages/icons/scripts/convert-svgs.ts` to generate simple function components
-- Re-run conversion to regenerate all icons
-- **Pros:** One-time fix, consistent pattern, ~1,670 LOC reduction
-- **Cons:** Loses ref capability if needed in future
-- **Effort:** Medium
-- **Risk:** Low (refs not currently used)
-
-### Option 2: Keep forwardRef for Future-Proofing
-- Leave as-is for potential future ref usage
-- **Pros:** Ready for future use cases
-- **Cons:** YAGNI violation, added complexity
-- **Effort:** None
-- **Risk:** None
-
-## Recommended Action
-
-_(To be filled during triage)_
-
-## Technical Details
-
-**Affected files:**
-- `packages/icons/scripts/convert-svgs.ts` (modify template)
-- `packages/icons/src/components/*.tsx` (167 files regenerated)
+| Metric | Value |
+|--------|-------|
+| Files transformed | 165 |
+| Lines saved per icon | ~4 |
+| Total lines saved | ~660 |
+| New total lines | ~2,475 |
 
 ## Acceptance Criteria
 
-- [ ] Conversion script generates simple function components
-- [ ] All 167 icon files regenerated
-- [ ] Build succeeds
-- [ ] No runtime errors
+- [x] Conversion script generates simple function components
+- [x] All 165 icon files transformed
+- [x] Build succeeds
+- [x] No runtime errors (TypeScript passes)
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
+| 2025-01-24 | Updated convert-svgs.ts template, created simplify-components.ts, transformed 165 files | Source SVGs no longer available so created transformation script for existing files. Actual line savings ~660 (not ~1,670 as estimated - the 9-line simple pattern estimate was too aggressive) |
 
 ## Resources
 
 - Conversion script: `packages/icons/scripts/convert-svgs.ts`
+- Simplify script: `packages/icons/scripts/simplify-components.ts`
 - React docs on forwardRef: https://react.dev/reference/react/forwardRef

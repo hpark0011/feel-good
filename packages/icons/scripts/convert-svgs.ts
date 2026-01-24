@@ -266,12 +266,11 @@ function generateComponent(svgContent: string, componentName: string): string {
     .replace(/\s+/g, " ")
     .trim();
 
-  return `import { forwardRef, type SVGProps } from "react";
+  return `import type { SVGProps } from "react";
 
-export const ${componentName} = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
-  ({ className, ...props }, ref) => (
+export function ${componentName}({ className, ...props }: SVGProps<SVGSVGElement>) {
+  return (
     <svg
-      ref={ref}
       viewBox="${viewBox}"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -280,10 +279,8 @@ export const ${componentName} = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement
     >
       ${jsxContent}
     </svg>
-  )
-);
-
-${componentName}.displayName = "${componentName}";
+  );
+}
 `;
 }
 

@@ -1,9 +1,8 @@
-import { forwardRef, type SVGProps } from "react";
+import type { SVGProps } from "react";
 
-export const PlayFillIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
-  ({ className, ...props }, ref) => (
+export function PlayFillIcon({ className, ...props }: SVGProps<SVGSVGElement>) {
+  return (
     <svg
-      ref={ref}
       viewBox="0 0 28 28"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -12,7 +11,5 @@ export const PlayFillIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
     >
       <path d="M8.78689 22.2682C9.17751 22.2682 9.50954 22.112 9.90017 21.8874L21.2869 15.3053C22.0974 14.8268 22.3806 14.5143 22.3806 13.9967C22.3806 13.4791 22.0974 13.1666 21.2869 12.6979L9.90017 6.10608C9.50954 5.88147 9.17751 5.73499 8.78689 5.73499C8.06422 5.73499 7.61501 6.28186 7.61501 7.13147V20.862C7.61501 21.7116 8.06422 22.2682 8.78689 22.2682Z" fill="currentColor" />
     </svg>
-  )
-);
-
-PlayFillIcon.displayName = "PlayFillIcon";
+  );
+}

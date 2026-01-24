@@ -1,9 +1,8 @@
-import { forwardRef, type SVGProps } from "react";
+import type { SVGProps } from "react";
 
-export const LineDiagonalIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
-  ({ className, ...props }, ref) => (
+export function LineDiagonalIcon({ className, ...props }: SVGProps<SVGSVGElement>) {
+  return (
     <svg
-      ref={ref}
       viewBox="0 0 28 28"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -12,7 +11,5 @@ export const LineDiagonalIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement
     >
       <path d="M9.61719 23H8L18.3926 5H20.0098L9.61719 23Z" fill="currentColor"/>
     </svg>
-  )
-);
-
-LineDiagonalIcon.displayName = "LineDiagonalIcon";
+  );
+}

@@ -1,9 +1,8 @@
-import { forwardRef, type SVGProps } from "react";
+import type { SVGProps } from "react";
 
-export const StopFillIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
-  ({ className, ...props }, ref) => (
+export function StopFillIcon({ className, ...props }: SVGProps<SVGSVGElement>) {
+  return (
     <svg
-      ref={ref}
       viewBox="0 0 28 28"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -12,7 +11,5 @@ export const StopFillIcon = forwardRef<SVGSVGElement, SVGProps<SVGSVGElement>>(
     >
       <path d="M6.03999 19.7998C6.03999 21.1572 6.86091 21.958 8.22912 21.958H19.7709C21.1489 21.958 21.96 21.1572 21.96 19.7998V8.19818C21.96 6.84076 21.1489 6.03998 19.7709 6.03998H8.22912C6.86091 6.03998 6.03999 6.84076 6.03999 8.19818V19.7998Z" fill="currentColor"/>
     </svg>
-  )
-);
-
-StopFillIcon.displayName = "StopFillIcon";
+  );
+}
