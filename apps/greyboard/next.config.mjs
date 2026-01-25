@@ -1,9 +1,3 @@
-import bundleAnalyzer from "@next/bundle-analyzer";
-
-const withBundleAnalyzer = bundleAnalyzer({
-  enabled: process.env.ANALYZE === "true",
-});
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Enable standalone output for production Electron builds
@@ -16,4 +10,14 @@ const nextConfig = {
   typescript: { ignoreBuildErrors: true },
 };
 
-export default withBundleAnalyzer(nextConfig);
+// Only load bundle analyzer when ANALYZE is true (dev only)
+let config = nextConfig;
+if (process.env.ANALYZE === "true") {
+  const bundleAnalyzer = await import("@next/bundle-analyzer");
+  const withBundleAnalyzer = bundleAnalyzer.default({
+    enabled: true,
+  });
+  config = withBundleAnalyzer(nextConfig);
+}
+
+export default config;
