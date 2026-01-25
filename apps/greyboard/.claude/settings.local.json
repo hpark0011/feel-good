@@ -38,7 +38,12 @@
       "Bash(pnpm build:*)",
       "Bash(git commit:*)",
       "Bash(pnpm list:*)",
-      "Bash(yes:*)"
+      "Bash(yes:*)",
+      "Bash(head:*)",
+      "Bash(pnpm ls:*)",
+      "WebFetch(domain:community.vercel.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(git ls-files:*)"
     ]
   },
   "enabledMcpjsonServers": [
