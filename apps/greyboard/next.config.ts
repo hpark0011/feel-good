@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
   // Enable standalone output for production Electron builds
   output: process.env.ELECTRON_BUILD === "true" ? "standalone" : undefined,
   // Transpile workspace packages (icons is pre-built, doesn't need transpilation)
@@ -10,14 +11,4 @@ const nextConfig = {
   typescript: { ignoreBuildErrors: true },
 };
 
-// Only load bundle analyzer when ANALYZE is true (dev only)
-let config = nextConfig;
-if (process.env.ANALYZE === "true") {
-  const bundleAnalyzer = await import("@next/bundle-analyzer");
-  const withBundleAnalyzer = bundleAnalyzer.default({
-    enabled: true,
-  });
-  config = withBundleAnalyzer(nextConfig);
-}
-
-export default config;
+export default nextConfig;
