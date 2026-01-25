@@ -1,11 +1,11 @@
-import type { NextConfig } from "next";
 import bundleAnalyzer from "@next/bundle-analyzer";
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   // Enable standalone output for production Electron builds
   output: process.env.ELECTRON_BUILD === "true" ? "standalone" : undefined,
   // Transpile workspace packages
