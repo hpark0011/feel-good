@@ -1,6 +1,4 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+const nextConfig = {
   // Enable standalone output for production Electron builds
   output: process.env.ELECTRON_BUILD === "true" ? "standalone" : undefined,
   // Transpile workspace packages (icons is pre-built, doesn't need transpilation)
