@@ -347,9 +347,8 @@ async function main() {
   // Sort icons alphabetically by component name
   convertedIcons.sort((a, b) => a.componentName.localeCompare(b.componentName));
 
-  // Generate types.ts with IconName union
+  // Generate types.ts
   console.log("Generating types.ts...");
-  const iconNames = convertedIcons.map((i) => `  | "${i.componentName}"`).join("\n");
   const typesContent = `import type { SVGProps } from "react";
 
 /**
@@ -363,12 +362,6 @@ async function main() {
 export interface IconProps extends SVGProps<SVGSVGElement> {
   className?: string;
 }
-
-/**
- * Union type of all available icon names.
- */
-export type IconName =
-${iconNames};
 `;
   await writeFile(TYPES_FILE, typesContent);
 
@@ -377,7 +370,7 @@ ${iconNames};
   const exports: string[] = [];
 
   // Type exports
-  exports.push('export type { IconProps, IconName } from "./types";');
+  exports.push('export type { IconProps } from "./types";');
   exports.push("");
 
   // Component exports

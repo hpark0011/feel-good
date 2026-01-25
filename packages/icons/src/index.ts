@@ -1,4 +1,4 @@
-export type { IconProps, IconName } from "./types";
+export type { IconProps } from "./types";
 
 export { ACircleFillIcon } from "./components/a-circle-fill";
 export { AqiHighIcon } from "./components/aqi-high";

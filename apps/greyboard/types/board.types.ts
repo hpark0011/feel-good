@@ -1,4 +1,3 @@
-import type { IconName } from "@feel-good/icons";
 import type { ComponentType, SVGProps } from "react";
 
 export interface SubTask {
