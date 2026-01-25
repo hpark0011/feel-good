@@ -84,7 +84,11 @@
       "Bash(vercel ls:*)",
       "Bash(vercel list:*)",
       "Bash(pnpm turbo build:*)",
-      "Bash(pnpm --filter @feel-good/icons convert:*)"
+      "Bash(pnpm --filter @feel-good/icons convert:*)",
+      "Bash(npm run build:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(pnpm turbo run build:*)",
+      "Bash(gh api:*)"
     ],
     "deny": [],
     "ask": []
