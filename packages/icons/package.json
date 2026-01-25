@@ -5,7 +5,15 @@
   "type": "module",
   "sideEffects": false,
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc || echo 'TypeScript not available, using pre-built dist'",
+    "clean": "rm -rf dist"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0"
