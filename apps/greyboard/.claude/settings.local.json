@@ -30,7 +30,15 @@
       "Bash(du:*)",
       "Bash(open:*)",
       "Bash(pnpm tsc:*)",
-      "Bash(pnpm --filter @feel-good/icons simplify:*)"
+      "Bash(pnpm --filter @feel-good/icons simplify:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nSync lockfile with icons package changes\n\nRemoves tsx from lockfile specifiers after it was removed from\npackages/icons/package.json devDependencies.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nConvert next.config.ts to next.config.mjs\n\nFixes Vercel build failure where TypeScript wasn''t available at build\ntime \\(devDependencies skipped in production mode\\). Using .mjs with\nJSDoc type annotation eliminates the TypeScript requirement.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(pnpm build:*)",
+      "Bash(git commit:*)",
+      "Bash(pnpm list:*)",
+      "Bash(yes:*)"
     ]
   },
   "enabledMcpjsonServers": [
