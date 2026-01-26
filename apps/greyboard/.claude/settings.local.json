@@ -3,7 +3,8 @@
     "allow": [
       "Bash(git submodule:*)",
       "Bash(git config:*)",
-      "Bash(pnpm install)"
+      "Bash(pnpm install)",
+      "Bash(pnpm build:*)"
     ]
   },
   "enabledMcpjsonServers": [
