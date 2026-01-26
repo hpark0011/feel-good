@@ -73,50 +73,50 @@ export function FocusFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className='sm:max-w-md '>
-        <DialogHeader className='p-0'>
-          <DialogTitle className='sr-only'>Set Today&apos;s Focus</DialogTitle>
-          <DialogDescription className='sr-only'>
+      <DialogContent className="sm:max-w-md ">
+        <DialogHeader className="p-0">
+          <DialogTitle className="sr-only">Set Today&apos;s Focus</DialogTitle>
+          <DialogDescription className="sr-only">
             Set your focus for today to stay productive.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)}>
-            <DialogBody className='mt-[7px] px-2.5'>
+            <DialogBody className="mt-[7px] px-2.5">
               <FormField
                 control={form.control}
-                name='focus'
+                name="focus"
                 render={({ field }) => (
-                  <FormItem className='gap-0'>
-                    <FormLabel className='sr-only'>
+                  <FormItem className="gap-0">
+                    <FormLabel className="sr-only">
                       What&apos;s your focus for today?
                     </FormLabel>
                     <FormControl>
-                      <div className='flex items-center hover:bg-hover rounded-lg w-[calc(100%+8px)] ml-[-4px] px-1 gap-0.5'>
-                        <TargetIcon className='size-6 text-icon-light' />
+                      <div className="flex items-center hover:bg-hover rounded-lg w-[calc(100%+8px)] ml-[-4px] px-1 gap-0.5">
+                        <TargetIcon className="size-6 text-icon-light" />
                         <Input
                           placeholder="What's your focus for today?"
                           {...field}
-                          className='h-9 border-none px-0 md:text-[16px]'
+                          className="h-9 border-none px-0 md:text-[16px]"
                           autoFocus
                         />
                       </div>
                     </FormControl>
-                    <FormMessage className='px-1 text-xs' />
+                    <FormMessage className="px-1 text-xs" />
                   </FormItem>
                 )}
               />
             </DialogBody>
             <DialogFooter>
               <Button
-                type='button'
-                variant='ghost'
+                type="button"
+                variant="ghost"
                 onClick={() => handleOpenChange(false)}
-                size='sm'
+                size="sm"
               >
                 Cancel
               </Button>
-              <Button type='submit' variant='primary' size='sm'>
+              <Button type="submit" variant="primary" size="sm">
                 Set Focus
               </Button>
             </DialogFooter>

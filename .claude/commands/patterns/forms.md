@@ -13,6 +13,7 @@ This document defines conventions for building forms using React Hook Form + Zod
 ## Overview
 
 All forms in the application use **React Hook Form** with **Zod** for type-safe validation. This pattern provides:
+
 - Type inference from schemas
 - Client-side validation
 - Server-side error mapping
@@ -20,6 +21,7 @@ All forms in the application use **React Hook Form** with **Zod** for type-safe 
 - Keyboard shortcuts
 
 **Stack:**
+
 - `react-hook-form` - Form state management
 - `zod` - Schema validation
 - `@hookform/resolvers/zod` - Integration layer
@@ -62,7 +64,7 @@ export const ticketSchema = z.object({
         id: z.string(),
         text: z.string().min(1, "Sub-task cannot be empty"),
         completed: z.boolean(),
-      })
+      }),
     )
     .optional(),
 });
@@ -268,6 +270,7 @@ export function TicketFormDialog({ open, onOpenChange }: Props) {
 ```
 
 **Key points:**
+
 - Form `id` attribute links to button `form` attribute
 - Submit button can be outside `<form>` tag
 - Dialog closes automatically on successful submit
@@ -309,11 +312,13 @@ export function TicketFormDialog({ open, onOpenChange }: Props) {
 ```
 
 **Behavior:**
+
 - ✅ Auto-saves valid data when dialog closes normally
 - ✅ Skips auto-save when "Cancel" is clicked
 - ✅ Only saves if `isValid` condition is met (e.g., title not empty)
 
 **When to use:**
+
 - Dialog-based forms where user might close without clicking "Save"
 - Create/Edit forms where preserving valid data is helpful
 - NOT for multi-step forms or wizards
@@ -376,6 +381,7 @@ export function TicketFormDialog({ open }: Props) {
 ```
 
 **Features:**
+
 - Auto-focus first field when dialog opens
 - Enter key moves focus to next field
 - Cursor positioned at end of text
@@ -470,6 +476,7 @@ export function TicketFormDialog({ ticket }: Props) {
 ```
 
 **Provides:**
+
 - Form instance with schema validation
 - Reset logic on dialog open/close
 - Submit handler with success/error callbacks
@@ -507,6 +514,7 @@ export function TicketFormDialog({ ticket, open }: Props) {
 ```
 
 **Behavior:**
+
 - CREATE mode: Loads persisted draft, saves changes to localStorage
 - EDIT mode: No-op, uses ticket's data
 - Call `clearSubTasks()` after successful submit
@@ -596,29 +604,34 @@ describe("TicketForm", () => {
 ### Creating a New Form
 
 - [ ] **Schema:**
+
   - [ ] Create schema in `/lib/schema/{feature}.schema.ts`
   - [ ] Export schema: `export const {feature}Schema = z.object({ ... })`
   - [ ] Export types: `export type {Feature}Input = z.infer<typeof {feature}Schema>`
   - [ ] Add validation messages for all required fields
 
 - [ ] **Form Component:**
+
   - [ ] Import schema from `/lib/schema/`
   - [ ] Use `useForm` with `zodResolver(schema)`
   - [ ] Set `defaultValues` for all fields
   - [ ] Render with `Form` + `FormField` components
 
 - [ ] **Dialog Integration (if applicable):**
+
   - [ ] Use `Dialog` + `DialogContent` components
   - [ ] Add `DialogHeader`, `DialogBody`, `DialogFooter`
   - [ ] Link form to submit button via `id` and `form` attributes
   - [ ] Close dialog on successful submit
 
 - [ ] **Enhanced UX:**
+
   - [ ] Add `useKeyboardSubmit` for Cmd/Ctrl+Enter
   - [ ] Add `useFocusManagement` for Enter navigation
   - [ ] Add `useDialogAutoSave` if appropriate
 
 - [ ] **Error Handling:**
+
   - [ ] Map server errors to form fields via `form.setError()`
   - [ ] Show global errors via toast
   - [ ] Display field errors via `FormMessage`
@@ -758,16 +771,19 @@ const form = useForm({
 ## Reference Examples
 
 ### Schema Files
+
 - `/lib/schema/auth.schema.ts` - Email, password, sign-in, sign-up, reset password
 - `/lib/schema/file.schema.ts` - File upload with custom validation utilities
 
 ### Form Components
+
 - `/components/tasks/ticket-form-dialog.tsx` - Complex form with sub-tasks, auto-save, keyboard shortcuts
 - `/components/tasks/focus-form-dialog.tsx` - Simple single-field form
 - `/components/auth/password-form.tsx` - Multi-mode form (sign-in/sign-up)
 - `/components/auth/magic-link-form.tsx` - Simple email form with server action
 
 ### Custom Hooks
+
 - `/hooks/use-ticket-form.ts` - Form state management with reset logic
 - `/hooks/use-dialog-auto-save.ts` - Auto-save on dialog close
 - `/hooks/use-focus-management.ts` - Auto-focus and Enter navigation
@@ -779,6 +795,7 @@ const form = useForm({
 ## Summary
 
 **Key Takeaways:**
+
 1. ✅ **Schemas in `/lib/schema/`** - Reusable, type-safe validation
 2. ✅ **React Hook Form + Zod** - Always use together
 3. ✅ **Export types** - `type {Feature}Input = z.infer<typeof schema>`
@@ -790,6 +807,7 @@ const form = useForm({
 9. ✅ **Testing** - Test schema validation and form integration
 
 **This convention ensures:**
+
 - Type-safe forms with client and server validation
 - Consistent error handling across the application
 - Enhanced UX with keyboard shortcuts and auto-save
