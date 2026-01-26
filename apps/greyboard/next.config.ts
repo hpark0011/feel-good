@@ -1,42 +1,13 @@
-import type { NextConfig } from "next";
-import type { RuleSetRule } from "webpack";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   // Enable standalone output for production Electron builds
   output: process.env.ELECTRON_BUILD === "true" ? "standalone" : undefined,
   // Transpile workspace packages
-  transpilePackages: ["@feel-good/ui", "@feel-good/utils"],
+  transpilePackages: ["@feel-good/icons", "@feel-good/ui", "@feel-good/utils"],
   // Skip ESLint and TypeScript checks during production builds
   // (these run in CI via separate lint/type-check commands)
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
-  webpack(config) {
-    // Grab the existing rule that handles SVG imports
-    const fileLoaderRule = config.module.rules.find((rule: RuleSetRule) => {
-      return rule.test instanceof RegExp && rule.test.test(".svg");
-    });
-
-    config.module.rules.push(
-      // Reapply the existing rule, but only for svg imports ending in ?url
-      {
-        ...fileLoaderRule,
-        test: /\.svg$/i,
-        resourceQuery: /url/, // *.svg?url
-      },
-      // Convert all other *.svg imports to React components
-      {
-        test: /\.svg$/i,
-        issuer: fileLoaderRule.issuer,
-        resourceQuery: { not: [...fileLoaderRule.resourceQuery.not, /url/] }, // exclude if *.svg?url
-        use: ["@svgr/webpack"],
-      }
-    );
-
-    // Modify the file loader rule to ignore *.svg, since we have it handled now
-    fileLoaderRule.exclude = /\.svg$/i;
-
-    return config;
-  },
 };
 
 export default nextConfig;

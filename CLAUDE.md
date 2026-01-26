@@ -9,7 +9,6 @@ pnpm install           # Install all dependencies
 pnpm dev               # Run all apps in dev mode
 pnpm build             # Build all packages
 pnpm lint              # Lint all packages
-pnpm test              # Test all packages
 ```
 
 ## Filtered Commands
@@ -27,11 +26,12 @@ feel-good/
 ├── apps/
 │   └── greyboard/              # Task management app (Next.js 15)
 ├── packages/
+│   ├── icons/                  # SVG icon components (@feel-good/icons)
 │   └── utils/                  # Shared utilities (@feel-good/utils)
 ├── tooling/
 │   ├── eslint/                 # @feel-good/eslint-config
 │   ├── prettier/               # @feel-good/prettier-config
-│   └── typescript/             # @feel-good/typescript-config
+│   └── typescript/             # @feel-good/tsconfig
 ├── turbo.json                  # Turborepo configuration
 ├── pnpm-workspace.yaml         # pnpm workspace definition
 └── package.json                # Root workspace package.json
@@ -54,13 +54,21 @@ Shared utility functions.
 import { cn } from "@feel-good/utils/cn";
 ```
 
-### @feel-good/typescript-config
+### @feel-good/icons
+
+SVG icon components as React components.
+
+```typescript
+import { CheckIcon, CloseIcon } from "@feel-good/icons";
+```
+
+### @feel-good/tsconfig
 
 Shared TypeScript configurations.
 
 ```json
 {
-  "extends": "@feel-good/typescript-config/nextjs.json"
+  "extends": "@feel-good/tsconfig/nextjs.json"
 }
 ```
 

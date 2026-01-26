@@ -23,3 +23,6 @@ out
 
 # Claude
 .claude/settings.local.json
+
+# Cursor
+.cursor/debug.log

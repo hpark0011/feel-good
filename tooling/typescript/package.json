@@ -1,5 +1,5 @@
 {
-  "name": "@feel-good/typescript-config",
+  "name": "@feel-good/tsconfig",
   "version": "0.0.0",
   "private": true,
   "exports": {

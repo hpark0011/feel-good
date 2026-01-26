@@ -19,6 +19,10 @@ pnpm supabase:reset       # Reset database
 pnpm supabase:deploy      # Deploy to production
 ```
 
+## Deployment
+
+See `DEPLOYMENT.md` for Vercel deployment configuration and troubleshooting.
+
 ## Code Philosophy
 
 **Optimize for clarity.** Ask: "Will this be clear to someone reading it for the first time?"
@@ -74,7 +78,6 @@ config/                # *.config.ts files for constants
   auth, board, insight-variants, navs, paths, routes, tasks
 
 hooks/                 # General-purpose hooks (10 hooks)
-  __tests__/           # Jest + React Testing Library
 
 lib/
   services/            # Business logic (auth, file)
@@ -345,7 +348,7 @@ const STORAGE_KEYS = {
 
 **Path aliases:** `@/*` maps to root (`@/components/ui/*`, `@/lib/utils`, `@/hooks/*`, `@/types/*`, `@/config/*`)
 
-**Icons:** Lucide React (primary), custom SVGs in `/icons`, `@/components/ui/icon`
+**Icons:** Lucide React (primary), `@feel-good/icons` package, `@/components/ui/icon`
 
 ## Performance & Security
 
