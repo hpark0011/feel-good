@@ -90,7 +90,9 @@
       "Bash(pnpm turbo run build:*)",
       "Bash(gh api:*)",
       "Bash(xargs stat:*)",
-      "Bash(pnpm ls:*)"
+      "Bash(pnpm ls:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(turbo run build:*)"
     ],
     "deny": [],
     "ask": []
