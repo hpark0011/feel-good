@@ -83,7 +83,10 @@
       "Bash(vercel project:*)",
       "Bash(vercel ls:*)",
       "Bash(vercel list:*)",
-      "Bash(pnpm turbo build:*)"
+      "Bash(pnpm turbo build:*)",
+      "Bash(pnpm --filter=@feel-good/greyboard check-types:*)",
+      "Bash(pnpm --filter=@feel-good/greyboard exec tsc:*)",
+      "Bash(pnpm --filter=@feel-good/greyboard exec node:*)"
     ],
     "deny": [],
     "ask": []

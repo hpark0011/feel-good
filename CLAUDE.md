@@ -9,7 +9,6 @@ pnpm install           # Install all dependencies
 pnpm dev               # Run all apps in dev mode
 pnpm build             # Build all packages
 pnpm lint              # Lint all packages
-pnpm test              # Test all packages
 ```
 
 ## Filtered Commands

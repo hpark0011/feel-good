@@ -74,7 +74,6 @@ config/                # *.config.ts files for constants
   auth, board, insight-variants, navs, paths, routes, tasks
 
 hooks/                 # General-purpose hooks (10 hooks)
-  __tests__/           # Jest + React Testing Library
 
 lib/
   services/            # Business logic (auth, file)

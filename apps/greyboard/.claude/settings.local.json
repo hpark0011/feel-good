@@ -2,7 +2,14 @@
   "permissions": {
     "allow": [
       "Bash(git submodule:*)",
-      "Bash(git config:*)"
+      "Bash(git config:*)",
+      "Bash(pnpm install)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "supabase",
+    "Context7",
+    "shadcn",
+    "chrome-devtools"
+  ]
 }
