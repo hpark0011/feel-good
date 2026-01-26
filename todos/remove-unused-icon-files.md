@@ -6,7 +6,7 @@ Clean up unused icon-related files and packages from greyboard after migrating t
 
 - [x] **Delete icons directory** - Remove `apps/greyboard/icons/` (206 files including SVGs, subdirectories, and index.ts)
 
-- [ ] **Remove @svgr/webpack dependency** - Edit `apps/greyboard/package.json` line 59
+- [x] **Remove @svgr/webpack dependency** - Edit `apps/greyboard/package.json` line 59
 
 - [ ] **Remove SVGR webpack config** - Simplify `apps/greyboard/next.config.ts` by removing the webpack() function (lines 13-38)
 
