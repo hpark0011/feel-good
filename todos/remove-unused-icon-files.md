@@ -8,12 +8,12 @@ Clean up unused icon-related files and packages from greyboard after migrating t
 
 - [x] **Remove @svgr/webpack dependency** - Edit `apps/greyboard/package.json` line 59
 
-- [ ] **Remove SVGR webpack config** - Simplify `apps/greyboard/next.config.ts` by removing the webpack() function (lines 13-38)
+- [x] **Remove SVGR webpack config** - Simplify `apps/greyboard/next.config.ts` by removing the webpack() function (lines 13-38)
 
-- [ ] **Update lockfile** - Run `pnpm install` to sync the lockfile
+- [x] **Update lockfile** - Run `pnpm install` to sync the lockfile
 
 ## Verification
 
-- [ ] `pnpm --filter=@feel-good/greyboard check-types` - TypeScript compiles
+- [x] `pnpm --filter=@feel-good/greyboard check-types` - TypeScript compiles
 - [ ] `pnpm dev --filter=@feel-good/greyboard` - Dev server starts
 - [ ] Icons render correctly on `/dashboard/tasks`
