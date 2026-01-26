@@ -37,7 +37,7 @@ Use `pnpm` for all package operations (not npm, yarn, or bun).
 - `/components/tasks` - Task board implementation with drag-and-drop
 - `/lib` - Utility functions and shared logic
 - `/hooks` - Custom React hooks
-- `/icons` - Custom SVG icon library (100+ icons with TypeScript support)
+- Icons available from `@feel-good/icons` workspace package
 - `/PRPs` - Product Requirements Plans for features
 
 ### Path Aliases
@@ -67,9 +67,8 @@ Use `pnpm` for all package operations (not npm, yarn, or bun).
 ### Icons
 
 - **Primary**: Lucide React (configured as default in components.json)
-- **Custom SVG icons**: Available in `/icons` directory with TypeScript exports
-- Icon component at `/components/ui/icon.tsx` for custom SVG icons
-- SVGR webpack configuration for importing SVGs as React components
+- **Custom SVG icons**: Available from `@feel-good/icons` workspace package
+- Icon component at `/components/ui/icon.tsx` for rendering icons
 
 ### Forms and Validation
 
@@ -118,5 +117,6 @@ A PRP exists at `/PRPs/feature-flag-system.md` for implementing an environment-v
 ### Next.js Configuration
 
 - Standalone output mode for containerization
-- Custom webpack config for SVG handling with @svgr/webpack
 - Turbopack enabled for fast development builds
+
+See `DEPLOYMENT.md` for Vercel deployment notes.
