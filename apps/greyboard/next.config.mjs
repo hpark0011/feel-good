@@ -98,8 +98,8 @@ fetch("http://127.0.0.1:7246/ingest/0f061f98-4f3b-442d-8089-b6671f4a1f66", {
 const nextConfig = {
   // Enable standalone output for production Electron builds
   output: process.env.ELECTRON_BUILD === "true" ? "standalone" : undefined,
-  // Transpile workspace packages (icons is pre-built, doesn't need transpilation)
-  transpilePackages: ["@feel-good/utils"],
+  // Transpile workspace packages
+  transpilePackages: ["@feel-good/utils", "@feel-good/icons"],
   // Skip ESLint and TypeScript checks during production builds
   // (these run in CI via separate lint/type-check commands)
   eslint: { ignoreDuringBuilds: true },

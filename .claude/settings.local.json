@@ -88,7 +88,9 @@
       "Bash(npm run build:*)",
       "Bash(git ls-tree:*)",
       "Bash(pnpm turbo run build:*)",
-      "Bash(gh api:*)"
+      "Bash(gh api:*)",
+      "Bash(xargs stat:*)",
+      "Bash(pnpm ls:*)"
     ],
     "deny": [],
     "ask": []
