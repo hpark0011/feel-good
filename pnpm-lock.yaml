@@ -26,6 +26,9 @@ importers:
       '@dnd-kit/utilities':
         specifier: ^3.2.2
         version: 3.2.2(react@19.1.0)
+      '@feel-good/icons':
+        specifier: workspace:*
+        version: link:../../packages/icons
       '@hookform/resolvers':
         specifier: ^5.2.1
         version: 5.2.2(react-hook-form@7.71.1(react@19.1.0))
