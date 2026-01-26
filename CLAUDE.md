@@ -31,7 +31,7 @@ feel-good/
 ├── tooling/
 │   ├── eslint/                 # @feel-good/eslint-config
 │   ├── prettier/               # @feel-good/prettier-config
-│   └── typescript/             # @feel-good/typescript-config
+│   └── typescript/             # @feel-good/tsconfig
 ├── turbo.json                  # Turborepo configuration
 ├── pnpm-workspace.yaml         # pnpm workspace definition
 └── package.json                # Root workspace package.json
@@ -54,13 +54,13 @@ Shared utility functions.
 import { cn } from "@feel-good/utils/cn";
 ```
 
-### @feel-good/typescript-config
+### @feel-good/tsconfig
 
 Shared TypeScript configurations.
 
 ```json
 {
-  "extends": "@feel-good/typescript-config/nextjs.json"
+  "extends": "@feel-good/tsconfig/nextjs.json"
 }
 ```
 

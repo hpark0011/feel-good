@@ -1,5 +1,5 @@
 {
-  "extends": "@feel-good/typescript-config/react-library.json",
+  "extends": "@feel-good/tsconfig/react-library.json",
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "scripts"]
 }

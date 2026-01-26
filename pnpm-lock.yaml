@@ -216,7 +216,7 @@ importers:
       '@feel-good/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint
-      '@feel-good/typescript-config':
+      '@feel-good/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
       '@next/bundle-analyzer':
@@ -305,6 +305,22 @@ importers:
         specifier: ^5
         version: 5.9.3
 
+  packages/icons:
+    dependencies:
+      react:
+        specifier: ^18.0.0 || ^19.0.0
+        version: 19.2.3
+    devDependencies:
+      '@feel-good/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/typescript
+      '@types/react':
+        specifier: ^19
+        version: 19.2.9
+      typescript:
+        specifier: ^5.3.0
+        version: 5.9.3
+
   packages/utils:
     dependencies:
       clsx:
@@ -314,7 +330,7 @@ importers:
         specifier: ^3.3.1
         version: 3.4.0
     devDependencies:
-      '@feel-good/typescript-config':
+      '@feel-good/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
       typescript:
