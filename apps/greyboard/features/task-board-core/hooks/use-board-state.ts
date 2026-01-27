@@ -90,49 +90,40 @@ export function useBoardState(): UseBoardStateReturn {
     return filtered;
   }, [board, selectedProjectIds]);
 
-  // Using refs to access board state without including it in useCallback dependencies.
-  // This prevents findColumn/findTicket from being recreated on every board change,
-  // which would cause infinite re-renders in dnd-kit's drag handlers.
-  // Synchronous assignment ensures no timing gap where the ref holds stale data.
+  // Refs allow callbacks to access current board state without being recreated on every
+  // board change. This prevents infinite re-renders in dnd-kit's drag handlers.
   const boardRef = useRef(board);
   boardRef.current = board;
 
-  // Build ticket-to-column index for O(1) lookups during drag operations.
-  // Only rebuilds when board changes.
-  const ticketColumnIndex = useMemo(() => {
-    const index = new Map<string, string>();
+  // Build O(1) lookup indexes for drag operations. Single pass builds both indexes.
+  const { ticketColumnIndex, ticketIndex } = useMemo(() => {
+    const columnIndex = new Map<string, string>();
+    const ticketMap = new Map<string, Ticket>();
+
     for (const [columnId, tickets] of Object.entries(board)) {
       for (const ticket of tickets) {
-        index.set(ticket.id, columnId);
+        columnIndex.set(ticket.id, columnId);
+        ticketMap.set(ticket.id, ticket);
       }
     }
-    return index;
+
+    return { ticketColumnIndex: columnIndex, ticketIndex: ticketMap };
   }, [board]);
 
+  // Refs for stable callback references
   const ticketColumnIndexRef = useRef(ticketColumnIndex);
-  ticketColumnIndexRef.current = ticketColumnIndex;
-
-  // Build ticket index for O(1) ticket lookups.
-  const ticketIndex = useMemo(() => {
-    const index = new Map<string, Ticket>();
-    for (const tickets of Object.values(board)) {
-      for (const ticket of tickets) {
-        index.set(ticket.id, ticket);
-      }
-    }
-    return index;
-  }, [board]);
-
   const ticketIndexRef = useRef(ticketIndex);
+  ticketColumnIndexRef.current = ticketColumnIndex;
   ticketIndexRef.current = ticketIndex;
 
   const findColumn = useCallback(
     (id: string, sourceBoard?: BoardState): string | null => {
-      // Use O(1) index lookup when no explicit sourceBoard is provided
+      // O(1) lookup via index for external callers (drag handlers)
+      // O(n) search when sourceBoard provided (inside setBoard updaters for fresh state)
       if (!sourceBoard) {
         return ticketColumnIndexRef.current.get(id) ?? null;
       }
-      // Fallback to O(n) search for explicit sourceBoard parameter
+
       for (const [columnId, tickets] of Object.entries(sourceBoard)) {
         if (tickets.some((t) => t.id === id)) {
           return columnId;
