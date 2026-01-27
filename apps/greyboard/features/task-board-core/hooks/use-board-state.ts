@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import {
   useProjectFilter,
@@ -90,27 +90,35 @@ export function useBoardState(): UseBoardStateReturn {
     return filtered;
   }, [board, selectedProjectIds]);
 
+  // Using a ref to access board state without including it in useCallback dependencies.
+  // This prevents findColumn/findTicket from being recreated on every board change,
+  // which would cause infinite re-renders in dnd-kit's drag handlers.
+  // Synchronous assignment ensures no timing gap where the ref holds stale data.
+  const boardRef = useRef(board);
+  boardRef.current = board;
+
   const findColumn = useCallback(
-    (id: string, sourceBoard: BoardState = board): string | null => {
-      for (const [columnId, tickets] of Object.entries(sourceBoard)) {
+    (id: string, sourceBoard?: BoardState): string | null => {
+      const searchBoard = sourceBoard ?? boardRef.current;
+      for (const [columnId, tickets] of Object.entries(searchBoard)) {
         if (tickets.some((t) => t.id === id)) {
           return columnId;
         }
       }
       return null;
     },
-    [board]
+    []
   );
 
   const findTicket = useCallback(
     (id: string): Ticket | null => {
-      for (const tickets of Object.values(board)) {
+      for (const tickets of Object.values(boardRef.current)) {
         const ticket = tickets.find((t) => t.id === id);
         if (ticket) return ticket;
       }
       return null;
     },
-    [board]
+    []
   );
 
   const deleteTicket = useCallback(
