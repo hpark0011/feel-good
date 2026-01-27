@@ -213,9 +213,6 @@ importers:
       '@biomejs/biome':
         specifier: ^2.3.2
         version: 2.3.11
-      '@eslint/eslintrc':
-        specifier: ^3
-        version: 3.3.3
       '@feel-good/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint
@@ -265,6 +262,9 @@ importers:
         specifier: 19.2.3
         version: 19.2.3(react@19.2.3)
     devDependencies:
+      '@feel-good/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint
       '@tailwindcss/postcss':
         specifier: ^4
         version: 4.1.18
@@ -475,12 +475,12 @@ importers:
       '@eslint/js':
         specifier: ^9.0.0
         version: 9.39.2
-      '@next/eslint-plugin-next':
-        specifier: ^15.0.0
-        version: 15.5.9
       eslint:
         specifier: ^9.0.0
         version: 9.39.2(jiti@2.6.1)
+      eslint-config-next:
+        specifier: '>=15.0.0'
+        version: 16.1.4(@typescript-eslint/parser@8.53.1(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
       eslint-config-prettier:
         specifier: ^9.0.0
         version: 9.1.2(eslint@9.39.2(jiti@2.6.1))
@@ -1043,9 +1043,6 @@ packages:
 
   '@next/eslint-plugin-next@15.4.7':
     resolution: {integrity: sha512-asj3RRiEruRLVr+k2ZC4hll9/XBzegMpFMr8IIRpNUYypG86m/a76339X2WETl1C53A512w2INOc2KZV769KPA==}
-
-  '@next/eslint-plugin-next@15.5.9':
-    resolution: {integrity: sha512-kUzXx0iFiXw27cQAViE1yKWnz/nF8JzRmwgMRTMh8qMY90crNsdXJRh2e+R0vBpFR3kk1yvAR7wev7+fCCb79Q==}
 
   '@next/eslint-plugin-next@16.1.4':
     resolution: {integrity: sha512-38WMjGP8y+1MN4bcZFs+GTcBe0iem5GGTzFE5GWW/dWdRKde7LOXH3lQT2QuoquVWyfl2S0fQRchGmeacGZ4Wg==}
@@ -5488,10 +5485,6 @@ snapshots:
   '@next/env@16.1.4': {}
 
   '@next/eslint-plugin-next@15.4.7':
-    dependencies:
-      fast-glob: 3.3.1
-
-  '@next/eslint-plugin-next@15.5.9':
     dependencies:
       fast-glob: 3.3.1
 
