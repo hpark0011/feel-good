@@ -93,3 +93,7 @@ Shared Prettier configuration.
 2. Add `package.json` with name `@feel-good/package-name`
 3. Add to consuming apps' dependencies
 4. Run `pnpm install` from root
+
+## Agent Docs
+
+The `agent-docs/` directory at the root is available for Claude to create markdown files for plans, tasks, or documentation during development sessions.
