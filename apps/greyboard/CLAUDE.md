@@ -36,7 +36,7 @@ See `DEPLOYMENT.md` for Vercel deployment configuration and troubleshooting.
 
 | Category  | Technology                                                    |
 | --------- | ------------------------------------------------------------- |
-| Framework | Next.js 15.4.10 (App Router, Turbopack), React 19, TypeScript |
+| Framework | Next.js 16.1.4 (App Router, Turbopack), React 19, TypeScript |
 | Backend   | Supabase (auth, database)                                     |
 | Styling   | Tailwind CSS 4, CSS variables, shadcn/ui (New York)           |
 | State     | Zustand (global), localStorage (persistence), React Context   |
