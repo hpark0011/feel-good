@@ -4,9 +4,8 @@ const nextConfig = {
   output: process.env.ELECTRON_BUILD === "true" ? "standalone" : undefined,
   // Transpile workspace packages
   transpilePackages: ["@feel-good/icons", "@feel-good/ui", "@feel-good/utils"],
-  // Skip ESLint and TypeScript checks during production builds
-  // (these run in CI via separate lint/type-check commands)
-  eslint: { ignoreDuringBuilds: true },
+  // Skip TypeScript checks during production builds
+  // (these run in CI via separate type-check commands)
   typescript: { ignoreBuildErrors: true },
 };
 
