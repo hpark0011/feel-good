@@ -90,17 +90,50 @@ export function useBoardState(): UseBoardStateReturn {
     return filtered;
   }, [board, selectedProjectIds]);
 
-  // Using a ref to access board state without including it in useCallback dependencies.
+  // Using refs to access board state without including it in useCallback dependencies.
   // This prevents findColumn/findTicket from being recreated on every board change,
   // which would cause infinite re-renders in dnd-kit's drag handlers.
   // Synchronous assignment ensures no timing gap where the ref holds stale data.
   const boardRef = useRef(board);
   boardRef.current = board;
 
+  // Build ticket-to-column index for O(1) lookups during drag operations.
+  // Only rebuilds when board changes.
+  const ticketColumnIndex = useMemo(() => {
+    const index = new Map<string, string>();
+    for (const [columnId, tickets] of Object.entries(board)) {
+      for (const ticket of tickets) {
+        index.set(ticket.id, columnId);
+      }
+    }
+    return index;
+  }, [board]);
+
+  const ticketColumnIndexRef = useRef(ticketColumnIndex);
+  ticketColumnIndexRef.current = ticketColumnIndex;
+
+  // Build ticket index for O(1) ticket lookups.
+  const ticketIndex = useMemo(() => {
+    const index = new Map<string, Ticket>();
+    for (const tickets of Object.values(board)) {
+      for (const ticket of tickets) {
+        index.set(ticket.id, ticket);
+      }
+    }
+    return index;
+  }, [board]);
+
+  const ticketIndexRef = useRef(ticketIndex);
+  ticketIndexRef.current = ticketIndex;
+
   const findColumn = useCallback(
     (id: string, sourceBoard?: BoardState): string | null => {
-      const searchBoard = sourceBoard ?? boardRef.current;
-      for (const [columnId, tickets] of Object.entries(searchBoard)) {
+      // Use O(1) index lookup when no explicit sourceBoard is provided
+      if (!sourceBoard) {
+        return ticketColumnIndexRef.current.get(id) ?? null;
+      }
+      // Fallback to O(n) search for explicit sourceBoard parameter
+      for (const [columnId, tickets] of Object.entries(sourceBoard)) {
         if (tickets.some((t) => t.id === id)) {
           return columnId;
         }
@@ -112,30 +145,29 @@ export function useBoardState(): UseBoardStateReturn {
 
   const findTicket = useCallback(
     (id: string): Ticket | null => {
-      for (const tickets of Object.values(boardRef.current)) {
-        const ticket = tickets.find((t) => t.id === id);
-        if (ticket) return ticket;
-      }
-      return null;
+      return ticketIndexRef.current.get(id) ?? null;
     },
     []
   );
 
   const deleteTicket = useCallback(
     (ticketId: string) => {
-      const column = findColumn(ticketId);
-      if (!column) return;
-
       // Stop timer if this ticket has an active timer
       const stopWatchStore = useStopWatchStore.getState();
       if (stopWatchStore.isTimerActive(ticketId)) {
         stopWatchStore.stopTimer();
       }
 
-      setBoard((board) => ({
-        ...board,
-        [column]: board[column].filter((t) => t.id !== ticketId),
-      }));
+      // Column lookup inside updater ensures we use fresh board state
+      setBoard((currentBoard) => {
+        const column = findColumn(ticketId, currentBoard);
+        if (!column) return currentBoard;
+
+        return {
+          ...currentBoard,
+          [column]: currentBoard[column].filter((t) => t.id !== ticketId),
+        };
+      });
     },
     [findColumn, setBoard]
   );
@@ -200,8 +232,9 @@ export function useBoardState(): UseBoardStateReturn {
   const clearColumn = useCallback(
     (columnId: ColumnId) => {
       // Stop timer if any ticket in this column has an active timer
+      // Uses boardRef to avoid recreating callback on board changes
       const stopWatchStore = useStopWatchStore.getState();
-      const ticketsInColumn = board[columnId] || [];
+      const ticketsInColumn = boardRef.current[columnId] || [];
       for (const ticket of ticketsInColumn) {
         if (stopWatchStore.isTimerActive(ticket.id)) {
           stopWatchStore.stopTimer();
@@ -209,12 +242,12 @@ export function useBoardState(): UseBoardStateReturn {
         }
       }
 
-      setBoard((board) => ({
-        ...board,
+      setBoard((currentBoard) => ({
+        ...currentBoard,
         [columnId]: [],
       }));
     },
-    [setBoard, board]
+    [setBoard]
   );
 
   const handleStatusChange = useCallback(
