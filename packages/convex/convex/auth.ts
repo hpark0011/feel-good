@@ -21,8 +21,9 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
       enabled: true,
       minPasswordLength: 8,
       requireEmailVerification: true,
-      sendResetPassword: async ({ user, url }) => {
-        await ctx.runAction(api.email.sendPasswordReset, {
+      sendResetPassword: ({ user, url }) => {
+        // Fire-and-forget: don't block auth response waiting for email
+        void ctx.runAction(api.email.sendPasswordReset, {
           to: user.email,
           link: url,
         });
@@ -30,8 +31,9 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
     },
 
     emailVerification: {
-      sendVerificationEmail: async ({ user, url }) => {
-        await ctx.runAction(api.email.sendVerificationEmail, {
+      sendVerificationEmail: ({ user, url }) => {
+        // Fire-and-forget: don't block auth response waiting for email
+        void ctx.runAction(api.email.sendVerificationEmail, {
           to: user.email,
           link: url,
         });
@@ -73,8 +75,9 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
     plugins: [
       convex({ authConfig }),
       magicLink({
-        sendMagicLink: async ({ email, url }) => {
-          await ctx.runAction(api.email.sendMagicLink, {
+        sendMagicLink: ({ email, url }) => {
+          // Fire-and-forget: don't block auth response waiting for email
+          void ctx.runAction(api.email.sendMagicLink, {
             to: email,
             link: url,
           });
