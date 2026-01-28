@@ -5,9 +5,12 @@ import { components, api } from "./_generated/api";
 import { type DataModel } from "./_generated/dataModel";
 import { query } from "./_generated/server";
 import { betterAuth } from "better-auth";
+import authConfig from "./auth.config";
 
 const siteUrl = process.env.SITE_URL!;
 
+// The component client has methods needed for integrating Convex with Better Auth,
+// as well as helper methods for general use.
 export const authComponent = createClient<DataModel>(components.betterAuth);
 
 export const createAuth = (ctx: GenericCtx<DataModel>) => {
@@ -69,7 +72,7 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
     },
 
     plugins: [
-      convex({ jwtExpirationSeconds: 900 }),
+      convex({ authConfig }),
       magicLink({
         sendMagicLink: async ({ email, url }) => {
           await ctx.runAction(api.email.sendMagicLink, {
