@@ -8,7 +8,7 @@ import { getSafeRedirectUrl } from "../utils/validate-redirect";
 
 interface OAuthButtonsProps {
   authClient: AuthClient;
-  callbackURL?: string;
+  redirectTo?: string;
 }
 
 function GoogleIcon() {
@@ -38,17 +38,17 @@ function GoogleIcon() {
   );
 }
 
-export function OAuthButtons({ authClient, callbackURL }: OAuthButtonsProps) {
+export function OAuthButtons({ authClient, redirectTo }: OAuthButtonsProps) {
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
 
-  const redirectUrl = getSafeRedirectUrl(callbackURL ?? searchParams.get("next"));
+  const safeRedirectTo = getSafeRedirectUrl(redirectTo ?? searchParams.get("next"));
 
   async function handleGoogleSignIn() {
     setIsLoading(true);
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: redirectUrl,
+      callbackURL: safeRedirectTo,
     });
   }
 

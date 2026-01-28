@@ -11,16 +11,16 @@ import { getSafeRedirectUrl } from "../utils/validate-redirect";
 
 interface MagicLinkFormProps {
   authClient: AuthClient;
-  callbackURL?: string;
+  redirectTo?: string;
 }
 
-export function MagicLinkForm({ authClient, callbackURL }: MagicLinkFormProps) {
+export function MagicLinkForm({ authClient, redirectTo }: MagicLinkFormProps) {
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<AuthStatus>("idle");
   const searchParams = useSearchParams();
 
-  const redirectUrl = getSafeRedirectUrl(callbackURL ?? searchParams.get("next"));
+  const safeRedirectTo = getSafeRedirectUrl(redirectTo ?? searchParams.get("next"));
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -28,7 +28,7 @@ export function MagicLinkForm({ authClient, callbackURL }: MagicLinkFormProps) {
     setStatus("loading");
 
     await authClient.signIn.magicLink(
-      { email, callbackURL: redirectUrl },
+      { email, callbackURL: safeRedirectTo },
       {
         onSuccess: () => setStatus("success"),
         onError: (ctx) => {
