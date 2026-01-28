@@ -25,24 +25,18 @@ export function ForgotPasswordForm({
     setError(null);
     setStatus("loading");
 
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const client = authClient as any;
-      const { error: resetError } = await client.forgetPassword({
-        email,
-        redirectTo: redirectURL,
-      });
-
-      if (resetError) {
-        setStatus("error");
-        setError(getAuthErrorMessage(resetError.code));
-      } else {
-        setStatus("success");
+    await authClient.forgetPassword(
+      { email, redirectTo: redirectURL },
+      {
+        onSuccess: () => {
+          setStatus("success");
+        },
+        onError: (ctx) => {
+          setStatus("error");
+          setError(getAuthErrorMessage(ctx.error.code ?? "UNKNOWN"));
+        },
       }
-    } catch {
-      setStatus("error");
-      setError(getAuthErrorMessage("UNKNOWN"));
-    }
+    );
   }
 
   const isLoading = status === "loading";
