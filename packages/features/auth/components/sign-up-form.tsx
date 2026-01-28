@@ -5,7 +5,12 @@ import { Button } from "@feel-good/ui/primitives/button";
 import { Input } from "@feel-good/ui/primitives/input";
 import { Label } from "@feel-good/ui/primitives/label";
 import type { AuthClient } from "../client";
-import { getAuthErrorMessage, type AuthStatus } from "../types";
+import {
+  getAuthErrorMessage,
+  PASSWORD_MIN_LENGTH,
+  validatePassword,
+  type AuthStatus,
+} from "../types";
 
 interface SignUpFormProps {
   authClient: AuthClient;
@@ -23,8 +28,9 @@ export function SignUpForm({ authClient, onSuccess }: SignUpFormProps) {
     e.preventDefault();
     setError(null);
 
-    if (password.length < 8) {
-      setError(getAuthErrorMessage("PASSWORD_TOO_SHORT"));
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      setError(getAuthErrorMessage(passwordError));
       return;
     }
 
@@ -109,7 +115,7 @@ export function SignUpForm({ authClient, onSuccess }: SignUpFormProps) {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          minLength={8}
+          minLength={PASSWORD_MIN_LENGTH}
           autoComplete="new-password"
           disabled={isLoading}
         />

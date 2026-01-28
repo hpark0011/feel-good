@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "010"
 tags: [code-review, dry, auth]
@@ -66,16 +66,17 @@ Extract password validation to a shared utility.
 
 ## Acceptance Criteria
 
-- [ ] Create `PASSWORD_MIN_LENGTH` constant
-- [ ] Create `validatePassword` utility function
-- [ ] Update both forms to use shared validation
-- [ ] Ensure constant matches backend config (minPasswordLength: 8)
+- [x] Create `PASSWORD_MIN_LENGTH` constant
+- [x] Create `validatePassword` utility function
+- [x] Update both forms to use shared validation
+- [x] Ensure constant matches backend config (minPasswordLength: 8)
 
 ## Work Log
 
 | Date | Action | Outcome |
 |------|--------|---------|
 | 2026-01-28 | Created from code review | Identified P2 DRY violation |
+| 2026-01-28 | Implemented fix | Added PASSWORD_MIN_LENGTH constant and validatePassword() to types.ts, updated both forms |
 
 ## Resources
 

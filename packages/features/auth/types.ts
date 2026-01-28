@@ -17,6 +17,20 @@ export type AuthProvider = "email" | "google" | "magic-link";
 
 export type AuthStatus = "idle" | "loading" | "success" | "error";
 
+// Password validation constant - must match backend config (convex/auth.ts minPasswordLength)
+export const PASSWORD_MIN_LENGTH = 8;
+
+/**
+ * Validates password meets minimum length requirement
+ * @returns error code if invalid, null if valid
+ */
+export function validatePassword(password: string): string | null {
+  if (password.length < PASSWORD_MIN_LENGTH) {
+    return "PASSWORD_TOO_SHORT";
+  }
+  return null;
+}
+
 export interface AuthError {
   code: string;
   message: string;
