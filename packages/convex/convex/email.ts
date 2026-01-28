@@ -7,6 +7,12 @@ import { v } from "convex/values";
 
 const resend = new Resend(components.resend);
 
+// Configurable email sender settings via environment variables
+// Using || instead of ?? to also handle empty strings as falsy
+const APP_NAME = process.env.APP_NAME || "Mirror";
+const EMAIL_DOMAIN = process.env.EMAIL_DOMAIN || "mirror.app";
+const EMAIL_FROM = `${APP_NAME} <auth@${EMAIL_DOMAIN}>`;
+
 export const sendMagicLink = action({
   args: {
     to: v.string(),
@@ -14,9 +20,9 @@ export const sendMagicLink = action({
   },
   handler: async (ctx, { to, link }) => {
     await resend.sendEmail(ctx, {
-      from: "Mirror <auth@mirror.app>",
+      from: EMAIL_FROM,
       to,
-      subject: "Sign in to Mirror",
+      subject: `Sign in to ${APP_NAME}`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -26,7 +32,7 @@ export const sendMagicLink = action({
         </head>
         <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 40px 20px; background: #f9fafb;">
           <div style="max-width: 480px; margin: 0 auto; background: white; border-radius: 12px; padding: 40px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-            <h1 style="margin: 0 0 24px; font-size: 24px; font-weight: 600; color: #111827;">Sign in to Mirror</h1>
+            <h1 style="margin: 0 0 24px; font-size: 24px; font-weight: 600; color: #111827;">Sign in to ${APP_NAME}</h1>
             <p style="margin: 0 0 24px; color: #6b7280; line-height: 1.6;">Click the button below to sign in to your account. This link will expire in 15 minutes.</p>
             <a href="${link}" style="display: inline-block; padding: 12px 24px; background: #111827; color: white; text-decoration: none; border-radius: 8px; font-weight: 500;">Sign In</a>
             <p style="margin: 24px 0 0; font-size: 14px; color: #9ca3af;">If you didn't request this email, you can safely ignore it.</p>
@@ -45,9 +51,9 @@ export const sendVerificationEmail = action({
   },
   handler: async (ctx, { to, link }) => {
     await resend.sendEmail(ctx, {
-      from: "Mirror <auth@mirror.app>",
+      from: EMAIL_FROM,
       to,
-      subject: "Verify your email address",
+      subject: `Verify your ${APP_NAME} email address`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -76,9 +82,9 @@ export const sendPasswordReset = action({
   },
   handler: async (ctx, { to, link }) => {
     await resend.sendEmail(ctx, {
-      from: "Mirror <auth@mirror.app>",
+      from: EMAIL_FROM,
       to,
-      subject: "Reset your password",
+      subject: `Reset your ${APP_NAME} password`,
       html: `
         <!DOCTYPE html>
         <html>
