@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p1
 issue_id: "003"
 tags: [code-review, architecture, auth]
@@ -63,9 +63,9 @@ Implement Option A - use environment variables with Mirror defaults.
 
 ## Acceptance Criteria
 
-- [ ] Replace hardcoded values with environment variables
-- [ ] Add sensible defaults for backwards compatibility
-- [ ] Update documentation with required env vars
+- [x] Replace hardcoded values with environment variables
+- [x] Add sensible defaults for backwards compatibility
+- [x] Update documentation with required env vars
 - [ ] Test email sending with different configurations
 
 ## Work Log
@@ -73,6 +73,7 @@ Implement Option A - use environment variables with Mirror defaults.
 | Date | Action | Outcome |
 |------|--------|---------|
 | 2026-01-28 | Created from code review | Identified P1 architecture issue |
+| 2026-01-28 | Implemented env var solution | Added APP_NAME and EMAIL_DOMAIN with defaults, updated all 3 email functions, created README |
 
 ## Resources
 
