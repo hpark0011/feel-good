@@ -7,6 +7,7 @@ import { Input } from "@feel-good/ui/primitives/input";
 import { Label } from "@feel-good/ui/primitives/label";
 import type { AuthClient } from "../client";
 import { getAuthErrorMessage, type AuthStatus } from "../types";
+import { getSafeRedirectUrl } from "../utils/validate-redirect";
 
 interface SignInFormProps {
   authClient: AuthClient;
@@ -21,7 +22,7 @@ export function SignInForm({ authClient, redirectTo }: SignInFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const nextUrl = redirectTo ?? searchParams.get("next") ?? "/dashboard";
+  const nextUrl = getSafeRedirectUrl(redirectTo ?? searchParams.get("next"));
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

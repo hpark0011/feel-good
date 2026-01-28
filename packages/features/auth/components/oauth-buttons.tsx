@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@feel-good/ui/primitives/button";
 import type { AuthClient } from "../client";
+import { getSafeRedirectUrl } from "../utils/validate-redirect";
 
 interface OAuthButtonsProps {
   authClient: AuthClient;
@@ -41,7 +42,7 @@ export function OAuthButtons({ authClient, callbackURL }: OAuthButtonsProps) {
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
 
-  const redirectUrl = callbackURL ?? searchParams.get("next") ?? "/dashboard";
+  const redirectUrl = getSafeRedirectUrl(callbackURL ?? searchParams.get("next"));
 
   async function handleGoogleSignIn() {
     setIsLoading(true);

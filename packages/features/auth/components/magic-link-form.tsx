@@ -7,6 +7,7 @@ import { Input } from "@feel-good/ui/primitives/input";
 import { Label } from "@feel-good/ui/primitives/label";
 import type { AuthClient } from "../client";
 import { getAuthErrorMessage, type AuthStatus } from "../types";
+import { getSafeRedirectUrl } from "../utils/validate-redirect";
 
 interface MagicLinkFormProps {
   authClient: AuthClient;
@@ -19,7 +20,7 @@ export function MagicLinkForm({ authClient, callbackURL }: MagicLinkFormProps) {
   const [status, setStatus] = useState<AuthStatus>("idle");
   const searchParams = useSearchParams();
 
-  const redirectUrl = callbackURL ?? searchParams.get("next") ?? "/dashboard";
+  const redirectUrl = getSafeRedirectUrl(callbackURL ?? searchParams.get("next"));
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
