@@ -6,6 +6,7 @@ import { Input } from "@feel-good/ui/primitives/input";
 import { Label } from "@feel-good/ui/primitives/label";
 import type { AuthClient } from "../client";
 import { getAuthErrorMessage, type AuthStatus } from "../types";
+import { getSafeRedirectUrl } from "../utils/validate-redirect";
 
 interface ForgotPasswordFormProps {
   authClient: AuthClient;
@@ -25,8 +26,10 @@ export function ForgotPasswordForm({
     setError(null);
     setStatus("loading");
 
+    const safeRedirectURL = getSafeRedirectUrl(redirectURL, "/reset-password");
+
     await authClient.forgetPassword(
-      { email, redirectTo: redirectURL },
+      { email, redirectTo: safeRedirectURL },
       {
         onSuccess: () => {
           setStatus("success");

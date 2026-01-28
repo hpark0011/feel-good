@@ -12,6 +12,7 @@ import {
   validatePassword,
   type AuthStatus,
 } from "../types";
+import { getSafeRedirectUrl } from "../utils/validate-redirect";
 
 interface ResetPasswordFormProps {
   authClient: AuthClient;
@@ -58,7 +59,8 @@ export function ResetPasswordForm({
       {
         onSuccess: () => {
           setStatus("success");
-          setTimeout(() => router.push(redirectTo), 2000);
+          const safeRedirectTo = getSafeRedirectUrl(redirectTo, "/sign-in");
+          setTimeout(() => router.push(safeRedirectTo), 2000);
         },
         onError: (ctx) => {
           setStatus("error");
