@@ -22,7 +22,7 @@ export function SignInForm({ authClient, redirectTo }: SignInFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const nextUrl = getSafeRedirectUrl(redirectTo ?? searchParams.get("next"));
+  const safeRedirectTo = getSafeRedirectUrl(redirectTo ?? searchParams.get("next"));
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -34,7 +34,7 @@ export function SignInForm({ authClient, redirectTo }: SignInFormProps) {
       {
         onSuccess: () => {
           setStatus("success");
-          router.push(nextUrl);
+          router.push(safeRedirectTo);
           router.refresh();
         },
         onError: (ctx) => {

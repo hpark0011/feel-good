@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "007"
 tags: [code-review, consistency, auth]
@@ -47,16 +47,17 @@ Rename all redirect props to `redirectTo` for consistency.
 
 ## Acceptance Criteria
 
-- [ ] Rename all redirect props to `redirectTo`
-- [ ] Update internal variables to be consistent
-- [ ] Update all usages in Mirror app
-- [ ] TypeScript compiles without errors
+- [x] Rename all redirect props to `redirectTo`
+- [x] Update internal variables to be consistent
+- [x] Update all usages in Mirror app
+- [x] TypeScript compiles without errors
 
 ## Work Log
 
 | Date | Action | Outcome |
 |------|--------|---------|
 | 2026-01-28 | Created from code review | Identified P2 consistency issue |
+| 2026-01-28 | Standardized all redirect props to `redirectTo` | Completed - all components now use consistent naming |
 
 ## Resources
 

@@ -10,12 +10,12 @@ import { getSafeRedirectUrl } from "../utils/validate-redirect";
 
 interface ForgotPasswordFormProps {
   authClient: AuthClient;
-  redirectURL?: string;
+  redirectTo?: string;
 }
 
 export function ForgotPasswordForm({
   authClient,
-  redirectURL = "/reset-password",
+  redirectTo = "/reset-password",
 }: ForgotPasswordFormProps) {
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -26,10 +26,10 @@ export function ForgotPasswordForm({
     setError(null);
     setStatus("loading");
 
-    const safeRedirectURL = getSafeRedirectUrl(redirectURL, "/reset-password");
+    const safeRedirectTo = getSafeRedirectUrl(redirectTo, "/reset-password");
 
     await authClient.forgetPassword(
-      { email, redirectTo: safeRedirectURL },
+      { email, redirectTo: safeRedirectTo },
       {
         onSuccess: () => {
           setStatus("success");
