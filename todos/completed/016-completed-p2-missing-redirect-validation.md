@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "016"
 tags: [code-review, security, auth]
@@ -96,17 +96,18 @@ Option A - Apply the same `getSafeRedirectUrl()` pattern used in `SignInForm` to
 
 ## Acceptance Criteria
 
-- [ ] `ForgotPasswordForm` uses `getSafeRedirectUrl()` for redirect validation
-- [ ] `ResetPasswordForm` uses `getSafeRedirectUrl()` for redirect validation
-- [ ] All auth forms have consistent redirect URL handling
-- [ ] TypeScript compiles without errors
-- [ ] Password reset flow still works correctly
+- [x] `ForgotPasswordForm` uses `getSafeRedirectUrl()` for redirect validation
+- [x] `ResetPasswordForm` uses `getSafeRedirectUrl()` for redirect validation
+- [x] All auth forms have consistent redirect URL handling
+- [x] TypeScript compiles without errors
+- [ ] Password reset flow still works correctly (manual testing)
 
 ## Work Log
 
 | Date | Action | Outcome |
 |------|--------|---------|
 | 2026-01-28 | Created from PR #68 code review | Identified P2 security consistency issue |
+| 2026-01-28 | Applied Option A fix | Added `getSafeRedirectUrl()` to both forms, build passes |
 
 ## Resources
 
