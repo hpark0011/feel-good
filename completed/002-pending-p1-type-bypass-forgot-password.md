@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p1
 issue_id: "002"
 tags: [code-review, typescript, auth]
@@ -75,17 +75,18 @@ await authClient.forgetPassword(
 
 ## Acceptance Criteria
 
-- [ ] Remove `any` type cast
-- [ ] Remove eslint-disable comment
-- [ ] Use proper Better Auth API method
-- [ ] Match error handling pattern of other forms
-- [ ] TypeScript compiles without errors
+- [x] Remove `any` type cast
+- [x] Remove eslint-disable comment
+- [x] Use proper Better Auth API method
+- [x] Match error handling pattern of other forms
+- [x] TypeScript compiles without errors
 
 ## Work Log
 
 | Date | Action | Outcome |
 |------|--------|---------|
 | 2026-01-28 | Created from code review | Identified P1 type safety issue |
+| 2026-01-28 | Refactored to callback pattern | Removed `any` cast, using `onSuccess`/`onError` callbacks like other auth forms |
 
 ## Resources
 
