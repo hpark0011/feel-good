@@ -195,6 +195,7 @@
 
 @layer base {
   body {
-    @apply bg-background text-foreground font-sans tracking-[-0.04em] font-[480];
+    @apply bg-background text-foreground tracking-[-0.04em] font-[480];
+    font-family: var(--font-inter);
   }
 }

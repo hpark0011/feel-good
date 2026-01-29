@@ -23,6 +23,7 @@
   body {
     background: var(--color-background);
     color: var(--color-foreground);
-    font-family: var(--font-serif);
+    font-family: var(--font-sans);
+    letter-spacing: -0.04em;
   }
 }
