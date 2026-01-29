@@ -5,7 +5,7 @@ import { Button } from "@feel-good/ui/primitives/button";
 import { Input } from "@feel-good/ui/primitives/input";
 import { Label } from "@feel-good/ui/primitives/label";
 import type { AuthClient } from "../client";
-import { getAuthErrorMessage, type AuthStatus } from "../types";
+import { type AuthStatus, getAuthErrorMessage } from "../types";
 import { getSafeRedirectUrl } from "../utils/validate-redirect";
 
 interface ForgotPasswordFormProps {
@@ -38,7 +38,7 @@ export function ForgotPasswordForm({
           setStatus("error");
           setError(getAuthErrorMessage(ctx.error.code ?? "UNKNOWN"));
         },
-      }
+      },
     );
   }
 
@@ -53,8 +53,8 @@ export function ForgotPasswordForm({
             Check your email
           </h3>
           <p className="mt-1 text-sm text-green-700 dark:text-green-300">
-            If an account exists for {email}, you will receive a password reset
-            link.
+            If an account exists for{" "}
+            {email}, you will receive a password reset link.
           </p>
         </div>
       </div>
