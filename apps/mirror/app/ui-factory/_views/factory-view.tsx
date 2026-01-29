@@ -7,7 +7,6 @@ export function FactoryView() {
   return (
     <div>
       <AuthButton />
-      <ThemeToggleButton />
     </div>
   );
 }
