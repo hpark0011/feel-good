@@ -462,9 +462,15 @@ importers:
       convex:
         specifier: 'catalog:'
         version: 1.31.6(react@19.2.3)
+      lucide-react:
+        specifier: ^0.540.0
+        version: 0.540.0(react@19.2.3)
       next:
         specifier: 'catalog:'
         version: 16.1.4(@babel/core@7.28.6)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      next-themes:
+        specifier: ^0.4.6
+        version: 0.4.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       react:
         specifier: 'catalog:'
         version: 19.2.3
