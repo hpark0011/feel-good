@@ -17,15 +17,15 @@
     "next": "^16.0.0"
   },
   "dependencies": {
-    "better-auth": "1.4.9",
-    "@convex-dev/better-auth": "^0.10.10",
+    "@convex-dev/better-auth": "catalog:",
     "@feel-good/ui": "workspace:*",
-    "convex": "^1.25.0",
-    "convex-helpers": "^0.1.111"
+    "better-auth": "catalog:",
+    "convex": "catalog:",
+    "convex-helpers": "catalog:"
   },
   "devDependencies": {
     "@feel-good/tsconfig": "workspace:*",
-    "@types/react": "^19",
-    "typescript": "^5.3.0"
+    "@types/react": "catalog:",
+    "typescript": "catalog:"
   }
 }
