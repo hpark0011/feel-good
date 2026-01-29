@@ -4,11 +4,9 @@
 
 "use client";
 
-import { ConvexProvider, ConvexReactClient } from "@feel-good/convex";
 import { ThemeProvider } from "@feel-good/ui/providers/theme-provider";
 import { SessionProvider } from "@/lib/auth-client";
-
-const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+import { ConvexProvider } from "./convex-provider";
 
 export function RootProvider({ children }: { children: React.ReactNode }) {
   return (
@@ -18,7 +16,7 @@ export function RootProvider({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      <ConvexProvider client={convex}>
+      <ConvexProvider>
         <SessionProvider>{children}</SessionProvider>
       </ConvexProvider>
     </ThemeProvider>
