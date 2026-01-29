@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@feel-good/ui/primitives/dropdown-menu";
 
-export function ModeToggle() {
+export function ThemeToggleButton() {
   const { setTheme } = useTheme();
 
   return (
