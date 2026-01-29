@@ -459,6 +459,9 @@ importers:
       '@feel-good/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@radix-ui/colors':
+        specifier: 'catalog:'
+        version: 3.0.0
       better-auth:
         specifier: 'catalog:'
         version: 1.4.9(next@16.1.4(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)

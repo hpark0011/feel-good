@@ -13,12 +13,19 @@ import {
 } from "@feel-good/ui/primitives/dropdown-menu";
 
 export function ThemeToggleButton() {
+  const [mounted, setMounted] = React.useState(false);
   const { setTheme } = useTheme();
 
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Always render the same component tree to avoid hydration mismatch
+  // Use disabled state to prevent interaction before mount
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
+      <DropdownMenuTrigger asChild disabled={!mounted}>
+        <Button variant="outline" size="icon" disabled={!mounted}>
           <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
           <span className="sr-only">Toggle theme</span>
