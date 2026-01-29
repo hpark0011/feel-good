@@ -16,7 +16,11 @@
       "Bash(git commit:*)",
       "Bash(git rev-parse:*)",
       "Bash(cat:*)",
-      "Bash(pnpm:*)"
+      "Bash(pnpm:*)",
+      "Bash(curl:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)",
+      "Bash(pkill:*)"
     ]
   }
 }
