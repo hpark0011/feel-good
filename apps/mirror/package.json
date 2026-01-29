@@ -15,7 +15,9 @@
     "@feel-good/ui": "workspace:*",
     "better-auth": "catalog:",
     "convex": "catalog:",
+    "lucide-react": "catalog:",
     "next": "catalog:",
+    "next-themes": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "zod": "catalog:"
