@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "017"
 tags: [code-review, performance, ssr-safety]
@@ -72,15 +72,16 @@ export function getConvexClient(): ConvexReactClient {
 
 ## Acceptance Criteria
 
-- [ ] Function throws helpful error if called server-side
-- [ ] Error message explains the issue and solution
-- [ ] No impact on client-side performance
+- [x] Function throws helpful error if called server-side
+- [x] Error message explains the issue and solution
+- [x] No impact on client-side performance
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-01-29 | Created from code review | Performance oracle identified SSR concern |
+| 2026-01-30 | Implemented Option A | Added runtime guard with helpful error message |
 
 ## Resources
 
