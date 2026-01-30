@@ -25,7 +25,7 @@
   --foreground: var(--gray-12);
 
   /* Button */
-  --primary: #ff0000;
+  --primary: var(--gray-12);
   --primary-foreground: var(--gray-1);
 
   --secondary: var(--gray-10);
@@ -37,8 +37,8 @@
   --foreground: var(--gray-12);
 
   /* Button */
-  --primary: #ff0000;
-  --primary-foreground: var(--gray-12);
+  --primary: var(--gray-12);
+  --primary-foreground: var(--gray-1);
 
   --secondary: var(--gray-10);
   --secondary-foreground: var(--gray-12);

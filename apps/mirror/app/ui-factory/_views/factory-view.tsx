@@ -1,12 +1,9 @@
-import { AuthButton } from "@/app/ui-factory/_components/auth-button";
-import {
-  ThemeToggleButton,
-} from "@/app/ui-factory/_components/theme-toggle-button";
+import { Buttons } from "@/app/ui-factory/_components/buttons";
 
 export function FactoryView() {
   return (
     <div>
-      <AuthButton />
+      <Buttons />
     </div>
   );
 }
