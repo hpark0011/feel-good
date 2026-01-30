@@ -16,7 +16,7 @@
 @import "./fonts.css";
 
 /* content sources - update the below if you add a new path */
-@source "../../packages/ui";
+@source "../node_modules/@feel-good/ui";
 
 @custom-variant dark (&:is(.dark *));
 

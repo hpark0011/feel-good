@@ -7,7 +7,6 @@ const PUBLIC_ROUTES = [
   "/sign-up",
   "/forgot-password",
   "/reset-password",
-  "/ui-factory",
 ];
 const AUTH_ROUTES = [
   "/sign-in",
