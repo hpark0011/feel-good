@@ -548,6 +548,9 @@ importers:
       '@feel-good/eslint-config':
         specifier: workspace:*
         version: link:../../tooling/eslint
+      '@feel-good/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/typescript
       '@tailwindcss/postcss':
         specifier: 'catalog:'
         version: 4.1.18

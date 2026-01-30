@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@feel-good/eslint-config": "workspace:*",
+    "@feel-good/tsconfig": "workspace:*",
     "@tailwindcss/postcss": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
