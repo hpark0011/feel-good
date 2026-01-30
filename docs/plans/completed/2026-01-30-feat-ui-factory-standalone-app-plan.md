@@ -118,16 +118,16 @@ export function RootProvider({ children }: { children: React.ReactNode }) {
 
 ### Functional Requirements
 
-- [ ] New `apps/ui-factory/` app created and registered in workspace
-- [ ] All components from mirror's ui-factory route migrated
-- [ ] App runs independently with `pnpm dev --filter=@feel-good/ui-factory`
+- [x] New `apps/ui-factory/` app created and registered in workspace
+- [x] All components from mirror's ui-factory route migrated
+- [x] App runs independently with `pnpm dev --filter=@feel-good/ui-factory`
 - [ ] Theme toggle works (light/dark/system)
 - [ ] All button variants display correctly
 
 ### Non-Functional Requirements
 
-- [ ] No TypeScript errors (`pnpm build` passes)
-- [ ] No ESLint errors (`pnpm lint` passes)
+- [x] No TypeScript errors (`pnpm build` passes)
+- [x] No ESLint errors (`pnpm lint` passes)
 - [ ] Global CSS properly wired (radix colors, tailwind utilities work)
 - [ ] Inter font loads correctly (check via browser DevTools)
 - [ ] InstrumentSerif font loads correctly

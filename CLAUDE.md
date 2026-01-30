@@ -24,7 +24,9 @@ pnpm lint --filter=@feel-good/greyboard   # Lint single app
 ```
 feel-good/
 ├── apps/
-│   └── greyboard/              # Task management app (Next.js 15)
+│   ├── greyboard/              # Task management app (Next.js 15)
+│   ├── mirror/                 # Main Feel Good app (Next.js 15)
+│   └── ui-factory/             # Component design & preview tool
 ├── packages/
 │   ├── icons/                  # SVG icon components (@feel-good/icons)
 │   └── utils/                  # Shared utilities (@feel-good/utils)
@@ -43,6 +45,16 @@ feel-good/
 
 AI-powered document creation & task management application.
 See `apps/greyboard/CLAUDE.md` for detailed documentation.
+
+### Mirror (`apps/mirror`)
+
+Main Feel Good application with Convex backend and better-auth.
+Runs on port 3001.
+
+### UI Factory (`apps/ui-factory`)
+
+Component design and preview tool for Feel Good apps.
+Runs on port 3002.
 
 ## Packages
 

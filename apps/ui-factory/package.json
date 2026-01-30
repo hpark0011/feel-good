@@ -1,31 +1,26 @@
 {
-  "name": "@feel-good/mirror",
+  "name": "@feel-good/ui-factory",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3001",
+    "dev": "next dev --port 3002",
     "build": "next build",
-    "start": "next start --port 3001",
+    "start": "next start --port 3002",
     "lint": "eslint"
   },
   "dependencies": {
-    "@convex-dev/better-auth": "catalog:",
-    "@feel-good/convex": "workspace:*",
-    "@radix-ui/colors": "catalog:",
-    "@feel-good/features": "workspace:*",
     "@feel-good/ui": "workspace:*",
-    "better-auth": "catalog:",
-    "convex": "catalog:",
+    "@radix-ui/colors": "catalog:",
     "lucide-react": "catalog:",
     "next": "catalog:",
     "next-themes": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "tw-animate-css": "catalog:",
-    "zod": "catalog:"
+    "tw-animate-css": "catalog:"
   },
   "devDependencies": {
     "@feel-good/eslint-config": "workspace:*",
+    "@feel-good/tsconfig": "workspace:*",
     "@tailwindcss/postcss": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",

@@ -518,6 +518,64 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
 
+  apps/ui-factory:
+    dependencies:
+      '@feel-good/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      '@radix-ui/colors':
+        specifier: 'catalog:'
+        version: 3.0.0
+      lucide-react:
+        specifier: 'catalog:'
+        version: 0.540.0(react@19.2.3)
+      next:
+        specifier: 'catalog:'
+        version: 16.1.4(@babel/core@7.28.6)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      next-themes:
+        specifier: 'catalog:'
+        version: 0.4.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      react:
+        specifier: 'catalog:'
+        version: 19.2.3
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.2.3(react@19.2.3)
+      tw-animate-css:
+        specifier: 'catalog:'
+        version: 1.4.0
+    devDependencies:
+      '@feel-good/eslint-config':
+        specifier: workspace:*
+        version: link:../../tooling/eslint
+      '@feel-good/tsconfig':
+        specifier: workspace:*
+        version: link:../../tooling/typescript
+      '@tailwindcss/postcss':
+        specifier: 'catalog:'
+        version: 4.1.18
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.19.30
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.2.9
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.2.3(@types/react@19.2.9)
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.2(jiti@2.6.1)
+      eslint-config-next:
+        specifier: 'catalog:'
+        version: 16.1.4(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
+      tailwindcss:
+        specifier: 'catalog:'
+        version: 4.1.18
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
   packages/convex:
     dependencies:
       '@convex-dev/better-auth':
