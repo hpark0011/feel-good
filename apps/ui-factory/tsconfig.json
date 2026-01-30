@@ -1,5 +1,5 @@
 {
-  "extends": "@feel-good/tsconfig/nextjs.json",
+  "extends": "../../tooling/typescript/nextjs.json",
   "compilerOptions": {
     "incremental": true,
     "paths": {
