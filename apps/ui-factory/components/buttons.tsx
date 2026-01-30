@@ -70,6 +70,17 @@ export function Buttons() {
           ))}
         </ButtonGroup>
       </Section>
+
+      <Section>
+        <SectionHeader>Size: icon-xs</SectionHeader>
+        <ButtonGroup>
+          {BUTTON_VARIANTS.map((variant) => (
+            <Button key={variant} variant={variant} size="icon-xs">
+              Icon
+            </Button>
+          ))}
+        </ButtonGroup>
+      </Section>
     </div>
   );
 }
