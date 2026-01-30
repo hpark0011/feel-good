@@ -1,5 +1,5 @@
 import { Button } from "@feel-good/ui/primitives/button";
-import { SectionHeader } from "./section-header";
+import { SectionHeader } from "../app/_components/section-header";
 
 export function Buttons() {
   return (
