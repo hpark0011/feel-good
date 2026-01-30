@@ -16,7 +16,7 @@
 
 /* local styles - update the below if you add a new style */
 @import "./fonts.css";
-@import "./radix-gray-scale.css";
+@import "./radix-color-scale.css";
 
 /* content sources - update the below if you add a new path */
 @source "../node_modules/@feel-good/ui";
@@ -35,7 +35,7 @@
   --secondary: var(--gray-10);
   --secondary-foreground: var(--gray-12);
 
-  --destructive: var(--red-12);
+  --destructive: var(--red-9);
   --destructive-foreground: var(--red-1);
 }
 
@@ -51,7 +51,7 @@
   --secondary: var(--gray-10);
   --secondary-foreground: var(--gray-12);
 
-  --destructive: var(--red-12);
+  --destructive: var(--red-9);
   --destructive-foreground: var(--red-1);
 }
 

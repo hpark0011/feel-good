@@ -18,4 +18,18 @@
   --color-gray-10: var(--gray-10);
   --color-gray-11: var(--gray-11);
   --color-gray-12: var(--gray-12);
+
+  /* Radix Red Scale */
+  --color-red-1: var(--red-1);
+  --color-red-2: var(--red-2);
+  --color-red-3: var(--red-3);
+  --color-red-4: var(--red-4);
+  --color-red-5: var(--red-5);
+  --color-red-6: var(--red-6);
+  --color-red-7: var(--red-7);
+  --color-red-8: var(--red-8);
+  --color-red-9: var(--red-9);
+  --color-red-10: var(--red-10);
+  --color-red-11: var(--red-11);
+  --color-red-12: var(--red-12);
 }
