@@ -11,9 +11,12 @@
 /* import radix colors */
 @import "@radix-ui/colors/gray.css";
 @import "@radix-ui/colors/gray-dark.css";
+@import "@radix-ui/colors/red.css";
+@import "@radix-ui/colors/red-dark.css";
 
 /* local styles - update the below if you add a new style */
 @import "./fonts.css";
+@import "./radix-gray-scale.css";
 
 /* content sources - update the below if you add a new path */
 @source "../node_modules/@feel-good/ui";
@@ -21,6 +24,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* Base */
   --background: var(--gray-1);
   --foreground: var(--gray-12);
 
@@ -30,9 +34,13 @@
 
   --secondary: var(--gray-10);
   --secondary-foreground: var(--gray-12);
+
+  --destructive: var(--red-12);
+  --destructive-foreground: var(--red-1);
 }
 
 .dark {
+  /* Base */
   --background: var(--gray-1);
   --foreground: var(--gray-12);
 
@@ -42,25 +50,15 @@
 
   --secondary: var(--gray-10);
   --secondary-foreground: var(--gray-12);
+
+  --destructive: var(--red-12);
+  --destructive-foreground: var(--red-1);
 }
 
 @theme inline {
+  /* Base */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-
-  /* Radix Gray Scale */
-  --color-gray-1: var(--gray-1);
-  --color-gray-2: var(--gray-2);
-  --color-gray-3: var(--gray-3);
-  --color-gray-4: var(--gray-4);
-  --color-gray-5: var(--gray-5);
-  --color-gray-6: var(--gray-6);
-  --color-gray-7: var(--gray-7);
-  --color-gray-8: var(--gray-8);
-  --color-gray-9: var(--gray-9);
-  --color-gray-10: var(--gray-10);
-  --color-gray-11: var(--gray-11);
-  --color-gray-12: var(--gray-12);
 
   /* Button */
   --color-primary: var(--primary);
@@ -68,6 +66,9 @@
 
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
 }
 
 @layer base {
