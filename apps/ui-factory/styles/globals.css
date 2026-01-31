@@ -30,8 +30,8 @@
   --foreground: var(--gray-12);
 
   /* Button */
-  --primary: #2a2a2a;
-  --primary-foreground: var(--gray-1);
+  --primary: #2d2d2d;
+  --primary-foreground: var(--gray-3);
 
   --secondary: var(--gray-1);
   --secondary-foreground: var(--gray-12);
@@ -39,15 +39,18 @@
   --destructive: var(--red-9);
   --destructive-foreground: var(--red-1);
 
-  --accent: var(--gray-3);
+  --accent: var(--gray-1);
   --accent-foreground: var(--gray-12);
+
+  --ghost: transparent;
+  --ghost-foreground: var(--gray-11);
 
   /* Input */
   --input: var(--gray-3);
   --input-foreground: var(--gray-12);
 
   /* Border */
-  --border: var(--gray-7);
+  --border: var(--gray-6);
   --ring: var(--gray-8);
 }
 
@@ -68,6 +71,9 @@
 
   --accent: var(--gray-3);
   --accent-foreground: var(--gray-12);
+
+  --ghost: transparent;
+  --ghost-foreground: var(--gray-12);
 
   /* Input */
   --input: var(--gray-3);
@@ -95,6 +101,9 @@
 
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+
+  --color-ghost: var(--ghost);
+  --color-ghost-foreground: var(--ghost-foreground);
 
   /* Input */
   --color-input: var(--input);
