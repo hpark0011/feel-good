@@ -1,13 +1,17 @@
-import { NavHeader } from "@/app/_components/nav-header";
+import { NavHeader } from "@/components/nav-header";
 import React from "react";
 
 export default function ComponentsLayout(
   { children }: { children: React.ReactNode },
 ) {
   return (
-    <div>
+    <div className="mx-auto relative">
       <NavHeader />
-      <main>{children}</main>
+      <main className="mx-auto min-h-screen">
+        <div className="flex flex-col items-center py-20">
+          {children}
+        </div>
+      </main>
     </div>
   );
 }

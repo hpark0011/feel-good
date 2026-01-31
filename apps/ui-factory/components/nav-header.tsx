@@ -1,4 +1,4 @@
-import { ThemeToggleButton } from "./theme-toggle-button";
+import { ThemeToggleButton } from "@/components/theme-toggle-button";
 
 export function NavHeader() {
   return (

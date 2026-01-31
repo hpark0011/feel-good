@@ -1,11 +1,13 @@
 import { cn } from "@feel-good/ui/lib/utils";
 
-interface ButtonGroupProps {
+interface ButtonGroupWrapperProps {
   children: React.ReactNode;
   className?: string;
 }
 
-export function ButtonGroup({ children, className }: ButtonGroupProps) {
+export function ButtonGroupWrapper(
+  { children, className }: ButtonGroupWrapperProps,
+) {
   return (
     <div className={cn("flex gap-3 w-full", className)}>
       {children}

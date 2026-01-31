@@ -1,4 +1,4 @@
-import { Buttons } from "@/components/buttons/buttons";
+import { Buttons } from "@/app/components/buttons/_components/buttons";
 
 export function ButtonsView() {
   return (

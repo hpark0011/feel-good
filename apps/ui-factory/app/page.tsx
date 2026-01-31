@@ -1,5 +1,5 @@
-import { NavHeader } from "@/app/_components/nav-header";
-import { FactoryView } from "@/app/_views/factory-view";
+import { FactoryView } from "@/app/views/factory-view";
+import { NavHeader } from "@/components/nav-header";
 
 export default function UIFactoryPage() {
   return (

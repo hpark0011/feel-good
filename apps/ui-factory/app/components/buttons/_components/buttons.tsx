@@ -1,10 +1,10 @@
-import { ButtonGroup } from "@/app/_components/button-group";
-import { Divider } from "@/app/_components/divider";
-import { Section } from "@/app/_components/section";
-import { SectionHeader } from "@/app/_components/section-header";
+import { ButtonGroupWrapper } from "@/app/components/buttons/_components/button-group-wrapper";
+import { ButtonsSection } from "@/app/components/buttons/_components/buttons-section";
+import { ButtonsSectionHeader } from "@/app/components/buttons/_components/buttons-section-header";
+import { Divider } from "@/components/divider";
 import { Button } from "@feel-good/ui/primitives/button";
 import { PlusIcon } from "lucide-react";
-import { BUTTON_VARIANTS } from "./button-variants.config";
+import { BUTTON_VARIANTS } from "../_utils/button-variants.config";
 
 const variantLabels: Record<(typeof BUTTON_VARIANTS)[number], string> = {
   default: "Default",
@@ -21,48 +21,48 @@ export function Buttons() {
     <div className="flex flex-col">
       <Divider />
 
-      <Section>
-        <SectionHeader>Size: xs</SectionHeader>
-        <ButtonGroup>
+      <ButtonsSection>
+        <ButtonsSectionHeader>Size: xs</ButtonsSectionHeader>
+        <ButtonGroupWrapper>
           {BUTTON_VARIANTS.map((variant) => (
             <Button key={variant} variant={variant} size="xs">
               {variantLabels[variant]}
             </Button>
           ))}
-        </ButtonGroup>
-      </Section>
+        </ButtonGroupWrapper>
+      </ButtonsSection>
 
       <Divider />
 
-      <Section>
-        <SectionHeader>Size: sm</SectionHeader>
-        <ButtonGroup>
+      <ButtonsSection>
+        <ButtonsSectionHeader>Size: sm</ButtonsSectionHeader>
+        <ButtonGroupWrapper>
           {BUTTON_VARIANTS.map((variant) => (
             <Button key={variant} variant={variant} size="sm">
               {variantLabels[variant]}
             </Button>
           ))}
-        </ButtonGroup>
-      </Section>
+        </ButtonGroupWrapper>
+      </ButtonsSection>
 
       <Divider />
 
-      <Section>
-        <SectionHeader>Size: default</SectionHeader>
-        <ButtonGroup>
+      <ButtonsSection>
+        <ButtonsSectionHeader>Size: default</ButtonsSectionHeader>
+        <ButtonGroupWrapper>
           {BUTTON_VARIANTS.map((variant) => (
             <Button key={variant} variant={variant}>
               {variantLabels[variant]}
             </Button>
           ))}
-        </ButtonGroup>
-      </Section>
+        </ButtonGroupWrapper>
+      </ButtonsSection>
 
       <Divider />
 
-      <Section>
-        <SectionHeader>Size: lg</SectionHeader>
-        <ButtonGroup>
+      <ButtonsSection>
+        <ButtonsSectionHeader>Size: lg</ButtonsSectionHeader>
+        <ButtonGroupWrapper>
           {BUTTON_VARIANTS.map((variant) => (
             <Button
               key={variant}
@@ -72,60 +72,60 @@ export function Buttons() {
               {variantLabels[variant]}
             </Button>
           ))}
-        </ButtonGroup>
-      </Section>
+        </ButtonGroupWrapper>
+      </ButtonsSection>
 
       <Divider />
 
-      <Section>
-        <SectionHeader>Size: icon-xs</SectionHeader>
-        <ButtonGroup>
+      <ButtonsSection>
+        <ButtonsSectionHeader>Size: icon-xs</ButtonsSectionHeader>
+        <ButtonGroupWrapper>
           {BUTTON_VARIANTS.map((variant) => (
             <Button key={variant} variant={variant} size="icon-xs">
               <PlusIcon />
             </Button>
           ))}
-        </ButtonGroup>
-      </Section>
+        </ButtonGroupWrapper>
+      </ButtonsSection>
 
       <Divider />
 
-      <Section>
-        <SectionHeader>Size: icon-sm</SectionHeader>
-        <ButtonGroup>
+      <ButtonsSection>
+        <ButtonsSectionHeader>Size: icon-sm</ButtonsSectionHeader>
+        <ButtonGroupWrapper>
           {BUTTON_VARIANTS.map((variant) => (
             <Button key={variant} variant={variant} size="icon-sm">
               <PlusIcon />
             </Button>
           ))}
-        </ButtonGroup>
-      </Section>
+        </ButtonGroupWrapper>
+      </ButtonsSection>
 
       <Divider />
 
-      <Section>
-        <SectionHeader>Size: icon</SectionHeader>
-        <ButtonGroup>
+      <ButtonsSection>
+        <ButtonsSectionHeader>Size: icon</ButtonsSectionHeader>
+        <ButtonGroupWrapper>
           {BUTTON_VARIANTS.map((variant) => (
             <Button key={variant} variant={variant} size="icon">
               <PlusIcon />
             </Button>
           ))}
-        </ButtonGroup>
-      </Section>
+        </ButtonGroupWrapper>
+      </ButtonsSection>
 
       <Divider />
 
-      <Section>
-        <SectionHeader>Size: icon-lg</SectionHeader>
-        <ButtonGroup>
+      <ButtonsSection>
+        <ButtonsSectionHeader>Size: icon-lg</ButtonsSectionHeader>
+        <ButtonGroupWrapper>
           {BUTTON_VARIANTS.map((variant) => (
             <Button key={variant} variant={variant} size="icon-lg">
               <PlusIcon />
             </Button>
           ))}
-        </ButtonGroup>
-      </Section>
+        </ButtonGroupWrapper>
+      </ButtonsSection>
 
       <Divider />
     </div>
