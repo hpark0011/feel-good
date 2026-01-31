@@ -22,7 +22,8 @@ const iconVariants = cva("shrink-0", {
 });
 
 export interface IconProps
-  extends Omit<React.SVGProps<SVGSVGElement>, "name">,
+  extends
+    Omit<React.SVGProps<SVGSVGElement>, "name">,
     VariantProps<typeof iconVariants> {
   name: IconName;
 }

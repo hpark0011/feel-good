@@ -1,6 +1,6 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
+import { Icon } from "@feel-good/ui/components/icon";
 import { useTheme } from "next-themes";
 import * as React from "react";
 
@@ -26,14 +26,16 @@ export function ThemeToggleButton() {
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <Sun className="h-4 w-4 text-muted-foreground" />
+    <div className="flex items-center gap-1">
+      <Icon name="SunMaxFillIcon" className="size-5 text-icon" />
       <Switch
         checked={isDark}
         onCheckedChange={handleToggle}
         aria-label="Toggle dark mode"
       />
-      <Moon className="h-4 w-4 text-muted-foreground" />
+      <div className="size-4.5 flex items-center justify-center">
+        <Icon name="MoonFillIcon" className="size-4 text-icon" />
+      </div>
     </div>
   );
 }
