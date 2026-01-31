@@ -7,7 +7,12 @@ interface SectionProps {
 
 export function Section({ children, className }: SectionProps) {
   return (
-    <div className={cn("flex flex-col gap-2", className)}>
+    <div
+      className={cn(
+        "flex flex-col gap-4 border p-4 pt-3 rounded-2xl",
+        className,
+      )}
+    >
       {children}
     </div>
   );

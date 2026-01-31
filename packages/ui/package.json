@@ -16,6 +16,7 @@
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "dependencies": {
+    "@feel-good/icons": "workspace:*",
     "@feel-good/utils": "workspace:*",
     "@hookform/resolvers": "catalog:",
     "@radix-ui/react-accordion": "catalog:",

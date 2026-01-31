@@ -16,6 +16,7 @@
 
 /* local styles - update the below if you add a new style */
 @import "./fonts.css";
+@import "./shadows.css";
 
 /* content sources - update the below if you add a new path */
 @source "../node_modules/@feel-good/ui";

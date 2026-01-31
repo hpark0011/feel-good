@@ -17,6 +17,7 @@
 /* local styles - update the below if you add a new style */
 @import "./fonts.css";
 @import "./radix-color-scale.css";
+@import "./shadows.css";
 
 /* content sources - update the below if you add a new path */
 @source "../node_modules/@feel-good/ui";
@@ -29,7 +30,7 @@
   --foreground: var(--gray-12);
 
   /* Button */
-  --primary: var(--gray-12);
+  --primary: #2a2a2a;
   --primary-foreground: var(--gray-1);
 
   --secondary: var(--gray-1);
@@ -37,6 +38,9 @@
 
   --destructive: var(--red-9);
   --destructive-foreground: var(--red-1);
+
+  --accent: var(--gray-3);
+  --accent-foreground: var(--gray-12);
 
   /* Input */
   --input: var(--gray-3);
@@ -62,6 +66,9 @@
   --destructive: var(--red-9);
   --destructive-foreground: var(--red-1);
 
+  --accent: var(--gray-3);
+  --accent-foreground: var(--gray-12);
+
   /* Input */
   --input: var(--gray-3);
   --input-foreground: var(--gray-12);
@@ -85,6 +92,9 @@
 
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
 
   /* Input */
   --color-input: var(--input);

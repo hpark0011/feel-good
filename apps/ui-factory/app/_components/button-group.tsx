@@ -7,7 +7,7 @@ interface ButtonGroupProps {
 
 export function ButtonGroup({ children, className }: ButtonGroupProps) {
   return (
-    <div className={cn("flex gap-2 w-[calc(100%-0.5rem)] -ml-1", className)}>
+    <div className={cn("flex gap-3 w-full", className)}>
       {children}
     </div>
   );

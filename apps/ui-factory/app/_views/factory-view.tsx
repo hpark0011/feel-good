@@ -1,4 +1,4 @@
-import { Buttons } from "@/components/buttons";
+import { Buttons } from "@/components/buttons/buttons";
 
 export function FactoryView() {
   return (

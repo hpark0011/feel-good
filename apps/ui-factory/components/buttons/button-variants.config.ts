@@ -10,10 +10,11 @@ export type ButtonVariant = NonNullable<
  * This ensures all button showcases follow the same variant ordering.
  */
 export const BUTTON_VARIANTS: ButtonVariant[] = [
+  "primary",
   "default",
   "secondary",
-  "outline",
   "destructive",
+  "outline",
   "ghost",
   "link",
 ] as const;
