@@ -9,7 +9,7 @@ export function ButtonGroupWrapper(
   { children, className }: ButtonGroupWrapperProps,
 ) {
   return (
-    <div className={cn("flex gap-3 w-full", className)}>
+    <div className={cn("flex gap-3 w-full flex-wrap", className)}>
       {children}
     </div>
   );
