@@ -1,4 +1,5 @@
 import { ButtonGroup } from "@/app/_components/button-group";
+import { Divider } from "@/app/_components/divider";
 import { Section } from "@/app/_components/section";
 import { SectionHeader } from "@/app/_components/section-header";
 import { Button } from "@feel-good/ui/primitives/button";
@@ -17,7 +18,9 @@ const variantLabels: Record<(typeof BUTTON_VARIANTS)[number], string> = {
 
 export function Buttons() {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col">
+      <Divider />
+
       <Section>
         <SectionHeader>Size: xs</SectionHeader>
         <ButtonGroup>
@@ -28,6 +31,8 @@ export function Buttons() {
           ))}
         </ButtonGroup>
       </Section>
+
+      <Divider />
 
       <Section>
         <SectionHeader>Size: sm</SectionHeader>
@@ -40,6 +45,8 @@ export function Buttons() {
         </ButtonGroup>
       </Section>
 
+      <Divider />
+
       <Section>
         <SectionHeader>Size: default</SectionHeader>
         <ButtonGroup>
@@ -50,6 +57,8 @@ export function Buttons() {
           ))}
         </ButtonGroup>
       </Section>
+
+      <Divider />
 
       <Section>
         <SectionHeader>Size: lg</SectionHeader>
@@ -66,6 +75,8 @@ export function Buttons() {
         </ButtonGroup>
       </Section>
 
+      <Divider />
+
       <Section>
         <SectionHeader>Size: icon-xs</SectionHeader>
         <ButtonGroup>
@@ -76,6 +87,8 @@ export function Buttons() {
           ))}
         </ButtonGroup>
       </Section>
+
+      <Divider />
 
       <Section>
         <SectionHeader>Size: icon-sm</SectionHeader>
@@ -88,6 +101,8 @@ export function Buttons() {
         </ButtonGroup>
       </Section>
 
+      <Divider />
+
       <Section>
         <SectionHeader>Size: icon</SectionHeader>
         <ButtonGroup>
@@ -99,6 +114,8 @@ export function Buttons() {
         </ButtonGroup>
       </Section>
 
+      <Divider />
+
       <Section>
         <SectionHeader>Size: icon-lg</SectionHeader>
         <ButtonGroup>
@@ -109,6 +126,8 @@ export function Buttons() {
           ))}
         </ButtonGroup>
       </Section>
+
+      <Divider />
     </div>
   );
 }

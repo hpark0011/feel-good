@@ -6,7 +6,7 @@ export default function UIFactoryPage() {
     <>
       <NavHeader />
       <main className="mx-auto min-h-screen">
-        <div className="flex flex-col items-center h-screen py-20">
+        <div className="flex flex-col items-center py-20">
           <FactoryView />
         </div>
       </main>
