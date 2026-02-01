@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "016"
 tags: [code-review, architecture, env-validation]
@@ -55,7 +55,7 @@ These are public variables being treated as server secrets.
 
 ## Recommended Action
 
-(To be filled during triage)
+Option A implemented: Removed `NEXT_PUBLIC_*` variables from server.ts (deleted the file entirely since it only contained public vars).
 
 ## Technical Details
 
@@ -65,15 +65,16 @@ These are public variables being treated as server secrets.
 
 ## Acceptance Criteria
 
-- [ ] No duplicate env variables between server and client schemas
-- [ ] Clear documentation on which vars belong where
-- [ ] All imports updated to use correct schema
+- [x] No duplicate env variables between server and client schemas
+- [x] Clear documentation on which vars belong where
+- [x] All imports updated to use correct schema
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-01-29 | Created from code review | Pattern analysis identified the duplication |
+| 2026-01-30 | Fixed duplication by removing server.ts | Server env file only contained public vars; moved `NEXT_PUBLIC_CONVEX_SITE_URL` to client.ts and updated auth-server.ts to use clientEnv |
 
 ## Resources
 
