@@ -1,13 +1,12 @@
-import Link from "next/link";
 import { ThemeToggleButton } from "@/components/theme-toggle-button";
+import { SidebarTrigger } from "@feel-good/ui/primitives/sidebar";
 
 export function NavHeader() {
   return (
-    <div className="fixed top-0 left-0 w-full h-12 flex items-center justify-between p-4">
-      <Link href="/">
-        <h1>UI Archive</h1>
-      </Link>
+    <header className="flex items-center gap-2 h-12 px-4 border-b border-border">
+      <SidebarTrigger />
+      <div className="flex-1" />
       <ThemeToggleButton />
-    </div>
+    </header>
   );
 }

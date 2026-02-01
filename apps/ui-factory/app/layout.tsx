@@ -1,6 +1,9 @@
 import { InstrumentSerif, Inter } from "@/app/fonts/font";
+import { AppSidebar } from "@/components/app-sidebar";
+import { NavHeader } from "@/components/nav-header";
 import { RootProvider } from "@/providers/root-provider";
 import "@/styles/globals.css";
+import { SidebarInset, SidebarProvider } from "@feel-good/ui/primitives/sidebar";
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 
@@ -25,7 +28,13 @@ export default function RootLayout({
         className={`${Inter.variable} ${InstrumentSerif.variable} ${geistMono.variable} antialiased`}
       >
         <RootProvider>
-          <div className="mx-auto relative">{children}</div>
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset>
+              <NavHeader />
+              <main>{children}</main>
+            </SidebarInset>
+          </SidebarProvider>
         </RootProvider>
       </body>
     </html>
