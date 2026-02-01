@@ -13,7 +13,7 @@ export function NavHeader() {
 
   return (
     <header
-      className="fixed top-0 right-0 z-10 flex h-12 items-center gap-2 px-4 transition-[left] duration-200 ease-linear"
+      className="fixed top-0 right-0 z-10 flex h-12 items-center gap-2 pl-3 pr-4 transition-[left] duration-200 ease-linear"
       style={{
         left: leftPosition,
       }}
