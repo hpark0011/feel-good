@@ -10,14 +10,14 @@ export function SwitchVariants() {
 
       <ComponentsSection>
         <ComponentsSectionHeader>Variant: Default</ComponentsSectionHeader>
-        <Switch />
+        <Switch variant="default" size="default" />
       </ComponentsSection>
 
       <Divider />
 
       <ComponentsSection>
         <ComponentsSectionHeader>Variant: Panel Toggle</ComponentsSectionHeader>
-        <Switch />
+        <Switch variant="panel" size="default" />
       </ComponentsSection>
     </div>
   );
