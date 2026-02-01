@@ -22,11 +22,9 @@ function Switch({
         // Shape
         "rounded-full",
         // Background
-        "data-[state=checked]:bg-primary data-[state=unchecked]:bg-input dark:data-[state=unchecked]:bg-input/80",
+        "data-[state=checked]:bg-input data-[state=unchecked]:bg-input dark:data-[state=unchecked]:bg-input/80",
         // Border
         "border border-transparent",
-        // Shadow
-        "shadow-xs",
         // Sizing
         "data-[size=default]:h-[1.15rem] data-[size=default]:w-8 data-[size=sm]:h-3.5 data-[size=sm]:w-6",
         // Interactive states
@@ -48,6 +46,8 @@ function Switch({
           "rounded-full",
           // Background
           "bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground",
+          // Shadow
+          "shadow-xs",
           // Sizing
           "group-data-[size=default]/switch:size-4 group-data-[size=sm]/switch:size-3",
           // Positioning
