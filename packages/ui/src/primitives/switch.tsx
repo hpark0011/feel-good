@@ -26,13 +26,14 @@ const switchVariants = cva(
       variant: {
         default: "rounded-full",
         panel: cn(
-          "rounded-sm",
+          "rounded-sm data-[state=checked]:bg-gray-7",
         ),
+        theme: "data-[state=checked]:bg-gray-7 rounded-full",
       },
       size: {
         default: "h-[18px] w-8",
         sm: "h-3.5 w-6",
-        panel: "h-[14px] w-4.5 data-[state=checked]:bg-gray-7",
+        panel: "h-[14px] w-4.5",
       },
     },
     defaultVariants: {
@@ -66,6 +67,9 @@ const switchThumbVariants = cva(
         panel: cn(
           "rounded-[3px]",
           "group-data-[size=default]/switch:w-[8px] group-data-[size=sm]/switch:w-[12px] group-data-[size=panel]/switch:w-[8px] group-data-[size=panel]/switch:h-[12px] data-[state=checked]:translate-x-[calc(100%)]",
+        ),
+        theme: cn(
+          "rounded-full",
         ),
       },
     },

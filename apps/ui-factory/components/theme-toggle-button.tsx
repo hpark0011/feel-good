@@ -29,6 +29,7 @@ export function ThemeToggleButton() {
       <Switch
         checked={resolvedTheme === "dark"}
         onCheckedChange={handleToggle}
+        variant="theme"
         aria-label="Toggle dark mode"
       />
       <div className="size-4.5 flex items-center justify-center">
