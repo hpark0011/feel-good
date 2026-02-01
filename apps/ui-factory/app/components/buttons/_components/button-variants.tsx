@@ -126,8 +126,6 @@ export function ButtonVariants() {
           ))}
         </ButtonGroupWrapper>
       </ComponentsSection>
-
-      <Divider />
     </div>
   );
 }

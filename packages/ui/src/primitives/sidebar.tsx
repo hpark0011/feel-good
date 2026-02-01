@@ -1,6 +1,5 @@
 "use client";
 
-import { Icon } from "@feel-good/ui/components/icon";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
@@ -18,6 +17,7 @@ import {
   SheetTitle,
 } from "./sheet";
 import { Skeleton } from "./skeleton";
+import { Switch } from "./switch";
 import {
   Tooltip,
   TooltipContent,
@@ -254,25 +254,39 @@ function SidebarTrigger({
   className,
   onClick,
   ...props
-}: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar();
+}: React.ComponentProps<"div">) {
+  const { toggleSidebar, open } = useSidebar();
 
   return (
-    <Button
+    <div
+      role="button"
+      tabIndex={0}
       data-sidebar="trigger"
       data-slot="sidebar-trigger"
-      variant="ghost"
-      size="icon-xs"
-      className={cn(className)}
+      className={cn(
+        "inline-flex items-center justify-center cursor-pointer",
+        className,
+      )}
       onClick={(event) => {
         onClick?.(event);
         toggleSidebar();
       }}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          toggleSidebar();
+        }
+      }}
       {...props}
     >
-      <Icon name="SidebarLeftFillIcon" className="size-4.5" />
+      <Switch
+        variant="panel"
+        size="panel"
+        checked={open}
+        tabIndex={-1}
+      />
       <span className="sr-only">Toggle Sidebar</span>
-    </Button>
+    </div>
   );
 }
 

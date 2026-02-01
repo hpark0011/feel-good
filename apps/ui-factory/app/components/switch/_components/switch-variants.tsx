@@ -16,6 +16,13 @@ export function SwitchVariants() {
       <Divider />
 
       <ComponentsSection>
+        <ComponentsSectionHeader>Variant: Theme</ComponentsSectionHeader>
+        <Switch variant="theme" size="default" />
+      </ComponentsSection>
+
+      <Divider />
+
+      <ComponentsSection>
         <ComponentsSectionHeader>Variant: Panel Toggle</ComponentsSectionHeader>
         <Switch variant="panel" size="panel" />
       </ComponentsSection>

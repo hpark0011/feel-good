@@ -24,11 +24,14 @@ const switchVariants = cva(
   {
     variants: {
       variant: {
-        default: "rounded-full",
+        default:
+          "rounded-full hover:data-[state=unchecked]:bg-gray-8 hover:data-[state=checked]:bg-green-600",
         panel: cn(
           "rounded-sm data-[state=checked]:bg-gray-7",
+          "hover:data-[state=unchecked]:bg-gray-8 hover:data-[state=checked]:bg-gray-8",
         ),
-        theme: "data-[state=checked]:bg-gray-7 rounded-full",
+        theme:
+          "data-[state=checked]:bg-gray-7 rounded-full hover:data-[state=unchecked]:bg-gray-8 hover:data-[state=checked]:bg-gray-8",
       },
       size: {
         default: "h-[18px] w-8",
