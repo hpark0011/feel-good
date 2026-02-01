@@ -40,7 +40,7 @@
   --destructive: var(--red-9);
   --destructive-foreground: var(--red-1);
 
-  --accent: var(--gray-1);
+  --accent: var(--gray-2);
   --accent-foreground: var(--gray-12);
 
   --ghost: transparent;
@@ -57,7 +57,7 @@
 
 .dark {
   /* Base */
-  --background: var(--gray-1);
+  --background: #0a0a0a;
   --foreground: var(--gray-12);
 
   /* Button */

@@ -23,12 +23,14 @@ export function AppSidebar() {
     <Sidebar collapsible="offcanvas">
       <SidebarHeader>
         <Link href="/" className="px-2 py-2">
-          <UiFactoryLogo />
+          <UiFactoryLogo className="text-md" />
         </Link>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="mt-8">
         <SidebarGroup>
-          <SidebarGroupLabel>Components</SidebarGroupLabel>
+          <SidebarGroupLabel className="rounded-none h-auto mb-2">
+            Components
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {NAVIGATION_ITEMS.map((item) => (
@@ -36,7 +38,8 @@ export function AppSidebar() {
                   <SidebarMenuButton
                     asChild
                     isActive={pathname === item.href}
-                    size="default"
+                    size="swiss-default"
+                    variant="swiss"
                   >
                     <Link href={item.href}>{item.label}</Link>
                   </SidebarMenuButton>

@@ -22,7 +22,7 @@ function Switch({
         // Shape
         "rounded-full",
         // Background
-        "data-[state=checked]:bg-input data-[state=unchecked]:bg-input dark:data-[state=unchecked]:bg-input/80",
+        "data-[state=checked]:bg-gray-5 data-[state=unchecked]:bg-gray-7 dark:data-[state=unchecked]:bg-gray-7",
         // Border
         "border border-transparent",
         // Sizing

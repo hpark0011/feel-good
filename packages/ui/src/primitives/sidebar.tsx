@@ -262,15 +262,15 @@ function SidebarTrigger({
       data-sidebar="trigger"
       data-slot="sidebar-trigger"
       variant="ghost"
-      size="icon-sm"
-      className={cn("size-7", className)}
+      size="icon-xs"
+      className={cn(className)}
       onClick={(event) => {
         onClick?.(event);
         toggleSidebar();
       }}
       {...props}
     >
-      <Icon name="SidebarLeftFillIcon" />
+      <Icon name="SidebarLeftFillIcon" className="size-4.5" />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   );
@@ -471,7 +471,7 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<"li">) {
 }
 
 const sidebarMenuButtonVariants = cva(
-  [
+  cn(
     // Layout
     "peer/menu-button flex w-full items-center gap-2 overflow-hidden",
     // Shape & Appearance
@@ -491,18 +491,35 @@ const sidebarMenuButtonVariants = cva(
     "data-[active=true]:font-medium",
     // Child Elements
     "[&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
-  ].join(" "),
+  ),
   {
     variants: {
       variant: {
         default: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-        outline:
-          "bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
+        outline: cn(
+          // Background
+          "bg-background",
+          // Shape/Shadow
+          "shadow-[0_0_0_1px_hsl(var(--sidebar-border))]",
+          // Interactive states
+          "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
+        ),
+        swiss: cn(
+          // Shape
+          "rounded-none",
+          // Background & Colors
+          "bg-swiss-sidebar-button-background text-swiss-sidebar-button-foreground active:bg-swiss-sidebar-accent active:text-sidebar-accent-foreground",
+          // Interactive states
+          "hover:bg-swiss-sidebar-button-accent hover:text-swiss-sidebar-button-accent-foreground",
+          // States
+          "data-[active=true]:bg-swiss-sidebar-button-accent",
+        ),
       },
       size: {
         default: "h-8 text-sm",
         sm: "h-7 text-xs",
         lg: "h-12 text-sm group-data-[collapsible=icon]:p-0!",
+        "swiss-default": "h-6 text-[15px] leading-0",
       },
     },
     defaultVariants: {

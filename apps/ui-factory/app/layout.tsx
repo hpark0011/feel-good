@@ -1,19 +1,8 @@
-import { InstrumentSerif, Inter } from "@/app/fonts/font";
-import { AppSidebar } from "@/components/app-sidebar";
-import { NavHeader } from "@/components/nav-header";
+import { fontVariables } from "@/app/fonts/font";
+import { SidebarLayout } from "@/components/sidebar-layout";
 import { RootProvider } from "@/providers/root-provider";
 import "@/styles/globals.css";
-import {
-  SidebarInset,
-  SidebarProvider,
-} from "@feel-good/ui/primitives/sidebar";
 import type { Metadata } from "next";
-import { Geist_Mono } from "next/font/google";
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "UI Factory",
@@ -27,17 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${Inter.variable} ${InstrumentSerif.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${fontVariables} antialiased`}>
         <RootProvider>
-          <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset>
-              <NavHeader />
-              <main>{children}</main>
-            </SidebarInset>
-          </SidebarProvider>
+          <SidebarLayout>{children}</SidebarLayout>
         </RootProvider>
       </body>
     </html>

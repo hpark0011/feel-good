@@ -1,5 +1,5 @@
-import React from "react";
+import { cn } from "@feel-good/ui/lib/utils";
 
-export function UiFactoryLogo() {
-  return <div className="font-[560]">Archive</div>;
+export function UiFactoryLogo({ className }: { className?: string }) {
+  return <div className={cn("font-[560]", className)}>Archive</div>;
 }
