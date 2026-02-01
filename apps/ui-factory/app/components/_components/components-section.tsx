@@ -1,11 +1,13 @@
 import { cn } from "@feel-good/ui/lib/utils";
 
-interface ButtonsSectionProps {
+interface ComponentsSectionProps {
   children: React.ReactNode;
   className?: string;
 }
 
-export function ButtonsSection({ children, className }: ButtonsSectionProps) {
+export function ComponentsSection(
+  { children, className }: ComponentsSectionProps,
+) {
   return (
     <div
       className={cn(
