@@ -17,7 +17,7 @@ export function SwitchVariants() {
 
       <ComponentsSection>
         <ComponentsSectionHeader>Variant: Panel Toggle</ComponentsSectionHeader>
-        <Switch variant="panel" size="default" />
+        <Switch variant="panel" size="panel" />
       </ComponentsSection>
     </div>
   );

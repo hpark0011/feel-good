@@ -11,7 +11,7 @@ const switchVariants = cva(
     // Layout
     "inline-flex shrink-0 items-center",
     // Background
-    "data-[state=checked]:bg-gray-5 data-[state=unchecked]:bg-gray-7 dark:data-[state=unchecked]:bg-gray-7",
+    "data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-gray-7 dark:data-[state=unchecked]:bg-gray-7",
     // Border
     "border border-transparent",
     // Interactive states
@@ -25,11 +25,14 @@ const switchVariants = cva(
     variants: {
       variant: {
         default: "rounded-full",
-        panel: "rounded-lg",
+        panel: cn(
+          "rounded-sm",
+        ),
       },
       size: {
         default: "h-[18px] w-8",
         sm: "h-3.5 w-6",
+        panel: "h-[14px] w-4.5 data-[state=checked]:bg-gray-7",
       },
     },
     defaultVariants: {
@@ -60,7 +63,10 @@ const switchThumbVariants = cva(
     variants: {
       variant: {
         default: "rounded-full",
-        panel: "rounded-md",
+        panel: cn(
+          "rounded-[3px]",
+          "group-data-[size=default]/switch:w-[8px] group-data-[size=sm]/switch:w-[12px] group-data-[size=panel]/switch:w-[8px] group-data-[size=panel]/switch:h-[12px] data-[state=checked]:translate-x-[calc(100%)]",
+        ),
       },
     },
     defaultVariants: {
