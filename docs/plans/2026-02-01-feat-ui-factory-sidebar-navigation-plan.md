@@ -250,17 +250,17 @@ export function NavHeader() {
 
 ## Implementation Checklist
 
-1. [ ] Create `config/navigation.config.ts` with NavItem type and initial items
-2. [ ] Create `components/app-sidebar.tsx` using shadcn sidebar primitives
-3. [ ] Update `app/layout.tsx` to wrap with SidebarProvider and add sidebar structure
-4. [ ] Update `components/nav-header.tsx` to include SidebarTrigger
-5. [ ] Verify sidebar CSS variables in `styles/globals.css`
-6. [ ] Create placeholder `app/components/input/page.tsx` for Input route
-7. [ ] Test desktop sidebar toggle
-8. [ ] Test mobile Sheet behavior
-9. [ ] Test navigation between components
-10. [ ] Test active state indication
-11. [ ] Test sidebar state persistence (reload page)
+1. [x] Create `config/navigation.config.ts` with NavItem type and initial items
+2. [x] Create `components/app-sidebar.tsx` using shadcn sidebar primitives
+3. [x] Update `app/layout.tsx` to wrap with SidebarProvider and add sidebar structure
+4. [x] Update `components/nav-header.tsx` to include SidebarTrigger
+5. [x] Verify sidebar CSS variables in `styles/globals.css`
+6. [x] Create placeholder `app/components/input/page.tsx` for Input route
+7. [x] Test desktop sidebar toggle
+8. [x] Test mobile Sheet behavior
+9. [x] Test navigation between components
+10. [x] Test active state indication
+11. [x] Test sidebar state persistence (reload page)
 
 ## References & Research
 
