@@ -18,7 +18,7 @@ const variantLabels: Record<(typeof BUTTON_VARIANTS)[number], string> = {
 
 export function ButtonVariants() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <Divider />
 
       <ComponentsSection>
