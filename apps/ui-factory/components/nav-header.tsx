@@ -3,7 +3,7 @@ import { SidebarTrigger } from "@feel-good/ui/primitives/sidebar";
 
 export function NavHeader() {
   return (
-    <header className="flex items-center gap-2 h-12 px-4 border-b border-border">
+    <header className="fixed top-0 z-10 flex items-center gap-2 h-12 px-4 bg-red-500">
       <SidebarTrigger />
       <div className="flex-1" />
       <ThemeToggleButton />

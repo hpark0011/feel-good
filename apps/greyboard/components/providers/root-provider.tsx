@@ -15,11 +15,11 @@ export function RootProvider({ children }: { children: React.ReactNode }) {
   return (
     <ReactQueryProvider>
       <ThemeProvider
-        attribute='class'
-        defaultTheme='light'
+        attribute="class"
+        defaultTheme="light"
         enableSystem
         disableTransitionOnChange
-        storageKey='theme'
+        storageKey="theme"
         themes={["light", "dark"]}
       >
         <ThemeWrapper>
