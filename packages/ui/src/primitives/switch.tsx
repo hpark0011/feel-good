@@ -65,8 +65,12 @@ const switchThumbVariants = cva(
       variant: {
         default: "rounded-full",
         panel: cn(
+          // Shape
           "rounded-[3px]",
-          "group-data-[size=default]/switch:w-[8px] group-data-[size=sm]/switch:w-[12px] group-data-[size=panel]/switch:w-[8px] group-data-[size=panel]/switch:h-[12px] data-[state=checked]:translate-x-[calc(100%)]",
+          // Sizing
+          "group-data-[size=default]/switch:w-[8px] group-data-[size=sm]/switch:w-[12px] group-data-[size=panel]/switch:w-[8px] group-data-[size=panel]/switch:h-[12px]",
+          // Positioning
+          "data-[state=checked]:translate-x-[calc(100%)]",
         ),
         theme: cn(
           "rounded-full",
