@@ -31,6 +31,7 @@ export function ThemeToggleButton() {
         onCheckedChange={handleToggle}
         variant="theme"
         aria-label="Toggle dark mode"
+        size="sm"
       />
       <div className="size-4.5 flex items-center justify-center">
         <Icon name="MoonFillIcon" className="size-4 text-icon" />
