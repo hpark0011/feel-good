@@ -1,3 +1,4 @@
+import { Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 
 export const Inter = localFont({
@@ -29,3 +30,10 @@ export const InstrumentSerif = localFont({
   display: "swap",
   variable: "--font-instrument-serif",
 });
+
+export const GeistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const fontVariables = `${Inter.variable} ${InstrumentSerif.variable} ${GeistMono.variable}`;

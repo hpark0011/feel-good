@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../lib/utils";
 
 const buttonVariants = cva(
-  [
+  cn(
     // Layout
     "inline-flex shrink-0",
     // Alignment & Spacing
@@ -24,7 +24,7 @@ const buttonVariants = cva(
     "aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
     // Active states
     "active:scale-95 cursor-pointer transition-all duration-100 ease-out",
-  ].join(" "),
+  ),
   {
     variants: {
       variant: {
@@ -38,7 +38,7 @@ const buttonVariants = cva(
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost:
-          "bg-ghost hover:bg-accent text-ghost-foreground hover:text-accent-foreground dark:hover:bg-accent/50",
+          "bg-ghost hover:bg-accent/80 text-ghost-foreground hover:text-accent-foreground dark:hover:bg-accent/50 [&_svg]:text-icon",
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {

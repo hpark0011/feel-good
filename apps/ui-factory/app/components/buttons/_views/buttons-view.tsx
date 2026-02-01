@@ -1,9 +1,5 @@
-import { Buttons } from "@/app/components/buttons/_components/buttons";
+import { ButtonVariants } from "@/app/components/buttons/_components/button-variants";
 
 export function ButtonsView() {
-  return (
-    <div>
-      <Buttons />
-    </div>
-  );
+  return <ButtonVariants />;
 }

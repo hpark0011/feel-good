@@ -18,6 +18,7 @@
 @import "./fonts.css";
 @import "./radix-color-scale.css";
 @import "./shadows.css";
+@import "./sidebar.css";
 
 /* content sources - update the below if you add a new path */
 @source "../node_modules/@feel-good/ui";
@@ -39,7 +40,7 @@
   --destructive: var(--red-9);
   --destructive-foreground: var(--red-1);
 
-  --accent: var(--gray-1);
+  --accent: var(--gray-2);
   --accent-foreground: var(--gray-12);
 
   --ghost: transparent;
@@ -56,7 +57,7 @@
 
 .dark {
   /* Base */
-  --background: var(--gray-1);
+  --background: #0a0a0a;
   --foreground: var(--gray-12);
 
   /* Button */
@@ -110,7 +111,7 @@
   --color-ring: var(--ring);
 
   /* Icon */
-  --color-icon: var(--gray-9);
+  --color-icon: var(--gray-8);
 
   /* Input */
   --color-input: var(--input);

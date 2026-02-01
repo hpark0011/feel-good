@@ -14,8 +14,6 @@ export function ThemeToggleButton() {
     setMounted(true);
   }, []);
 
-  const isDark = resolvedTheme === "dark";
-
   const handleToggle = (checked: boolean) => {
     setTheme(checked ? "dark" : "light");
   };
@@ -29,8 +27,9 @@ export function ThemeToggleButton() {
     <div className="flex items-center gap-1">
       <Icon name="SunMaxFillIcon" className="size-5 text-icon" />
       <Switch
-        checked={isDark}
+        checked={resolvedTheme === "dark"}
         onCheckedChange={handleToggle}
+        variant="theme"
         aria-label="Toggle dark mode"
       />
       <div className="size-4.5 flex items-center justify-center">
