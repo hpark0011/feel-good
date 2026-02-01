@@ -1,19 +1,20 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { UiFactoryLogo } from "@/components/ui-factory-logo";
+import { NAVIGATION_ITEMS } from "@/config/navigation.config";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarGroupContent,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
+  SidebarGroupLabel,
   SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
 } from "@feel-good/ui/primitives/sidebar";
-import { NAVIGATION_ITEMS } from "@/config/navigation.config";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -21,8 +22,8 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="offcanvas">
       <SidebarHeader>
-        <Link href="/" className="font-semibold px-2 py-2">
-          UI Factory
+        <Link href="/" className="px-2 py-2">
+          <UiFactoryLogo />
         </Link>
       </SidebarHeader>
       <SidebarContent>

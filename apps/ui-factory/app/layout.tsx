@@ -3,7 +3,10 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { NavHeader } from "@/components/nav-header";
 import { RootProvider } from "@/providers/root-provider";
 import "@/styles/globals.css";
-import { SidebarInset, SidebarProvider } from "@feel-good/ui/primitives/sidebar";
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@feel-good/ui/primitives/sidebar";
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 
