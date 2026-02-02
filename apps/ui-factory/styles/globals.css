@@ -1,137 +1,15 @@
 /*
-* global.css
+* globals.css
 *
-* Global styles for the entire application
- */
+* Global styles for ui-factory application
+*/
 
 /* import tailwindcss */
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* import radix colors */
-@import "@radix-ui/colors/gray.css";
-@import "@radix-ui/colors/gray-dark.css";
-@import "@radix-ui/colors/red.css";
-@import "@radix-ui/colors/red-dark.css";
-@import "@radix-ui/colors/green.css";
-@import "@radix-ui/colors/green-dark.css";
-@import "@radix-ui/colors/grass.css";
-
-/* local styles - update the below if you add a new style */
-@import "./fonts.css";
-@import "./radix-color-scale.css";
-@import "./shadows.css";
-@import "./sidebar.css";
-@import "./input.css";
-@import "./switch.css";
-@import "./field.css";
+/* import shared styles from @feel-good/ui */
+@import "@feel-good/ui/styles.css";
 
 /* content sources - update the below if you add a new path */
 @source "../node_modules/@feel-good/ui";
-
-@custom-variant dark (&:is(.dark *));
-
-:root {
-  /* Base */
-  --background: var(--gray-4);
-  --foreground: var(--gray-12);
-
-  /* Button */
-  --primary: #2d2d2d;
-  --primary-foreground: var(--gray-3);
-
-  --secondary: var(--gray-1);
-  --secondary-foreground: var(--gray-12);
-
-  --destructive: var(--red-9);
-  --destructive-foreground: var(--red-1);
-
-  --accent: var(--gray-2);
-  --accent-foreground: var(--gray-12);
-
-  --muted-foreground: var(--gray-9);
-
-  --ghost: transparent;
-  --ghost-foreground: var(--gray-11);
-
-  /* Border */
-  --border: var(--gray-7);
-  --border-subtle: var(--gray-6);
-
-  --ring: var(--gray-7);
-}
-
-.dark {
-  /* Base */
-  --background: #0a0a0a;
-  --foreground: var(--gray-12);
-
-  /* Button */
-  --primary: var(--gray-12);
-  --primary-foreground: var(--gray-1);
-
-  --secondary: var(--gray-3);
-  --secondary-foreground: var(--gray-12);
-
-  --destructive: var(--red-9);
-  --destructive-foreground: var(--red-1);
-
-  --accent: var(--gray-3);
-  --accent-foreground: var(--gray-12);
-
-  --muted-foreground: var(--gray-9);
-
-  --ghost: transparent;
-  --ghost-foreground: var(--gray-12);
-
-  /* Border */
-  --border: var(--gray-3);
-  --border-subtle: var(--gray-2);
-
-  --ring: var(--gray-3);
-}
-
-@theme inline {
-  /* Base */
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-
-  /* Button */
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-
-  --color-muted-foreground: var(--muted-foreground);
-
-  --color-ghost: var(--ghost);
-  --color-ghost-foreground: var(--ghost-foreground);
-
-  /* Border */
-  --color-border: var(--border);
-  --color-ring: var(--ring);
-
-  /* Icon */
-  --color-icon: var(--gray-8);
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-
-  body {
-    background: var(--color-background);
-    color: var(--color-foreground);
-    font-family: var(--font-sans);
-    letter-spacing: -0.04em;
-    font-weight: 480;
-  }
-}

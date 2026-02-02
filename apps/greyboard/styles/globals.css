@@ -1,5 +1,13 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+
+/* import shared styles from @feel-good/ui */
+@import "@feel-good/ui/styles.css";
+
+/* content sources */
+@source "../node_modules/@feel-good/ui";
+
+/* greyboard custom styles */
 @import "./primitives.css";
 @import "./text-colors.css";
 @import "./icon-colors.css";
@@ -8,10 +16,6 @@
 @import "./border.css";
 @import "./fonts.css";
 @import "./components.css";
-@import "@radix-ui/colors/gray.css";
-@import "@radix-ui/colors/gray-dark.css";
-
-@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   /* Background Colors */
