@@ -55,7 +55,7 @@ export function MagicLinkLoginForm({
                   </FieldLabel>
                   <a
                     href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline text-muted-foreground hover:text-blue-500"
+                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline text-muted-foreground hover:text-blue-500 pr-1.5"
                   >
                     Forgot your password?
                   </a>
@@ -77,7 +77,13 @@ export function MagicLinkLoginForm({
                   Login with Google
                 </Button>
                 <FieldDescription className="text-center text-sm pt-4">
-                  Don&apos;t have an account? <a href="#">Sign up</a>
+                  Don&apos;t have an account?{" "}
+                  <a
+                    href="#"
+                    className="text-muted-foreground"
+                  >
+                    Sign up
+                  </a>
                 </FieldDescription>
               </Field>
             </FieldGroup>
