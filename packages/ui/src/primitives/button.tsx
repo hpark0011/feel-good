@@ -23,7 +23,7 @@ const buttonVariants = cva(
     // Invalid states
     "aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
     // Active states
-    "active:scale-95 cursor-pointer transition-all duration-100 ease-out",
+    "active:scale-97 cursor-pointer transition-all duration-100 ease-out",
   ),
   {
     variants: {
