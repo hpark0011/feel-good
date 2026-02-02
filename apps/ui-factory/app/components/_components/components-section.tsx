@@ -11,7 +11,7 @@ export function ComponentsSection(
   return (
     <div
       className={cn(
-        "flex flex-col gap-7 py-1.5 pb-10",
+        "flex flex-col gap-10 py-1.5 pb-12",
         className,
       )}
     >
