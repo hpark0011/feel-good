@@ -1,0 +1,23 @@
+/*
+* input.css
+*
+* Input-specific styles and CSS variables
+*/
+
+:root {
+  /* Input Primitive */
+  --input: var(--gray-7);
+  --input-foreground: var(--gray-12);
+}
+
+.dark {
+  /* Input Primitive */
+  --input: var(--gray-3);
+  --input-foreground: var(--gray-12);
+}
+
+@theme inline {
+  /* Input Primitive */
+  --color-input: var(--input);
+  --color-input-foreground: var(--input-foreground);
+}

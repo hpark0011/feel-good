@@ -14,8 +14,6 @@
   --sidebar-ring: var(--gray-8);
   --sidebar-primary: var(--gray-12);
   --sidebar-primary-foreground: var(--gray-1);
-
-  /* Sidebar Swiss */
 }
 
 .dark {
@@ -28,8 +26,6 @@
   --sidebar-ring: var(--gray-4);
   --sidebar-primary: var(--gray-12);
   --sidebar-primary-foreground: var(--gray-1);
-
-  /* Sidebar Swiss */
 }
 
 @theme inline {

@@ -8,16 +8,36 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
       <input
         type={type}
         ref={ref}
-        data-slot='input'
+        data-slot="input"
         className={cn(
-          "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-2.5 py-1 text-text-primary transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-[13px] file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-[13px] caret-blue-300 hover:bg-hover",
-          "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-          className
+          // Layout
+          "flex w-full min-w-0",
+          // Shape
+          "rounded-md border border-input",
+          // Background
+          "bg-transparent hover:bg-hover",
+          // Sizing
+          "h-9 px-2.5 py-1",
+          // Typography
+          "text-text-primary text-[13px] md:text-[13px]",
+          // Interactive states
+          "outline-none transition-[color,box-shadow]",
+          "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
+          "aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
+          // File input styles
+          "file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-[13px] file:font-medium file:text-foreground",
+          // Placeholder
+          "placeholder:text-muted-foreground",
+          // Selection
+          "selection:bg-primary selection:text-primary-foreground",
+          // Caret
+          "caret-blue-300",
+          className,
         )}
         {...props}
       />
     );
-  }
+  },
 );
 
 Input.displayName = "Input";
