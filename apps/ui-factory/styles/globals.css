@@ -24,6 +24,7 @@
 @import "./sidebar.css";
 @import "./input.css";
 @import "./switch.css";
+@import "./field.css";
 
 /* content sources - update the below if you add a new path */
 @source "../node_modules/@feel-good/ui";
