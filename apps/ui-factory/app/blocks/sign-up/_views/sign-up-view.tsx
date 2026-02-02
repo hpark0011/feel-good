@@ -1,4 +1,4 @@
-import { LoginForm } from "@/app/blocks/login/_components/login-form";
+import { PasswordLoginForm } from "@/app/blocks/login/_components/password-login-form";
 import { Divider } from "@/components/divider";
 import { PageSection } from "@/components/page-section";
 import { PageSectionHeader } from "@/components/page-section-header";
@@ -9,7 +9,7 @@ export function SignUpView() {
       <Divider />
       <PageSection>
         <PageSectionHeader>Sign Up Form</PageSectionHeader>
-        <LoginForm />
+        <PasswordLoginForm />
       </PageSection>
     </div>
   );

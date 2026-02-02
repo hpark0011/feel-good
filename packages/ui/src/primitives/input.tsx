@@ -34,7 +34,7 @@ const inputVariants = cva(
         underline: cn(
           "border-b border-input",
           "rounded-none",
-          "px-0.5",
+          "px-1.5",
           "focus-visible:ring-0 focus-visible:bg-accent focus-visible:border-accent",
         ),
       },
