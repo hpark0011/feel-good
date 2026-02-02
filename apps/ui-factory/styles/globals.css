@@ -49,6 +49,8 @@
   --accent: var(--gray-2);
   --accent-foreground: var(--gray-12);
 
+  --muted-foreground: var(--gray-9);
+
   --ghost: transparent;
   --ghost-foreground: var(--gray-11);
 
@@ -77,6 +79,8 @@
   --accent: var(--gray-3);
   --accent-foreground: var(--gray-12);
 
+  --muted-foreground: var(--gray-9);
+
   --ghost: transparent;
   --ghost-foreground: var(--gray-12);
 
@@ -104,6 +108,8 @@
 
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+
+  --color-muted-foreground: var(--muted-foreground);
 
   --color-ghost: var(--ghost);
   --color-ghost-foreground: var(--ghost-foreground);

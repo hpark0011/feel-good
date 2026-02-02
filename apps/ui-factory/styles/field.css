@@ -6,7 +6,7 @@
 
 :root {
   /* Field Default */
-  --field-label: var(--gray-10);
+  --field-label: var(--gray-12);
 }
 
 .dark {
