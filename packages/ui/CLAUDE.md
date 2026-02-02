@@ -55,6 +55,27 @@ src/
 
 Uses Radix UI primitives, class-variance-authority, and Tailwind CSS.
 
+## Dependency Management
+
+When adding packages to package.json, follow these rules:
+
+dependencies - Add packages that:
+
+- Are imported and used in exported components/code
+- Are bundled with the library and needed at runtime
+- Examples: clsx, tailwind-merge, lucide-react, react-dropzone
+
+devDependencies - Add packages that:
+
+- Are build/dev tools: eslint, prettier, typescript, @kit/eslint-config
+- Are type-only packages: @types/react, @types/react-dom
+- Are used internally but not exported (peer dependencies):
+  - Packages provided by consuming apps (e.g., react-i18next, next, react-hook-form, zod)
+  - Used for type checking/development but expected to be provided at runtime
+- Examples: react-i18next, next, react-hook-form, zod, @supabase/supabase-js
+
+Rule of thumb: If a package is imported in exported code AND the consuming app doesn't provide it → dependencies. Otherwise → devDependencies.
+
 ## Styling
 
 - Tailwind CSS v4 with semantic classes
