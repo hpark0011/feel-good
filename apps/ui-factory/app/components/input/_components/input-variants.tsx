@@ -16,14 +16,14 @@ export function InputVariants() {
       <Divider />
 
       <PageSection>
-        <PageSectionHeader>Variant: Default</PageSectionHeader>
+        <PageSectionHeader>Input Variant: Default</PageSectionHeader>
         <Input placeholder="Enter your email" />
       </PageSection>
 
       <Divider />
 
       <PageSection>
-        <PageSectionHeader>Variant: Underline</PageSectionHeader>
+        <PageSectionHeader>Input Variant: Underline</PageSectionHeader>
         <Input placeholder="Enter your email" variant="underline" />
       </PageSection>
 
@@ -31,7 +31,7 @@ export function InputVariants() {
 
       <PageSection>
         <PageSectionHeader>
-          Variant: Invalid
+          Invalid
         </PageSectionHeader>
         <Input placeholder="Enter your email" aria-invalid />
       </PageSection>
@@ -40,7 +40,7 @@ export function InputVariants() {
 
       <PageSection>
         <PageSectionHeader>
-          Variant: With Label
+          With Label
         </PageSectionHeader>
         <Field>
           <FieldLabel htmlFor="fieldgroup-name">Name</FieldLabel>
@@ -52,7 +52,7 @@ export function InputVariants() {
 
       <PageSection>
         <PageSectionHeader>
-          Variant: With Description
+          With Description
         </PageSectionHeader>
         <Field>
           <FieldLabel htmlFor="input-field-username">Username</FieldLabel>
@@ -71,7 +71,7 @@ export function InputVariants() {
 
       <PageSection>
         <PageSectionHeader>
-          Variant: Form
+          Form
         </PageSectionHeader>
         <FieldGroup>
           <Field>
