@@ -13,7 +13,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
         // Shape
         "rounded-lg",
         // Background & Colors
-        "bg-transparent dark:bg-input/30 border border-input hover:bg-accent hover:border-accent",
+        "bg-transparent dark:bg-input/30 border border-input hover:bg-accent hover:border-accent dark:hover:bg-accent dark:hover:border-accent",
         // Text & Typography
         "text-base md:text-sm placeholder:text-muted-foreground",
         "selection:bg-primary selection:text-primary-foreground",
@@ -23,9 +23,9 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
         "outline-none transition-[color,box-shadow]",
         "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
         // Focus States
-        "focus-visible:border-ring/50 focus-visible:ring-ring/50 focus-visible:ring-[3px]",
+        "focus-visible:border-ring focus-visible:ring-ring focus-visible:ring-[3px]",
         // Invalid States
-        "aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
+        "aria-invalid:border-input-destructive aria-invalid:ring-input-destructive aria-invalid:ring-[3px] dark:aria-invalid:ring-input-destructive dark:aria-invalid:border-input-destructive",
         className,
       )}
       {...props}

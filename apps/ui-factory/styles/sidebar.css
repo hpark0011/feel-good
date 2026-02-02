@@ -8,7 +8,7 @@
   /* Sidebar Primitive */
   --sidebar: var(--background);
   --sidebar-foreground: var(--gray-12);
-  --sidebar-border: var(--gray-6);
+  --sidebar-border: var(--gray-7);
   --sidebar-accent: var(--gray-2);
   --sidebar-accent-foreground: var(--gray-12);
   --sidebar-ring: var(--gray-8);

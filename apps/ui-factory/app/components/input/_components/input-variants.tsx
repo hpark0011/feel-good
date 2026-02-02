@@ -9,8 +9,17 @@ export function InputVariants() {
       <Divider />
 
       <ComponentsSection>
-        <ComponentsSectionHeader>Variant: Input Basic</ComponentsSectionHeader>
+        <ComponentsSectionHeader>Variant: Basic</ComponentsSectionHeader>
         <Input placeholder="Enter your email" />
+      </ComponentsSection>
+
+      <Divider />
+
+      <ComponentsSection>
+        <ComponentsSectionHeader>
+          Variant: Invalid
+        </ComponentsSectionHeader>
+        <Input placeholder="Enter your email" aria-invalid />
       </ComponentsSection>
     </div>
   );

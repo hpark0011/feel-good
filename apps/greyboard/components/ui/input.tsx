@@ -23,7 +23,7 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
           // Interactive states
           "outline-none transition-[color,box-shadow]",
           "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
-          "aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
+          "aria-invalid:border-destructive aria-invalid:ring-destructive dark:aria-invalid:ring-destructive/40",
           // File input styles
           "file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-[13px] file:font-medium file:text-foreground",
           // Placeholder
