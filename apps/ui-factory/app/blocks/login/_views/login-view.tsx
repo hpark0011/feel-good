@@ -10,13 +10,17 @@ export function LoginView() {
       <Divider />
       <PageSection>
         <PageSectionHeader>Password</PageSectionHeader>
-        <PasswordLoginForm />
+        <div className="flex flex-col w-full items-center">
+          <PasswordLoginForm />
+        </div>
       </PageSection>
 
       <Divider />
       <PageSection>
         <PageSectionHeader>Magic Link</PageSectionHeader>
-        <MagicLinkLoginForm />
+        <div className="flex flex-col w-full items-center">
+          <MagicLinkLoginForm />
+        </div>
       </PageSection>
     </div>
   );

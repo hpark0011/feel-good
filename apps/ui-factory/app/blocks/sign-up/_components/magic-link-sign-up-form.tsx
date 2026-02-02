@@ -1,3 +1,4 @@
+import { GoogleIcon } from "@feel-good/icons";
 import { Button } from "@feel-good/ui/primitives/button";
 import {
   Card,
@@ -16,10 +17,15 @@ import { Input } from "@feel-good/ui/primitives/input";
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   return (
-    <Card {...props}>
+    <Card
+      {...props}
+      className="max-w-md w-full rounded-4xl p-4 py-8 pb-10 border-transparent"
+    >
       <CardHeader>
-        <CardTitle>Create an account</CardTitle>
-        <CardDescription>
+        <CardTitle className="font-medium text-center text-2xl">
+          Create an account
+        </CardTitle>
+        <CardDescription className="sr-only">
           Enter your information below to create your account
         </CardDescription>
       </CardHeader>
@@ -59,8 +65,15 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             </Field>
             <FieldGroup>
               <Field>
-                <Button type="submit">Create Account</Button>
-                <Button variant="outline" type="button">
+                <Button
+                  type="submit"
+                  size="lg"
+                  variant="primary"
+                >
+                  Create Account
+                </Button>
+                <Button variant="outline" type="button" size="lg">
+                  <GoogleIcon className="size-4 text-primary" />
                   Sign up with Google
                 </Button>
                 <FieldDescription className="px-6 text-center">

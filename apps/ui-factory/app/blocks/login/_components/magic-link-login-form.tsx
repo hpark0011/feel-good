@@ -1,4 +1,4 @@
-import { cn } from "@feel-good/ui/lib/utils";
+import { GoogleIcon } from "@feel-good/icons";
 import { Button } from "@feel-good/ui/primitives/button";
 import {
   Card,
@@ -14,67 +14,63 @@ import {
   FieldLabel,
 } from "@feel-good/ui/primitives/field";
 import { Input } from "@feel-good/ui/primitives/input";
-import { GoogleIcon } from "@feel-good/icons";
 
 export function MagicLinkLoginForm({
-  className,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<typeof Card>) {
   return (
-    <div
-      className={cn("flex flex-col gap-6 w-full items-center", className)}
+    <Card
       {...props}
+      className="max-w-md w-full rounded-4xl p-4 py-8 pb-10 border-transparent"
     >
-      <Card className="max-w-md w-full rounded-4xl p-4 py-8 pb-10 border-transparent">
-        <CardHeader>
-          <CardTitle className="font-medium text-center text-2xl">
-            Login
-          </CardTitle>
-          <CardDescription className="sr-only">
-            Enter your email below to login to your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form>
-            <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="email" className="px-1.5">
-                  Email <span className="text-destructive">*</span>
-                </FieldLabel>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  required
-                  variant="underline"
-                />
-              </Field>
+      <CardHeader>
+        <CardTitle className="font-medium text-center text-2xl">
+          Login
+        </CardTitle>
+        <CardDescription className="sr-only">
+          Enter your email below to login to your account
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form>
+          <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor="email" className="px-1.5">
+                Email <span className="text-destructive">*</span>
+              </FieldLabel>
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                required
+                variant="underline"
+              />
+            </Field>
 
-              <Field>
-                <Button type="submit" size="lg" variant="primary">
-                  Send magic link
-                </Button>
-                <div className="text-center text-sm text-muted-foreground my-4">
-                  or continue with
-                </div>
-                <Button variant="outline" type="button" size="lg">
-                  <GoogleIcon className="size-4 text-primary" />
-                  Login with Google
-                </Button>
-                <FieldDescription className="text-center text-sm pt-4">
-                  Don&apos;t have an account?{" "}
-                  <a
-                    href="#"
-                    className="text-muted-foreground"
-                  >
-                    Sign up
-                  </a>
-                </FieldDescription>
-              </Field>
-            </FieldGroup>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+            <Field>
+              <Button type="submit" size="lg" variant="primary">
+                Send magic link
+              </Button>
+              <div className="text-center text-sm text-muted-foreground my-4">
+                or continue with
+              </div>
+              <Button variant="outline" type="button" size="lg">
+                <GoogleIcon className="size-4 text-primary" />
+                Login with Google
+              </Button>
+              <FieldDescription className="text-center text-sm pt-4">
+                Don&apos;t have an account?{" "}
+                <a
+                  href="#"
+                  className="text-muted-foreground"
+                >
+                  Sign up
+                </a>
+              </FieldDescription>
+            </Field>
+          </FieldGroup>
+        </form>
+      </CardContent>
+    </Card>
   );
 }
