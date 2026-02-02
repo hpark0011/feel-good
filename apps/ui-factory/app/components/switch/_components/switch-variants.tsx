@@ -1,5 +1,5 @@
-import { ComponentsSection } from "@/app/components/_components/components-section";
-import { ComponentsSectionHeader } from "@/app/components/_components/components-section-header";
+import { PageSection } from "@/components/page-section";
+import { PageSectionHeader } from "@/components/page-section-header";
 import { Divider } from "@/components/divider";
 import { Switch } from "@feel-good/ui/primitives/switch";
 
@@ -8,24 +8,24 @@ export function SwitchVariants() {
     <div className="flex flex-col w-full">
       <Divider />
 
-      <ComponentsSection>
-        <ComponentsSectionHeader>Variant: Default</ComponentsSectionHeader>
+      <PageSection>
+        <PageSectionHeader>Variant: Default</PageSectionHeader>
         <Switch variant="default" size="default" />
-      </ComponentsSection>
+      </PageSection>
 
       <Divider />
 
-      <ComponentsSection>
-        <ComponentsSectionHeader>Variant: Theme</ComponentsSectionHeader>
+      <PageSection>
+        <PageSectionHeader>Variant: Theme</PageSectionHeader>
         <Switch variant="theme" size="default" />
-      </ComponentsSection>
+      </PageSection>
 
       <Divider />
 
-      <ComponentsSection>
-        <ComponentsSectionHeader>Variant: Panel Toggle</ComponentsSectionHeader>
+      <PageSection>
+        <PageSectionHeader>Variant: Panel Toggle</PageSectionHeader>
         <Switch variant="panel" size="panel" />
-      </ComponentsSection>
+      </PageSection>
     </div>
   );
 }

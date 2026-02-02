@@ -11,7 +11,7 @@ const switchVariants = cva(
     // Layout
     "inline-flex shrink-0 items-center",
     // Background
-    "data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-gray-7 dark:data-[state=unchecked]:bg-gray-7",
+    "data-[state=checked]:bg-switch-checked data-[state=unchecked]:bg-switch-unchecked dark:data-[state=unchecked]:bg-switch-unchecked",
     // Border
     "border border-transparent",
     // Interactive states
@@ -25,13 +25,13 @@ const switchVariants = cva(
     variants: {
       variant: {
         default:
-          "rounded-full hover:data-[state=unchecked]:bg-gray-8 hover:data-[state=checked]:bg-green-600",
+          "rounded-full hover:data-[state=unchecked]:bg-switch-unchecked-hover hover:data-[state=checked]:bg-switch-checked-hover",
         panel: cn(
-          "rounded-sm data-[state=checked]:bg-gray-7",
-          "hover:data-[state=unchecked]:bg-gray-8 hover:data-[state=checked]:bg-gray-8",
+          "rounded-sm data-[state=checked]:bg-switch-panel-checked",
+          "hover:data-[state=unchecked]:bg-switch-panel-unchecked-hover hover:data-[state=checked]:bg-switch-panel-checked-hover",
         ),
         theme:
-          "data-[state=checked]:bg-gray-7 rounded-full hover:data-[state=unchecked]:bg-gray-8 hover:data-[state=checked]:bg-gray-8",
+          "data-[state=checked]:bg-switch-theme-checked rounded-full hover:data-[state=unchecked]:bg-switch-theme-checked-hover hover:data-[state=checked]:bg-switch-theme-checked-hover",
       },
       size: {
         default: "h-[18px] w-8",
@@ -51,7 +51,7 @@ const switchThumbVariants = cva(
     // Layout
     "block",
     // Background
-    "bg-background dark:data-[state=unchecked]:bg-foreground dark:data-[state=checked]:bg-primary-foreground",
+    "bg-background dark:data-[state=unchecked]:bg-primary-foreground dark:data-[state=checked]:bg-primary-foreground",
     // Shadow
     "shadow-xs",
     // Sizing (via group)

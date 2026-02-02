@@ -1,17 +1,17 @@
 import { cn } from "@feel-good/ui/lib/utils";
 
-interface ComponentsSectionProps {
+interface PageSectionProps {
   children: React.ReactNode;
   className?: string;
 }
 
-export function ComponentsSection(
-  { children, className }: ComponentsSectionProps,
+export function PageSection(
+  { children, className }: PageSectionProps,
 ) {
   return (
     <div
       className={cn(
-        "flex flex-col gap-7 py-1.5 pb-10",
+        "flex flex-col gap-10 py-1.5 pb-12",
         className,
       )}
     >

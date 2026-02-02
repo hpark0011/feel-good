@@ -37,30 +37,58 @@ import "@feel-good/ui/styles.css";
 ```
 src/
 ├── primitives/       # shadcn/ui base components
-├── components/       # Composed components
+├── components/       # Custom components & Composed components
 ├── hooks/            # UI-related hooks
 ├── providers/        # Context providers (theme, etc.)
 ├── lib/              # Utilities (cn, etc.)
 └── styles/           # Global CSS
 ```
 
-## Available Primitives
-
-Core primitives (50+ components):
-
-- **Layout:** Card, Separator, Tabs, Accordion, Collapsible
-- **Forms:** Button, Input, Textarea, Select, Checkbox, Switch, Radio Group, Slider
-- **Feedback:** Alert, Progress, Skeleton, Spinner, Sonner (toast)
-- **Overlays:** Dialog, Sheet, Drawer, Popover, Tooltip, Hover Card
-- **Navigation:** Breadcrumb, Navigation Menu, Menubar, Pagination
-- **Data:** Table, Chart, Calendar, Carousel
-
 ## Adding New Components
 
-1. Create component in `src/primitives/` or `src/components/`
-2. Add export to `package.json` exports field
-3. Run `pnpm install` from monorepo root
+1. If it's from shadcn/ui, create in `src/primitives/`
+2. If it's a custom component, create in `src/components/`
+3. Add export to `package.json` exports field
+4. Run `pnpm install` from monorepo root
 
 ## Dependencies
 
 Uses Radix UI primitives, class-variance-authority, and Tailwind CSS.
+
+## Dependency Management
+
+When adding packages to package.json, follow these rules:
+
+dependencies - Add packages that:
+
+- Are imported and used in exported components/code
+- Are bundled with the library and needed at runtime
+- Examples: clsx, tailwind-merge, lucide-react, react-dropzone
+
+devDependencies - Add packages that:
+
+- Are build/dev tools: eslint, prettier, typescript, @kit/eslint-config
+- Are type-only packages: @types/react, @types/react-dom
+- Are used internally but not exported (peer dependencies):
+  - Packages provided by consuming apps (e.g., react-i18next, next, react-hook-form, zod)
+  - Used for type checking/development but expected to be provided at runtime
+- Examples: react-i18next, next, react-hook-form, zod, @supabase/supabase-js
+
+Rule of thumb: If a package is imported in exported code AND the consuming app doesn't provide it → dependencies. Otherwise → devDependencies.
+
+## Styling
+
+- Tailwind CSS v4 with semantic classes
+- Prefer: `bg-background`, `text-muted-foreground`, `border-border`
+- Use `cn()` for class merging
+- Never use hardcoded colors like `bg-white`
+
+## Key Components
+
+| Component | Usage                 |
+| --------- | --------------------- |
+| `If`      | Conditional rendering |
+| `Trans`   | Internationalization  |
+| `toast`   | Notifications         |
+| `Form*`   | Form fields           |
+| `Button`  | Actions               |

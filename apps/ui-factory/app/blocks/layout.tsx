@@ -3,7 +3,7 @@
 import React from "react";
 import { PageTitle } from "@/components/page-title";
 
-export default function ComponentsLayout({
+export default function BlocksLayout({
   children,
 }: {
   children: React.ReactNode;

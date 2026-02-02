@@ -21,6 +21,7 @@
     "next-themes": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "react-i18next": "catalog:",
     "tw-animate-css": "catalog:",
     "zod": "catalog:"
   },
