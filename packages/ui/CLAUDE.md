@@ -37,30 +37,37 @@ import "@feel-good/ui/styles.css";
 ```
 src/
 ├── primitives/       # shadcn/ui base components
-├── components/       # Composed components
+├── components/       # Custom components & Composed components
 ├── hooks/            # UI-related hooks
 ├── providers/        # Context providers (theme, etc.)
 ├── lib/              # Utilities (cn, etc.)
 └── styles/           # Global CSS
 ```
 
-## Available Primitives
-
-Core primitives (50+ components):
-
-- **Layout:** Card, Separator, Tabs, Accordion, Collapsible
-- **Forms:** Button, Input, Textarea, Select, Checkbox, Switch, Radio Group, Slider
-- **Feedback:** Alert, Progress, Skeleton, Spinner, Sonner (toast)
-- **Overlays:** Dialog, Sheet, Drawer, Popover, Tooltip, Hover Card
-- **Navigation:** Breadcrumb, Navigation Menu, Menubar, Pagination
-- **Data:** Table, Chart, Calendar, Carousel
-
 ## Adding New Components
 
-1. Create component in `src/primitives/` or `src/components/`
-2. Add export to `package.json` exports field
-3. Run `pnpm install` from monorepo root
+1. If it's from shadcn/ui, create in `src/primitives/`
+2. If it's a custom component, create in `src/components/`
+3. Add export to `package.json` exports field
+4. Run `pnpm install` from monorepo root
 
 ## Dependencies
 
 Uses Radix UI primitives, class-variance-authority, and Tailwind CSS.
+
+## Styling
+
+- Tailwind CSS v4 with semantic classes
+- Prefer: `bg-background`, `text-muted-foreground`, `border-border`
+- Use `cn()` for class merging
+- Never use hardcoded colors like `bg-white`
+
+## Key Components
+
+| Component | Usage                 |
+| --------- | --------------------- |
+| `If`      | Conditional rendering |
+| `Trans`   | Internationalization  |
+| `toast`   | Notifications         |
+| `Form*`   | Form fields           |
+| `Button`  | Actions               |

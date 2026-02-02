@@ -12,7 +12,8 @@
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
-    "react-dom": "^18.0.0 || ^19.0.0"
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "react-i18next": "^15.0.0"
   },
   "dependencies": {
     "@feel-good/icons": "workspace:*",
@@ -63,6 +64,7 @@
     "@feel-good/tsconfig": "workspace:*",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "react-i18next": "catalog:",
     "typescript": "catalog:"
   }
 }
