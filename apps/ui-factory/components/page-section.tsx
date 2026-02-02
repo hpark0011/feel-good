@@ -1,12 +1,12 @@
 import { cn } from "@feel-good/ui/lib/utils";
 
-interface ComponentsSectionProps {
+interface PageSectionProps {
   children: React.ReactNode;
   className?: string;
 }
 
-export function ComponentsSection(
-  { children, className }: ComponentsSectionProps,
+export function PageSection(
+  { children, className }: PageSectionProps,
 ) {
   return (
     <div

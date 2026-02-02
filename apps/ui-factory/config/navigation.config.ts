@@ -3,9 +3,13 @@ export type NavItem = {
   href: string;
 };
 
-export const NAVIGATION_ITEMS: NavItem[] = [
+export const COMPONENT_NAV_ITEMS: NavItem[] = [
   { label: "Button", href: "/components/buttons" },
   { label: "Input", href: "/components/input" },
   { label: "Sidebar", href: "/components/sidebar" },
   { label: "Switch", href: "/components/switch" },
+];
+
+export const BLOCK_NAV_ITEMS: NavItem[] = [
+  { label: "Login", href: "/blocks/login" },
 ];

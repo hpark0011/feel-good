@@ -1,7 +1,10 @@
 "use client";
 
 import { UiFactoryLogo } from "@/components/ui-factory-logo";
-import { NAVIGATION_ITEMS } from "@/config/navigation.config";
+import {
+  BLOCK_NAV_ITEMS,
+  COMPONENT_NAV_ITEMS,
+} from "@/config/navigation.config";
 import {
   Sidebar,
   SidebarContent,
@@ -33,7 +36,28 @@ export function AppSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {NAVIGATION_ITEMS.map((item) => (
+              {COMPONENT_NAV_ITEMS.map((item) => (
+                <SidebarMenuItem key={item.href}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === item.href}
+                    size="swiss-default"
+                    variant="swiss"
+                  >
+                    <Link href={item.href}>{item.label}</Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel className="rounded-none h-auto mb-2">
+            Blocks
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {BLOCK_NAV_ITEMS.map((item) => (
                 <SidebarMenuItem key={item.href}>
                   <SidebarMenuButton
                     asChild

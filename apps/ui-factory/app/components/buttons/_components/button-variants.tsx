@@ -1,6 +1,6 @@
 import { ButtonGroupWrapper } from "@/app/components/buttons/_components/button-group-wrapper";
-import { ComponentsSection } from "@/app/components/_components/components-section";
-import { ComponentsSectionHeader } from "@/app/components/_components/components-section-header";
+import { PageSection } from "@/components/page-section";
+import { PageSectionHeader } from "@/components/page-section-header";
 import { Divider } from "@/components/divider";
 import { Button } from "@feel-good/ui/primitives/button";
 import { PlusIcon } from "lucide-react";
@@ -21,8 +21,8 @@ export function ButtonVariants() {
     <div className="flex flex-col w-full">
       <Divider />
 
-      <ComponentsSection>
-        <ComponentsSectionHeader>Size: xs</ComponentsSectionHeader>
+      <PageSection>
+        <PageSectionHeader>Size: xs</PageSectionHeader>
         <ButtonGroupWrapper>
           {BUTTON_VARIANTS.map((variant) => (
             <Button key={variant} variant={variant} size="xs">
@@ -30,12 +30,12 @@ export function ButtonVariants() {
             </Button>
           ))}
         </ButtonGroupWrapper>
-      </ComponentsSection>
+      </PageSection>
 
       <Divider />
 
-      <ComponentsSection>
-        <ComponentsSectionHeader>Size: sm</ComponentsSectionHeader>
+      <PageSection>
+        <PageSectionHeader>Size: sm</PageSectionHeader>
         <ButtonGroupWrapper>
           {BUTTON_VARIANTS.map((variant) => (
             <Button key={variant} variant={variant} size="sm">
@@ -43,12 +43,12 @@ export function ButtonVariants() {
             </Button>
           ))}
         </ButtonGroupWrapper>
-      </ComponentsSection>
+      </PageSection>
 
       <Divider />
 
-      <ComponentsSection>
-        <ComponentsSectionHeader>Size: default</ComponentsSectionHeader>
+      <PageSection>
+        <PageSectionHeader>Size: default</PageSectionHeader>
         <ButtonGroupWrapper>
           {BUTTON_VARIANTS.map((variant) => (
             <Button key={variant} variant={variant}>
@@ -56,12 +56,12 @@ export function ButtonVariants() {
             </Button>
           ))}
         </ButtonGroupWrapper>
-      </ComponentsSection>
+      </PageSection>
 
       <Divider />
 
-      <ComponentsSection>
-        <ComponentsSectionHeader>Size: lg</ComponentsSectionHeader>
+      <PageSection>
+        <PageSectionHeader>Size: lg</PageSectionHeader>
         <ButtonGroupWrapper>
           {BUTTON_VARIANTS.map((variant) => (
             <Button
@@ -73,12 +73,12 @@ export function ButtonVariants() {
             </Button>
           ))}
         </ButtonGroupWrapper>
-      </ComponentsSection>
+      </PageSection>
 
       <Divider />
 
-      <ComponentsSection>
-        <ComponentsSectionHeader>Size: icon-xs</ComponentsSectionHeader>
+      <PageSection>
+        <PageSectionHeader>Size: icon-xs</PageSectionHeader>
         <ButtonGroupWrapper>
           {BUTTON_VARIANTS.map((variant) => (
             <Button key={variant} variant={variant} size="icon-xs">
@@ -86,12 +86,12 @@ export function ButtonVariants() {
             </Button>
           ))}
         </ButtonGroupWrapper>
-      </ComponentsSection>
+      </PageSection>
 
       <Divider />
 
-      <ComponentsSection>
-        <ComponentsSectionHeader>Size: icon-sm</ComponentsSectionHeader>
+      <PageSection>
+        <PageSectionHeader>Size: icon-sm</PageSectionHeader>
         <ButtonGroupWrapper>
           {BUTTON_VARIANTS.map((variant) => (
             <Button key={variant} variant={variant} size="icon-sm">
@@ -99,12 +99,12 @@ export function ButtonVariants() {
             </Button>
           ))}
         </ButtonGroupWrapper>
-      </ComponentsSection>
+      </PageSection>
 
       <Divider />
 
-      <ComponentsSection>
-        <ComponentsSectionHeader>Size: icon</ComponentsSectionHeader>
+      <PageSection>
+        <PageSectionHeader>Size: icon</PageSectionHeader>
         <ButtonGroupWrapper>
           {BUTTON_VARIANTS.map((variant) => (
             <Button key={variant} variant={variant} size="icon">
@@ -112,12 +112,12 @@ export function ButtonVariants() {
             </Button>
           ))}
         </ButtonGroupWrapper>
-      </ComponentsSection>
+      </PageSection>
 
       <Divider />
 
-      <ComponentsSection>
-        <ComponentsSectionHeader>Size: icon-lg</ComponentsSectionHeader>
+      <PageSection>
+        <PageSectionHeader>Size: icon-lg</PageSectionHeader>
         <ButtonGroupWrapper>
           {BUTTON_VARIANTS.map((variant) => (
             <Button key={variant} variant={variant} size="icon-lg">
@@ -125,7 +125,7 @@ export function ButtonVariants() {
             </Button>
           ))}
         </ButtonGroupWrapper>
-      </ComponentsSection>
+      </PageSection>
     </div>
   );
 }

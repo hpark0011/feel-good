@@ -1,5 +1,5 @@
-import { ComponentsSection } from "@/app/components/_components/components-section";
-import { ComponentsSectionHeader } from "@/app/components/_components/components-section-header";
+import { PageSection } from "@/components/page-section";
+import { PageSectionHeader } from "@/components/page-section-header";
 import { Divider } from "@/components/divider";
 import { Button } from "@feel-good/ui/primitives/button";
 import {
@@ -15,45 +15,45 @@ export function InputVariants() {
     <div className="flex flex-col w-full">
       <Divider />
 
-      <ComponentsSection>
-        <ComponentsSectionHeader>Variant: Default</ComponentsSectionHeader>
+      <PageSection>
+        <PageSectionHeader>Variant: Default</PageSectionHeader>
         <Input placeholder="Enter your email" />
-      </ComponentsSection>
+      </PageSection>
 
       <Divider />
 
-      <ComponentsSection>
-        <ComponentsSectionHeader>Variant: Underline</ComponentsSectionHeader>
+      <PageSection>
+        <PageSectionHeader>Variant: Underline</PageSectionHeader>
         <Input placeholder="Enter your email" variant="underline" />
-      </ComponentsSection>
+      </PageSection>
 
       <Divider />
 
-      <ComponentsSection>
-        <ComponentsSectionHeader>
+      <PageSection>
+        <PageSectionHeader>
           Variant: Invalid
-        </ComponentsSectionHeader>
+        </PageSectionHeader>
         <Input placeholder="Enter your email" aria-invalid />
-      </ComponentsSection>
+      </PageSection>
 
       <Divider />
 
-      <ComponentsSection>
-        <ComponentsSectionHeader>
+      <PageSection>
+        <PageSectionHeader>
           Variant: With Label
-        </ComponentsSectionHeader>
+        </PageSectionHeader>
         <Field>
           <FieldLabel htmlFor="fieldgroup-name">Name</FieldLabel>
           <Input id="fieldgroup-name" placeholder="Jordan Lee" />
         </Field>
-      </ComponentsSection>
+      </PageSection>
 
       <Divider />
 
-      <ComponentsSection>
-        <ComponentsSectionHeader>
+      <PageSection>
+        <PageSectionHeader>
           Variant: With Description
-        </ComponentsSectionHeader>
+        </PageSectionHeader>
         <Field>
           <FieldLabel htmlFor="input-field-username">Username</FieldLabel>
           <Input
@@ -65,14 +65,14 @@ export function InputVariants() {
             Choose a unique username for your account.
           </FieldDescription>
         </Field>
-      </ComponentsSection>
+      </PageSection>
 
       <Divider />
 
-      <ComponentsSection>
-        <ComponentsSectionHeader>
+      <PageSection>
+        <PageSectionHeader>
           Variant: Form
-        </ComponentsSectionHeader>
+        </PageSectionHeader>
         <FieldGroup>
           <Field>
             <FieldLabel htmlFor="fieldgroup-form-name">
@@ -109,7 +109,7 @@ export function InputVariants() {
             <Button type="submit" variant="primary">Submit</Button>
           </Field>
         </FieldGroup>
-      </ComponentsSection>
+      </PageSection>
     </div>
   );
 }
