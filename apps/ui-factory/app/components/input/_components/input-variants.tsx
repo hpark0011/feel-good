@@ -16,8 +16,15 @@ export function InputVariants() {
       <Divider />
 
       <ComponentsSection>
-        <ComponentsSectionHeader>Variant: Basic</ComponentsSectionHeader>
+        <ComponentsSectionHeader>Variant: Default</ComponentsSectionHeader>
         <Input placeholder="Enter your email" />
+      </ComponentsSection>
+
+      <Divider />
+
+      <ComponentsSection>
+        <ComponentsSectionHeader>Variant: Underline</ComponentsSectionHeader>
+        <Input placeholder="Enter your email" variant="underline" />
       </ComponentsSection>
 
       <Divider />
