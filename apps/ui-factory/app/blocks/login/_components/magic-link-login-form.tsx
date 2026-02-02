@@ -14,6 +14,7 @@ import {
   FieldLabel,
 } from "@feel-good/ui/primitives/field";
 import { Input } from "@feel-good/ui/primitives/input";
+import { GoogleIcon } from "@feel-good/icons";
 
 export function MagicLinkLoginForm({
   className,
@@ -74,6 +75,7 @@ export function MagicLinkLoginForm({
                   or continue with
                 </div>
                 <Button variant="outline" type="button" size="lg">
+                  <GoogleIcon className="size-4 text-primary" />
                   Login with Google
                 </Button>
                 <FieldDescription className="text-center text-sm pt-4">

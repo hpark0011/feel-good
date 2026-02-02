@@ -167,3 +167,7 @@ export { DocImageLightIcon } from "./doc-icons/doc-image-light";
 export { DocMdLightIcon } from "./doc-icons/doc-md-light";
 export { DocPdfLightIcon } from "./doc-icons/doc-pdf-light";
 export { DocTextLightIcon } from "./doc-icons/doc-text-light";
+
+export { GithubIcon } from "./social-icons/github";
+export { GoogleIcon } from "./social-icons/google";
+export { XIcon } from "./social-icons/x";

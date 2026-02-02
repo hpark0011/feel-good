@@ -1,3 +1,4 @@
+import { GoogleIcon } from "@feel-good/icons";
 import { cn } from "@feel-good/ui/lib/utils";
 import { Button } from "@feel-good/ui/primitives/button";
 import {
@@ -74,6 +75,7 @@ export function PasswordLoginForm({
                   or continue with
                 </div>
                 <Button variant="outline" type="button" size="lg">
+                  <GoogleIcon className="size-4 text-primary" />
                   Login with Google
                 </Button>
                 <FieldDescription className="text-center text-sm pt-4">
