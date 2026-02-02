@@ -44,33 +44,16 @@ export function MagicLinkLoginForm({
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="you@example.com"
                   required
                   variant="underline"
                 />
               </Field>
+
               <Field>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password" className="px-1.5">
-                    Password <span className="text-destructive">*</span>
-                  </FieldLabel>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline text-muted-foreground hover:text-blue-500 pr-1.5"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  placeholder="Enter your password"
-                  variant="underline"
-                />
-              </Field>
-              <Field>
-                <Button type="submit" size="lg" variant="primary">Login</Button>
+                <Button type="submit" size="lg" variant="primary">
+                  Send magic link
+                </Button>
                 <div className="text-center text-sm text-muted-foreground my-4">
                   or continue with
                 </div>
