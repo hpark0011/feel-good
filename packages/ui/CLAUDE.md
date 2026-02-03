@@ -116,6 +116,6 @@ Steps
 
 1. Run a no-emit typecheck using workspace TypeScript:
   - Command: `tsc -p packages/ui/tsconfig.json --noEmit`
-2. If the command fails because tsc isn’t found or dependencies aren’t installed:
-  - Install deps at the repo root: pnpm -C /Users/disquiet/Desktop/feel-good install
+2. If the command fails because tsc isn't found or dependencies aren't installed:
+  - Install deps at the repo root: pnpm install
   - Re-run the typecheck command from step 1.
