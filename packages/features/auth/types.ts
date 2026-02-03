@@ -54,9 +54,6 @@ export const AUTH_ERROR_MESSAGES: Record<string, string> = {
   UNKNOWN: "Something went wrong. Please try again.",
 };
 
-// Mode types for preview/production rendering
-export type AuthMode = "default" | "preview";
-
 export function getAuthErrorMessage(code: string | undefined | null): string {
   if (!code) return AUTH_ERROR_MESSAGES.UNKNOWN!;
   return AUTH_ERROR_MESSAGES[code] ?? AUTH_ERROR_MESSAGES.UNKNOWN!;

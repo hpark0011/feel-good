@@ -39,14 +39,6 @@ export default function LoginPage() {
 }
 ```
 
-### Preview Mode
-
-For UI Factory or design system previews:
-
-```typescript
-<LoginBlock mode="preview" />
-```
-
 ### Legacy Components (Backwards Compatible)
 
 ```typescript

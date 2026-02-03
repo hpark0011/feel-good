@@ -16,7 +16,7 @@ import {
 } from "../components/shared/oauth-buttons";
 import { AuthDivider } from "./shared/auth-divider";
 import type { AuthClient } from "../client";
-import type { AuthMode, AuthError } from "../types";
+import type { AuthError } from "../types";
 import type { FC } from "react";
 
 export interface LoginBlockSlots {
@@ -26,8 +26,7 @@ export interface LoginBlockSlots {
 }
 
 export interface LoginBlockProps {
-  authClient?: AuthClient;
-  mode?: AuthMode;
+  authClient: AuthClient;
   signUpHref?: string;
   forgotPasswordHref?: string;
   redirectTo?: string;
@@ -38,7 +37,6 @@ export interface LoginBlockProps {
 
 function LoginBlockContent({
   authClient,
-  mode = "default",
   signUpHref = "/sign-up",
   forgotPasswordHref = "/forgot-password",
   redirectTo,
@@ -52,7 +50,6 @@ function LoginBlockContent({
 
   const formProps = {
     authClient,
-    mode,
     redirectTo,
     onSuccess,
     onError,
@@ -63,7 +60,6 @@ function LoginBlockContent({
       {/* OAuth Section */}
       <OAuth
         authClient={authClient}
-        mode={mode}
         redirectTo={redirectTo}
         label="Continue with Google"
         onError={onError}

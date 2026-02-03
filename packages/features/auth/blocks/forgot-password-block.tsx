@@ -4,11 +4,10 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { ForgotPasswordForm } from "../components/forms/forgot-password-form";
 import type { AuthClient } from "../client";
-import type { AuthMode, AuthError } from "../types";
+import type { AuthError } from "../types";
 
 export interface ForgotPasswordBlockProps {
-  authClient?: AuthClient;
-  mode?: AuthMode;
+  authClient: AuthClient;
   signInHref?: string;
   resetPasswordHref?: string;
   onSuccess?: () => void;
@@ -17,7 +16,6 @@ export interface ForgotPasswordBlockProps {
 
 function ForgotPasswordBlockContent({
   authClient,
-  mode = "default",
   signInHref = "/sign-in",
   resetPasswordHref = "/reset-password",
   onSuccess,
@@ -27,7 +25,6 @@ function ForgotPasswordBlockContent({
     <div className="mx-auto w-full max-w-md space-y-6">
       <ForgotPasswordForm
         authClient={authClient}
-        mode={mode}
         redirectTo={resetPasswordHref}
         onSuccess={onSuccess}
         onError={onError}

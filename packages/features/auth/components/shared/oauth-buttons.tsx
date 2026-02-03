@@ -4,11 +4,10 @@ import { useState } from "react";
 import { GoogleIcon } from "@feel-good/icons";
 import { Button } from "@feel-good/ui/primitives/button";
 import type { AuthClient } from "../../client";
-import type { AuthMode, AuthError } from "../../types";
+import type { AuthError } from "../../types";
 
 export interface OAuthButtonsProps {
-  authClient?: AuthClient;
-  mode?: AuthMode;
+  authClient: AuthClient;
   label?: string;
   variant?: "outline" | "secondary";
   size?: "default" | "lg";
@@ -19,7 +18,6 @@ export interface OAuthButtonsProps {
 
 export function OAuthButtons({
   authClient,
-  mode = "default",
   label = "Continue with Google",
   variant = "outline",
   size = "lg",
@@ -30,10 +28,6 @@ export function OAuthButtons({
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleGoogleSignIn() {
-    // Preview mode — do nothing
-    if (mode === "preview") return;
-    if (!authClient) return;
-
     setIsLoading(true);
 
     try {

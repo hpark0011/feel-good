@@ -4,11 +4,10 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { ResetPasswordForm } from "../components/forms/reset-password-form";
 import type { AuthClient } from "../client";
-import type { AuthMode, AuthError } from "../types";
+import type { AuthError } from "../types";
 
 export interface ResetPasswordBlockProps {
-  authClient?: AuthClient;
-  mode?: AuthMode;
+  authClient: AuthClient;
   signInHref?: string;
   forgotPasswordHref?: string;
   redirectTo?: string;
@@ -18,7 +17,6 @@ export interface ResetPasswordBlockProps {
 
 function ResetPasswordBlockContent({
   authClient,
-  mode = "default",
   signInHref = "/sign-in",
   forgotPasswordHref = "/forgot-password",
   redirectTo = "/sign-in",
@@ -29,7 +27,6 @@ function ResetPasswordBlockContent({
     <div className="mx-auto w-full max-w-md space-y-6">
       <ResetPasswordForm
         authClient={authClient}
-        mode={mode}
         signInHref={signInHref}
         forgotPasswordHref={forgotPasswordHref}
         redirectTo={redirectTo}
