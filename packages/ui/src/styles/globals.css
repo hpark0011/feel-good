@@ -3,16 +3,16 @@
 *
 * Shared global styles for @feel-good/ui
 * Import this in your app's globals.css after tailwindcss and tw-animate-css
+*
+* Consuming apps must import Radix colors before this file. Required imports:
+* @radix-ui/colors/gray.css
+* @radix-ui/colors/gray-dark.css
+* @radix-ui/colors/red.css
+* @radix-ui/colors/red-dark.css
+* @radix-ui/colors/green.css
+* @radix-ui/colors/green-dark.css
+* @radix-ui/colors/grass.css
 */
-
-/* import radix colors */
-@import "@radix-ui/colors/gray.css";
-@import "@radix-ui/colors/gray-dark.css";
-@import "@radix-ui/colors/red.css";
-@import "@radix-ui/colors/red-dark.css";
-@import "@radix-ui/colors/green.css";
-@import "@radix-ui/colors/green-dark.css";
-@import "@radix-ui/colors/grass.css";
 
 /* local styles */
 @import "./fonts.css";
