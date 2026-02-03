@@ -11,7 +11,7 @@ import {
 import { Field, FieldGroup, FieldLabel } from "@feel-good/ui/primitives/field";
 import { Input } from "@feel-good/ui/primitives/input";
 import Link from "next/link";
-import type { AuthStatus, AuthError } from "../../types";
+import type { AuthError, AuthStatus } from "../../types";
 import { FormError } from "../shared/form-error";
 
 export interface PasswordLoginViewProps {
@@ -43,7 +43,7 @@ export function PasswordLoginView({
   const isLoading = status === "loading";
 
   return (
-    <Card className="w-full max-w-md rounded-4xl border-transparent p-4 py-8 pb-10">
+    <Card className="w-full max-w-md rounded-4xl border-transparent p-4 py-8 pb-10 bg-red-500">
       <CardHeader>
         <CardTitle className="text-center text-2xl font-medium">
           Login
@@ -93,14 +93,16 @@ export function PasswordLoginView({
                     *
                   </span>
                 </FieldLabel>
-                {forgotPasswordHref ? (
-                  <Link
-                    href={forgotPasswordHref}
-                    className="text-muted-foreground hover:text-blue-500 ml-auto pr-1.5 text-sm underline-offset-4 hover:underline leading-0"
-                  >
-                    Forgot your password?
-                  </Link>
-                ) : null}
+                {forgotPasswordHref
+                  ? (
+                    <Link
+                      href={forgotPasswordHref}
+                      className="text-muted-foreground hover:text-blue-500 ml-auto pr-1.5 text-sm underline-offset-4 hover:underline leading-0"
+                    >
+                      Forgot your password?
+                    </Link>
+                  )
+                  : null}
               </div>
               <Input
                 id="login-password"
