@@ -1,5 +1,5 @@
 ---
-status: pending
+status: done
 priority: p2
 issue_id: "020"
 tags: [code-review, security, auth]
@@ -75,9 +75,9 @@ Option A - Clear password immediately. Email can remain for display purposes but
 
 ## Acceptance Criteria
 
-- [ ] Password state is cleared immediately upon successful authentication
-- [ ] Password state is cleared even if component is about to unmount
-- [ ] Success callbacks still fire correctly
+- [x] Password state is cleared immediately upon successful authentication
+- [x] Password state is cleared even if component is about to unmount
+- [x] Success callbacks still fire correctly
 
 ## Work Log
 

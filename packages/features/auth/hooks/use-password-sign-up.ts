@@ -80,6 +80,7 @@ export function usePasswordSignUp(
       { name, email, password },
       {
         onSuccess: () => {
+          setPassword(""); // Clear password immediately
           if (!isMountedRef.current) return;
           setStatus("success");
           options.onSuccess?.();
