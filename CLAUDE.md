@@ -106,12 +106,26 @@ import { api } from "@feel-good/convex";
 
 ### @feel-good/tsconfig
 
-Shared TypeScript configurations.
+Shared TypeScript configurations. Choose based on package type:
+
+| Config               | Use Case                                           |
+|----------------------|----------------------------------------------------|
+| `base.json`          | Backend/non-browser packages (e.g., Convex)        |
+| `react-library.json` | React component libraries (ui, icons, features)   |
+| `nextjs.json`        | Next.js applications (greyboard, mirror)           |
 
 ```json
 {
-  "extends": "@feel-good/tsconfig/nextjs.json"
+  "extends": "@feel-good/tsconfig/react-library.json"
 }
+```
+
+Available configs in `tooling/typescript/`:
+
+```
+├── base.json             # ES2022, strict mode, bundler resolution
+├── react-library.json    # Extends base + DOM libs + react-jsx
+└── nextjs.json           # Extends base + Next.js plugin + jsx preserve
 ```
 
 ### @feel-good/eslint-config
