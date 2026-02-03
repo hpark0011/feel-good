@@ -15,6 +15,7 @@ Read `best-practices.md` in this skill directory for quality criteria and anti-p
 
 - `create-claude-md.md` — Analyze codebase, generate new CLAUDE.md
 - `review-claude-md.md` — Audit existing file, provide scored feedback
+- `update-claude-md.md` — Apply targeted updates based on user requirements
 
 ## Core Constraints
 
