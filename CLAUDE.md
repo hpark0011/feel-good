@@ -9,6 +9,7 @@ pnpm install           # Install all dependencies
 pnpm dev               # Run all apps in dev mode
 pnpm build             # Build all packages
 pnpm lint              # Lint all packages
+pnpm format            # Format all files
 ```
 
 ## Filtered Commands
@@ -21,150 +22,36 @@ pnpm lint --filter=@feel-good/greyboard   # Lint single app
 
 ## Structure
 
-```
-feel-good/
-├── apps/
-│   ├── greyboard/              # Task management app (Next.js 15)
-│   ├── mirror/                 # Auth app (Convex + Better Auth)
-│   └── ui-factory/             # Design system showcase
-├── packages/
-│   ├── convex/                 # Shared Convex backend (@feel-good/convex)
-│   ├── features/               # Shared feature components (@feel-good/features)
-│   ├── icons/                  # SVG icon components (@feel-good/icons)
-│   ├── ui/                     # Shared UI components (@feel-good/ui)
-│   └── utils/                  # Shared utilities (@feel-good/utils)
-├── tooling/
-│   ├── eslint/                 # @feel-good/eslint-config
-│   ├── prettier/               # @feel-good/prettier-config
-│   └── typescript/             # @feel-good/tsconfig
-├── turbo.json                  # Turborepo configuration
-├── pnpm-workspace.yaml         # pnpm workspace definition
-└── package.json                # Root workspace package.json
-```
+- `apps/` — Next.js applications (greyboard, mirror, ui-factory)
+- `packages/` — Shared libraries (ui, features, icons, utils, convex)
+- `tooling/` — Shared configs (eslint, prettier, typescript)
+
+Each app has its own `CLAUDE.md` with app-specific documentation.
 
 ## Apps
 
-### Greyboard (`apps/greyboard`)
-
-AI-powered document creation & task management application.
-See `apps/greyboard/CLAUDE.md` for detailed documentation.
-
-### Mirror (`apps/mirror`)
-
-Authentication dashboard with Convex real-time backend and Better Auth.
-Runs on port 3001. See `apps/mirror/CLAUDE.md` for detailed documentation.
-
-### UI Factory (`apps/ui-factory`)
-
-Design system showcase and component playground for Feel Good apps.
-Runs on port 3002. See `apps/ui-factory/CLAUDE.md` for detailed documentation.
+| App | Description | Port |
+|-----|-------------|------|
+| greyboard | AI-powered task management | 3000 |
+| mirror | Auth dashboard (Convex + Better Auth) | 3001 |
+| ui-factory | Design system showcase | 3002 |
 
 ## Packages
 
-### @feel-good/utils
+| Package | Purpose | Example Import |
+|---------|---------|----------------|
+| @feel-good/ui | shadcn/ui primitives | `@feel-good/ui/primitives/button` |
+| @feel-good/features | Auth components/hooks | `@feel-good/features/auth/components` |
+| @feel-good/icons | SVG icon components | `@feel-good/icons` |
+| @feel-good/utils | Utilities (cn, etc.) | `@feel-good/utils/cn` |
+| @feel-good/convex | Convex backend | `@feel-good/convex` |
 
-Shared utility functions.
+## TypeScript Configs
 
-```typescript
-import { cn } from "@feel-good/utils/cn";
-```
-
-### @feel-good/icons
-
-SVG icon components as React components.
-
-```typescript
-import { CheckIcon, CloseIcon } from "@feel-good/icons";
-```
-
-### @feel-good/ui
-
-Shared UI component library based on shadcn/ui primitives.
-
-```typescript
-import { Button } from "@feel-good/ui/primitives/button";
-import { Card } from "@feel-good/ui/primitives/card";
-import { Dialog } from "@feel-good/ui/primitives/dialog";
-```
-
-### @feel-good/features
-
-Shared feature components (authentication).
-
-```typescript
-import { SignInForm, SignUpForm } from "@feel-good/features/auth/components";
-import { useSession } from "@feel-good/features/auth/hooks";
-```
-
-### @feel-good/convex
-
-Shared Convex backend configuration and functions.
-
-```typescript
-import { api } from "@feel-good/convex";
-```
-
-### @feel-good/tsconfig
-
-Shared TypeScript configurations. Choose based on package type:
-
-| Config               | Use Case                                           |
-|----------------------|----------------------------------------------------|
-| `base.json`          | Backend/non-browser packages (e.g., Convex)        |
-| `react-library.json` | React component libraries (ui, icons, features)   |
-| `nextjs.json`        | Next.js applications (greyboard, mirror)           |
-
-```json
-{
-  "extends": "@feel-good/tsconfig/react-library.json"
-}
-```
-
-Available configs in `tooling/typescript/`:
-
-```
-├── base.json             # ES2022, strict mode, bundler resolution
-├── react-library.json    # Extends base + DOM libs + react-jsx
-└── nextjs.json           # Extends base + Next.js plugin + jsx preserve
-```
-
-### @feel-good/eslint-config
-
-Shared ESLint configurations.
-
-### @feel-good/prettier-config
-
-Shared Prettier configuration.
-
-## Adding a New App
-
-1. Create directory in `apps/`
-2. Add `package.json` with name `@feel-good/app-name`
-3. Reference workspace packages: `"@feel-good/utils": "workspace:*"`
-4. Run `pnpm install` from root
-
-## Adding a New Package
-
-1. Create directory in `packages/`
-2. Add `package.json` with name `@feel-good/package-name`
-3. Add to consuming apps' dependencies
-4. Run `pnpm install` from root
-
-## Claude Code Configuration
-
-```
-.claude/
-├── rules/                    # Path-specific rules (auto-loaded by context)
-│   ├── monorepo.md          # Workspace conventions
-│   ├── typescript.md        # TypeScript rules
-│   ├── react-components.md  # Component patterns
-│   ├── forms.md             # Form handling
-│   ├── state-management.md  # State patterns
-│   └── apps/greyboard/      # App-specific rules
-├── skills/                   # Detailed documentation
-├── commands/                 # Custom commands
-└── agents/                   # AI agents
-```
+Extend from `@feel-good/tsconfig`:
+- `nextjs.json` — Next.js apps
+- `react-library.json` — React packages (ui, icons, features)
+- `base.json` — Non-browser packages (convex)
 
 ### Personal Preferences
 
