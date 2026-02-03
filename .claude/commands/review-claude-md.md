@@ -1,4 +1,5 @@
 ---
+argument-hint: [project-path][claude-md-file-path]
 name: review-claude-md
 description: Audit an existing CLAUDE.md and suggest improvements
 ---

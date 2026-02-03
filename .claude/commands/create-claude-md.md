@@ -1,4 +1,5 @@
 ---
+argument-hint: [project-path]
 name: create-claude-md
 description: Generate a new CLAUDE.md by analyzing the codebase
 ---
