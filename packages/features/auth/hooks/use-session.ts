@@ -15,6 +15,16 @@ interface Session {
   user: User;
 }
 
+/**
+ * Factory function that creates a useSession hook bound to a specific auth client.
+ * @param authClient - The auth client instance created by createAppAuthClient
+ * @returns A useSession hook that provides session state and auth methods
+ * @example
+ * const useSession = createUseSession(authClient);
+ *
+ * // In a component:
+ * const { user, isLoading, isAuthenticated, signOut } = useSession();
+ */
 export function createUseSession(authClient: AuthClient) {
   return function useSession() {
     const [session, setSession] = useState<Session | null>(null);
