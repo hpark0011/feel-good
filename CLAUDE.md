@@ -41,10 +41,20 @@ Each app has its own `CLAUDE.md` with app-specific documentation.
 | Package | Purpose | Example Import |
 |---------|---------|----------------|
 | @feel-good/ui | shadcn/ui primitives | `@feel-good/ui/primitives/button` |
-| @feel-good/features | Auth components/hooks | `@feel-good/features/auth/components` |
+| @feel-good/features | Auth components/hooks | `@feel-good/features/auth/blocks` |
 | @feel-good/icons | SVG icon components | `@feel-good/icons` |
 | @feel-good/utils | Utilities (cn, etc.) | `@feel-good/utils/cn` |
 | @feel-good/convex | Convex backend | `@feel-good/convex` |
+
+### Auth Package Layers
+
+| Layer | Import | Purpose |
+|-------|--------|---------|
+| Blocks | `@feel-good/features/auth/blocks` | Drop-in page sections |
+| Forms | `@feel-good/features/auth/components/forms` | Complete forms with logic |
+| Views | `@feel-good/features/auth/components/views` | Pure UI components |
+| Hooks | `@feel-good/features/auth/hooks` | Headless auth logic |
+| Providers | `@feel-good/features/auth/providers` | Context providers |
 
 ## TypeScript Configs
 

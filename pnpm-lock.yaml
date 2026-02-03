@@ -526,6 +526,9 @@ importers:
 
   apps/ui-factory:
     dependencies:
+      '@feel-good/features':
+        specifier: workspace:*
+        version: link:../../packages/features
       '@feel-good/icons':
         specifier: workspace:*
         version: link:../../packages/icons
@@ -618,6 +621,9 @@ importers:
       '@convex-dev/better-auth':
         specifier: 'catalog:'
         version: 0.10.10(@better-auth/core@1.4.9(@better-auth/utils@0.3.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.7(zod@4.3.5))(jose@6.1.3)(kysely@0.28.10)(nanostores@1.1.0))(@better-auth/utils@0.3.0)(@standard-schema/spec@1.1.0)(better-auth@1.4.9(next@16.1.4(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(better-call@1.1.7(zod@4.3.5))(convex@1.31.6(react@19.2.3))(hono@4.11.5)(nanostores@1.1.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(typescript@5.9.3)
+      '@feel-good/icons':
+        specifier: workspace:*
+        version: link:../icons
       '@feel-good/ui':
         specifier: workspace:*
         version: link:../ui
@@ -636,6 +642,9 @@ importers:
       react:
         specifier: ^19.0.0
         version: 19.2.3
+      zod:
+        specifier: 'catalog:'
+        version: 4.3.5
     devDependencies:
       '@feel-good/tsconfig':
         specifier: workspace:*

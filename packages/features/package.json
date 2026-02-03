@@ -6,11 +6,16 @@
   "sideEffects": false,
   "exports": {
     "./auth": "./auth/index.ts",
+    "./auth/blocks": "./auth/blocks/index.ts",
+    "./auth/components": "./auth/components/index.ts",
+    "./auth/components/forms": "./auth/components/forms/index.ts",
+    "./auth/components/views": "./auth/components/views/index.ts",
+    "./auth/components/shared": "./auth/components/shared/index.ts",
+    "./auth/hooks": "./auth/hooks/index.ts",
+    "./auth/providers": "./auth/providers/index.ts",
     "./auth/client": "./auth/client.ts",
     "./auth/server": "./auth/server.ts",
-    "./auth/types": "./auth/types.ts",
-    "./auth/hooks": "./auth/hooks/index.ts",
-    "./auth/components": "./auth/components/index.ts"
+    "./auth/types": "./auth/types.ts"
   },
   "peerDependencies": {
     "react": "^19.0.0",
@@ -18,10 +23,12 @@
   },
   "dependencies": {
     "@convex-dev/better-auth": "catalog:",
+    "@feel-good/icons": "workspace:*",
     "@feel-good/ui": "workspace:*",
     "better-auth": "catalog:",
     "convex": "catalog:",
-    "convex-helpers": "catalog:"
+    "convex-helpers": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@feel-good/tsconfig": "workspace:*",

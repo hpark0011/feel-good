@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@feel-good/features": "workspace:*",
     "@feel-good/icons": "workspace:*",
     "@feel-good/ui": "workspace:*",
     "@radix-ui/colors": "catalog:",

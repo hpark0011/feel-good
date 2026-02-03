@@ -1,5 +1,7 @@
-import { MagicLinkSignUpForm } from "@/app/blocks/sign-up/_components/magic-link-sign-up-form";
-import { PasswordSignUpForm } from "@/app/blocks/sign-up/_components/password-sign-up-form";
+import {
+  PasswordSignUpForm,
+  MagicLinkSignUpForm,
+} from "@feel-good/features/auth/components/forms";
 import { Divider } from "@/components/divider";
 import { PageSection } from "@/components/page-section";
 import { PageSectionHeader } from "@/components/page-section-header";
@@ -10,13 +12,13 @@ export function SignUpView() {
       <Divider />
       <PageSection>
         <PageSectionHeader>Password</PageSectionHeader>
-        <PasswordSignUpForm />
+        <PasswordSignUpForm mode="preview" />
       </PageSection>
 
       <Divider />
       <PageSection>
         <PageSectionHeader>Magic Link</PageSectionHeader>
-        <MagicLinkSignUpForm />
+        <MagicLinkSignUpForm mode="preview" />
       </PageSection>
     </div>
   );

@@ -34,21 +34,28 @@ export function validatePassword(password: string): string | null {
 export interface AuthError {
   code: string;
   message: string;
+  field?: string; // For form validation errors
 }
 
+// Security: Generic error messages to prevent user enumeration
 export const AUTH_ERROR_MESSAGES: Record<string, string> = {
   INVALID_CREDENTIALS: "Invalid email or password",
-  USER_NOT_FOUND: "No account found with this email",
+  USER_NOT_FOUND: "Invalid email or password", // Same as invalid credentials to prevent enumeration
   EMAIL_NOT_VERIFIED: "Please verify your email before signing in",
-  EMAIL_ALREADY_EXISTS: "An account with this email already exists",
+  EMAIL_ALREADY_EXISTS:
+    "Unable to create account. Please try signing in instead.", // Vague to prevent enumeration
   INVALID_TOKEN: "This link is invalid or has expired",
   RATE_LIMITED: "Too many attempts. Please try again later.",
   PASSWORD_TOO_SHORT: "Password must be at least 8 characters",
   PASSWORDS_DONT_MATCH: "Passwords do not match",
   INVALID_EMAIL: "Please enter a valid email address",
   NETWORK_ERROR: "Unable to connect. Please check your internet connection.",
+  OAUTH_ERROR: "Unable to sign in with this provider. Please try again.",
   UNKNOWN: "Something went wrong. Please try again.",
 };
+
+// Mode types for preview/production rendering
+export type AuthMode = "default" | "preview";
 
 export function getAuthErrorMessage(code: string | undefined | null): string {
   if (!code) return AUTH_ERROR_MESSAGES.UNKNOWN!;

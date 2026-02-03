@@ -1283,46 +1283,46 @@ Add to packages section:
 
 ### Functional Requirements
 
-- [ ] `LoginBlock` renders stacked Password + Magic Link + OAuth sections
-- [ ] `SignUpBlock` renders stacked sections with name field
-- [ ] `mode="preview"` renders forms without authClient
-- [ ] Password sign-in flow works end-to-end
-- [ ] Password sign-up flow works end-to-end
-- [ ] Magic link request flow works
-- [ ] Google OAuth flow works
-- [ ] Forgot password flow works
-- [ ] Reset password flow works
-- [ ] Slot overrides allow component replacement
-- [ ] Navigation links work (sign-up, sign-in, forgot password)
+- [x] `LoginBlock` renders stacked Password + Magic Link + OAuth sections
+- [x] `SignUpBlock` renders stacked sections with name field
+- [x] `mode="preview"` renders forms without authClient
+- [x] Password sign-in flow works end-to-end
+- [x] Password sign-up flow works end-to-end
+- [x] Magic link request flow works
+- [x] Google OAuth flow works
+- [x] Forgot password flow works
+- [x] Reset password flow works
+- [x] Slot overrides allow component replacement
+- [x] Navigation links work (sign-up, sign-in, forgot password)
 
 ### Non-Functional Requirements
 
-- [ ] `pnpm lint --filter=@feel-good/features` passes
-- [ ] `pnpm build --filter=@feel-good/mirror` succeeds
-- [ ] `pnpm build --filter=@feel-good/ui-factory` succeeds
-- [ ] No TypeScript errors
-- [ ] Existing Mirror auth pages work after migration
+- [x] `pnpm lint --filter=@feel-good/features` passes
+- [x] `pnpm build --filter=@feel-good/mirror` succeeds
+- [x] `pnpm build --filter=@feel-good/ui-factory` succeeds
+- [x] No TypeScript errors
+- [x] Existing Mirror auth pages work after migration
 
 ### Quality Gates
 
-- [ ] All hooks are unit testable (no JSX dependencies)
-- [ ] All views are pure components (no side effects)
-- [ ] Backwards compatibility maintained via re-exports
-- [ ] README documents all abstraction levels
+- [x] All hooks are unit testable (no JSX dependencies)
+- [x] All views are pure components (no side effects)
+- [x] Backwards compatibility maintained via re-exports
+- [x] README documents all abstraction levels
 
 ### Security Requirements (from Security Sentinel)
 
-- [ ] Error messages do not reveal account existence
-- [ ] Reset password tokens handled securely
-- [ ] CSRF protection verified via Better Auth config
-- [ ] Rate limiting in place for all auth endpoints
+- [x] Error messages do not reveal account existence
+- [x] Reset password tokens handled securely
+- [x] CSRF protection verified via Better Auth config
+- [x] Rate limiting in place for all auth endpoints
 
 ### Accessibility Requirements (from Best Practices Research)
 
-- [ ] All forms have proper `aria-` attributes
-- [ ] Error messages announced to screen readers
-- [ ] Correct `autoComplete` values on all inputs
-- [ ] Keyboard navigation works
+- [x] All forms have proper `aria-` attributes
+- [x] Error messages announced to screen readers
+- [x] Correct `autoComplete` values on all inputs
+- [x] Keyboard navigation works
 
 ---
 

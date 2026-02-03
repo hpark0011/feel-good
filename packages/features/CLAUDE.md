@@ -18,7 +18,36 @@ Add to your app's dependencies:
 
 Authentication components and utilities using Better Auth with Convex.
 
-### Components
+### Auth Package Layers
+
+| Layer | Import | Purpose |
+|-------|--------|---------|
+| Blocks | `@feel-good/features/auth/blocks` | Drop-in page sections |
+| Forms | `@feel-good/features/auth/components/forms` | Complete forms with logic |
+| Views | `@feel-good/features/auth/components/views` | Pure UI components |
+| Hooks | `@feel-good/features/auth/hooks` | Headless auth logic |
+| Providers | `@feel-good/features/auth/providers` | Context providers |
+
+### Quick Start (Blocks)
+
+```typescript
+import { LoginBlock } from "@feel-good/features/auth/blocks"
+import { authClient } from "@/lib/auth-client"
+
+export default function LoginPage() {
+  return <LoginBlock authClient={authClient} />
+}
+```
+
+### Preview Mode
+
+For UI Factory or design system previews:
+
+```typescript
+<LoginBlock mode="preview" />
+```
+
+### Legacy Components (Backwards Compatible)
 
 ```typescript
 import {
@@ -37,42 +66,52 @@ import {
 ### Hooks
 
 ```typescript
-import { useSession } from "@feel-good/features/auth/hooks";
+import {
+  usePasswordSignIn,
+  usePasswordSignUp,
+  useMagicLinkRequest,
+  useForgotPassword,
+  useResetPassword,
+  useAuthClient,
+  createUseSession,
+} from "@feel-good/features/auth/hooks";
 ```
 
 ### Client/Server Utilities
 
 ```typescript
 // Client-side auth
-import { authClient } from "@feel-good/features/auth/client";
+import { getAuthClient } from "@feel-good/features/auth/client";
 
 // Server-side auth
 import { auth } from "@feel-good/features/auth/server";
 
 // Types
-import type { Session, User } from "@feel-good/features/auth/types";
+import type { AuthSession, AuthUser, AuthError, AuthStatus } from "@feel-good/features/auth/types";
 ```
 
 ## Structure
 
 ```
 auth/
-├── components/       # Auth UI components
-│   ├── sign-in-form.tsx
-│   ├── sign-up-form.tsx
-│   ├── forgot-password-form.tsx
-│   ├── reset-password-form.tsx
-│   ├── magic-link-form.tsx
-│   ├── oauth-buttons.tsx
-│   ├── session-provider.tsx
-│   ├── form-error.tsx
-│   └── form-success.tsx
-├── hooks/            # Auth hooks (useSession, etc.)
-├── utils/            # Auth utilities
-├── client.ts         # Client-side auth setup
-├── server.ts         # Server-side auth setup
-├── types.ts          # TypeScript types
-└── index.ts          # Barrel export
+├── blocks/               # Layer 1: Page sections
+│   ├── login-block.tsx
+│   ├── sign-up-block.tsx
+│   ├── forgot-password-block.tsx
+│   ├── reset-password-block.tsx
+│   └── shared/           # Layout helpers
+├── components/
+│   ├── forms/            # Layer 2: Container components
+│   ├── views/            # Layer 3: Pure UI components
+│   └── shared/           # Shared pieces
+├── hooks/                # Layer 4: Headless logic
+├── providers/            # Context providers
+├── _lib/schemas/         # Zod validation schemas
+├── utils/                # Auth utilities
+├── client.ts             # Client-side auth setup
+├── server.ts             # Server-side auth setup
+├── types.ts              # TypeScript types
+└── index.ts              # Barrel export
 ```
 
 ## Adding New Features
@@ -85,6 +124,8 @@ auth/
 ## Dependencies
 
 - `@feel-good/ui` - UI components
+- `@feel-good/icons` - Icons (GoogleIcon)
 - `better-auth` - Authentication library
 - `@convex-dev/better-auth` - Convex adapter
 - `convex` - Real-time backend
+- `zod` - Validation schemas
