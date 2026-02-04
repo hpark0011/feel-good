@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import type { AuthClient } from "../client";
 import { getAuthErrorMessage, type AuthStatus, type AuthError } from "../types";
+import { getSafeRedirectUrl } from "../utils/validate-redirect";
 
 export interface UsePasswordSignInOptions {
   redirectTo?: string;
@@ -56,8 +57,12 @@ export function usePasswordSignIn(
     setError(null);
     setStatus("loading");
 
+    const callbackURL = options.redirectTo
+      ? getSafeRedirectUrl(options.redirectTo, undefined)
+      : undefined;
+
     await authClient.signIn.email(
-      { email, password },
+      { email, password, callbackURL },
       {
         onSuccess: () => {
           setPassword(""); // Clear password immediately

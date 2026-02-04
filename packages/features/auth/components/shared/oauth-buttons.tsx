@@ -5,6 +5,7 @@ import { GoogleIcon } from "@feel-good/icons";
 import { Button } from "@feel-good/ui/primitives/button";
 import type { AuthClient } from "../../client";
 import type { AuthError } from "../../types";
+import { getSafeRedirectUrl } from "../../utils/validate-redirect";
 
 export interface OAuthButtonsProps {
   authClient: AuthClient;
@@ -31,9 +32,13 @@ export function OAuthButtons({
     setIsLoading(true);
 
     try {
+      const callbackURL = redirectTo
+        ? getSafeRedirectUrl(redirectTo, undefined)
+        : undefined;
+
       await authClient.signIn.social({
         provider: "google",
-        callbackURL: redirectTo,
+        callbackURL,
       });
       // If we reach here without redirect, reset loading after timeout
       // OAuth might open popup that user closes

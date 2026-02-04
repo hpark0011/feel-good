@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import type { AuthClient } from "../client";
 import { getAuthErrorMessage, type AuthStatus, type AuthError } from "../types";
+import { getSafeRedirectUrl } from "../utils/validate-redirect";
 
 export interface UseForgotPasswordOptions {
   redirectTo?: string;
@@ -53,8 +54,10 @@ export function useForgotPassword(
     setError(null);
     setStatus("loading");
 
+    const redirectTo = getSafeRedirectUrl(options.redirectTo, "/reset-password");
+
     await authClient.requestPasswordReset(
-      { email, redirectTo: options.redirectTo ?? "/reset-password" },
+      { email, redirectTo },
       {
         onSuccess: () => {
           if (!isMountedRef.current) return;

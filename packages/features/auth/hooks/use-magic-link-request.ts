@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import type { AuthClient } from "../client";
 import { getAuthErrorMessage, type AuthStatus, type AuthError } from "../types";
+import { getSafeRedirectUrl } from "../utils/validate-redirect";
 
 export interface UseMagicLinkRequestOptions {
   redirectTo?: string;
@@ -53,8 +54,12 @@ export function useMagicLinkRequest(
     setError(null);
     setStatus("loading");
 
+    const callbackURL = options.redirectTo
+      ? getSafeRedirectUrl(options.redirectTo, undefined)
+      : undefined;
+
     await authClient.signIn.magicLink(
-      { email, callbackURL: options.redirectTo },
+      { email, callbackURL },
       {
         onSuccess: () => {
           if (!isMountedRef.current) return;
