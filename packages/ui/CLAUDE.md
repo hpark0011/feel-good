@@ -29,7 +29,22 @@ import { useMediaQuery } from "@feel-good/ui/hooks/use-media-query";
 import { ThemeProvider } from "@feel-good/ui/providers/theme-provider";
 
 // Import styles (in layout/app)
-import "@feel-good/ui/styles.css";
+// See globals.css example below.
+```
+
+```css
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@import "@radix-ui/colors/gray.css";
+@import "@radix-ui/colors/gray-dark.css";
+@import "@radix-ui/colors/red.css";
+@import "@radix-ui/colors/red-dark.css";
+@import "@radix-ui/colors/green.css";
+@import "@radix-ui/colors/green-dark.css";
+@import "@radix-ui/colors/grass.css";
+
+@import "@feel-good/ui/styles.css";
 ```
 
 ## Structure

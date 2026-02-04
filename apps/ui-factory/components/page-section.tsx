@@ -11,7 +11,7 @@ export function PageSection(
   return (
     <div
       className={cn(
-        "flex flex-col gap-10 py-1.5 pb-12",
+        "flex flex-col gap-10 py-1.5 pb-12 items-center",
         className,
       )}
     >

@@ -1,8 +1,14 @@
-import { MagicLinkLoginForm } from "@/app/blocks/login/_components/magic-link-login-form";
-import { PasswordLoginForm } from "@/app/blocks/login/_components/password-login-form";
+"use client";
+
+import {
+  PasswordLoginView,
+  MagicLinkLoginView,
+} from "@feel-good/features/auth/components/views";
 import { Divider } from "@/components/divider";
 import { PageSection } from "@/components/page-section";
 import { PageSectionHeader } from "@/components/page-section-header";
+
+const noop = () => {};
 
 export function LoginView() {
   return (
@@ -10,13 +16,27 @@ export function LoginView() {
       <Divider />
       <PageSection>
         <PageSectionHeader>Password</PageSectionHeader>
-        <PasswordLoginForm />
+        <PasswordLoginView
+          email=""
+          password=""
+          status="idle"
+          error={null}
+          onEmailChange={noop}
+          onPasswordChange={noop}
+          onSubmit={noop}
+        />
       </PageSection>
 
       <Divider />
       <PageSection>
         <PageSectionHeader>Magic Link</PageSectionHeader>
-        <MagicLinkLoginForm />
+        <MagicLinkLoginView
+          email=""
+          status="idle"
+          error={null}
+          onEmailChange={noop}
+          onSubmit={noop}
+        />
       </PageSection>
     </div>
   );

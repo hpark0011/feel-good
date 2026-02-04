@@ -1,4 +1,4 @@
-# Makerkit Form Components Reference
+# Form Components Reference
 
 ## Import Pattern
 

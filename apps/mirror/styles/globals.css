@@ -8,6 +8,15 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* import radix colors */
+@import "@radix-ui/colors/gray.css";
+@import "@radix-ui/colors/gray-dark.css";
+@import "@radix-ui/colors/red.css";
+@import "@radix-ui/colors/red-dark.css";
+@import "@radix-ui/colors/green.css";
+@import "@radix-ui/colors/green-dark.css";
+@import "@radix-ui/colors/grass.css";
+
 /* import shared styles from @feel-good/ui */
 @import "@feel-good/ui/styles.css";
 
@@ -16,28 +25,11 @@
 
 /* content sources */
 @source "../node_modules/@feel-good/ui";
+@source "../node_modules/@feel-good/features";
 
 /* mirror-specific overrides */
 :root {
-  --background: var(--gray-1);
-  --foreground: var(--gray-12);
-
-  /* Button */
-  --primary: var(--gray-12);
-  --primary-foreground: var(--gray-1);
-
-  --secondary: var(--gray-10);
-  --secondary-foreground: var(--gray-12);
 }
 
 .dark {
-  --background: var(--gray-1);
-  --foreground: var(--gray-12);
-
-  /* Button */
-  --primary: var(--gray-12);
-  --primary-foreground: var(--gray-1);
-
-  --secondary: var(--gray-10);
-  --secondary-foreground: var(--gray-12);
 }
