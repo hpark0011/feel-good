@@ -43,7 +43,7 @@ export function PasswordLoginView({
   const isLoading = status === "loading";
 
   return (
-    <Card className="w-full max-w-md rounded-4xl border-transparent p-4 py-8 pb-10 bg-red-500">
+    <Card className="w-full max-w-md rounded-4xl border-transparent p-4 py-8 pb-10">
       <CardHeader>
         <CardTitle className="text-center text-2xl font-medium">
           Login
