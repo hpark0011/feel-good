@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef, useEffect } from "react";
+import { useState, useCallback } from "react";
 import type { AuthClient } from "../client";
 import {
   getAuthErrorMessage,
@@ -8,6 +8,7 @@ import {
   type AuthStatus,
   type AuthError,
 } from "../types";
+import { useMountedRef } from "./_lib/use-mounted-ref";
 
 export interface UseResetPasswordOptions {
   token: string | null;
@@ -49,14 +50,7 @@ export function useResetPassword(
   const [status, setStatus] = useState<AuthStatus>("idle");
   const [error, setError] = useState<AuthError | null>(null);
 
-  // Race condition prevention: track if component is mounted
-  const isMountedRef = useRef(true);
-  useEffect(() => {
-    isMountedRef.current = true;
-    return () => {
-      isMountedRef.current = false;
-    };
-  }, []);
+  const isMountedRef = useMountedRef();
 
   const submit = useCallback(async () => {
     // Guard against double-submission
