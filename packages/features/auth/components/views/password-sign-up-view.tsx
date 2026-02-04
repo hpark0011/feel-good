@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { Button } from "@feel-good/ui/primitives/button";
 import {
   Card,
@@ -30,7 +31,7 @@ export interface PasswordSignUpViewProps {
   onSubmit: () => void;
 }
 
-export function PasswordSignUpView({
+export const PasswordSignUpView = memo(function PasswordSignUpView({
   name,
   email,
   password,
@@ -164,4 +165,4 @@ export function PasswordSignUpView({
       </CardContent>
     </Card>
   );
-}
+});

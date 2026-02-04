@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { Button } from "@feel-good/ui/primitives/button";
 import {
   Card,
@@ -36,7 +37,7 @@ export interface ResetPasswordViewProps {
   forgotPasswordHref?: string;
 }
 
-export function ResetPasswordView({
+export const ResetPasswordView = memo(function ResetPasswordView({
   password,
   confirmPassword,
   status,
@@ -179,4 +180,4 @@ export function ResetPasswordView({
       </CardContent>
     </Card>
   );
-}
+});

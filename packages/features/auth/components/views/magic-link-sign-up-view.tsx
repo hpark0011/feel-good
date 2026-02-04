@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { Button } from "@feel-good/ui/primitives/button";
 import {
   Card,
@@ -26,7 +27,7 @@ export interface MagicLinkSignUpViewProps {
   onReset?: () => void;
 }
 
-export function MagicLinkSignUpView({
+export const MagicLinkSignUpView = memo(function MagicLinkSignUpView({
   email,
   status,
   error,
@@ -122,4 +123,4 @@ export function MagicLinkSignUpView({
       </CardContent>
     </Card>
   );
-}
+});

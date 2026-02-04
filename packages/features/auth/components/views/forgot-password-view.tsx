@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { Button } from "@feel-good/ui/primitives/button";
 import {
   Card,
@@ -25,7 +26,7 @@ export interface ForgotPasswordViewProps {
   onSubmit: () => void;
 }
 
-export function ForgotPasswordView({
+export const ForgotPasswordView = memo(function ForgotPasswordView({
   email,
   status,
   error,
@@ -110,4 +111,4 @@ export function ForgotPasswordView({
       </CardContent>
     </Card>
   );
-}
+});
