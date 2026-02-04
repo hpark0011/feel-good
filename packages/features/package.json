@@ -9,7 +9,7 @@
     "./auth/blocks": "./auth/blocks/index.ts",
     "./auth/components": "./auth/components/index.ts",
     "./auth/components/forms": "./auth/components/forms/index.ts",
-    "./auth/components/views": "./auth/components/views/index.ts",
+    "./auth/views": "./auth/views/index.ts",
     "./auth/components/shared": "./auth/components/shared/index.ts",
     "./auth/hooks": "./auth/hooks/index.ts",
     "./auth/providers": "./auth/providers/index.ts",

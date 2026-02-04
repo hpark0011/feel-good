@@ -3,7 +3,7 @@
 import {
   PasswordLoginView,
   MagicLinkLoginView,
-} from "@feel-good/features/auth/components/views";
+} from "@feel-good/features/auth/views";
 import { Divider } from "@/components/divider";
 import { PageSection } from "@/components/page-section";
 import { PageSectionHeader } from "@/components/page-section-header";

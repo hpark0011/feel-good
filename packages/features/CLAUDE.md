@@ -24,7 +24,7 @@ Authentication components and utilities using Better Auth with Convex.
 |-------|--------|---------|
 | Blocks | `@feel-good/features/auth/blocks` | Drop-in page sections |
 | Forms | `@feel-good/features/auth/components/forms` | Complete forms with logic |
-| Views | `@feel-good/features/auth/components/views` | Pure UI components |
+| Views | `@feel-good/features/auth/views` | Pure UI components |
 | Hooks | `@feel-good/features/auth/hooks` | Headless auth logic |
 | Providers | `@feel-good/features/auth/providers` | Context providers |
 
@@ -94,11 +94,11 @@ auth/
 │   └── shared/           # Layout helpers
 ├── components/
 │   ├── forms/            # Layer 2: Container components
-│   ├── views/            # Layer 3: Pure UI components
 │   └── shared/           # Shared pieces
+├── views/                # Layer 3: Pure UI components
 ├── hooks/                # Layer 4: Headless logic
 ├── providers/            # Context providers
-├── _lib/schemas/         # Zod validation schemas
+├── lib/schemas/          # Zod validation schemas
 ├── utils/                # Auth utilities
 ├── client.ts             # Client-side auth setup
 ├── server.ts             # Server-side auth setup
