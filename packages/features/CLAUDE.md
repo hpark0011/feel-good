@@ -113,6 +113,112 @@ auth/
 3. Update `package.json` exports field
 4. Run `pnpm install` from monorepo root
 
+## Dock Feature
+
+macOS-style application dock for navigating between apps. Features auto-hide behavior, smooth animations, and a layered architecture.
+
+### Dock Package Layers
+
+| Layer | Import | Purpose |
+|-------|--------|---------|
+| Blocks | `@feel-good/features/dock/blocks` | Drop-in dock with all behavior built-in |
+| Components | `@feel-good/features/dock/components` | Individual UI primitives for custom composition |
+| Hooks | `@feel-good/features/dock/hooks` | Headless logic for visibility and config management |
+| Providers | `@feel-good/features/dock/providers` | Context providers for state management |
+| Lib | `@feel-good/features/dock/lib` | Types and validation schemas |
+
+### Quick Start (Blocks)
+
+```typescript
+import { AppDock } from "@feel-good/features/dock/blocks";
+import { HomeIcon, SettingsIcon } from "@feel-good/icons";
+
+const dockConfig = {
+  placement: "bottom",
+  defaultAppId: "home",
+  apps: [
+    { id: "home", name: "Home", icon: HomeIcon, route: "/", order: 1 },
+    { id: "settings", name: "Settings", icon: SettingsIcon, route: "/settings", order: 2 },
+  ],
+};
+
+export default function Layout({ children }) {
+  return (
+    <>
+      {children}
+      <AppDock config={dockConfig} onAppClick={(appId) => console.log(appId)} />
+    </>
+  );
+}
+```
+
+### Components
+
+```typescript
+import {
+  DockRoot,
+  DockContainer,
+  DockItem,
+  DockIcon,
+} from "@feel-good/features/dock/components";
+```
+
+### Hooks
+
+```typescript
+import {
+  useDock,
+  useDockConfig,
+  useDockVisibility,
+} from "@feel-good/features/dock/hooks";
+```
+
+### Providers
+
+```typescript
+import { DockProvider, useDock } from "@feel-good/features/dock/providers";
+```
+
+### Types and Schemas
+
+```typescript
+import type {
+  DockConfig,
+  DockApp,
+  DockPlacement,
+  DockState,
+  DockContextValue,
+} from "@feel-good/features/dock/lib";
+
+import {
+  dockConfigSchema,
+  dockAppSchema,
+  dockPlacementSchema,
+} from "@feel-good/features/dock/lib";
+```
+
+## Structure
+
+```
+dock/
+├── blocks/               # Layer 1: Drop-in dock
+│   └── app-dock.tsx
+├── components/           # Layer 2: UI primitives
+│   ├── dock-root.tsx
+│   ├── dock-container.tsx
+│   ├── dock-item.tsx
+│   └── dock-icon.tsx
+├── hooks/                # Layer 3: Headless logic
+│   ├── use-dock-config.ts
+│   └── use-dock-visibility.ts
+├── providers/            # Layer 4: State management
+│   └── dock-provider.tsx
+├── lib/                  # Types and schemas
+│   ├── types.ts
+│   └── schemas/
+└── index.ts              # Barrel export
+```
+
 ## Dependencies
 
 - `@feel-good/ui` - UI components

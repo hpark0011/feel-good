@@ -12,4 +12,5 @@ export const COMPONENT_NAV_ITEMS: NavItem[] = [
 export const BLOCK_NAV_ITEMS: NavItem[] = [
   { label: "Login", href: "/blocks/login" },
   { label: "Sign Up", href: "/blocks/sign-up" },
+  { label: "Dock", href: "/blocks/dock" },
 ];

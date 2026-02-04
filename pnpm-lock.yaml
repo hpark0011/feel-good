@@ -627,6 +627,9 @@ importers:
       '@feel-good/ui':
         specifier: workspace:*
         version: link:../ui
+      '@feel-good/utils':
+        specifier: workspace:*
+        version: link:../utils
       better-auth:
         specifier: 'catalog:'
         version: 1.4.9(next@16.1.4(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
