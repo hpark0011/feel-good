@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "022"
 tags: [code-review, duplication, hooks, auth]
@@ -85,16 +85,17 @@ Option A - Extract to `_lib/use-mounted-ref.ts` and update all hooks.
 
 ## Acceptance Criteria
 
-- [ ] Shared useMountedRef hook created
-- [ ] All 5 auth hooks updated to use shared hook
-- [ ] Race condition prevention still works correctly
-- [ ] No regressions in unmount handling
+- [x] Shared useMountedRef hook created
+- [x] All 5 auth hooks updated to use shared hook
+- [x] Race condition prevention still works correctly
+- [x] No regressions in unmount handling
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-03 | Created from code review | Pattern recognition found 5x duplication |
+| 2026-02-04 | Implemented shared hook | Created `_lib/use-mounted-ref.ts`, updated all 5 hooks, saved ~28 LOC |
 
 ## Resources
 
