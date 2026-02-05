@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "028"
 tags: [code-review, testing, accessibility, auth]

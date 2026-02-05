@@ -3,7 +3,6 @@
 import { useState, useCallback } from "react";
 import type { AuthClient } from "../client";
 import { getAuthErrorMessage, type AuthStatus, type AuthError } from "../types";
-import { useMountedRef } from "./_lib/use-mounted-ref";
 import { getSafeRedirectUrl } from "../utils/validate-redirect";
 
 export interface UsePasswordSignInOptions {
@@ -42,8 +41,6 @@ export function usePasswordSignIn(
   const [status, setStatus] = useState<AuthStatus>("idle");
   const [error, setError] = useState<AuthError | null>(null);
 
-  const isMountedRef = useMountedRef();
-
   const submit = useCallback(async () => {
     // Guard against double-submission
     if (status === "loading") return;
@@ -60,12 +57,10 @@ export function usePasswordSignIn(
       {
         onSuccess: () => {
           setPassword(""); // Clear password immediately
-          if (!isMountedRef.current) return;
           setStatus("success");
           options.onSuccess?.();
         },
         onError: (ctx) => {
-          if (!isMountedRef.current) return;
           const authError: AuthError = {
             code: ctx.error.code ?? "UNKNOWN",
             message: getAuthErrorMessage(ctx.error.code ?? "UNKNOWN"),

@@ -4,7 +4,6 @@ import { useState, useCallback } from "react";
 import type { AuthClient } from "../client";
 import { getAuthErrorMessage, type AuthStatus, type AuthError } from "../types";
 import { getSafeRedirectUrl } from "../utils/validate-redirect";
-import { useMountedRef } from "./_lib/use-mounted-ref";
 
 export interface UseMagicLinkRequestOptions {
   redirectTo?: string;
@@ -39,8 +38,6 @@ export function useMagicLinkRequest(
   const [status, setStatus] = useState<AuthStatus>("idle");
   const [error, setError] = useState<AuthError | null>(null);
 
-  const isMountedRef = useMountedRef();
-
   const submit = useCallback(async () => {
     // Guard against double-submission
     if (status === "loading") return;
@@ -56,12 +53,10 @@ export function useMagicLinkRequest(
       { email, callbackURL },
       {
         onSuccess: () => {
-          if (!isMountedRef.current) return;
           setStatus("success");
           options.onSuccess?.();
         },
         onError: (ctx) => {
-          if (!isMountedRef.current) return;
           const authError: AuthError = {
             code: ctx.error.code ?? "UNKNOWN",
             message: getAuthErrorMessage(ctx.error.code ?? "UNKNOWN"),

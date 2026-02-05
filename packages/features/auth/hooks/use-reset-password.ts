@@ -8,7 +8,6 @@ import {
   type AuthStatus,
   type AuthError,
 } from "../types";
-import { useMountedRef } from "./_lib/use-mounted-ref";
 
 export interface UseResetPasswordOptions {
   token: string | null;
@@ -49,8 +48,6 @@ export function useResetPassword(
   const [confirmPassword, setConfirmPassword] = useState("");
   const [status, setStatus] = useState<AuthStatus>("idle");
   const [error, setError] = useState<AuthError | null>(null);
-
-  const isMountedRef = useMountedRef();
 
   const submit = useCallback(async () => {
     // Guard against double-submission
@@ -97,12 +94,10 @@ export function useResetPassword(
       { newPassword: password, token: options.token },
       {
         onSuccess: () => {
-          if (!isMountedRef.current) return;
           setStatus("success");
           options.onSuccess?.();
         },
         onError: (ctx) => {
-          if (!isMountedRef.current) return;
           const authError: AuthError = {
             code: ctx.error.code ?? "UNKNOWN",
             message: getAuthErrorMessage(ctx.error.code ?? "UNKNOWN"),
