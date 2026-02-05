@@ -18,17 +18,19 @@ export function DockIcon({ icon: Icon, isActive, className }: DockIconProps) {
       data-active={isActive}
       className={cn(
         "size-12 p-2",
-        "[corner-shape:superellipse(1.1)] rounded-xl",
-        "bg-muted/50",
+        "[corner-shape:superellipse(1.1)] rounded-[14px]",
+        "bg-transparent",
         "flex items-center justify-center",
         "transition-all duration-100",
-        "hover:bg-muted",
+        "hover:bg-accent",
         "active:scale-97",
-        isActive && "bg-primary/10 ring-2 ring-primary/20",
+        isActive && "bg-accent shadow-dock-icon-active",
         className,
       )}
     >
-      <Icon className="size-7" />
+      <Icon
+        className={cn("text-icon", isActive && "text-primary")}
+      />
     </div>
   );
 }

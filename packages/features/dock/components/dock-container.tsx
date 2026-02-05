@@ -31,11 +31,11 @@ export function DockContainer({
         // Position
         "fixed bottom-2 left-1/2 -translate-x-1/2",
         // Layout
-        "flex items-center gap-2 px-3 py-2",
+        "flex items-center gap-0.5 p-1",
         // Appearance
-        "bg-background/80 backdrop-blur-lg",
+        "bg-background/80 backdrop-blur-lg bg-transparent",
         // Border
-        "border border-border/50 rounded-2xl shadow-lg",
+        "border border-border/0 rounded-[17px]",
         // Animation
         "transition-transform duration-300 ease-out",
         // Visibility

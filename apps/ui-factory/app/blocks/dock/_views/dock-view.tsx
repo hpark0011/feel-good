@@ -7,16 +7,25 @@ import { PageSectionHeader } from "@/components/page-section-header";
 import { AppDock } from "@feel-good/features/dock/blocks";
 import type { DockConfig } from "@feel-good/features/dock/lib";
 import {
-  AqiHighIcon,
   BubbleLeftFillIcon,
   CheckListIcon,
   DocFillIcon,
+  PersonCropRectangleStackFillIcon,
 } from "@feel-good/icons";
+import { cn } from "@feel-good/ui/lib/utils";
 
-const DocIcon = () => <DocFillIcon />;
-const ThreadIcon = () => <BubbleLeftFillIcon />;
-const TaskIcon = () => <CheckListIcon />;
-const AgentIcon = () => <AqiHighIcon />;
+const DocIcon = ({ className }: { className?: string }) => (
+  <DocFillIcon className={cn("size-6.5", className)} />
+);
+const ThreadIcon = ({ className }: { className?: string }) => (
+  <BubbleLeftFillIcon className={cn("size-6.5", className)} />
+);
+const TaskIcon = ({ className }: { className?: string }) => (
+  <CheckListIcon className={cn("size-6.5", className)} />
+);
+const AgentIcon = ({ className }: { className?: string }) => (
+  <PersonCropRectangleStackFillIcon className={cn("size-6.5", className)} />
+);
 
 const dockConfig: DockConfig = {
   placement: "bottom",
@@ -53,10 +62,15 @@ export function DockView() {
       <Divider />
       <PageSection>
         <PageSectionHeader>App Dock</PageSectionHeader>
-        <Icon name="ArrowDownIcon" />
-        <p className="text-sm text-muted-foreground w-full">
-          Hover near the bottom of the screen to reveal the dock.
-        </p>
+        <div className="flex items-center gap-1 mt-20 mx-auto h-full">
+          <Icon
+            name="ArrowDownCircleFillIcon"
+            className="size-6.5 text-primary"
+          />
+          <p className="text-[15px] text-foreground w-full">
+            Hover near the bottom of the screen to reveal the dock.
+          </p>
+        </div>
       </PageSection>
 
       <AppDock
