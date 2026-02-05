@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "047"
 tags: [code-review, pr-103, auth, ui, design]

@@ -74,7 +74,7 @@ export const PasswordLoginView = memo(function PasswordLoginView({
               <Input
                 id="login-email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder="you@example.com"
                 value={email}
                 onChange={(e) => onEmailChange(e.target.value)}
                 variant="underline"
@@ -129,7 +129,7 @@ export const PasswordLoginView = memo(function PasswordLoginView({
                 aria-busy={isLoading}
                 data-testid="auth.login.submit-btn"
               >
-                {isLoading ? "Signing in..." : "Login"}
+                {isLoading ? "Signing in..." : "Sign in"}
               </Button>
             </Field>
           </FieldGroup>

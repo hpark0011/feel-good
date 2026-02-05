@@ -38,7 +38,7 @@ export const ForgotPasswordView = memo(function ForgotPasswordView({
 
   if (isSuccess) {
     return (
-      <Card className="w-full max-w-md rounded-4xl border-transparent p-4 py-8 pb-10">
+      <Card className="w-full max-w-md rounded-4xl border-transparent p-0">
         <CardContent className="pt-6">
           <div className="space-y-4 text-center">
             <FormSuccess
@@ -52,7 +52,7 @@ export const ForgotPasswordView = memo(function ForgotPasswordView({
   }
 
   return (
-    <Card className="w-full max-w-md rounded-4xl border-transparent p-4 py-8 pb-10">
+    <Card className="w-full max-w-md rounded-4xl border-transparent p-0">
       <CardHeader>
         <CardTitle className="text-center text-2xl font-medium">
           Forgot password

@@ -43,7 +43,7 @@ export const PasswordSignUpView = memo(function PasswordSignUpView({
 
   if (isSuccess) {
     return (
-      <Card className="w-full max-w-md rounded-4xl border-transparent">
+      <Card className="w-full max-w-md rounded-4xl border-transparent p-0">
         <CardContent className="pt-6">
           <div className="space-y-4 text-center">
             <FormSuccess
@@ -87,7 +87,7 @@ export const PasswordSignUpView = memo(function PasswordSignUpView({
               <Input
                 id="sign-up-email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder="you@example.com"
                 value={email}
                 onChange={(e) => onEmailChange(e.target.value)}
                 variant="underline"
