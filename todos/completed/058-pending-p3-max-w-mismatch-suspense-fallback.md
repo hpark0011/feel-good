@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "058"
 tags: [code-review, pr-103, auth, ui, layout]
@@ -44,10 +44,11 @@ dependencies: []
 
 ## Acceptance Criteria
 
-- [ ] Suspense fallback width matches content wrapper width in all auth blocks
+- [x] Suspense fallback width matches content wrapper width in all auth blocks
 
 ## Work Log
 
 | Date | Action | Outcome |
 |------|--------|---------|
 | 2026-02-05 | Created from PR #103 architecture review | Pending |
+| 2026-02-05 | Changed Suspense fallback max-w-md → max-w-sm in LoginBlock and SignUpBlock | Completed |

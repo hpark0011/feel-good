@@ -83,7 +83,7 @@ export function SignUpBlock(props: SignUpBlockProps) {
   return (
     <Suspense
       fallback={
-        <div className="bg-muted/50 mx-auto h-96 w-full max-w-md animate-pulse rounded-lg" />
+        <div className="bg-muted/50 mx-auto h-96 w-full max-w-sm animate-pulse rounded-lg" />
       }
     >
       <SignUpBlockContent {...props} />

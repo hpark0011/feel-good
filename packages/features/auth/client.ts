@@ -48,11 +48,3 @@ export function getAuthClient(baseURL?: string): AuthClient {
   clientCache.set(url, client);
   return client;
 }
-
-/**
- * Legacy export for backwards compatibility.
- * @deprecated Use getAuthClient() instead
- */
-export function createAppAuthClient(baseURL: string): AuthClient {
-  return getAuthClient(baseURL);
-}
