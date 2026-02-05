@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import type { AuthClient } from "../client";
 import {
   getAuthErrorMessage,
@@ -44,25 +44,27 @@ export function useResetPassword(
   authClient: AuthClient,
   options: UseResetPasswordOptions
 ): UseResetPasswordReturn {
+  const { token, onSuccess, onError } = options;
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [status, setStatus] = useState<AuthStatus>("idle");
   const [error, setError] = useState<AuthError | null>(null);
+  const statusRef = useRef(status);
+  statusRef.current = status;
 
   const submit = useCallback(async () => {
-    // Guard against double-submission
-    if (status === "loading") return;
+    if (statusRef.current === "loading") return;
 
     setError(null);
 
     // Validate token exists
-    if (!options.token) {
+    if (!token) {
       const authError: AuthError = {
         code: "INVALID_TOKEN",
         message: getAuthErrorMessage("INVALID_TOKEN"),
       };
       setError(authError);
-      options.onError?.(authError);
+      onError?.(authError);
       return;
     }
 
@@ -74,7 +76,7 @@ export function useResetPassword(
         message: getAuthErrorMessage(passwordError),
       };
       setError(authError);
-      options.onError?.(authError);
+      onError?.(authError);
       return;
     }
 
@@ -84,18 +86,18 @@ export function useResetPassword(
         message: getAuthErrorMessage("PASSWORDS_DONT_MATCH"),
       };
       setError(authError);
-      options.onError?.(authError);
+      onError?.(authError);
       return;
     }
 
     setStatus("loading");
 
     await authClient.resetPassword(
-      { newPassword: password, token: options.token },
+      { newPassword: password, token },
       {
         onSuccess: () => {
           setStatus("success");
-          options.onSuccess?.();
+          onSuccess?.();
         },
         onError: (ctx) => {
           const authError: AuthError = {
@@ -104,11 +106,11 @@ export function useResetPassword(
           };
           setStatus("error");
           setError(authError);
-          options.onError?.(authError);
+          onError?.(authError);
         },
       }
     );
-  }, [password, confirmPassword, authClient, options, status]);
+  }, [password, confirmPassword, authClient, token, onSuccess, onError]);
 
   const reset = useCallback(() => {
     setPassword("");
@@ -124,7 +126,7 @@ export function useResetPassword(
     setConfirmPassword,
     status,
     error,
-    hasToken: Boolean(options.token),
+    hasToken: Boolean(token),
     isLoading: status === "loading",
     isSuccess: status === "success",
     isError: status === "error",

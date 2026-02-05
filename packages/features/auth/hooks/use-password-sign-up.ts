@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import type { AuthClient } from "../client";
 import {
   getAuthErrorMessage,
@@ -39,14 +39,16 @@ export function usePasswordSignUp(
   authClient: AuthClient,
   options: UsePasswordSignUpOptions = {}
 ): UsePasswordSignUpReturn {
+  const { onSuccess, onError } = options;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<AuthStatus>("idle");
   const [error, setError] = useState<AuthError | null>(null);
+  const statusRef = useRef(status);
+  statusRef.current = status;
 
   const submit = useCallback(async () => {
-    // Guard against double-submission
-    if (status === "loading") return;
+    if (statusRef.current === "loading") return;
 
     setError(null);
 
@@ -58,7 +60,7 @@ export function usePasswordSignUp(
         message: getAuthErrorMessage(passwordError),
       };
       setError(authError);
-      options.onError?.(authError);
+      onError?.(authError);
       return;
     }
 
@@ -70,7 +72,7 @@ export function usePasswordSignUp(
         onSuccess: () => {
           setPassword(""); // Clear password immediately
           setStatus("success");
-          options.onSuccess?.();
+          onSuccess?.();
         },
         onError: (ctx) => {
           const authError: AuthError = {
@@ -79,11 +81,11 @@ export function usePasswordSignUp(
           };
           setStatus("error");
           setError(authError);
-          options.onError?.(authError);
+          onError?.(authError);
         },
       }
     );
-  }, [email, password, authClient, options, status]);
+  }, [email, password, authClient, onSuccess, onError]);
 
   const reset = useCallback(() => {
     setEmail("");

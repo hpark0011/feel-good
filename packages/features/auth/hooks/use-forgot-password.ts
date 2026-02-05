@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import type { AuthClient } from "../client";
 import { getAuthErrorMessage, type AuthStatus, type AuthError } from "../types";
 import { getSafeRedirectUrl } from "../utils/validate-redirect";
@@ -34,25 +34,27 @@ export function useForgotPassword(
   authClient: AuthClient,
   options: UseForgotPasswordOptions = {}
 ): UseForgotPasswordReturn {
+  const { redirectTo: redirectToOption, onSuccess, onError } = options;
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<AuthStatus>("idle");
   const [error, setError] = useState<AuthError | null>(null);
+  const statusRef = useRef(status);
+  statusRef.current = status;
 
   const submit = useCallback(async () => {
-    // Guard against double-submission
-    if (status === "loading") return;
+    if (statusRef.current === "loading") return;
 
     setError(null);
     setStatus("loading");
 
-    const redirectTo = getSafeRedirectUrl(options.redirectTo, "/reset-password");
+    const redirectTo = getSafeRedirectUrl(redirectToOption, "/reset-password");
 
     await authClient.requestPasswordReset(
       { email, redirectTo },
       {
         onSuccess: () => {
           setStatus("success");
-          options.onSuccess?.();
+          onSuccess?.();
         },
         onError: (ctx) => {
           const authError: AuthError = {
@@ -61,11 +63,11 @@ export function useForgotPassword(
           };
           setStatus("error");
           setError(authError);
-          options.onError?.(authError);
+          onError?.(authError);
         },
       }
     );
-  }, [email, authClient, options, status]);
+  }, [email, authClient, redirectToOption, onSuccess, onError]);
 
   const reset = useCallback(() => {
     setEmail("");
