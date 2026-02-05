@@ -25,34 +25,36 @@ export function SubTasksListHeader({
 
   return (
     <div
-      data-slot='subtasks-list-header'
+      data-slot="subtasks-list-header"
       className={cn(
         "text-xs text-text-muted px-2 mb-2 pt-1.5 flex items-center gap-1.5",
-        className
+        className,
       )}
       {...props}
     >
-      {hasSubTasks ? (
-        <>
-          <div className='flex items-center justify-center pt-[1px] pl-0.5'>
-            <RingPercentage
-              value={completionPercentage}
-              size={12}
-              strokeWidth={2}
-              ariaLabel='Sub-task completion'
-              showLabel={false}
-            />
-          </div>
-          <span className='text-xs text-text-muted'>
-            {completed} / {total} Completed
-          </span>
-        </>
-      ) : (
-        <>
-          <Icon name='ChecklistIcon' className='size-3.5' />
-          <span className='text-xs text-text-muted'>Sub-tasks</span>
-        </>
-      )}
+      {hasSubTasks
+        ? (
+          <>
+            <div className="flex items-center justify-center pt-px pl-0.5">
+              <RingPercentage
+                value={completionPercentage}
+                size={12}
+                strokeWidth={2}
+                ariaLabel="Sub-task completion"
+                showLabel={false}
+              />
+            </div>
+            <span className="text-xs text-text-muted">
+              {completed} / {total} Completed
+            </span>
+          </>
+        )
+        : (
+          <>
+            <Icon name="CheckListIcon" className="size-3.5" />
+            <span className="text-xs text-text-muted">Sub-tasks</span>
+          </>
+        )}
     </div>
   );
 }

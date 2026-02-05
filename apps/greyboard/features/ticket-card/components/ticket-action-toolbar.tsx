@@ -49,15 +49,15 @@ export function TicketActionToolbar({
         // Desktop: hover reveal
         "md:opacity-0 md:group-hover:opacity-100",
         "pointer-events-auto md:pointer-events-none md:group-hover:pointer-events-auto",
-        "transition-opacity"
+        "transition-opacity",
       )}
     >
       {/* Sub-tasks toggle button */}
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
-            size='sm'
-            variant='ghost'
+            size="sm"
+            variant="ghost"
             className={cn(
               // Layout & Alignment
               "flex items-center justify-center",
@@ -72,7 +72,7 @@ export function TicketActionToolbar({
               // Interactive States
               "cursor-pointer",
               "hover:bg-neutral-100 dark:hover:bg-neutral-700",
-              "hover:shadow-lg"
+              "hover:shadow-lg",
             )}
             onClick={(e) => {
               e.stopPropagation();
@@ -80,12 +80,12 @@ export function TicketActionToolbar({
             }}
           >
             <Icon
-              name='ChecklistIcon'
+              name="CheckListIcon"
               className={cn(
                 // Sizing
                 "size-4.5",
                 // Typography (conditional color)
-                isSubTaskEditorOpen ? "text-blue-500" : "text-icon-dark"
+                isSubTaskEditorOpen ? "text-blue-500" : "text-icon-dark",
               )}
             />
           </Button>
@@ -103,7 +103,7 @@ export function TicketActionToolbar({
           // Sizing
           "w-px",
           // Background
-          "bg-border-light"
+          "bg-border-light",
         )}
       />
 
@@ -111,8 +111,8 @@ export function TicketActionToolbar({
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
-            size='sm'
-            variant='ghost'
+            size="sm"
+            variant="ghost"
             className={cn(
               // Layout & Alignment
               "flex items-center justify-center",
@@ -127,7 +127,7 @@ export function TicketActionToolbar({
               // Interactive States
               "cursor-pointer",
               "hover:bg-neutral-100 dark:hover:bg-neutral-700",
-              "hover:shadow-lg"
+              "hover:shadow-lg",
             )}
             onClick={(e) => {
               e.stopPropagation();
@@ -135,12 +135,12 @@ export function TicketActionToolbar({
             }}
           >
             <Icon
-              name='PencilIcon'
+              name="PencilIcon"
               className={cn(
                 // Sizing
                 "size-4.5",
                 // Typography
-                "text-icon-dark"
+                "text-icon-dark",
               )}
             />
           </Button>
@@ -156,7 +156,7 @@ export function TicketActionToolbar({
           // Sizing
           "w-px",
           // Background
-          "bg-border-light"
+          "bg-border-light",
         )}
       />
 
@@ -164,8 +164,8 @@ export function TicketActionToolbar({
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
-            size='sm'
-            variant='ghost'
+            size="sm"
+            variant="ghost"
             className={cn(
               // Layout & Alignment
               "flex items-center justify-center",
@@ -180,7 +180,7 @@ export function TicketActionToolbar({
               // Interactive States
               "cursor-pointer",
               "hover:bg-neutral-100 dark:hover:bg-neutral-700",
-              "hover:shadow-lg"
+              "hover:shadow-lg",
             )}
             onClick={(e) => {
               e.stopPropagation();
@@ -188,12 +188,12 @@ export function TicketActionToolbar({
             }}
           >
             <Icon
-              name='TrashIcon'
+              name="TrashIcon"
               className={cn(
                 // Sizing
                 "size-4",
                 // Typography
-                "text-icon-dark"
+                "text-icon-dark",
               )}
             />
           </Button>

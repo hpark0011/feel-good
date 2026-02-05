@@ -297,7 +297,7 @@ export function TicketFormDialog({
                       onClick={toggleSubTasks}
                     >
                       <Icon
-                        name="ChecklistIcon"
+                        name="CheckListIcon"
                         className={cn(
                           "size-4.5",
                           showSubTasks ? "text-blue-500" : "text-icon-light",
