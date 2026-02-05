@@ -20,9 +20,6 @@
 /* import shared styles from @feel-good/ui */
 @import "@feel-good/ui/styles.css";
 
-/* local styles */
-@import "./fonts.css";
-
 /* content sources */
 @source "../node_modules/@feel-good/ui";
 @source "../node_modules/@feel-good/features";
