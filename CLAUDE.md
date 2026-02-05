@@ -41,7 +41,7 @@ Each app has its own `CLAUDE.md` with app-specific documentation.
 | Package | Purpose | Example Import |
 |---------|---------|----------------|
 | @feel-good/ui | shadcn/ui primitives | `@feel-good/ui/primitives/button` |
-| @feel-good/features | Auth components/hooks | `@feel-good/features/auth/blocks` |
+| @feel-good/features | Feature components (auth, dock) | `@feel-good/features/auth/blocks` |
 | @feel-good/icons | SVG icon components | `@feel-good/icons` |
 | @feel-good/utils | Utilities (cn, etc.) | `@feel-good/utils/cn` |
 | @feel-good/convex | Convex backend | `@feel-good/convex` |
@@ -90,11 +90,12 @@ import { Dialog } from "@feel-good/ui/primitives/dialog";
 
 ### @feel-good/features
 
-Shared feature components (authentication).
+Shared feature components (auth, dock).
 
 ```typescript
 import { SignInForm, SignUpForm } from "@feel-good/features/auth/components";
 import { useSession } from "@feel-good/features/auth/hooks";
+import { Dock } from "@feel-good/features/dock";
 ```
 
 ### @feel-good/convex
