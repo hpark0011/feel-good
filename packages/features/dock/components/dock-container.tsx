@@ -8,6 +8,7 @@ export interface DockContainerProps {
   children: ReactNode;
   isVisible?: boolean;
   className?: string;
+  onMouseEnter?: () => void;
   onMouseLeave?: () => void;
 }
 
@@ -15,6 +16,7 @@ export function DockContainer({
   children,
   isVisible = true,
   className,
+  onMouseEnter,
   onMouseLeave,
 }: DockContainerProps) {
   return (
@@ -23,6 +25,7 @@ export function DockContainer({
       aria-label="App navigation"
       data-slot="dock-container"
       data-state={isVisible ? "visible" : "hidden"}
+      onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       className={cn(
         // Position
@@ -34,10 +37,10 @@ export function DockContainer({
         // Border
         "border border-border/50 rounded-2xl shadow-lg",
         // Animation
-        "transition-transform duration-200 ease-out",
+        "transition-transform duration-300 ease-out",
         // Visibility
         isVisible ? "translate-y-0" : "translate-y-[calc(100%+16px)]",
-        className
+        className,
       )}
     >
       {children}

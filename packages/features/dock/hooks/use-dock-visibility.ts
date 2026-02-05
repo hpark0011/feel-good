@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { useDock } from "../providers";
 
 /**
@@ -17,6 +17,10 @@ export interface UseDockVisibilityOptions {
 export interface DockVisibilityHandlers {
   /** Called when mouse enters the activation zone */
   onActivationZoneEnter: () => void;
+  /** Called when mouse leaves the activation zone */
+  onActivationZoneLeave: () => void;
+  /** Called when mouse enters the dock */
+  onDockEnter: () => void;
   /** Called when mouse leaves the dock */
   onDockLeave: () => void;
 }
@@ -47,8 +51,14 @@ export interface UseDockVisibilityReturn {
  *
  * return (
  *   <>
- *     <div onMouseEnter={handlers.onActivationZoneEnter} />
- *     <Dock onMouseLeave={handlers.onDockLeave} />
+ *     <div
+ *       onMouseEnter={handlers.onActivationZoneEnter}
+ *       onMouseLeave={handlers.onActivationZoneLeave}
+ *     />
+ *     <Dock
+ *       onMouseEnter={handlers.onDockEnter}
+ *       onMouseLeave={handlers.onDockLeave}
+ *     />
  *   </>
  * );
  */
@@ -68,16 +78,32 @@ export function useDockVisibility(
   }, [setIsVisible]);
 
   const hide = useCallback(() => {
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current);
+    }
     hideTimeoutRef.current = setTimeout(() => {
       setIsVisible(false);
       hideTimeoutRef.current = null;
     }, hideDelay);
   }, [setIsVisible, hideDelay]);
 
-  const handlers: DockVisibilityHandlers = {
-    onActivationZoneEnter: show,
-    onDockLeave: hide,
-  };
+  const handlers: DockVisibilityHandlers = useMemo(
+    () => ({
+      onActivationZoneEnter: show,
+      onActivationZoneLeave: hide,
+      onDockEnter: show,
+      onDockLeave: hide,
+    }),
+    [show, hide]
+  );
+
+  useEffect(() => {
+    return () => {
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return {
     isVisible: state.isVisible,

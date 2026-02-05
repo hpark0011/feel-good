@@ -1,16 +1,9 @@
 "use client";
 
-import { cn } from "@feel-good/utils/cn";
-
-import {
-  DockRoot,
-  DockContainer,
-  DockItem,
-  DockIcon,
-} from "../components";
-import { DockProvider, useDock } from "../providers";
-import { useDockVisibility, useDockConfig } from "../hooks";
+import { DockContainer, DockIcon, DockItem, DockRoot } from "../components";
+import { useDockConfig, useDockVisibility } from "../hooks";
 import type { DockConfig } from "../lib/types";
+import { DockProvider, useDock } from "../providers";
 
 export interface AppDockProps {
   config: DockConfig;
@@ -38,10 +31,12 @@ function AppDockContent({ onAppClick, className }: AppDockContentProps) {
       <div
         className="absolute inset-x-0 bottom-0 h-[72px]"
         onMouseEnter={handlers.onActivationZoneEnter}
+        onMouseLeave={handlers.onActivationZoneLeave}
       />
       <DockContainer
         isVisible={isVisible}
         className={className}
+        onMouseEnter={handlers.onDockEnter}
         onMouseLeave={handlers.onDockLeave}
       >
         {sortedApps.map((app) => (
