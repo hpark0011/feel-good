@@ -41,12 +41,6 @@ export function DockItem({
           )}
         >
           {children}
-          {isActive && (
-            <span
-              data-slot="dock-item-indicator"
-              className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-[0px] h-[5px] rounded-full bg-primary"
-            />
-          )}
         </button>
       </TooltipTrigger>
       <TooltipContent side="top" sideOffset={4}>

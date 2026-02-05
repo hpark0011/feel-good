@@ -17,8 +17,8 @@ export function DockIcon({ icon: Icon, isActive, className }: DockIconProps) {
       data-slot="dock-icon"
       data-active={isActive}
       className={cn(
-        "size-12 p-2",
-        "[corner-shape:superellipse(1.1)] rounded-[14px]",
+        "size-10 p-2",
+        "[corner-shape:superellipse(1.1)] rounded-[12px]",
         "bg-transparent",
         "flex items-center justify-center",
         "transition-all duration-100",

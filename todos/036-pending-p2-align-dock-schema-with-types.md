@@ -1,5 +1,5 @@
 ---
-status: pending
+status: done
 priority: p2
 issue_id: "036"
 tags: [code-review, dock, validation, types]
@@ -58,3 +58,4 @@ Align schema to the current types/README by requiring `defaultAppId` and validat
 | Date | Action | Outcome |
 |------|--------|---------|
 | 2026-02-04 | Created from code review | Pending |
+| 2026-02-05 | Made defaultAppId required, added icon validation to dockAppSchema | Done |

@@ -24,7 +24,7 @@ const TaskIcon = ({ className }: { className?: string }) => (
   <CheckListIcon className={cn("size-6.5", className)} />
 );
 const AgentIcon = ({ className }: { className?: string }) => (
-  <PersonCropRectangleStackFillIcon className={cn("size-6.5", className)} />
+  <PersonCropRectangleStackFillIcon className={cn("size-6", className)} />
 );
 
 const dockConfig: DockConfig = {
@@ -62,10 +62,10 @@ export function DockView() {
       <Divider />
       <PageSection>
         <PageSectionHeader>App Dock</PageSectionHeader>
-        <div className="flex items-center gap-1 mt-20 mx-auto h-full">
+        <div className="flex items-center gap-1 mt-[200px] mx-auto h-full">
           <Icon
             name="ArrowDownCircleFillIcon"
-            className="size-6.5 text-primary"
+            className="size-6 text-primary"
           />
           <p className="text-[15px] text-foreground w-full">
             Hover near the bottom of the screen to reveal the dock.
