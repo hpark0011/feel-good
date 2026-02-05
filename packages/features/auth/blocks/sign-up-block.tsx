@@ -54,7 +54,7 @@ function SignUpBlockContent({
   };
 
   return (
-    <div className="mx-auto w-full max-w-sm px-8 space-y-2 relative">
+    <div className="mx-auto w-full max-w-sm px-8 relative space-y-6 pb-10">
       {/* Magic Link Sign Up */}
       <MagicLinkForm {...formProps} />
 
