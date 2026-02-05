@@ -1,24 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import type { FC } from "react";
-import { Suspense } from "react";
 import type { AuthClient } from "../client";
-import {
-  MagicLinkLoginForm,
-  type MagicLinkLoginFormProps,
-} from "../components/forms/magic-link-login-form";
-import {
-  OAuthButtons,
-  type OAuthButtonsProps,
-} from "../components/shared/oauth-buttons";
+import { MagicLinkLoginForm } from "../components/forms/magic-link-login-form";
+import { OAuthButtons } from "../components/shared/oauth-buttons";
 import type { AuthError } from "../types";
 import { AuthDivider } from "./shared/auth-divider";
-
-export interface LoginBlockSlots {
-  magicLinkForm?: FC<MagicLinkLoginFormProps>;
-  oauthButtons?: FC<OAuthButtonsProps>;
-}
 
 export interface LoginBlockProps {
   authClient: AuthClient;
@@ -26,36 +13,29 @@ export interface LoginBlockProps {
   redirectTo?: string;
   onSuccess?: () => void;
   onError?: (error: AuthError) => void;
-  slots?: LoginBlockSlots;
 }
 
-function LoginBlockContent({
+export function LoginBlock({
   authClient,
   signUpHref = "/sign-up",
   redirectTo,
   onSuccess,
   onError,
-  slots,
 }: LoginBlockProps) {
-  const MagicLinkForm = slots?.magicLinkForm ?? MagicLinkLoginForm;
-  const OAuth = slots?.oauthButtons ?? OAuthButtons;
-
-  const formProps = {
-    authClient,
-    redirectTo,
-    onSuccess,
-    onError,
-  };
-
   return (
     <div className="mx-auto w-full max-w-sm px-8 relative space-y-6 pb-10">
       {/* Magic Link Login */}
-      <MagicLinkForm {...formProps} />
+      <MagicLinkLoginForm
+        authClient={authClient}
+        redirectTo={redirectTo}
+        onSuccess={onSuccess}
+        onError={onError}
+      />
 
       <AuthDivider>or</AuthDivider>
 
       {/* OAuth Section */}
-      <OAuth
+      <OAuthButtons
         authClient={authClient}
         redirectTo={redirectTo}
         label="Continue with Google"
@@ -70,17 +50,5 @@ function LoginBlockContent({
         </Link>
       </p>
     </div>
-  );
-}
-
-export function LoginBlock(props: LoginBlockProps) {
-  return (
-    <Suspense
-      fallback={
-        <div className="bg-muted/50 mx-auto h-96 w-full max-w-sm animate-pulse rounded-lg" />
-      }
-    >
-      <LoginBlockContent {...props} />
-    </Suspense>
   );
 }

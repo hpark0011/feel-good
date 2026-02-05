@@ -20,11 +20,6 @@ export interface UseMagicLinkRequestReturn {
   status: AuthStatus;
   error: AuthError | null;
 
-  // Derived state for convenience
-  isLoading: boolean;
-  isSuccess: boolean;
-  isError: boolean;
-
   // Actions
   submit: () => Promise<void>;
   reset: () => void;
@@ -82,9 +77,6 @@ export function useMagicLinkRequest(
     setEmail,
     status,
     error,
-    isLoading: status === "loading",
-    isSuccess: status === "success",
-    isError: status === "error",
     submit,
     reset,
   };

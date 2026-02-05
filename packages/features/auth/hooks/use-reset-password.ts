@@ -30,11 +30,6 @@ export interface UseResetPasswordReturn {
   // Token validity
   hasToken: boolean;
 
-  // Derived state for convenience
-  isLoading: boolean;
-  isSuccess: boolean;
-  isError: boolean;
-
   // Actions
   submit: () => Promise<void>;
   reset: () => void;
@@ -127,9 +122,6 @@ export function useResetPassword(
     status,
     error,
     hasToken: Boolean(token),
-    isLoading: status === "loading",
-    isSuccess: status === "success",
-    isError: status === "error",
     submit,
     reset,
   };

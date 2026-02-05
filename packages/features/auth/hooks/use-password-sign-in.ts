@@ -22,11 +22,6 @@ export interface UsePasswordSignInReturn {
   status: AuthStatus;
   error: AuthError | null;
 
-  // Derived state for convenience
-  isLoading: boolean;
-  isSuccess: boolean;
-  isError: boolean;
-
   // Actions
   submit: () => Promise<void>;
   reset: () => void;
@@ -89,9 +84,6 @@ export function usePasswordSignIn(
     setPassword,
     status,
     error,
-    isLoading: status === "loading",
-    isSuccess: status === "success",
-    isError: status === "error",
     submit,
     reset,
   };

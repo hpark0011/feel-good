@@ -1,29 +1,11 @@
 "use client";
 
-import { Suspense } from "react";
 import Link from "next/link";
-import {
-  PasswordSignUpForm,
-  type PasswordSignUpFormProps,
-} from "../components/forms/password-sign-up-form";
-import {
-  MagicLinkSignUpForm,
-  type MagicLinkSignUpFormProps,
-} from "../components/forms/magic-link-sign-up-form";
-import {
-  OAuthButtons,
-  type OAuthButtonsProps,
-} from "../components/shared/oauth-buttons";
-import { AuthDivider } from "./shared/auth-divider";
 import type { AuthClient } from "../client";
+import { MagicLinkSignUpForm } from "../components/forms/magic-link-sign-up-form";
+import { OAuthButtons } from "../components/shared/oauth-buttons";
 import type { AuthError } from "../types";
-import type { FC } from "react";
-
-export interface SignUpBlockSlots {
-  passwordForm?: FC<PasswordSignUpFormProps>;
-  magicLinkForm?: FC<MagicLinkSignUpFormProps>;
-  oauthButtons?: FC<OAuthButtonsProps>;
-}
+import { AuthDivider } from "./shared/auth-divider";
 
 export interface SignUpBlockProps {
   authClient: AuthClient;
@@ -31,37 +13,29 @@ export interface SignUpBlockProps {
   redirectTo?: string;
   onSuccess?: () => void;
   onError?: (error: AuthError) => void;
-  slots?: SignUpBlockSlots;
 }
 
-function SignUpBlockContent({
+export function SignUpBlock({
   authClient,
   signInHref = "/sign-in",
   redirectTo,
   onSuccess,
   onError,
-  slots,
 }: SignUpBlockProps) {
-  const PasswordForm = slots?.passwordForm ?? PasswordSignUpForm;
-  const MagicLinkForm = slots?.magicLinkForm ?? MagicLinkSignUpForm;
-  const OAuth = slots?.oauthButtons ?? OAuthButtons;
-
-  const formProps = {
-    authClient,
-    redirectTo,
-    onSuccess,
-    onError,
-  };
-
   return (
     <div className="mx-auto w-full max-w-sm px-8 relative space-y-6 pb-10">
       {/* Magic Link Sign Up */}
-      <MagicLinkForm {...formProps} />
+      <MagicLinkSignUpForm
+        authClient={authClient}
+        redirectTo={redirectTo}
+        onSuccess={onSuccess}
+        onError={onError}
+      />
 
       <AuthDivider>or</AuthDivider>
 
       {/* OAuth Section */}
-      <OAuth
+      <OAuthButtons
         authClient={authClient}
         redirectTo={redirectTo}
         label="Continue with Google"
@@ -76,17 +50,5 @@ function SignUpBlockContent({
         </Link>
       </p>
     </div>
-  );
-}
-
-export function SignUpBlock(props: SignUpBlockProps) {
-  return (
-    <Suspense
-      fallback={
-        <div className="bg-muted/50 mx-auto h-96 w-full max-w-sm animate-pulse rounded-lg" />
-      }
-    >
-      <SignUpBlockContent {...props} />
-    </Suspense>
   );
 }
