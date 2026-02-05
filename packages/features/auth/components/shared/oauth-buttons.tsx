@@ -70,7 +70,7 @@ export function OAuthButtons({
       aria-busy={isLoading}
       data-testid="auth.oauth.google-btn"
     >
-      <GoogleIcon className="text-primary mr-2 size-4" aria-hidden="true" />
+      <GoogleIcon className="text-primary size-4" aria-hidden="true" />
       {isLoading ? "Redirecting..." : label}
     </Button>
   );

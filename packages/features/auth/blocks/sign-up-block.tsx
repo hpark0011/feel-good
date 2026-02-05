@@ -54,24 +54,19 @@ function SignUpBlockContent({
   };
 
   return (
-    <div className="mx-auto w-full max-w-md space-y-6">
+    <div className="mx-auto w-full max-w-sm px-8 space-y-2 relative">
+      {/* Magic Link Sign Up */}
+      <MagicLinkForm {...formProps} />
+
+      <AuthDivider>or</AuthDivider>
+
       {/* OAuth Section */}
       <OAuth
         authClient={authClient}
         redirectTo={redirectTo}
-        label="Sign up with Google"
+        label="Continue with Google"
         onError={onError}
       />
-
-      <AuthDivider>or continue with</AuthDivider>
-
-      {/* Password Sign Up */}
-      <PasswordForm {...formProps} />
-
-      <AuthDivider>or</AuthDivider>
-
-      {/* Magic Link Sign Up */}
-      <MagicLinkForm {...formProps} />
 
       {/* Sign In Link */}
       <p className="text-muted-foreground text-center text-sm">

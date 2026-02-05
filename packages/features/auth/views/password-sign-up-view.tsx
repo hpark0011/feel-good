@@ -12,7 +12,7 @@ import {
 import { Field, FieldGroup, FieldLabel } from "@feel-good/ui/primitives/field";
 import { Input } from "@feel-good/ui/primitives/input";
 import { PASSWORD_MIN_LENGTH } from "../types";
-import type { AuthStatus, AuthError } from "../types";
+import type { AuthError, AuthStatus } from "../types";
 import { FormError } from "../components/shared/form-error";
 import { FormSuccess } from "../components/shared/form-success";
 
@@ -60,7 +60,7 @@ export const PasswordSignUpView = memo(function PasswordSignUpView({
     <Card className="w-full max-w-md rounded-4xl border-transparent p-4 py-8 pb-10">
       <CardHeader>
         <CardTitle className="text-center text-2xl font-medium">
-          Create an account
+          Create your account
         </CardTitle>
         <CardDescription className="sr-only">
           Enter your information below to create your account

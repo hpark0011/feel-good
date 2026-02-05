@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  PasswordSignUpView,
   MagicLinkSignUpView,
+  PasswordSignUpView,
 } from "@feel-good/features/auth/views";
 import { Divider } from "@/components/divider";
 import { PageSection } from "@/components/page-section";
@@ -30,13 +30,15 @@ export function SignUpView() {
       <Divider />
       <PageSection>
         <PageSectionHeader>Magic Link</PageSectionHeader>
-        <MagicLinkSignUpView
-          email=""
-          status="idle"
-          error={null}
-          onEmailChange={noop}
-          onSubmit={noop}
-        />
+        <div className="max-w-sm w-full">
+          <MagicLinkSignUpView
+            email=""
+            status="idle"
+            error={null}
+            onEmailChange={noop}
+            onSubmit={noop}
+          />
+        </div>
       </PageSection>
     </div>
   );

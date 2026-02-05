@@ -39,22 +39,6 @@ export default function LoginPage() {
 }
 ```
 
-### Legacy Components (Backwards Compatible)
-
-```typescript
-import {
-  SignInForm,
-  SignUpForm,
-  ForgotPasswordForm,
-  ResetPasswordForm,
-  MagicLinkForm,
-  OAuthButtons,
-  SessionProvider,
-  FormError,
-  FormSuccess,
-} from "@feel-good/features/auth/components";
-```
-
 ### Hooks
 
 ```typescript
