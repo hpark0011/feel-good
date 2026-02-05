@@ -1,7 +1,7 @@
 "use client";
 
 import { usePasswordSignIn } from "../../hooks";
-import { PasswordLoginView } from "../views";
+import { PasswordLoginView } from "../../views";
 import type { AuthClient } from "../../client";
 import type { AuthError } from "../../types";
 

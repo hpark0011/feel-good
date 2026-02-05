@@ -3,7 +3,7 @@ import { FactoryView } from "@/app/views/factory-view";
 export default function UIFactoryPage() {
   return (
     <main className="mx-auto min-h-screen">
-      <div className="flex flex-col items-center py-20">
+      <div className="flex flex-col items-center py-20  justify-center h-full min-h-screen">
         <FactoryView />
       </div>
     </main>

@@ -4,7 +4,7 @@
 // For new code, prefer importing from specific subpaths:
 //   - @feel-good/features/auth/blocks (drop-in page sections)
 //   - @feel-good/features/auth/components/forms (composable forms)
-//   - @feel-good/features/auth/components/views (pure UI)
+//   - @feel-good/features/auth/views (pure UI)
 //   - @feel-good/features/auth/hooks (headless logic)
 // =============================================================================
 
@@ -31,7 +31,7 @@ export { FormSuccess } from "./form-success";
 export * from "./forms";
 
 // Views layer
-export * from "./views";
+export * from "../views";
 
 // Shared components
 export * from "./shared";

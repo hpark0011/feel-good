@@ -11,10 +11,10 @@ import {
 } from "@feel-good/ui/primitives/card";
 import { Field, FieldGroup, FieldLabel } from "@feel-good/ui/primitives/field";
 import { Input } from "@feel-good/ui/primitives/input";
-import { PASSWORD_MIN_LENGTH } from "../../types";
-import type { AuthStatus, AuthError } from "../../types";
-import { FormError } from "../shared/form-error";
-import { FormSuccess } from "../shared/form-success";
+import { PASSWORD_MIN_LENGTH } from "../types";
+import type { AuthStatus, AuthError } from "../types";
+import { FormError } from "../components/shared/form-error";
+import { FormSuccess } from "../components/shared/form-success";
 
 export interface PasswordSignUpViewProps {
   // Form state (controlled)

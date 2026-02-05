@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useResetPassword } from "../../hooks";
-import { ResetPasswordView } from "../views";
+import { ResetPasswordView } from "../../views";
 import type { AuthClient } from "../../client";
 import type { AuthError } from "../../types";
 import { getSafeRedirectUrl } from "../../utils/validate-redirect";

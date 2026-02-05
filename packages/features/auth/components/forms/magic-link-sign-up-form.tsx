@@ -1,7 +1,7 @@
 "use client";
 
 import { useMagicLinkRequest } from "../../hooks";
-import { MagicLinkSignUpView } from "../views";
+import { MagicLinkSignUpView } from "../../views";
 import type { AuthClient } from "../../client";
 import type { AuthError } from "../../types";
 

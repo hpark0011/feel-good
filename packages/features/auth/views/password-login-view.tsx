@@ -12,8 +12,8 @@ import {
 import { Field, FieldGroup, FieldLabel } from "@feel-good/ui/primitives/field";
 import { Input } from "@feel-good/ui/primitives/input";
 import Link from "next/link";
-import type { AuthError, AuthStatus } from "../../types";
-import { FormError } from "../shared/form-error";
+import type { AuthError, AuthStatus } from "../types";
+import { FormError } from "../components/shared/form-error";
 
 export interface PasswordLoginViewProps {
   // Form state (controlled)

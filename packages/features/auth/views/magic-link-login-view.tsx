@@ -11,11 +11,11 @@ import {
 } from "@feel-good/ui/primitives/card";
 import { Field, FieldGroup, FieldLabel } from "@feel-good/ui/primitives/field";
 import { Input } from "@feel-good/ui/primitives/input";
-import type { AuthStatus, AuthError } from "../../types";
-import { FormError } from "../shared/form-error";
-import { FormSuccess } from "../shared/form-success";
+import type { AuthStatus, AuthError } from "../types";
+import { FormError } from "../components/shared/form-error";
+import { FormSuccess } from "../components/shared/form-success";
 
-export interface ForgotPasswordViewProps {
+export interface MagicLinkLoginViewProps {
   // Form state (controlled)
   email: string;
   status: AuthStatus;
@@ -24,15 +24,17 @@ export interface ForgotPasswordViewProps {
   // Handlers
   onEmailChange: (value: string) => void;
   onSubmit: () => void;
+  onReset?: () => void;
 }
 
-export const ForgotPasswordView = memo(function ForgotPasswordView({
+export const MagicLinkLoginView = memo(function MagicLinkLoginView({
   email,
   status,
   error,
   onEmailChange,
   onSubmit,
-}: ForgotPasswordViewProps) {
+  onReset,
+}: MagicLinkLoginViewProps) {
   const isLoading = status === "loading";
   const isSuccess = status === "success";
 
@@ -43,8 +45,18 @@ export const ForgotPasswordView = memo(function ForgotPasswordView({
           <div className="space-y-4 text-center">
             <FormSuccess
               title="Check your email"
-              message={`If an account exists for ${email}, you will receive a password reset link.`}
+              message={`We sent a magic link to ${email}. Click the link to sign in.`}
             />
+            {onReset ? (
+              <Button
+                variant="ghost"
+                onClick={onReset}
+                className="text-sm"
+                data-testid="auth.magic-link.reset-btn"
+              >
+                Use a different email
+              </Button>
+            ) : null}
           </div>
         </CardContent>
       </Card>
@@ -55,10 +67,10 @@ export const ForgotPasswordView = memo(function ForgotPasswordView({
     <Card className="w-full max-w-md rounded-4xl border-transparent p-4 py-8 pb-10">
       <CardHeader>
         <CardTitle className="text-center text-2xl font-medium">
-          Forgot password
+          Login
         </CardTitle>
-        <CardDescription className="text-muted-foreground text-center text-sm">
-          Enter your email and we&apos;ll send you a reset link
+        <CardDescription className="sr-only">
+          Enter your email to receive a magic link
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -67,20 +79,20 @@ export const ForgotPasswordView = memo(function ForgotPasswordView({
             e.preventDefault();
             onSubmit();
           }}
-          aria-describedby={error ? "forgot-password-form-error" : undefined}
+          aria-describedby={error ? "magic-link-form-error" : undefined}
         >
           <FieldGroup>
-            <FormError error={error} id="forgot-password-form-error" />
+            <FormError error={error} id="magic-link-form-error" />
 
             <Field>
-              <FieldLabel htmlFor="forgot-password-email" className="px-1.5">
+              <FieldLabel htmlFor="magic-link-email" className="px-1.5">
                 Email{" "}
                 <span className="text-destructive" aria-hidden="true">
                   *
                 </span>
               </FieldLabel>
               <Input
-                id="forgot-password-email"
+                id="magic-link-email"
                 type="email"
                 placeholder="you@example.com"
                 value={email}
@@ -90,7 +102,7 @@ export const ForgotPasswordView = memo(function ForgotPasswordView({
                 aria-required="true"
                 aria-invalid={error?.field === "email"}
                 disabled={isLoading}
-                data-testid="auth.forgot-password.email-input"
+                data-testid="auth.magic-link.email-input"
               />
             </Field>
 
@@ -101,9 +113,9 @@ export const ForgotPasswordView = memo(function ForgotPasswordView({
                 variant="primary"
                 disabled={isLoading}
                 aria-busy={isLoading}
-                data-testid="auth.forgot-password.submit-btn"
+                data-testid="auth.magic-link.submit-btn"
               >
-                {isLoading ? "Sending..." : "Send reset link"}
+                {isLoading ? "Sending link..." : "Send magic link"}
               </Button>
             </Field>
           </FieldGroup>
