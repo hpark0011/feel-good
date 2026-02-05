@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "024"
 tags: [code-review, duplication, views, auth]
