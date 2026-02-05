@@ -31,27 +31,27 @@ const dockConfig: DockConfig = {
   placement: "bottom",
   defaultAppId: "docs",
   apps: [
-    { id: "docs", name: "Doc Viewer", icon: DocIcon, route: "/docs", order: 0 },
+    { id: "docs", name: "Doc Viewer", icon: DocIcon, route: "/docs", order: 1 },
     {
       id: "threads",
       name: "Threads",
       icon: ThreadIcon,
       route: "/threads",
-      order: 1,
+      order: 2,
     },
     {
       id: "tasks",
       name: "Task Board",
       icon: TaskIcon,
       route: "/tasks",
-      order: 2,
+      order: 3,
     },
     {
       id: "agents",
       name: "Agent Book",
       icon: AgentIcon,
       route: "/agents",
-      order: 3,
+      order: 0,
     },
   ],
 };
