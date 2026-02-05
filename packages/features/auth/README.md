@@ -19,15 +19,19 @@ export default function LoginPage() {
 |--------|----------|
 | `auth/blocks` | Most apps — drop-in page sections |
 | `auth/components/forms` | Custom layouts — compose forms yourself |
-| `auth/components/views` | Custom logic — bring your own state |
+| `auth/views` | Custom logic — bring your own state |
 | `auth/hooks` | Fully custom UI — headless logic only |
 
 ## Available Blocks
 
-- `LoginBlock` — Password + Magic Link + OAuth sections
-- `SignUpBlock` — Registration with password or magic link
+- `LoginBlock` — Magic Link + OAuth sign-in
+- `SignUpBlock` — Magic Link + OAuth registration
 - `ForgotPasswordBlock` — Request password reset
 - `ResetPasswordBlock` — Set new password
+
+> **Product decision:** LoginBlock uses magic-link-only authentication (no password form).
+> Magic links work for all accounts, including those originally registered with a password.
+> The `PasswordLoginView` and `usePasswordSignIn` hook remain available for apps that need password login.
 
 ## Configuration
 
@@ -35,50 +39,10 @@ export default function LoginPage() {
 <LoginBlock
   authClient={authClient}
   signUpHref="/sign-up"
-  forgotPasswordHref="/forgot-password"
   redirectTo="/dashboard"
   onSuccess={() => console.log("Logged in!")}
   onError={(error) => console.error(error)}
 />
-```
-
-## Slot Overrides
-
-Replace default components with custom implementations:
-
-```tsx
-<LoginBlock
-  authClient={authClient}
-  slots={{
-    passwordForm: MyCustomPasswordForm,
-    oauthButtons: MyCustomOAuthButtons,
-  }}
-/>
-```
-
-## Preview Mode (UI Factory)
-
-Render forms without auth backend for design system previews:
-
-```tsx
-<LoginBlock mode="preview" />
-```
-
-## Alternative: Context Provider
-
-Instead of passing `authClient` as a prop, wrap your app with `AuthProvider`:
-
-```tsx
-// app/layout.tsx
-import { AuthProvider } from "@feel-good/features/auth/providers"
-
-export default function RootLayout({ children }) {
-  return (
-    <AuthProvider>
-      {children}
-    </AuthProvider>
-  )
-}
 ```
 
 ## Hooks
@@ -86,11 +50,11 @@ export default function RootLayout({ children }) {
 For headless auth logic:
 
 ```tsx
-import { usePasswordSignIn } from "@feel-good/features/auth/hooks"
+import { useMagicLinkRequest } from "@feel-good/features/auth/hooks"
 
 function CustomLoginForm() {
-  const { email, setEmail, password, setPassword, status, error, submit } =
-    usePasswordSignIn(authClient)
+  const { email, setEmail, status, error, submit } =
+    useMagicLinkRequest(authClient)
 
   // Build your own UI
 }
@@ -104,11 +68,17 @@ Available hooks:
 - `useResetPassword` — Set new password with token
 - `useAuthClient` — Access auth client from context
 
+## Naming Conventions
+
+- **Hooks** use "SignIn/SignUp" to match the Better Auth client API methods (`signIn.email`, `signUp.email`)
+- **UI components** (forms, views, blocks) use "Login/SignUp" for user-facing terminology
+- **Routes** use kebab-case `/sign-in` and `/sign-up`
+
 ## Security
 
 - Error messages don't reveal account existence (user enumeration protection)
-- Race condition guards prevent double-submission
-- Mounted component checks prevent state updates on unmounted components
+- Status ref guards prevent double-submission
+- Redirect URLs validated against allowed origins
 
 ## Accessibility
 
