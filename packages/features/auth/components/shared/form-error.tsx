@@ -19,22 +19,3 @@ export function FormError({ error, id }: FormErrorProps) {
     </div>
   );
 }
-
-// Legacy support for string-based error messages
-interface LegacyFormErrorProps {
-  message: string | null;
-}
-
-export function LegacyFormError({ message }: LegacyFormErrorProps) {
-  if (!message) return null;
-
-  return (
-    <div
-      role="alert"
-      aria-live="polite"
-      className="bg-destructive/10 text-destructive rounded-md p-3 text-sm"
-    >
-      {message}
-    </div>
-  );
-}
