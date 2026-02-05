@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "052"
 tags: [code-review, pr-103, naming, convention]

@@ -1,5 +1,5 @@
 ---
-status: pending
+status: done
 priority: p1
 issue_id: "037"
 tags: [code-review, pr-103, auth, typescript, build-error]
@@ -42,8 +42,8 @@ Delete `forgotPasswordHref="/forgot-password"` from the `<LoginBlock>` usage in 
 
 ## Acceptance Criteria
 
-- [ ] `forgotPasswordHref` prop removed from mirror sign-in page
-- [ ] `pnpm --filter @feel-good/mirror exec tsc --noEmit` passes
+- [x] `forgotPasswordHref` prop removed from mirror sign-in page
+- [x] `pnpm --filter @feel-good/mirror exec tsc --noEmit` passes
 - [ ] `pnpm build --filter=@feel-good/mirror` succeeds
 
 ## Work Log
@@ -51,3 +51,4 @@ Delete `forgotPasswordHref="/forgot-password"` from the `<LoginBlock>` usage in 
 | Date | Action | Outcome |
 |------|--------|---------|
 | 2026-02-05 | Created from PR #103 review | Pending |
+| 2026-02-05 | Removed stale prop, tsc --noEmit passes | Done |

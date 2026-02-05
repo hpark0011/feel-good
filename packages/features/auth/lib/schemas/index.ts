@@ -1,5 +1,4 @@
 export {
-  PASSWORD_MIN_LENGTH,
   emailSchema,
   passwordSchema,
   nameSchema,

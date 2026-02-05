@@ -8,7 +8,12 @@ import { z } from "zod";
 
 const clientEnvSchema = z.object({
   NEXT_PUBLIC_SITE_URL: z.string().url("NEXT_PUBLIC_SITE_URL must be a valid URL"),
-  NEXT_PUBLIC_CONVEX_URL: z.string().url("NEXT_PUBLIC_CONVEX_URL must be a valid URL"),
+  NEXT_PUBLIC_CONVEX_URL: z
+    .string()
+    .url("NEXT_PUBLIC_CONVEX_URL must be a valid URL")
+    .refine((url) => url.startsWith("https://"), {
+      message: "NEXT_PUBLIC_CONVEX_URL must use HTTPS",
+    }),
   NEXT_PUBLIC_CONVEX_SITE_URL: z
     .string()
     .url("NEXT_PUBLIC_CONVEX_SITE_URL must be a valid URL"),

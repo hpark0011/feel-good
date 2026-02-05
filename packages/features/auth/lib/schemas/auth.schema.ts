@@ -1,6 +1,5 @@
 import { z } from "zod";
-
-export const PASSWORD_MIN_LENGTH = 8;
+import { PASSWORD_MIN_LENGTH } from "../../types";
 
 export const emailSchema = z
   .string()

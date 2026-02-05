@@ -8,7 +8,7 @@ export function MirrorHomePageView() {
         MIRROR
       </div>
 
-      <div className="flex flex-col gap-1.5 ">
+      <div className="flex flex-col gap-1.5">
         <Button variant="outline" size="lg" asChild>
           <Link href="/sign-in">
             Sign in
