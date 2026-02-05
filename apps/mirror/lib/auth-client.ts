@@ -1,9 +1,9 @@
 "use client";
 
-import { createAppAuthClient, createSessionProvider } from "@feel-good/features/auth";
+import { getAuthClient, createSessionProvider } from "@feel-good/features/auth";
 import { clientEnv } from "./env/client";
 
-export const authClient = createAppAuthClient(
+export const authClient = getAuthClient(
   clientEnv.NEXT_PUBLIC_SITE_URL
 );
 

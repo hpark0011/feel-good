@@ -8,6 +8,7 @@ export function FormSuccess({ title, message }: FormSuccessProps) {
     <div
       role="status"
       aria-live="polite"
+      data-testid="auth.form-success"
       className="rounded-md bg-green-50 p-4 dark:bg-green-900/20"
     >
       <h3 className="font-medium text-green-800 dark:text-green-200">

@@ -1,82 +1,46 @@
 "use client";
 
-import { Suspense } from "react";
 import Link from "next/link";
-import {
-  PasswordLoginForm,
-  type PasswordLoginFormProps,
-} from "../components/forms/password-login-form";
-import {
-  MagicLinkLoginForm,
-  type MagicLinkLoginFormProps,
-} from "../components/forms/magic-link-login-form";
-import {
-  OAuthButtons,
-  type OAuthButtonsProps,
-} from "../components/shared/oauth-buttons";
-import { AuthDivider } from "./shared/auth-divider";
 import type { AuthClient } from "../client";
+import { MagicLinkLoginForm } from "../components/forms/magic-link-login-form";
+import { OAuthButtons } from "../components/shared/oauth-buttons";
 import type { AuthError } from "../types";
-import type { FC } from "react";
-
-export interface LoginBlockSlots {
-  passwordForm?: FC<PasswordLoginFormProps>;
-  magicLinkForm?: FC<MagicLinkLoginFormProps>;
-  oauthButtons?: FC<OAuthButtonsProps>;
-}
+import { AuthDivider } from "./shared/auth-divider";
 
 export interface LoginBlockProps {
   authClient: AuthClient;
   signUpHref?: string;
-  forgotPasswordHref?: string;
   redirectTo?: string;
   onSuccess?: () => void;
   onError?: (error: AuthError) => void;
-  slots?: LoginBlockSlots;
 }
 
-function LoginBlockContent({
+export function LoginBlock({
   authClient,
   signUpHref = "/sign-up",
-  forgotPasswordHref = "/forgot-password",
   redirectTo,
   onSuccess,
   onError,
-  slots,
 }: LoginBlockProps) {
-  const PasswordForm = slots?.passwordForm ?? PasswordLoginForm;
-  const MagicLinkForm = slots?.magicLinkForm ?? MagicLinkLoginForm;
-  const OAuth = slots?.oauthButtons ?? OAuthButtons;
-
-  const formProps = {
-    authClient,
-    redirectTo,
-    onSuccess,
-    onError,
-  };
-
   return (
-    <div className="mx-auto w-full max-w-md space-y-6">
+    <div className="mx-auto w-full max-w-sm px-8 relative space-y-6 pb-10">
+      {/* Magic Link Login */}
+      <MagicLinkLoginForm
+        authClient={authClient}
+        redirectTo={redirectTo}
+        onSuccess={onSuccess}
+        onError={onError}
+      />
+
+      <AuthDivider>or</AuthDivider>
+
       {/* OAuth Section */}
-      <OAuth
+      <OAuthButtons
         authClient={authClient}
         redirectTo={redirectTo}
         label="Continue with Google"
         onError={onError}
       />
-
-      <AuthDivider>or continue with</AuthDivider>
-
-      {/* Password Login */}
-      <PasswordForm
-        {...formProps}
-        forgotPasswordHref={forgotPasswordHref}
-      />
-
-      <AuthDivider>or</AuthDivider>
-
-      {/* Magic Link Login */}
-      <MagicLinkForm {...formProps} />
 
       {/* Sign Up Link */}
       <p className="text-muted-foreground text-center text-sm">
@@ -86,17 +50,5 @@ function LoginBlockContent({
         </Link>
       </p>
     </div>
-  );
-}
-
-export function LoginBlock(props: LoginBlockProps) {
-  return (
-    <Suspense
-      fallback={
-        <div className="bg-muted/50 mx-auto h-96 w-full max-w-md animate-pulse rounded-lg" />
-      }
-    >
-      <LoginBlockContent {...props} />
-    </Suspense>
   );
 }

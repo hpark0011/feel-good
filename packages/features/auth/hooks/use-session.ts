@@ -17,7 +17,7 @@ interface Session {
 
 /**
  * Factory function that creates a useSession hook bound to a specific auth client.
- * @param authClient - The auth client instance created by createAppAuthClient
+ * @param authClient - The auth client instance created by getAuthClient
  * @returns A useSession hook that provides session state and auth methods
  * @example
  * const useSession = createUseSession(authClient);

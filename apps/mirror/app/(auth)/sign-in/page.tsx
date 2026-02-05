@@ -6,7 +6,6 @@ export default function SignInPage() {
     <LoginBlock
       authClient={authClient}
       signUpHref="/sign-up"
-      forgotPasswordHref="/forgot-password"
       redirectTo="/dashboard"
     />
   );

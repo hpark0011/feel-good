@@ -17,19 +17,6 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
     baseURL: env.SITE_URL,
     database: authComponent.adapter(ctx),
 
-    emailAndPassword: {
-      enabled: true,
-      minPasswordLength: 8,
-      requireEmailVerification: true,
-      sendResetPassword: ({ user, url }) => {
-        // Fire-and-forget: don't block auth response waiting for email
-        void ctx.runAction(api.email.sendPasswordReset, {
-          to: user.email,
-          link: url,
-        });
-      },
-    },
-
     emailVerification: {
       sendVerificationEmail: ({ user, url }) => {
         // Fire-and-forget: don't block auth response waiting for email
@@ -65,10 +52,7 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
       window: 60,
       max: 10,
       customRules: {
-        "/sign-in/email": { window: 60, max: 5 },
-        "/sign-up/email": { window: 60, max: 5 },
         "/sign-in/magic-link": { window: 60, max: 3 },
-        "/request-password-reset": { window: 60, max: 3 },
       },
     },
 

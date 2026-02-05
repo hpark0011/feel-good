@@ -23,7 +23,7 @@ export function MagicLinkSignUpForm({
       <Card className="max-w-md w-full rounded-4xl p-4 py-8 pb-10 border-transparent">
         <CardHeader>
           <CardTitle className="font-medium text-center text-2xl">
-            Create an account
+            Create your account
           </CardTitle>
           <CardDescription className="sr-only">
             Enter your email below to create your account

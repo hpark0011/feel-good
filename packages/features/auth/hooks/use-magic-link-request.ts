@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import type { AuthClient } from "../client";
 import { getAuthErrorMessage, type AuthStatus, type AuthError } from "../types";
 import { getSafeRedirectUrl } from "../utils/validate-redirect";
-import { useMountedRef } from "./_lib/use-mounted-ref";
 
 export interface UseMagicLinkRequestOptions {
   redirectTo?: string;
@@ -21,11 +20,6 @@ export interface UseMagicLinkRequestReturn {
   status: AuthStatus;
   error: AuthError | null;
 
-  // Derived state for convenience
-  isLoading: boolean;
-  isSuccess: boolean;
-  isError: boolean;
-
   // Actions
   submit: () => Promise<void>;
   reset: () => void;
@@ -35,44 +29,42 @@ export function useMagicLinkRequest(
   authClient: AuthClient,
   options: UseMagicLinkRequestOptions = {}
 ): UseMagicLinkRequestReturn {
+  const { redirectTo, onSuccess, onError } = options;
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<AuthStatus>("idle");
   const [error, setError] = useState<AuthError | null>(null);
-
-  const isMountedRef = useMountedRef();
+  const statusRef = useRef(status);
+  statusRef.current = status;
 
   const submit = useCallback(async () => {
-    // Guard against double-submission
-    if (status === "loading") return;
+    if (statusRef.current === "loading") return;
 
     setError(null);
     setStatus("loading");
 
-    const callbackURL = options.redirectTo
-      ? getSafeRedirectUrl(options.redirectTo, undefined)
+    const callbackURL = redirectTo
+      ? getSafeRedirectUrl(redirectTo, undefined)
       : undefined;
 
     await authClient.signIn.magicLink(
       { email, callbackURL },
       {
         onSuccess: () => {
-          if (!isMountedRef.current) return;
           setStatus("success");
-          options.onSuccess?.();
+          onSuccess?.();
         },
         onError: (ctx) => {
-          if (!isMountedRef.current) return;
           const authError: AuthError = {
             code: ctx.error.code ?? "UNKNOWN",
             message: getAuthErrorMessage(ctx.error.code ?? "UNKNOWN"),
           };
           setStatus("error");
           setError(authError);
-          options.onError?.(authError);
+          onError?.(authError);
         },
       }
     );
-  }, [email, authClient, options, status]);
+  }, [email, authClient, redirectTo, onSuccess, onError]);
 
   const reset = useCallback(() => {
     setEmail("");
@@ -85,9 +77,6 @@ export function useMagicLinkRequest(
     setEmail,
     status,
     error,
-    isLoading: status === "loading",
-    isSuccess: status === "success",
-    isError: status === "error",
     submit,
     reset,
   };

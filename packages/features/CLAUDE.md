@@ -39,31 +39,11 @@ export default function LoginPage() {
 }
 ```
 
-### Legacy Components (Backwards Compatible)
-
-```typescript
-import {
-  SignInForm,
-  SignUpForm,
-  ForgotPasswordForm,
-  ResetPasswordForm,
-  MagicLinkForm,
-  OAuthButtons,
-  SessionProvider,
-  FormError,
-  FormSuccess,
-} from "@feel-good/features/auth/components";
-```
-
 ### Hooks
 
 ```typescript
 import {
-  usePasswordSignIn,
-  usePasswordSignUp,
   useMagicLinkRequest,
-  useForgotPassword,
-  useResetPassword,
   useAuthClient,
   createUseSession,
 } from "@feel-good/features/auth/hooks";
@@ -89,8 +69,6 @@ auth/
 ├── blocks/               # Layer 1: Page sections
 │   ├── login-block.tsx
 │   ├── sign-up-block.tsx
-│   ├── forgot-password-block.tsx
-│   ├── reset-password-block.tsx
 │   └── shared/           # Layout helpers
 ├── components/
 │   ├── forms/            # Layer 2: Container components
