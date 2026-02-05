@@ -1,21 +1,22 @@
 "use client";
 
-import { AppDock } from "@feel-good/features/dock/blocks";
 import { Divider } from "@/components/divider";
+import { Icon } from "@feel-good/ui/components/icon";
 import { PageSection } from "@/components/page-section";
 import { PageSectionHeader } from "@/components/page-section-header";
+import { AppDock } from "@feel-good/features/dock/blocks";
 import type { DockConfig } from "@feel-good/features/dock/lib";
+import {
+  AqiHighIcon,
+  BubbleLeftFillIcon,
+  CheckListIcon,
+  DocFillIcon,
+} from "@feel-good/icons";
 
-const MockIcon = ({ label }: { label: string }) => (
-  <div className="size-full flex items-center justify-center text-xs font-medium">
-    {label}
-  </div>
-);
-
-const DocIcon = () => <MockIcon label="D" />;
-const ThreadIcon = () => <MockIcon label="T" />;
-const TaskIcon = () => <MockIcon label="K" />;
-const AgentIcon = () => <MockIcon label="A" />;
+const DocIcon = () => <DocFillIcon />;
+const ThreadIcon = () => <BubbleLeftFillIcon />;
+const TaskIcon = () => <CheckListIcon />;
+const AgentIcon = () => <AqiHighIcon />;
 
 const dockConfig: DockConfig = {
   placement: "bottom",
@@ -52,6 +53,7 @@ export function DockView() {
       <Divider />
       <PageSection>
         <PageSectionHeader>App Dock</PageSectionHeader>
+        <Icon name="ArrowDownIcon" />
         <p className="text-sm text-muted-foreground w-full">
           Hover near the bottom of the screen to reveal the dock.
         </p>
