@@ -35,7 +35,7 @@ export function DockContainer({
         // Appearance
         "bg-background/80 backdrop-blur-lg bg-transparent",
         // Border
-        "border border-border/0 rounded-[17px]",
+        "border border-border/80 rounded-[17px]",
         // Animation
         "transition-transform duration-300 ease-out",
         // Visibility
