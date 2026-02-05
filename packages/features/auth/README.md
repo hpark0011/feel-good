@@ -26,12 +26,9 @@ export default function LoginPage() {
 
 - `LoginBlock` — Magic Link + OAuth sign-in
 - `SignUpBlock` — Magic Link + OAuth registration
-- `ForgotPasswordBlock` — Request password reset
-- `ResetPasswordBlock` — Set new password
 
-> **Product decision:** LoginBlock uses magic-link-only authentication (no password form).
-> Magic links work for all accounts, including those originally registered with a password.
-> The `PasswordLoginView` and `usePasswordSignIn` hook remain available for apps that need password login.
+> **Product decision:** Authentication uses magic-link-only (no password form).
+> Magic links provide a simpler, more secure authentication experience.
 
 ## Configuration
 
@@ -61,11 +58,7 @@ function CustomLoginForm() {
 ```
 
 Available hooks:
-- `usePasswordSignIn` — Email + password sign in
-- `usePasswordSignUp` — Registration with password
 - `useMagicLinkRequest` — Request magic link email
-- `useForgotPassword` — Request password reset
-- `useResetPassword` — Set new password with token
 - `useAuthClient` — Access auth client from context
 
 ## Naming Conventions

@@ -87,25 +87,3 @@ export const sendVerificationEmail = action({
   },
 });
 
-export const sendPasswordReset = action({
-  args: {
-    to: v.string(),
-    link: v.string(),
-  },
-  handler: async (ctx, { to, link }) => {
-    await resend.sendEmail(ctx, {
-      from: EMAIL_FROM,
-      to,
-      subject: `Reset your ${APP_NAME} password`,
-      html: createEmailTemplate({
-        title: "Reset your password",
-        message:
-          "Click the button below to reset your password. This link will expire in 1 hour.",
-        buttonText: "Reset Password",
-        link,
-        footerText:
-          "If you didn't request a password reset, you can safely ignore this email.",
-      }),
-    });
-  },
-});

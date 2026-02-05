@@ -1,8 +1,6 @@
 // Block components
-export { LoginBlock, type LoginBlockProps, type LoginBlockSlots } from "./login-block";
-export { SignUpBlock, type SignUpBlockProps, type SignUpBlockSlots } from "./sign-up-block";
-export { ForgotPasswordBlock, type ForgotPasswordBlockProps } from "./forgot-password-block";
-export { ResetPasswordBlock, type ResetPasswordBlockProps } from "./reset-password-block";
+export { LoginBlock, type LoginBlockProps } from "./login-block";
+export { SignUpBlock, type SignUpBlockProps } from "./sign-up-block";
 
 // Layout helpers
 export { AuthSection } from "./shared/auth-section";

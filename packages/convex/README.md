@@ -52,10 +52,6 @@ Sends a magic link email for passwordless authentication.
 
 Sends an email verification link to new users.
 
-### `sendPasswordReset`
-
-Sends a password reset link.
-
 ## Usage
 
 ```typescript

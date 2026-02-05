@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  MagicLinkLoginView,
-  PasswordLoginView,
-} from "@feel-good/features/auth/views";
+import { MagicLinkLoginView } from "@feel-good/features/auth/views";
 import { Divider } from "@/components/divider";
 import { PageSection } from "@/components/page-section";
 import { PageSectionHeader } from "@/components/page-section-header";
@@ -13,22 +10,6 @@ const noop = () => {};
 export function LoginView() {
   return (
     <div className="flex flex-col w-full">
-      <Divider />
-      <PageSection>
-        <PageSectionHeader>Password</PageSectionHeader>
-        <div className="max-w-sm w-full">
-          <PasswordLoginView
-            email=""
-            password=""
-            status="idle"
-            error={null}
-            onEmailChange={noop}
-            onPasswordChange={noop}
-            onSubmit={noop}
-          />
-        </div>
-      </PageSection>
-
       <Divider />
       <PageSection>
         <PageSectionHeader>Magic Link</PageSectionHeader>
