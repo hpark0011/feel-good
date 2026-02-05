@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "050"
 tags: [code-review, pr-103, auth, ui, layout]
@@ -38,11 +38,12 @@ All other auth views consistently use `max-w-md` on their Card:
 
 ## Acceptance Criteria
 
-- [ ] Both Card instances in magic-link-sign-up-view.tsx include `max-w-md`
-- [ ] Card width matches other auth views visually
+- [x] Both Card instances in magic-link-sign-up-view.tsx include `max-w-md`
+- [x] Card width matches other auth views visually
 
 ## Work Log
 
 | Date | Action | Outcome |
 |------|--------|---------|
 | 2026-02-05 | Created from PR #103 pattern recognition review | Pending |
+| 2026-02-05 | Added `max-w-md` to both Card instances (lines 43, 69) | Completed |

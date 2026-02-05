@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "031"
 tags: [code-review, naming, auth]
@@ -66,15 +66,16 @@ Option A - The current split is intentional (API alignment vs user terminology).
 
 ## Acceptance Criteria
 
-- [ ] README documents naming convention
-- [ ] Rationale explained for the split
-- [ ] New contributors understand the pattern
+- [x] README documents naming convention
+- [x] Rationale explained for the split
+- [x] New contributors understand the pattern
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-03 | Created from code review | Pattern recognition noted terminology mix |
+| 2026-02-05 | Added Naming Conventions section to auth README | Completed — Option A |
 
 ## Resources
 
