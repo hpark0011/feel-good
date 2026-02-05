@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GoogleIcon } from "@feel-good/icons";
 import { Button } from "@feel-good/ui/primitives/button";
 import type { AuthClient } from "../../client";
@@ -27,6 +27,13 @@ export function OAuthButtons({
   onError,
 }: OAuthButtonsProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   async function handleGoogleSignIn() {
     setIsLoading(true);
@@ -42,7 +49,7 @@ export function OAuthButtons({
       });
       // If we reach here without redirect, reset loading after timeout
       // OAuth might open popup that user closes
-      setTimeout(() => setIsLoading(false), 5000);
+      timeoutRef.current = setTimeout(() => setIsLoading(false), 5000);
     } catch {
       setIsLoading(false);
       onError?.({

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useResetPassword } from "../../hooks";
 import { ResetPasswordView } from "../views";
@@ -28,6 +29,13 @@ export function ResetPasswordForm({
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get("token");
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const {
     password,
@@ -45,7 +53,10 @@ export function ResetPasswordForm({
       options.onSuccess?.();
       // Redirect to sign-in after success
       const safeRedirect = getSafeRedirectUrl(redirectTo, "/sign-in");
-      setTimeout(() => router.push(safeRedirect), 2000);
+      timeoutRef.current = setTimeout(
+        () => router.push(safeRedirect),
+        2000
+      );
     },
     onError: options.onError,
   });
