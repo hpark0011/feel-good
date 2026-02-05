@@ -44,7 +44,7 @@ export const PasswordLoginView = memo(function PasswordLoginView({
   const isLoading = status === "loading";
 
   return (
-    <Card className="w-full max-w-md rounded-4xl border-transparent p-4 py-8 pb-10">
+    <Card className="w-full max-w-md rounded-4xl border-transparent p-0">
       <CardHeader>
         <CardTitle className="text-center text-2xl font-medium">
           Login
@@ -53,7 +53,7 @@ export const PasswordLoginView = memo(function PasswordLoginView({
           Enter your email and password to login to your account
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0">
         <form
           onSubmit={(e) => {
             e.preventDefault();

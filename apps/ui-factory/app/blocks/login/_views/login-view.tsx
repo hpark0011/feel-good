@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  PasswordLoginView,
   MagicLinkLoginView,
+  PasswordLoginView,
 } from "@feel-good/features/auth/views";
 import { Divider } from "@/components/divider";
 import { PageSection } from "@/components/page-section";
@@ -16,27 +16,31 @@ export function LoginView() {
       <Divider />
       <PageSection>
         <PageSectionHeader>Password</PageSectionHeader>
-        <PasswordLoginView
-          email=""
-          password=""
-          status="idle"
-          error={null}
-          onEmailChange={noop}
-          onPasswordChange={noop}
-          onSubmit={noop}
-        />
+        <div className="max-w-sm w-full">
+          <PasswordLoginView
+            email=""
+            password=""
+            status="idle"
+            error={null}
+            onEmailChange={noop}
+            onPasswordChange={noop}
+            onSubmit={noop}
+          />
+        </div>
       </PageSection>
 
       <Divider />
       <PageSection>
         <PageSectionHeader>Magic Link</PageSectionHeader>
-        <MagicLinkLoginView
-          email=""
-          status="idle"
-          error={null}
-          onEmailChange={noop}
-          onSubmit={noop}
-        />
+        <div className="max-w-sm w-full">
+          <MagicLinkLoginView
+            email=""
+            status="idle"
+            error={null}
+            onEmailChange={noop}
+            onSubmit={noop}
+          />
+        </div>
       </PageSection>
     </div>
   );

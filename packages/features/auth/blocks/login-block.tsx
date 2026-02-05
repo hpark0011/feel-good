@@ -1,11 +1,9 @@
 "use client";
 
-import { Suspense } from "react";
 import Link from "next/link";
-import {
-  PasswordLoginForm,
-  type PasswordLoginFormProps,
-} from "../components/forms/password-login-form";
+import type { FC } from "react";
+import { Suspense } from "react";
+import type { AuthClient } from "../client";
 import {
   MagicLinkLoginForm,
   type MagicLinkLoginFormProps,
@@ -14,13 +12,10 @@ import {
   OAuthButtons,
   type OAuthButtonsProps,
 } from "../components/shared/oauth-buttons";
-import { AuthDivider } from "./shared/auth-divider";
-import type { AuthClient } from "../client";
 import type { AuthError } from "../types";
-import type { FC } from "react";
+import { AuthDivider } from "./shared/auth-divider";
 
 export interface LoginBlockSlots {
-  passwordForm?: FC<PasswordLoginFormProps>;
   magicLinkForm?: FC<MagicLinkLoginFormProps>;
   oauthButtons?: FC<OAuthButtonsProps>;
 }
@@ -28,7 +23,6 @@ export interface LoginBlockSlots {
 export interface LoginBlockProps {
   authClient: AuthClient;
   signUpHref?: string;
-  forgotPasswordHref?: string;
   redirectTo?: string;
   onSuccess?: () => void;
   onError?: (error: AuthError) => void;
@@ -38,13 +32,11 @@ export interface LoginBlockProps {
 function LoginBlockContent({
   authClient,
   signUpHref = "/sign-up",
-  forgotPasswordHref = "/forgot-password",
   redirectTo,
   onSuccess,
   onError,
   slots,
 }: LoginBlockProps) {
-  const PasswordForm = slots?.passwordForm ?? PasswordLoginForm;
   const MagicLinkForm = slots?.magicLinkForm ?? MagicLinkLoginForm;
   const OAuth = slots?.oauthButtons ?? OAuthButtons;
 
@@ -56,7 +48,12 @@ function LoginBlockContent({
   };
 
   return (
-    <div className="mx-auto w-full max-w-md space-y-6">
+    <div className="mx-auto w-full max-w-sm px-8 relative space-y-6 pb-10">
+      {/* Magic Link Login */}
+      <MagicLinkForm {...formProps} />
+
+      <AuthDivider>or</AuthDivider>
+
       {/* OAuth Section */}
       <OAuth
         authClient={authClient}
@@ -64,19 +61,6 @@ function LoginBlockContent({
         label="Continue with Google"
         onError={onError}
       />
-
-      <AuthDivider>or continue with</AuthDivider>
-
-      {/* Password Login */}
-      <PasswordForm
-        {...formProps}
-        forgotPasswordHref={forgotPasswordHref}
-      />
-
-      <AuthDivider>or</AuthDivider>
-
-      {/* Magic Link Login */}
-      <MagicLinkForm {...formProps} />
 
       {/* Sign Up Link */}
       <p className="text-muted-foreground text-center text-sm">

@@ -40,7 +40,7 @@ export const MagicLinkSignUpView = memo(function MagicLinkSignUpView({
 
   if (isSuccess) {
     return (
-      <Card className="w-full rounded-4xl border-transparent">
+      <Card className="w-full rounded-4xl border-transparent p-0">
         <CardContent className="p-0">
           <div className="space-y-4 text-center">
             <FormSuccess

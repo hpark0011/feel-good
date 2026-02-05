@@ -13,7 +13,7 @@ import { Field, FieldGroup, FieldLabel } from "@feel-good/ui/primitives/field";
 import { Input } from "@feel-good/ui/primitives/input";
 import Link from "next/link";
 import { PASSWORD_MIN_LENGTH } from "../types";
-import type { AuthStatus, AuthError } from "../types";
+import type { AuthError, AuthStatus } from "../types";
 import { FormError } from "../components/shared/form-error";
 import { FormSuccess } from "../components/shared/form-success";
 
@@ -55,7 +55,7 @@ export const ResetPasswordView = memo(function ResetPasswordView({
   // Invalid token state
   if (!hasToken) {
     return (
-      <Card className="w-full max-w-md rounded-4xl border-transparent p-4 py-8 pb-10">
+      <Card className="w-full max-w-md rounded-4xl border-transparent p-0">
         <CardContent className="pt-6">
           <div className="bg-destructive/10 rounded-md p-4 text-center">
             <p className="text-destructive text-sm">
@@ -77,7 +77,7 @@ export const ResetPasswordView = memo(function ResetPasswordView({
   // Success state
   if (isSuccess) {
     return (
-      <Card className="w-full max-w-md rounded-4xl border-transparent p-4 py-8 pb-10">
+      <Card className="w-full max-w-md rounded-4xl border-transparent p-0">
         <CardContent className="pt-6">
           <div className="space-y-4 text-center">
             <FormSuccess
@@ -97,7 +97,7 @@ export const ResetPasswordView = memo(function ResetPasswordView({
   }
 
   return (
-    <Card className="w-full max-w-md rounded-4xl border-transparent p-4 py-8 pb-10">
+    <Card className="w-full max-w-md rounded-4xl border-transparent p-0">
       <CardHeader>
         <CardTitle className="text-center text-2xl font-medium">
           Reset password

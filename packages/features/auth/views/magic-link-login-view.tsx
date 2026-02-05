@@ -11,7 +11,7 @@ import {
 } from "@feel-good/ui/primitives/card";
 import { Field, FieldGroup, FieldLabel } from "@feel-good/ui/primitives/field";
 import { Input } from "@feel-good/ui/primitives/input";
-import type { AuthStatus, AuthError } from "../types";
+import type { AuthError, AuthStatus } from "../types";
 import { FormError } from "../components/shared/form-error";
 import { FormSuccess } from "../components/shared/form-success";
 
@@ -40,23 +40,25 @@ export const MagicLinkLoginView = memo(function MagicLinkLoginView({
 
   if (isSuccess) {
     return (
-      <Card className="w-full max-w-md rounded-4xl border-transparent p-4 py-8 pb-10">
+      <Card className="w-full max-w-md rounded-4xl border-transparent p-0">
         <CardContent className="pt-6">
           <div className="space-y-4 text-center">
             <FormSuccess
               title="Check your email"
               message={`We sent a magic link to ${email}. Click the link to sign in.`}
             />
-            {onReset ? (
-              <Button
-                variant="ghost"
-                onClick={onReset}
-                className="text-sm"
-                data-testid="auth.magic-link.reset-btn"
-              >
-                Use a different email
-              </Button>
-            ) : null}
+            {onReset
+              ? (
+                <Button
+                  variant="ghost"
+                  onClick={onReset}
+                  className="text-sm"
+                  data-testid="auth.magic-link.reset-btn"
+                >
+                  Use a different email
+                </Button>
+              )
+              : null}
           </div>
         </CardContent>
       </Card>
@@ -64,7 +66,7 @@ export const MagicLinkLoginView = memo(function MagicLinkLoginView({
   }
 
   return (
-    <Card className="w-full max-w-md rounded-4xl border-transparent p-4 py-8 pb-10">
+    <Card className="w-full max-w-md rounded-4xl border-transparent p-0">
       <CardHeader>
         <CardTitle className="text-center text-2xl font-medium">
           Login
@@ -73,7 +75,7 @@ export const MagicLinkLoginView = memo(function MagicLinkLoginView({
           Enter your email to receive a magic link
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -115,7 +117,7 @@ export const MagicLinkLoginView = memo(function MagicLinkLoginView({
                 aria-busy={isLoading}
                 data-testid="auth.magic-link.submit-btn"
               >
-                {isLoading ? "Sending link..." : "Send magic link"}
+                {isLoading ? "Sending link..." : "Continue with Email"}
               </Button>
             </Field>
           </FieldGroup>

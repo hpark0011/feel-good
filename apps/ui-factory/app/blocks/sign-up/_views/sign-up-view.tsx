@@ -16,15 +16,17 @@ export function SignUpView() {
       <Divider />
       <PageSection>
         <PageSectionHeader>Password</PageSectionHeader>
-        <PasswordSignUpView
-          email=""
-          password=""
-          status="idle"
-          error={null}
-          onEmailChange={noop}
-          onPasswordChange={noop}
-          onSubmit={noop}
-        />
+        <div className="max-w-sm w-full">
+          <PasswordSignUpView
+            email=""
+            password=""
+            status="idle"
+            error={null}
+            onEmailChange={noop}
+            onPasswordChange={noop}
+            onSubmit={noop}
+          />
+        </div>
       </PageSection>
 
       <Divider />
