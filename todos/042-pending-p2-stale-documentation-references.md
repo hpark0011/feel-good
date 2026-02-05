@@ -18,8 +18,10 @@ The PR deletes 8 legacy auth form components and removes password login from Log
 
 **Affected Files:**
 - `packages/features/CLAUDE.md`
+- `packages/features/auth/README.md` (has broken slot override examples and "Password + Magic Link + OAuth" description)
 - `CLAUDE.md` (root)
-- Any README or doc referencing deleted components
+- `apps/mirror/CLAUDE.md` (line 46 references deleted legacy imports)
+- `.claude/rules/monorepo.md` (line 25 references deleted legacy imports)
 
 **Details:**
 - 8 legacy form components deleted: `sign-in-form.tsx`, `sign-up-form.tsx`, `magic-link-form.tsx`, `oauth-buttons.tsx`, `forgot-password-form.tsx`, `reset-password-form.tsx`, `form-error.tsx`, `form-success.tsx`
