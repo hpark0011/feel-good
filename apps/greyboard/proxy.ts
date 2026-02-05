@@ -1,13 +1,13 @@
 import { type NextRequest } from "next/server";
-import { updateSession } from "@/utils/supabase/client/middleware-client";
+import { updateSession } from "@/utils/supabase/client/proxy-client";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // Update the session using the existing updateSession function
   // This handles session refresh and cookie management
   return await updateSession(request);
 }
 
-// Configure which routes the middleware should run on
+// Configure which routes the proxy should run on
 export const config = {
   matcher: [
     /*
