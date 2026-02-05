@@ -17,8 +17,6 @@ export interface UsePasswordSignUpOptions {
 
 export interface UsePasswordSignUpReturn {
   // Form state
-  name: string;
-  setName: (value: string) => void;
   email: string;
   setEmail: (value: string) => void;
   password: string;
@@ -42,7 +40,6 @@ export function usePasswordSignUp(
   authClient: AuthClient,
   options: UsePasswordSignUpOptions = {}
 ): UsePasswordSignUpReturn {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState<AuthStatus>("idle");
@@ -71,7 +68,7 @@ export function usePasswordSignUp(
     setStatus("loading");
 
     await authClient.signUp.email(
-      { name, email, password },
+      { name: "", email, password },
       {
         onSuccess: () => {
           setPassword(""); // Clear password immediately
@@ -91,10 +88,9 @@ export function usePasswordSignUp(
         },
       }
     );
-  }, [name, email, password, authClient, options, status]);
+  }, [email, password, authClient, options, status]);
 
   const reset = useCallback(() => {
-    setName("");
     setEmail("");
     setPassword("");
     setStatus("idle");
@@ -102,8 +98,6 @@ export function usePasswordSignUp(
   }, []);
 
   return {
-    name,
-    setName,
     email,
     setEmail,
     password,

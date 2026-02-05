@@ -17,12 +17,10 @@ export function SignUpView() {
       <PageSection>
         <PageSectionHeader>Password</PageSectionHeader>
         <PasswordSignUpView
-          name=""
           email=""
           password=""
           status="idle"
           error={null}
-          onNameChange={noop}
           onEmailChange={noop}
           onPasswordChange={noop}
           onSubmit={noop}

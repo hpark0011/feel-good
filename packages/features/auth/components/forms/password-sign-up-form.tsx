@@ -18,8 +18,6 @@ export function PasswordSignUpForm({
   ...options
 }: PasswordSignUpFormProps) {
   const {
-    name,
-    setName,
     email,
     setEmail,
     password,
@@ -31,12 +29,10 @@ export function PasswordSignUpForm({
 
   return (
     <PasswordSignUpView
-      name={name}
       email={email}
       password={password}
       status={disabled ? "loading" : status}
       error={error}
-      onNameChange={setName}
       onEmailChange={setEmail}
       onPasswordChange={setPassword}
       onSubmit={submit}

@@ -18,26 +18,22 @@ import { FormSuccess } from "../components/shared/form-success";
 
 export interface PasswordSignUpViewProps {
   // Form state (controlled)
-  name: string;
   email: string;
   password: string;
   status: AuthStatus;
   error: AuthError | null;
 
   // Handlers
-  onNameChange: (value: string) => void;
   onEmailChange: (value: string) => void;
   onPasswordChange: (value: string) => void;
   onSubmit: () => void;
 }
 
 export const PasswordSignUpView = memo(function PasswordSignUpView({
-  name,
   email,
   password,
   status,
   error,
-  onNameChange,
   onEmailChange,
   onPasswordChange,
   onSubmit,
@@ -80,28 +76,6 @@ export const PasswordSignUpView = memo(function PasswordSignUpView({
         >
           <FieldGroup>
             <FormError error={error} id="sign-up-form-error" />
-
-            <Field>
-              <FieldLabel htmlFor="sign-up-name" className="px-1.5">
-                Name{" "}
-                <span className="text-destructive" aria-hidden="true">
-                  *
-                </span>
-              </FieldLabel>
-              <Input
-                id="sign-up-name"
-                type="text"
-                placeholder="Your name"
-                value={name}
-                onChange={(e) => onNameChange(e.target.value)}
-                variant="underline"
-                autoComplete="name"
-                aria-required="true"
-                aria-invalid={error?.field === "name"}
-                disabled={isLoading}
-                data-testid="auth.sign-up.name-input"
-              />
-            </Field>
 
             <Field>
               <FieldLabel htmlFor="sign-up-email" className="px-1.5">
