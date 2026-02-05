@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@feel-good/ui/primitives/button";
 import { Input } from "@feel-good/ui/primitives/input";
@@ -31,6 +31,13 @@ export function ResetPasswordForm({
   const [status, setStatus] = useState<AuthStatus>("idle");
   const router = useRouter();
   const searchParams = useSearchParams();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const token = searchParams.get("token");
 
@@ -62,7 +69,10 @@ export function ResetPasswordForm({
         onSuccess: () => {
           setStatus("success");
           const safeRedirectTo = getSafeRedirectUrl(redirectTo, "/sign-in");
-          setTimeout(() => router.push(safeRedirectTo), 2000);
+          timeoutRef.current = setTimeout(
+            () => router.push(safeRedirectTo),
+            2000
+          );
         },
         onError: (ctx) => {
           setStatus("error");
