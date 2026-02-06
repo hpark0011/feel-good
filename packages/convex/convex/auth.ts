@@ -1,7 +1,7 @@
 import { createClient, type GenericCtx } from "@convex-dev/better-auth";
 import { convex } from "@convex-dev/better-auth/plugins";
 import { betterAuth } from "better-auth";
-import { magicLink } from "better-auth/plugins";
+import { emailOTP, magicLink } from "better-auth/plugins";
 import { api, components } from "./_generated/api";
 import { type DataModel } from "./_generated/dataModel";
 import { query } from "./_generated/server";
@@ -53,6 +53,7 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
       max: 10,
       customRules: {
         "/sign-in/magic-link": { window: 60, max: 3 },
+        "/email-otp/send-verification-otp": { window: 60, max: 3 },
       },
     },
 
@@ -67,6 +68,14 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
           });
         },
         expiresIn: 900, // 15 minutes
+      }),
+      emailOTP({
+        otpLength: 6,
+        expiresIn: 300, // 5 minutes
+        sendVerificationOTP: ({ email, otp, type }) => {
+          // Fire-and-forget: don't block auth response waiting for email
+          void ctx.runAction(api.email.sendOTP, { to: email, otp, type });
+        },
       }),
     ],
   });

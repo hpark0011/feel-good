@@ -17,6 +17,8 @@ export type AuthProvider = "google" | "magic-link";
 
 export type AuthStatus = "idle" | "loading" | "success" | "error";
 
+export type OTPStep = "email" | "verify";
+
 export interface AuthError {
   code: string;
   message: string;
@@ -33,6 +35,9 @@ export const AUTH_ERROR_MESSAGES: Record<string, string> = {
   INVALID_EMAIL: "Please enter a valid email address",
   NETWORK_ERROR: "Unable to connect. Please check your internet connection.",
   OAUTH_ERROR: "Unable to sign in with this provider. Please try again.",
+  OTP_EXPIRED: "This code has expired. Please request a new one.",
+  OTP_INVALID: "Invalid code. Please check and try again.",
+  OTP_MAX_ATTEMPTS: "Too many attempts. Please request a new code.",
   UNKNOWN: "Something went wrong. Please try again.",
 };
 

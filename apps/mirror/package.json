@@ -6,7 +6,9 @@
     "dev": "next dev --port 3001",
     "build": "next build",
     "start": "next start --port 3001",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@convex-dev/better-auth": "catalog:",
@@ -27,6 +29,7 @@
   },
   "devDependencies": {
     "@feel-good/eslint-config": "workspace:*",
+    "@playwright/test": "^1.40.0",
     "@tailwindcss/postcss": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",

@@ -1,9 +1,9 @@
-import { LoginBlock } from "@feel-good/features/auth/blocks";
+import { OTPLoginBlock } from "@feel-good/features/auth/blocks";
 import { authClient } from "@/lib/auth-client";
 
 export default function SignInPage() {
   return (
-    <LoginBlock
+    <OTPLoginBlock
       authClient={authClient}
       signUpHref="/sign-up"
       redirectTo="/dashboard"
