@@ -12,6 +12,7 @@ import { getSafeRedirectUrl } from "../utils/validate-redirect";
 
 export interface UseOTPAuthOptions {
   redirectTo?: string;
+  type?: "sign-in" | "email-verification" | "forget-password";
   onSuccess?: () => void;
   onError?: (error: AuthError) => void;
 }
@@ -43,7 +44,7 @@ export function useOTPAuth(
   authClient: AuthClient,
   options: UseOTPAuthOptions = {}
 ): UseOTPAuthReturn {
-  const { redirectTo, onSuccess, onError } = options;
+  const { redirectTo, type = "sign-in", onSuccess, onError } = options;
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [step, setStep] = useState<OTPStep>("email");
@@ -69,12 +70,13 @@ export function useOTPAuth(
 
   const requestOTP = useCallback(async () => {
     if (statusRef.current === "loading") return;
+    statusRef.current = "loading";
 
     setError(null);
     setStatus("loading");
 
     await authClient.emailOtp.sendVerificationOtp(
-      { email, type: "sign-in" },
+      { email, type },
       {
         onSuccess: () => {
           setStatus("idle");
@@ -92,10 +94,11 @@ export function useOTPAuth(
         },
       }
     );
-  }, [email, authClient, onError]);
+  }, [email, type, authClient, onError]);
 
   const verifyOTP = useCallback(async () => {
     if (statusRef.current === "loading") return;
+    statusRef.current = "loading";
 
     setError(null);
     setStatus("loading");
@@ -129,12 +132,15 @@ export function useOTPAuth(
 
   const resendOTP = useCallback(async () => {
     if (statusRef.current === "loading" || resendCooldown > 0) return;
+    statusRef.current = "loading";
+
     setError(null);
+    setStatus("loading");
     setOtp("");
     setResendCooldown(60);
 
     await authClient.emailOtp.sendVerificationOtp(
-      { email, type: "sign-in" },
+      { email, type },
       {
         onSuccess: () => {
           setStatus("idle");
@@ -150,7 +156,7 @@ export function useOTPAuth(
         },
       }
     );
-  }, [email, authClient, onError, resendCooldown]);
+  }, [email, type, authClient, onError, resendCooldown]);
 
   const goBack = useCallback(() => {
     setStep("email");

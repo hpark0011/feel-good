@@ -2,7 +2,7 @@
 
 import { Resend } from "@convex-dev/resend";
 import { components } from "./_generated/api";
-import { action } from "./_generated/server";
+import { internalAction } from "./_generated/server";
 import { v } from "convex/values";
 
 const resend = new Resend(components.resend);
@@ -70,7 +70,7 @@ function createOTPEmailTemplate(config: OTPEmailTemplateConfig): string {
   `;
 }
 
-export const sendMagicLink = action({
+export const sendMagicLink = internalAction({
   args: {
     to: v.string(),
     link: v.string(),
@@ -93,7 +93,7 @@ export const sendMagicLink = action({
   },
 });
 
-export const sendVerificationEmail = action({
+export const sendVerificationEmail = internalAction({
   args: {
     to: v.string(),
     link: v.string(),
@@ -116,7 +116,7 @@ export const sendVerificationEmail = action({
   },
 });
 
-export const sendOTP = action({
+export const sendOTP = internalAction({
   args: {
     to: v.string(),
     otp: v.string(),

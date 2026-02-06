@@ -31,7 +31,7 @@ export function OTPSignUpForm({
     resendOTP,
     resendCooldown,
     goBack,
-  } = useOTPAuth(authClient, options);
+  } = useOTPAuth(authClient, { ...options, type: "email-verification" });
 
   return (
     <OTPSignUpView

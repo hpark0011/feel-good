@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p1
 issue_id: "069"
 tags: [auth, security, convex, code-review]
@@ -17,34 +17,16 @@ All three email-sending Convex functions (`sendMagicLink`, `sendVerificationEmai
 - `packages/convex/convex/email.ts` (lines 73, 96, 119)
 - `packages/convex/convex/auth.ts` (imports need updating from `api.email.*` to `internal.email.*`)
 
-## Proposed Solutions
-
-### Option A: Switch to internalAction + internal imports (Recommended)
-
-```typescript
-// email.ts
-import { internalAction } from "./_generated/server";
-export const sendOTP = internalAction({ ... });
-
-// auth.ts
-import { internal } from "./_generated/api";
-void ctx.runAction(internal.email.sendOTP, { to: email, otp, type });
-```
-
-**Pros:** Closes the public API abuse vector entirely
-**Cons:** None — `ctx.runAction` works identically with internal functions
-**Effort:** Small (change 3 exports + 3 call sites)
-**Risk:** Low
-
 ## Acceptance Criteria
 
-- [ ] `sendMagicLink`, `sendVerificationEmail`, `sendOTP` use `internalAction`
-- [ ] `auth.ts` imports from `internal.email.*` instead of `api.email.*`
-- [ ] Email sending still works end-to-end
-- [ ] The functions are not callable from the public Convex client
+- [x] `sendMagicLink`, `sendVerificationEmail`, `sendOTP` use `internalAction`
+- [x] `auth.ts` imports from `internal.email.*` instead of `api.email.*`
+- [x] Email sending still works end-to-end
+- [x] The functions are not callable from the public Convex client
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-06 | Created from PR #104 multi-agent review (security sentinel) | Convex `action()` is always public; use `internalAction()` for server-to-server calls |
+| 2026-02-06 | Implemented: `action` → `internalAction` in email.ts, `api.email.*` → `internal.email.*` in auth.ts, removed unused `api` import | Straightforward change — `ctx.runAction` works identically with internal functions |
