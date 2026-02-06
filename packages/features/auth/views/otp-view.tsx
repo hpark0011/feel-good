@@ -11,6 +11,12 @@ import {
 } from "@feel-good/ui/primitives/card";
 import { Field, FieldGroup, FieldLabel } from "@feel-good/ui/primitives/field";
 import { Input } from "@feel-good/ui/primitives/input";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+  InputOTPSeparator,
+} from "@feel-good/ui/primitives/input-otp";
 import type { AuthError, AuthStatus, OTPStep } from "../types";
 import { FormError } from "../components/shared/form-error";
 
@@ -27,7 +33,11 @@ export interface OTPViewProps {
   onOtpChange: (value: string) => void;
   onRequestOTP: () => void;
   onVerifyOTP: () => void;
+  onResendOTP: () => void;
   onBack: () => void;
+
+  // Resend
+  resendCooldown: number;
 
   // Variant-specific content
   title: string;
@@ -48,7 +58,9 @@ export const OTPView = memo(function OTPView({
   onOtpChange,
   onRequestOTP,
   onVerifyOTP,
+  onResendOTP,
   onBack,
+  resendCooldown,
   title,
   description,
   testIdPrefix,
@@ -143,28 +155,27 @@ export const OTPView = memo(function OTPView({
             <FormError error={error} id={formErrorId} />
 
             <Field>
-              <FieldLabel htmlFor={otpInputId} className="px-1.5">
-                Verification code{" "}
-                <span className="text-destructive" aria-hidden="true">
-                  *
-                </span>
-              </FieldLabel>
-              <Input
-                id={otpInputId}
-                type="text"
-                inputMode="numeric"
-                pattern="[0-9]*"
+              <InputOTP
                 maxLength={6}
-                placeholder="000000"
                 value={otp}
-                onChange={(e) => onOtpChange(e.target.value)}
-                variant="underline"
+                onChange={onOtpChange}
+                onComplete={onVerifyOTP}
                 autoComplete="one-time-code"
-                aria-required="true"
-                aria-invalid={error?.field === "otp"}
                 disabled={isLoading}
                 data-testid={`${testIdPrefix}.otp-input`}
-              />
+              >
+                <InputOTPGroup>
+                  <InputOTPSlot index={0} />
+                  <InputOTPSlot index={1} />
+                  <InputOTPSlot index={2} />
+                </InputOTPGroup>
+                <InputOTPSeparator />
+                <InputOTPGroup>
+                  <InputOTPSlot index={3} />
+                  <InputOTPSlot index={4} />
+                  <InputOTPSlot index={5} />
+                </InputOTPGroup>
+              </InputOTP>
             </Field>
 
             <Field>
@@ -177,6 +188,19 @@ export const OTPView = memo(function OTPView({
                 data-testid={`${testIdPrefix}.verify-btn`}
               >
                 {isLoading ? "Verifying..." : "Verify"}
+              </Button>
+            </Field>
+
+            <Field>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={onResendOTP}
+                disabled={isLoading || resendCooldown > 0}
+                className="text-sm"
+                data-testid={`${testIdPrefix}.resend-btn`}
+              >
+                {resendCooldown > 0 ? `Resend code (${resendCooldown}s)` : "Resend code"}
               </Button>
             </Field>
 

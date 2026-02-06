@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import type { AuthClient } from "../client";
 import {
   getAuthErrorMessage,
@@ -31,8 +31,12 @@ export interface UseOTPAuthReturn {
   // Actions
   requestOTP: () => Promise<void>;
   verifyOTP: () => Promise<void>;
+  resendOTP: () => Promise<void>;
   goBack: () => void;
   reset: () => void;
+
+  // Resend
+  resendCooldown: number;
 }
 
 export function useOTPAuth(
@@ -45,8 +49,23 @@ export function useOTPAuth(
   const [step, setStep] = useState<OTPStep>("email");
   const [status, setStatus] = useState<AuthStatus>("idle");
   const [error, setError] = useState<AuthError | null>(null);
+  const [resendCooldown, setResendCooldown] = useState(0);
   const statusRef = useRef(status);
   statusRef.current = status;
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const interval = setInterval(() => {
+      setResendCooldown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [resendCooldown]);
 
   const requestOTP = useCallback(async () => {
     if (statusRef.current === "loading") return;
@@ -60,6 +79,7 @@ export function useOTPAuth(
         onSuccess: () => {
           setStatus("idle");
           setStep("verify");
+          setResendCooldown(60);
         },
         onError: (ctx) => {
           const authError: AuthError = {
@@ -107,11 +127,37 @@ export function useOTPAuth(
     );
   }, [email, otp, authClient, redirectTo, onSuccess, onError]);
 
+  const resendOTP = useCallback(async () => {
+    if (statusRef.current === "loading" || resendCooldown > 0) return;
+    setError(null);
+    setOtp("");
+    setResendCooldown(60);
+
+    await authClient.emailOtp.sendVerificationOtp(
+      { email, type: "sign-in" },
+      {
+        onSuccess: () => {
+          setStatus("idle");
+        },
+        onError: (ctx) => {
+          const authError: AuthError = {
+            code: ctx.error.code ?? "UNKNOWN",
+            message: getAuthErrorMessage(ctx.error.code ?? "UNKNOWN"),
+          };
+          setStatus("error");
+          setError(authError);
+          onError?.(authError);
+        },
+      }
+    );
+  }, [email, authClient, onError, resendCooldown]);
+
   const goBack = useCallback(() => {
     setStep("email");
     setOtp("");
     setError(null);
     setStatus("idle");
+    setResendCooldown(0);
   }, []);
 
   const reset = useCallback(() => {
@@ -120,6 +166,7 @@ export function useOTPAuth(
     setStep("email");
     setStatus("idle");
     setError(null);
+    setResendCooldown(0);
   }, []);
 
   return {
@@ -132,6 +179,8 @@ export function useOTPAuth(
     error,
     requestOTP,
     verifyOTP,
+    resendOTP,
+    resendCooldown,
     goBack,
     reset,
   };

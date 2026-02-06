@@ -16,6 +16,7 @@
     "./auth/client": "./auth/client.ts",
     "./auth/server": "./auth/server.ts",
     "./auth/types": "./auth/types.ts",
+    "./auth/utils": "./auth/utils/index.ts",
     "./dock": "./dock/index.ts",
     "./dock/blocks": "./dock/blocks/index.ts",
     "./dock/components": "./dock/components/index.ts",

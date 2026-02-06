@@ -28,6 +28,8 @@ export function OTPLoginForm({
     error,
     requestOTP,
     verifyOTP,
+    resendOTP,
+    resendCooldown,
     goBack,
   } = useOTPAuth(authClient, options);
 
@@ -42,6 +44,8 @@ export function OTPLoginForm({
       onOtpChange={setOtp}
       onRequestOTP={requestOTP}
       onVerifyOTP={verifyOTP}
+      onResendOTP={resendOTP}
+      resendCooldown={resendCooldown}
       onBack={goBack}
     />
   );

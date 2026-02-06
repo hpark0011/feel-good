@@ -13,7 +13,7 @@ export interface AuthSession {
   expiresAt: Date;
 }
 
-export type AuthProvider = "google" | "magic-link";
+export type AuthProvider = "google" | "magic-link" | "email-otp";
 
 export type AuthStatus = "idle" | "loading" | "success" | "error";
 

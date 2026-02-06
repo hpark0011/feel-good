@@ -14,7 +14,9 @@ export interface OTPLoginViewProps {
   onOtpChange: (value: string) => void;
   onRequestOTP: () => void;
   onVerifyOTP: () => void;
+  onResendOTP: () => void;
   onBack: () => void;
+  resendCooldown: number;
 }
 
 export const OTPLoginView = memo(function OTPLoginView(
