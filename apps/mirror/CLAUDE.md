@@ -40,14 +40,14 @@ pnpm dev --filter=@feel-good/mirror
 
 ## Auth Flow
 
-Authentication is handled by the shared `@feel-good/features` package (magic-link only):
+Authentication is handled by the shared `@feel-good/features` package (OTP and magic-link):
 
 ```typescript
 // Forms
-import { MagicLinkLoginForm, MagicLinkSignUpForm } from "@feel-good/features/auth/components/forms";
+import { MagicLinkLoginForm, MagicLinkSignUpForm, OTPLoginForm, OTPSignUpForm } from "@feel-good/features/auth/components/forms";
 
 // Hooks
-import { useMagicLinkRequest, createUseSession } from "@feel-good/features/auth/hooks";
+import { useMagicLinkRequest, useOTPAuth, createUseSession } from "@feel-good/features/auth/hooks";
 
 // Blocks (drop-in page sections)
 import { LoginBlock, SignUpBlock } from "@feel-good/features/auth/blocks";

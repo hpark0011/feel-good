@@ -93,11 +93,11 @@ import { Dialog } from "@feel-good/ui/primitives/dialog";
 Shared feature components (auth, dock).
 
 ```typescript
-// Auth forms (magic-link only)
-import { MagicLinkLoginForm, MagicLinkSignUpForm } from "@feel-good/features/auth/components/forms";
+// Auth forms
+import { MagicLinkLoginForm, MagicLinkSignUpForm, OTPLoginForm, OTPSignUpForm } from "@feel-good/features/auth/components/forms";
 
 // Auth hooks
-import { useMagicLinkRequest, createUseSession } from "@feel-good/features/auth/hooks";
+import { useMagicLinkRequest, useOTPAuth, createUseSession } from "@feel-good/features/auth/hooks";
 
 // Auth blocks (drop-in page sections)
 import { LoginBlock, SignUpBlock } from "@feel-good/features/auth/blocks";
