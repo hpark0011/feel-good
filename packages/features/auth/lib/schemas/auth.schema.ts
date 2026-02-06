@@ -15,11 +15,3 @@ export const MagicLinkSchema = z.object({
 });
 
 export type MagicLinkData = z.infer<typeof MagicLinkSchema>;
-
-export const otpSchema = z.object({
-  email: emailSchema,
-  otp: z.string().length(6, "Enter all 6 digits"),
-});
-
-export type OTPSchema = z.infer<typeof otpSchema>;
-export type OTPData = z.infer<typeof otpSchema>;

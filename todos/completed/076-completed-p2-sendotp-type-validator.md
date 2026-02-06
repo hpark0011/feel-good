@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "076"
 tags: [auth, security, convex, code-review]
@@ -31,11 +31,12 @@ type: v.union(
 
 ## Acceptance Criteria
 
-- [ ] `type` parameter uses a union of literal validators
-- [ ] OTP emails still send correctly for sign-in and sign-up flows
+- [x] `type` parameter uses a union of literal validators
+- [x] OTP emails still send correctly for sign-in and sign-up flows
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-06 | Created from PR #104 multi-agent review (security, typescript) | Convex validators should be as narrow as possible per guidelines |
+| 2026-02-06 | Completed: narrowed type to union of literals | Defense-in-depth for internalAction |

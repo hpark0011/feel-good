@@ -155,7 +155,11 @@ export const OTPView = memo(function OTPView({
             <FormError error={error} id={formErrorId} />
 
             <Field>
+              <FieldLabel htmlFor={otpInputId} className="sr-only">
+                Verification code
+              </FieldLabel>
               <InputOTP
+                id={otpInputId}
                 maxLength={6}
                 value={otp}
                 onChange={onOtpChange}

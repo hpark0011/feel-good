@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "080"
 tags: [auth, otp, accessibility, cleanup, code-review]
@@ -24,11 +24,12 @@ Apply `id={otpInputId}` to the `InputOTP` component, or remove the prop if it's 
 
 ## Acceptance Criteria
 
-- [ ] `otpInputId` is either applied to `InputOTP` or removed from the interface
-- [ ] If applied, a `FieldLabel` with matching `htmlFor` is added for accessibility
+- [x] `otpInputId` is either applied to `InputOTP` or removed from the interface
+- [x] If applied, a `FieldLabel` with matching `htmlFor` is added for accessibility
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-06 | Created from PR #104 multi-agent review (typescript reviewer) | Props should either be used or not declared |
+| 2026-02-06 | Completed: applied id to InputOTP + added sr-only FieldLabel | Accessibility: label association via htmlFor |

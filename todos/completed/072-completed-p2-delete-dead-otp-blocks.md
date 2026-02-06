@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "072"
 tags: [auth, otp, dead-code, cleanup, code-review]
@@ -19,8 +19,8 @@ dependencies: []
 
 ## Acceptance Criteria
 
-- [ ] Both files are deleted
-- [ ] No remaining imports or references to OTPLoginBlock/OTPSignUpBlock
+- [x] Both files are deleted
+- [x] No remaining imports or references to OTPLoginBlock/OTPSignUpBlock
 - [ ] `pnpm build` passes
 
 ## Work Log
@@ -28,3 +28,4 @@ dependencies: []
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-06 | Created from PR #104 multi-agent review (all 4+ agents flagged) | Files survived consolidation; barrel exports correctly exclude them |
+| 2026-02-06 | Completed: deleted both dead files, verified no imports | Files survived consolidation; safe to remove |

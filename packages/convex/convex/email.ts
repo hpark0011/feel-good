@@ -75,6 +75,7 @@ export const sendMagicLink = internalAction({
     to: v.string(),
     link: v.string(),
   },
+  returns: v.null(),
   handler: async (ctx, { to, link }) => {
     await resend.sendEmail(ctx, {
       from: EMAIL_FROM,
@@ -90,6 +91,7 @@ export const sendMagicLink = internalAction({
           "If you didn't request this email, you can safely ignore it.",
       }),
     });
+    return null;
   },
 });
 
@@ -98,6 +100,7 @@ export const sendVerificationEmail = internalAction({
     to: v.string(),
     link: v.string(),
   },
+  returns: v.null(),
   handler: async (ctx, { to, link }) => {
     await resend.sendEmail(ctx, {
       from: EMAIL_FROM,
@@ -113,6 +116,7 @@ export const sendVerificationEmail = internalAction({
           "If you didn't create an account, you can safely ignore this email.",
       }),
     });
+    return null;
   },
 });
 
@@ -120,8 +124,14 @@ export const sendOTP = internalAction({
   args: {
     to: v.string(),
     otp: v.string(),
-    type: v.string(),
+    type: v.union(
+      v.literal("sign-in"),
+      v.literal("sign-up"),
+      v.literal("email-verification"),
+      v.literal("forget-password"),
+    ),
   },
+  returns: v.null(),
   handler: async (ctx, { to, otp, type }) => {
     await resend.sendEmail(ctx, {
       from: EMAIL_FROM,
@@ -138,6 +148,7 @@ export const sendOTP = internalAction({
           "This code will expire in 5 minutes. If you didn't request this code, you can safely ignore this email.",
       }),
     });
+    return null;
   },
 });
 

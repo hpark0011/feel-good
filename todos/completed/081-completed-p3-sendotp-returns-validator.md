@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "081"
 tags: [convex, code-review]
@@ -24,10 +24,11 @@ Add `returns: v.null()` to all three email actions.
 
 ## Acceptance Criteria
 
-- [ ] All email actions have `returns: v.null()`
+- [x] All email actions have `returns: v.null()`
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-06 | Created from PR #104 multi-agent review (typescript reviewer) | Convex guidelines require returns validators on all functions |
+| 2026-02-06 | Completed: added returns: v.null() to all 3 actions | Convex guidelines require returns validators |

@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "067"
 tags: [auth, otp, error-handling, code-review]
@@ -48,3 +48,4 @@ Error mapping should handle upstream Better Auth codes so OTP flows display corr
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-06 | Created from PR #104 code review finding | Better Auth code constants must be mapped verbatim to avoid silent fallback to `UNKNOWN` |
+| 2026-02-06 | Completed: added INVALID_OTP and TOO_MANY_ATTEMPTS mappings | Keep old keys for backward compat |
