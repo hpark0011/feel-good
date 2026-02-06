@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "077"
 tags: [auth, otp, architecture, code-review]
@@ -17,33 +17,18 @@ Additionally, if `verifyOTP` succeeds after the component unmounts (user navigat
 ## Affected Files
 
 - `packages/features/auth/hooks/use-otp-auth.ts` (lines 110-115)
-
-## Proposed Solutions
-
-### Option A: Delegate redirect to onSuccess callback (Recommended)
-
-```typescript
-onSuccess: () => {
-  setStatus("success");
-  onSuccess?.(); // let consumer handle redirect
-},
-```
-
-The Mirror app's page component or a wrapper can handle `window.location.href` if needed.
-
-**Pros:** Matches magic-link pattern, respects consumer autonomy
-**Cons:** Mirror app needs to handle redirect in its onSuccess callback
-**Effort:** Small
-**Risk:** Low
+- `packages/features/auth/components/forms/otp-login-form.tsx`
+- `packages/features/auth/components/forms/otp-sign-up-form.tsx`
 
 ## Acceptance Criteria
 
-- [ ] `useOTPAuth` does not call `window.location.href`
-- [ ] Consuming app (Mirror) handles redirect in its `onSuccess` callback
-- [ ] Post-unmount verify no longer causes unexpected navigation
+- [x] `useOTPAuth` does not call `window.location.href`
+- [x] Consuming app (Mirror) handles redirect in its `onSuccess` callback
+- [x] Post-unmount verify no longer causes unexpected navigation
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-06 | Created from PR #104 multi-agent review (architecture, patterns, races) | Shared hooks should not own browser navigation |
+| 2026-02-06 | Completed: removed `window.location.href`, `getSafeRedirectUrl` import, and `redirectTo` from hook options. Moved redirect logic to form components (`OTPLoginForm`, `OTPSignUpForm`) via `handleSuccess` wrapper that calls `onSuccess` then redirects. | Redirect responsibility belongs in the form/block layer, not the headless hook. The form has access to `redirectTo` and can wrap `onSuccess` cleanly. |

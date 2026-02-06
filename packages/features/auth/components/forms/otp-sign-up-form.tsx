@@ -1,9 +1,11 @@
 "use client";
 
+import { useCallback } from "react";
 import { useOTPAuth } from "../../hooks/use-otp-auth";
 import { OTPSignUpView } from "../../views";
 import type { AuthClient } from "../../client";
 import type { AuthError } from "../../types";
+import { getSafeRedirectUrl } from "../../utils/validate-redirect";
 
 export interface OTPSignUpFormProps {
   authClient: AuthClient;
@@ -16,8 +18,17 @@ export interface OTPSignUpFormProps {
 export function OTPSignUpForm({
   authClient,
   disabled = false,
-  ...options
+  redirectTo,
+  onSuccess,
+  onError,
 }: OTPSignUpFormProps) {
+  const handleSuccess = useCallback(() => {
+    onSuccess?.();
+    if (redirectTo) {
+      window.location.href = getSafeRedirectUrl(redirectTo, undefined);
+    }
+  }, [onSuccess, redirectTo]);
+
   const {
     email,
     setEmail,
@@ -31,7 +42,11 @@ export function OTPSignUpForm({
     resendOTP,
     resendCooldown,
     goBack,
-  } = useOTPAuth(authClient, { ...options, type: "email-verification" });
+  } = useOTPAuth(authClient, {
+    onSuccess: handleSuccess,
+    onError,
+    type: "email-verification",
+  });
 
   return (
     <OTPSignUpView

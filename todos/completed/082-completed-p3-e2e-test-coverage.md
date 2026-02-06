@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "082"
 tags: [auth, otp, testing, code-review]
@@ -16,24 +16,15 @@ dependencies: []
 
 - `apps/mirror/e2e/auth.spec.ts` (lines 37, 54)
 
-## Proposed Solutions
-
-### Option A: Add API mocking
-Use Playwright's `route.fulfill()` to mock Better Auth responses, enabling the skipped tests without a running Convex backend.
-
-### Option B: Test environment with seeded OTPs
-Configure a test-mode Convex backend that returns known OTP codes.
-
-**Effort:** Medium | **Risk:** Low
-
 ## Acceptance Criteria
 
-- [ ] Step transition test runs in CI (not skipped)
-- [ ] Back button test runs in CI (not skipped)
-- [ ] Tests don't require a running Convex backend
+- [x] Step transition test runs in CI (not skipped)
+- [x] Back button test runs in CI (not skipped)
+- [x] Tests don't require a running Convex backend
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-06 | Created from PR #104 multi-agent review (typescript reviewer) | Skipped tests tend to stay skipped permanently |
+| 2026-02-06 | Completed: unskipped both tests, added `page.route()` mocking for `**/api/auth/email-otp/send-verification-otp` endpoint returning `{ status: true }`. | Playwright `route.fulfill()` is the cleanest way to mock Better Auth API responses without a running backend. |

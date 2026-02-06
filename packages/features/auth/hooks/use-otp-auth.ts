@@ -8,10 +8,8 @@ import {
   type AuthError,
   type OTPStep,
 } from "../types";
-import { getSafeRedirectUrl } from "../utils/validate-redirect";
 
 export interface UseOTPAuthOptions {
-  redirectTo?: string;
   type?: "sign-in" | "email-verification" | "forget-password";
   onSuccess?: () => void;
   onError?: (error: AuthError) => void;
@@ -44,7 +42,7 @@ export function useOTPAuth(
   authClient: AuthClient,
   options: UseOTPAuthOptions = {}
 ): UseOTPAuthReturn {
-  const { redirectTo, type = "sign-in", onSuccess, onError } = options;
+  const { type = "sign-in", onSuccess, onError } = options;
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [step, setStep] = useState<OTPStep>("email");
@@ -53,6 +51,8 @@ export function useOTPAuth(
   const [resendCooldown, setResendCooldown] = useState(0);
   const statusRef = useRef(status);
   statusRef.current = status;
+  const resendCooldownRef = useRef(resendCooldown);
+  resendCooldownRef.current = resendCooldown;
 
   useEffect(() => {
     if (resendCooldown <= 0) return;
@@ -66,7 +66,23 @@ export function useOTPAuth(
       });
     }, 1000);
     return () => clearInterval(interval);
-  }, [resendCooldown]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resendCooldown > 0]);
+
+  const handleAuthError = useCallback(
+    (ctx: { error: Record<string, unknown> }) => {
+      const code =
+        typeof ctx.error.code === "string" ? ctx.error.code : "UNKNOWN";
+      const authError: AuthError = {
+        code,
+        message: getAuthErrorMessage(code),
+      };
+      setStatus("error");
+      setError(authError);
+      onError?.(authError);
+    },
+    [onError]
+  );
 
   const requestOTP = useCallback(async () => {
     if (statusRef.current === "loading") return;
@@ -83,18 +99,10 @@ export function useOTPAuth(
           setStep("verify");
           setResendCooldown(60);
         },
-        onError: (ctx) => {
-          const authError: AuthError = {
-            code: ctx.error.code ?? "UNKNOWN",
-            message: getAuthErrorMessage(ctx.error.code ?? "UNKNOWN"),
-          };
-          setStatus("error");
-          setError(authError);
-          onError?.(authError);
-        },
+        onError: handleAuthError,
       }
     );
-  }, [email, type, authClient, onError]);
+  }, [email, type, authClient, handleAuthError]);
 
   const verifyOTP = useCallback(async () => {
     if (statusRef.current === "loading") return;
@@ -103,60 +111,41 @@ export function useOTPAuth(
     setError(null);
     setStatus("loading");
 
-    const callbackURL = redirectTo
-      ? getSafeRedirectUrl(redirectTo, undefined)
-      : undefined;
-
     await authClient.signIn.emailOtp(
       { email, otp },
       {
         onSuccess: () => {
           setStatus("success");
-          if (callbackURL) {
-            window.location.href = callbackURL;
-          }
           onSuccess?.();
         },
-        onError: (ctx) => {
-          const authError: AuthError = {
-            code: ctx.error.code ?? "UNKNOWN",
-            message: getAuthErrorMessage(ctx.error.code ?? "UNKNOWN"),
-          };
-          setStatus("error");
-          setError(authError);
-          onError?.(authError);
-        },
+        onError: handleAuthError,
       }
     );
-  }, [email, otp, authClient, redirectTo, onSuccess, onError]);
+  }, [email, otp, authClient, onSuccess, handleAuthError]);
 
   const resendOTP = useCallback(async () => {
-    if (statusRef.current === "loading" || resendCooldown > 0) return;
+    if (statusRef.current === "loading" || resendCooldownRef.current > 0)
+      return;
     statusRef.current = "loading";
 
     setError(null);
     setStatus("loading");
     setOtp("");
-    setResendCooldown(60);
 
     await authClient.emailOtp.sendVerificationOtp(
       { email, type },
       {
         onSuccess: () => {
           setStatus("idle");
+          setResendCooldown(60);
         },
         onError: (ctx) => {
-          const authError: AuthError = {
-            code: ctx.error.code ?? "UNKNOWN",
-            message: getAuthErrorMessage(ctx.error.code ?? "UNKNOWN"),
-          };
-          setStatus("error");
-          setError(authError);
-          onError?.(authError);
+          handleAuthError(ctx);
+          setResendCooldown(0);
         },
       }
     );
-  }, [email, type, authClient, onError, resendCooldown]);
+  }, [email, type, authClient, handleAuthError]);
 
   const goBack = useCallback(() => {
     setStep("email");

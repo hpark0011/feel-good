@@ -33,25 +33,40 @@ test.describe("Authentication", () => {
       await expect(page.getByRole("button", { name: /google/i })).toBeVisible();
     });
 
-    // Skip: Requires running Convex backend with email sending
-    test.skip("transitions to OTP verification step after email submission", async ({
+    test("transitions to OTP verification step after email submission", async ({
       page,
     }) => {
+      // Mock the Better Auth send-verification-otp endpoint
+      await page.route("**/api/auth/email-otp/send-verification-otp", (route) =>
+        route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({ status: true }),
+        })
+      );
+
       await page.goto("/sign-in");
 
       // Fill and submit email
       await page.getByTestId("auth.otp-login.email-input").fill("test@example.com");
       await page.getByTestId("auth.otp-login.submit-btn").click();
 
-      // Wait for transition to verify step (may take time for API call)
-      // Note: In real tests, you'd mock the API response
+      // Wait for transition to verify step
       await expect(page.getByTestId("auth.otp-login.otp-input")).toBeVisible({
-        timeout: 10000,
+        timeout: 5000,
       });
     });
 
-    // Skip: Requires running Convex backend with email sending
-    test.skip("back button returns to email step", async ({ page }) => {
+    test("back button returns to email step", async ({ page }) => {
+      // Mock the Better Auth send-verification-otp endpoint
+      await page.route("**/api/auth/email-otp/send-verification-otp", (route) =>
+        route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({ status: true }),
+        })
+      );
+
       await page.goto("/sign-in");
 
       // Fill and submit email
@@ -60,7 +75,7 @@ test.describe("Authentication", () => {
 
       // Wait for verify step
       await expect(page.getByTestId("auth.otp-login.otp-input")).toBeVisible({
-        timeout: 10000,
+        timeout: 5000,
       });
 
       // Click back button
