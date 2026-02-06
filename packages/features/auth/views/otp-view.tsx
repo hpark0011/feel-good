@@ -14,8 +14,8 @@ import { Input } from "@feel-good/ui/primitives/input";
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSlot,
   InputOTPSeparator,
+  InputOTPSlot,
 } from "@feel-good/ui/primitives/input-otp";
 import type { AuthError, AuthStatus, OTPStep } from "../types";
 import { FormError } from "../components/shared/form-error";
@@ -151,7 +151,7 @@ export const OTPView = memo(function OTPView({
           }}
           aria-describedby={error ? formErrorId : undefined}
         >
-          <FieldGroup>
+          <FieldGroup className="mx-auto">
             <FormError error={error} id={formErrorId} />
 
             <Field>
@@ -200,7 +200,9 @@ export const OTPView = memo(function OTPView({
                 className="text-sm"
                 data-testid={`${testIdPrefix}.resend-btn`}
               >
-                {resendCooldown > 0 ? `Resend code (${resendCooldown}s)` : "Resend code"}
+                {resendCooldown > 0
+                  ? `Resend code (${resendCooldown}s)`
+                  : "Resend code"}
               </Button>
             </Field>
 
