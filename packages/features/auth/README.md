@@ -59,7 +59,8 @@ function CustomLoginForm() {
 
 Available hooks:
 - `useMagicLinkRequest` — Request magic link email
-- `useAuthClient` — Access auth client from context
+- `useOTPAuth` — OTP send/verify flow
+- `createUseSession` — Session management factory
 
 ## Naming Conventions
 

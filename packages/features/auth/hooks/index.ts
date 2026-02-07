@@ -11,8 +11,5 @@ export {
   type UseOTPAuthReturn,
 } from "./use-otp-auth";
 
-// Context hook
-export { useAuthClient } from "../providers";
-
 // Session hook
 export { createUseSession } from "./use-session";

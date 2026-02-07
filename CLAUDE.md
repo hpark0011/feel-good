@@ -54,7 +54,6 @@ Each app has its own `CLAUDE.md` with app-specific documentation.
 | Forms | `@feel-good/features/auth/components/forms` | Complete forms with logic |
 | Views | `@feel-good/features/auth/views` | Pure UI components |
 | Hooks | `@feel-good/features/auth/hooks` | Headless auth logic |
-| Providers | `@feel-good/features/auth/providers` | Context providers |
 
 ## TypeScript Configs
 

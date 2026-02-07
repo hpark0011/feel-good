@@ -12,7 +12,6 @@
     "./auth/views": "./auth/views/index.ts",
     "./auth/components/shared": "./auth/components/shared/index.ts",
     "./auth/hooks": "./auth/hooks/index.ts",
-    "./auth/providers": "./auth/providers/index.ts",
     "./auth/client": "./auth/client.ts",
     "./auth/server": "./auth/server.ts",
     "./auth/types": "./auth/types.ts",
