@@ -19,18 +19,18 @@ export function ArticleListItem({ article }: { article: Article }) {
 
   return (
     <TableRow
-      className="cursor-pointer"
+      className="cursor-pointer border-b-0"
       tabIndex={0}
       onClick={() => router.push(href)}
       onKeyDown={(e) => {
         if (e.key === "Enter") router.push(href);
       }}
     >
-      <TableCell className="font-medium truncate max-w-0">
+      <TableCell className="font-medium truncate max-w-0 py-0 text-lg">
         {article.title}
       </TableCell>
-      <TableCell>{article.category}</TableCell>
-      <TableCell className="text-right">
+      <TableCell className="py-0 font-medium">{article.category}</TableCell>
+      <TableCell className="text-right py-0 font-medium">
         <time dateTime={article.published_at}>
           {formatDate(article.published_at)}
         </time>

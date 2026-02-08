@@ -21,13 +21,13 @@ export function ArticleListView({
   onLoadMore,
 }: ArticleListViewProps) {
   return (
-    <section className="w-full max-w-2xl mx-auto mt-16">
+    <section className="w-full max-w-2xl mx-auto mt-0">
       <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-3/5">Title</TableHead>
-            <TableHead className="w-1/5">Category</TableHead>
-            <TableHead className="text-right w-1/5">Published</TableHead>
+        <TableHeader className="[&_tr]:border-b-0">
+          <TableRow className="border-b-0">
+            <TableHead className="w-3/5 text-muted-foreground h-8">Title</TableHead>
+            <TableHead className="w-1/5 text-muted-foreground h-8">Category</TableHead>
+            <TableHead className="text-right w-1/5 text-muted-foreground h-8">Published</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
