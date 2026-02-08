@@ -135,17 +135,17 @@ export function useArticleList(allArticles: Article[], pageSize = 10) {
 
 ## Acceptance Criteria
 
-- [ ] `Article` type defined with all 6 properties (title, cover_image, created_at, published_at, category, body)
-- [ ] 30 mock articles with realistic content themed around Rick Rubin's interests
-- [ ] Article list renders below DashboardView on the dashboard page
-- [ ] Only 10 articles visible on initial load
-- [ ] Scrolling to bottom loads next 10 articles automatically
-- [ ] After 30 articles loaded, no more loading triggers
-- [ ] Each article item shows title, published_at (absolute: "Feb 8, 2025"), and category
-- [ ] Clicking an article navigates to `/dashboard/articles/[slug]`
-- [ ] Placeholder detail page exists at `[slug]/page.tsx`
-- [ ] Clear separation: hook (state/logic), view (UI), components (reusable pieces)
-- [ ] `pnpm build --filter=@feel-good/mirror` passes
+- [x] `Article` type defined with all 6 properties (title, cover_image, created_at, published_at, category, body)
+- [x] 30 mock articles with realistic content themed around Rick Rubin's interests
+- [x] Article list renders below DashboardView on the dashboard page
+- [x] Only 10 articles visible on initial load
+- [x] Scrolling to bottom loads next 10 articles automatically
+- [x] After 30 articles loaded, no more loading triggers
+- [x] Each article item shows title, published_at (absolute: "Feb 8, 2025"), and category
+- [x] Clicking an article navigates to `/dashboard/articles/[slug]`
+- [x] Placeholder detail page exists at `[slug]/page.tsx`
+- [x] Clear separation: hook (state/logic), view (UI), components (reusable pieces)
+- [x] `pnpm build --filter=@feel-good/mirror` passes
 
 ## Dependencies & Risks
 

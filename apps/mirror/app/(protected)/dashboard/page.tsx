@@ -2,9 +2,13 @@
 
 import { useSession } from "@/lib/auth-client";
 import { DashboardView } from "./_view/dashboard-view";
+import { MOCK_ARTICLES } from "./articles/_data/mock-articles";
+import { useArticleList } from "./articles/_hooks/use-article-list";
+import { ArticleListView } from "./articles/_view/article-list-view";
 
 export default function DashboardPage() {
   const { isLoading } = useSession();
+  const { articles, hasMore, loadMore } = useArticleList(MOCK_ARTICLES);
 
   if (isLoading) {
     return (
@@ -16,8 +20,13 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen">
-      <main className="mx-auto max-w-7xl px-4 h-full min-h-screen flex items-center justify-center ">
+      <main className="mx-auto max-w-7xl px-4 py-8">
         <DashboardView />
+        <ArticleListView
+          articles={articles}
+          hasMore={hasMore}
+          onLoadMore={loadMore}
+        />
       </main>
     </div>
   );
