@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/auth-client";
 import { Button } from "@feel-good/ui/primitives/button";
+import { DashboardView } from "./_view/dashboard-view";
 
 export default function DashboardPage() {
   const { user, isLoading, signOut } = useSession();
@@ -25,7 +26,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen">
       <header className="">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-end px-4">
           <div className="flex items-center gap-4">
             <span className="text-sm text-zinc-600 dark:text-zinc-400">
               {user?.email}
@@ -37,7 +38,7 @@ export default function DashboardPage() {
         </div>
       </header>
       <main className="mx-auto max-w-7xl px-4 py-8">
-        Mirro Dashboard
+        <DashboardView />
       </main>
     </div>
   );
