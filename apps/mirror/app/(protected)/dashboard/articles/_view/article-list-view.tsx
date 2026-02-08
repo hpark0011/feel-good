@@ -24,7 +24,7 @@ export function ArticleListView({
     <section className="w-full mx-auto mt-0 pr-4">
       <Table>
         <TableHeader className="[&_tr]:border-b-0">
-          <TableRow className="border-b-0">
+          <TableRow className="border-b-0 hover:bg-transparent">
             <TableHead className="w-3/5 text-muted-foreground h-8">Title</TableHead>
             <TableHead className="w-1/5 text-muted-foreground h-8">Category</TableHead>
             <TableHead className="text-right w-1/5 text-muted-foreground h-8">Published</TableHead>
