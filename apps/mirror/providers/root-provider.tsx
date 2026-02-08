@@ -14,7 +14,6 @@ export function RootProvider({ children }: { children: React.ReactNode }) {
       attribute="class"
       defaultTheme="system"
       enableSystem
-      disableTransitionOnChange
     >
       <ConvexProvider>
         <SessionProvider>{children}</SessionProvider>

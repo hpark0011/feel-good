@@ -16,7 +16,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen">
-      <main className="mx-auto max-w-7xl px-4 py-8">
+      <main className="mx-auto max-w-7xl px-4 h-full min-h-screen flex items-center justify-center ">
         <DashboardView />
       </main>
     </div>

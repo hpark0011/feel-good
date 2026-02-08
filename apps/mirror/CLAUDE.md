@@ -1,6 +1,6 @@
 # Mirror
 
-Authentication dashboard with Convex real-time backend and Better Auth.
+Mirror is an interactive blogging platform that turns blog articles into a conversational digital clone of the author that readers can chat with.
 
 ## Commands
 
@@ -18,12 +18,12 @@ pnpm dev --filter=@feel-good/mirror
 
 ## Tech Stack
 
-| Category  | Technology                                      |
-| --------- | ----------------------------------------------- |
-| Framework | Next.js 15 (App Router), React 19, TypeScript   |
-| Backend   | Convex (real-time)                              |
-| Auth      | Better Auth with @convex-dev/better-auth        |
-| Styling   | Tailwind CSS, @feel-good/ui                     |
+| Category  | Technology                                    |
+| --------- | --------------------------------------------- |
+| Framework | Next.js 15 (App Router), React 19, TypeScript |
+| Backend   | Convex (real-time)                            |
+| Auth      | Better Auth with @convex-dev/better-auth      |
+| Styling   | Tailwind CSS, @feel-good/ui                   |
 
 ## Dependencies
 
@@ -44,10 +44,19 @@ Authentication is handled by the shared `@feel-good/features` package (OTP and m
 
 ```typescript
 // Forms
-import { MagicLinkLoginForm, MagicLinkSignUpForm, OTPLoginForm, OTPSignUpForm } from "@feel-good/features/auth/components/forms";
+import {
+  MagicLinkLoginForm,
+  MagicLinkSignUpForm,
+  OTPLoginForm,
+  OTPSignUpForm,
+} from "@feel-good/features/auth/components/forms";
 
 // Hooks
-import { useMagicLinkRequest, useOTPAuth, createUseSession } from "@feel-good/features/auth/hooks";
+import {
+  useMagicLinkRequest,
+  useOTPAuth,
+  createUseSession,
+} from "@feel-good/features/auth/hooks";
 
 // Blocks (drop-in page sections)
 import { LoginBlock, SignUpBlock } from "@feel-good/features/auth/blocks";
