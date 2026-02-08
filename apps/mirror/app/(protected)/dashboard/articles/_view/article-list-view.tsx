@@ -30,7 +30,7 @@ export function ArticleListView({
             <TableHead className="text-right w-1/5 text-muted-foreground h-8">Published</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="group/list">
           {articles.map((article) => (
             <ArticleListItem key={article.slug} article={article} />
           ))}

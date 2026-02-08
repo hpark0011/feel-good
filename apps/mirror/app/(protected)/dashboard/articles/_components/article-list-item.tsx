@@ -19,7 +19,7 @@ export function ArticleListItem({ article }: { article: Article }) {
 
   return (
     <TableRow
-      className="cursor-pointer border-b-0"
+      className="cursor-pointer border-b-0 group-hover/list:text-muted-foreground hover:text-secondary-foreground hover:bg-transparent"
       tabIndex={0}
       onClick={() => router.push(href)}
       onKeyDown={(e) => {
