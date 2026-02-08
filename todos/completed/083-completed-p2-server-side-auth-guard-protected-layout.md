@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "083"
 tags: [code-review, security, auth, mirror]
@@ -57,15 +57,16 @@ Option A -- add server-side auth validation.
 
 ## Acceptance Criteria
 
-- [ ] Protected layout validates session server-side
-- [ ] Expired/revoked sessions redirect to sign-in
-- [ ] `isAuthenticated()` is called before rendering children
+- [x] Protected layout validates session server-side
+- [x] Expired/revoked sessions redirect to sign-in
+- [x] `isAuthenticated()` is called before rendering children
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-08 | Created from PR #105 code review | Middleware cookie checks are insufficient for session validity |
+| 2026-02-08 | Completed: added `isAuthenticated()` check in protected layout and server-side `redirect("/sign-in")` guard before rendering protected UI. | Middleware remains useful for fast-path redirects, but server validation is required for expired/revoked-session defense-in-depth. |
 
 ## Resources
 

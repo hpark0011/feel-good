@@ -19,15 +19,15 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      <main className="mx-auto max-w-7xl px-4 py-8">
-        <DashboardView />
+    <main className="flex h-screen gap-4">
+      <DashboardView />
+      <div className="flex-1 min-w-0 overflow-y-auto py-12 pb-[200px]">
         <ArticleListView
           articles={articles}
           hasMore={hasMore}
           onLoadMore={loadMore}
         />
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

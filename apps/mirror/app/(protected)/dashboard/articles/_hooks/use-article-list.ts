@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import type { Article } from "../_data/mock-articles";
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 30;
 
 export function useArticleList(allArticles: Article[]) {
   const [page, setPage] = useState(1);

@@ -20,3 +20,20 @@
   - `pnpm --filter @feel-good/ui-factory run dev:turbo:reset-cache --help` (cache-reset script resolves).
   - `pnpm --filter @feel-good/ui-factory build` (fails in sandbox due blocked network request to `fonts.googleapis.com` for Geist Mono).
 - Limitation: this sandbox does not allow binding to local ports (`listen EPERM`), so an interactive browser dev session could not be run here.
+
+# 2026-02-08 Task 083 Server-Side Auth Guard
+
+- [x] Review task spec and auth implementation touch points
+- [x] Add server-side auth guard in protected layout
+- [x] Verify with mirror lint/type checks
+- [x] Update task doc status, acceptance criteria, and work log
+- [x] Add review notes
+
+## Review
+
+- Updated `apps/mirror/app/(protected)/layout.tsx` to run `isAuthenticated()` server-side and `redirect("/sign-in")` before rendering protected children.
+- Updated task tracker file and moved it to `todos/completed/083-completed-p2-server-side-auth-guard-protected-layout.md` with acceptance criteria checked and completion log added.
+- Verification run:
+  - `pnpm --filter @feel-good/mirror lint` (passes).
+  - `pnpm --filter @feel-good/mirror exec tsc --noEmit` (passes).
+  - `pnpm --filter @feel-good/mirror build` (fails in sandbox due blocked Google Fonts fetch for Geist Mono).

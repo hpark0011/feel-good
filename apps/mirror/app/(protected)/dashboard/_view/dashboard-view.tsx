@@ -2,7 +2,7 @@ import { ProfileImage } from "@/app/(protected)/dashboard/_components/profile-im
 
 export function DashboardView() {
   return (
-    <div className="w-full flex flex-col items-center pb-20">
+    <div className="flex-1 flex flex-col items-center justify-center border-r border-border-subtle pb-[80px]">
       {/* Profile Name */}
       <div className="text-3xl font-medium text-center">
         Rick Rubin

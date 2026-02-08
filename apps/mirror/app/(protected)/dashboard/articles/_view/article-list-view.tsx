@@ -21,7 +21,7 @@ export function ArticleListView({
   onLoadMore,
 }: ArticleListViewProps) {
   return (
-    <section className="w-full max-w-2xl mx-auto mt-0">
+    <section className="w-full mx-auto mt-0 pr-4">
       <Table>
         <TableHeader className="[&_tr]:border-b-0">
           <TableRow className="border-b-0">

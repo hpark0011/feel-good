@@ -23,14 +23,8 @@ Todo #052 established `_views/` (plural) as the directory naming convention acro
 
 ## Proposed Solutions
 
-### Option A: Rename to `_views/` (plural) (Recommended)
-- Rename all 3 mirror `_view/` directories to `_views/`
-- **Pros:** Matches established convention, consistent across all apps
-- **Cons:** Minor rename churn
-- **Effort:** Small
-- **Risk:** Low
+### Option A: Standardize on `_view/` (singular) everywhere
 
-### Option B: Standardize on `_view/` (singular) everywhere
 - Update greyboard and ui-factory to use `_view/`
 - **Pros:** Grammatically matches "single view per directory"
 - **Cons:** Reverses an established decision (todo #052), larger scope
@@ -39,26 +33,24 @@ Todo #052 established `_views/` (plural) as the directory naming convention acro
 
 ## Recommended Action
 
-Option A -- align with the existing `_views/` convention.
+Option A -- Standardize on `_view/` (singular) everywhere
 
 ## Technical Details
 
 - **Affected files:**
-  - `apps/mirror/app/_view/` -> `apps/mirror/app/_views/`
-  - `apps/mirror/app/(protected)/dashboard/_view/` -> `_views/`
-  - `apps/mirror/app/(protected)/dashboard/articles/_view/` -> `_views/`
-  - Update import in `apps/mirror/app/page.tsx`
+- Inspect the codebase, change everything to view
+- After changing the folder name, test if there are any next js import errors.
 
 ## Acceptance Criteria
 
-- [ ] All mirror `_view/` directories renamed to `_views/`
+- [ ] All `_views/` directories renamed to `_view/`
 - [ ] All imports updated accordingly
 - [ ] Build passes
 
 ## Work Log
 
-| Date | Action | Learnings |
-|------|--------|-----------|
+| Date       | Action                           | Learnings                       |
+| ---------- | -------------------------------- | ------------------------------- |
 | 2026-02-08 | Created from PR #105 code review | Convention was set in todo #052 |
 
 ## Resources
