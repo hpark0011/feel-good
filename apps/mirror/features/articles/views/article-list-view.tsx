@@ -25,9 +25,9 @@ export function ArticleListView({
   scrollRoot,
 }: ArticleListViewProps) {
   return (
-    <section className="w-full mx-auto mt-0 **:data-[slot=table-container]:overflow-visible">
+    <section className="w-full mx-auto **:data-[slot=table-container]:overflow-visible">
       <Table>
-        <TableHeader className="[&_tr]:border-b-0 bg-background">
+        <TableHeader className="[&_tr]:border-b-0">
           <TableRow className="border-b-0 hover:bg-transparent">
             <TableHead className="w-3/5 text-muted-foreground h-8">
               Title

@@ -38,8 +38,7 @@ export function DashboardView(
       <div className="relative z-20 h-screen flex w-1/2 flex-col justify-center items-center border-r border-border-subtle">
         <ProfileInfoView profile={profile} />
       </div>
-      <div className="relative flex-1 min-w-0 overflow-y-auto px-0 py-12 pb-[80px]">
-        <div className="sticky top-0 z-10 left-0 w-full h-3 bg-linear-to-b from-background to-transparent" />
+      <div className="relative flex-1 min-w-0 overflow-y-auto px-0 py-10 pb-[64px]">
         <DashboardHeader />
         <div className="px-4">
           <ScrollableArticleList articles={articles} />
