@@ -459,6 +459,9 @@ importers:
       '@feel-good/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@feel-good/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@radix-ui/colors':
         specifier: 'catalog:'
         version: 3.0.0
@@ -642,6 +645,9 @@ importers:
       next:
         specifier: ^16.0.0
         version: 16.1.4(@babel/core@7.28.6)(@playwright/test@1.58.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      next-themes:
+        specifier: 'catalog:'
+        version: 0.4.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       react:
         specifier: ^19.0.0
         version: 19.2.3

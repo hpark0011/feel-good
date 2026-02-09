@@ -12,7 +12,6 @@
     "./auth/views": "./auth/views/index.ts",
     "./auth/components/shared": "./auth/components/shared/index.ts",
     "./auth/hooks": "./auth/hooks/index.ts",
-    "./auth/providers": "./auth/providers/index.ts",
     "./auth/client": "./auth/client.ts",
     "./auth/server": "./auth/server.ts",
     "./auth/types": "./auth/types.ts",
@@ -23,7 +22,9 @@
     "./dock/hooks": "./dock/hooks/index.ts",
     "./dock/providers": "./dock/providers/index.ts",
     "./dock/lib": "./dock/lib/index.ts",
-    "./dock/lib/types": "./dock/lib/types.ts"
+    "./dock/lib/types": "./dock/lib/types.ts",
+    "./theme": "./theme/index.ts",
+    "./theme/components": "./theme/components/index.ts"
   },
   "peerDependencies": {
     "next": "^16.0.0",
@@ -37,6 +38,7 @@
     "better-auth": "catalog:",
     "convex": "^1.31.7",
     "convex-helpers": "catalog:",
+    "next-themes": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

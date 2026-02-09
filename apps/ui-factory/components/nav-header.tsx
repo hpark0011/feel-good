@@ -1,6 +1,6 @@
 "use client";
 
-import { ThemeToggleButton } from "@/components/theme-toggle-button";
+import { ThemeToggleButton } from "@feel-good/features/theme/components";
 import { SidebarTrigger, useSidebar } from "@feel-good/ui/primitives/sidebar";
 
 export function NavHeader() {

@@ -26,7 +26,6 @@ Authentication components and utilities using Better Auth with Convex.
 | Forms | `@feel-good/features/auth/components/forms` | Complete forms with logic |
 | Views | `@feel-good/features/auth/views` | Pure UI components |
 | Hooks | `@feel-good/features/auth/hooks` | Headless auth logic |
-| Providers | `@feel-good/features/auth/providers` | Context providers |
 
 ### Quick Start (Blocks)
 
@@ -45,7 +44,6 @@ export default function LoginPage() {
 import {
   useMagicLinkRequest,
   useOTPAuth,
-  useAuthClient,
   createUseSession,
 } from "@feel-good/features/auth/hooks";
 ```
@@ -76,7 +74,6 @@ auth/
 │   └── shared/           # Shared pieces
 ├── views/                # Layer 3: Pure UI components
 ├── hooks/                # Layer 4: Headless logic
-├── providers/            # Context providers
 ├── lib/schemas/          # Zod validation schemas
 ├── utils/                # Auth utilities
 ├── client.ts             # Client-side auth setup
