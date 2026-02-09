@@ -24,12 +24,12 @@ export function SheetContainer(
       )}
     >
       {/* Background gradient */}
-      <div className="absolute top-[28px] z-10 left-0 w-full h-3 bg-linear-to-b from-background to-transparent" />
+      <div className="absolute top-[32px] z-10 left-0 w-full h-6 bg-linear-to-b from-background to-transparent" />
 
       {/* Drag handle */}
       <div
         ref={handleRef}
-        className="flex items-center justify-center py-3 cursor-grab active:cursor-grabbing touch-none"
+        className="flex items-center justify-center pt-3 pb-4 cursor-grab active:cursor-grabbing touch-none"
       >
         <div className="h-1 w-10 rounded-full bg-muted-foreground/20" />
       </div>
@@ -37,7 +37,7 @@ export function SheetContainer(
       {/* Scrollable content */}
       <div
         ref={contentRef}
-        className="overflow-y-auto overscroll-y-contain h-[calc(100%-36px)]"
+        className="overflow-y-auto overscroll-y-contain h-[calc(100%-36px)] pt-2"
       >
         {children}
       </div>
