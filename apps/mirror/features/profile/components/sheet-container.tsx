@@ -11,15 +11,19 @@ type SheetContainerProps = {
   className?: string;
 };
 
-export function SheetContainer({ children, ref, handleRef, contentRef, isDragging, className }: SheetContainerProps) {
+export function SheetContainer(
+  { children, ref, handleRef, contentRef, isDragging, className }:
+    SheetContainerProps,
+) {
   return (
     <div
       ref={ref}
       role="region"
       aria-label="Articles"
       className={cn(
-        "absolute inset-x-0 bottom-0 top-0 rounded-t-4xl bg-background border-t border-border-subtle",
-        !isDragging && "transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
+        "absolute inset-x-0 bottom-0 top-[48px] [corner-shape:superellipse(1.1)] rounded-t-4xl bg-background border-t border-border-subtle",
+        !isDragging &&
+          "transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]",
         className,
       )}
     >
@@ -32,7 +36,10 @@ export function SheetContainer({ children, ref, handleRef, contentRef, isDraggin
       </div>
 
       {/* Scrollable content */}
-      <div ref={contentRef} className="overflow-y-auto overscroll-y-contain h-[calc(100%-36px)]">
+      <div
+        ref={contentRef}
+        className="overflow-y-auto overscroll-y-contain h-[calc(100%-36px)]"
+      >
         {children}
       </div>
     </div>

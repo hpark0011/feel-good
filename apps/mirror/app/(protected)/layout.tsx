@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { isAuthenticated } from "@/lib/auth-server";
-import { DashboardHeader } from "./_components/dashboard-header";
+import { DashboardHeader } from "@/app/(protected)/dashboard/_components/dashboard-header";
 
 export default async function ProtectedLayout({
   children,
