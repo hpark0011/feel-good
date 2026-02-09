@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "120"
 tags: [code-review, ui-primitives, functional-correctness]
@@ -57,6 +57,7 @@ Apply `pointer-events: none` to the overlay when at a snap point below `fadeFrom
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-09 | Created from code review of peeking drawer | Vaul hides overlay visually but not interactively for snap-point drawers |
+| 2026-02-09 | Investigated — false positive. Vaul's `DrawerPrimitive.Overlay` returns null for `modal={false}` drawers. No overlay enters the DOM, so no pointer-event interception occurs. No code change needed. | Vaul handles non-modal overlay suppression internally |
 
 ## Resources
 
