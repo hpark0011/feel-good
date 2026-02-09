@@ -35,7 +35,7 @@ export function MobileProfileLayout({
   >(
     PEEK_SNAP_POINT,
   );
-  const [contentElement, setContentElement] = useState<HTMLDivElement | null>(
+  const [scrollRoot, setScrollRoot] = useState<HTMLDivElement | null>(
     null,
   );
   const [drawerContainer, setDrawerContainer] = useState<HTMLDivElement | null>(
@@ -43,7 +43,7 @@ export function MobileProfileLayout({
   );
 
   const resolvedContent = typeof content === "function"
-    ? content(contentElement)
+    ? content(scrollRoot)
     : content;
   const isExpanded = activeSnapPoint === EXPANDED_SNAP_POINT;
 
@@ -73,7 +73,7 @@ export function MobileProfileLayout({
             role="region"
             aria-label="Articles"
             showHandle={false}
-            className="absolute inset-0 data-[vaul-drawer-direction=bottom]:rounded-t-4xl border-border-subtle"
+            className="absolute inset-0 border-border-subtle"
           >
             <DrawerHeader className="sr-only">
               <DrawerTitle>Articles</DrawerTitle>
@@ -90,7 +90,7 @@ export function MobileProfileLayout({
               </div>
 
               <div
-                ref={setContentElement}
+                ref={setScrollRoot}
                 className="overflow-y-auto overscroll-y-contain h-[calc(100%-36px)] pt-2"
               >
                 {resolvedContent}
