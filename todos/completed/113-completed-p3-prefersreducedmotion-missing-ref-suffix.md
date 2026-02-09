@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "113"
 tags: [code-review, naming, mirror, profile]
@@ -25,14 +25,15 @@ In `use-bottom-sheet.ts`, `prefersReducedMotion` is a `useRef` but lacks the `Re
 
 ## Acceptance Criteria
 
-- [ ] Ref renamed to `prefersReducedMotionRef`
-- [ ] All usages updated
+- [x] Ref renamed to `prefersReducedMotionRef`
+- [x] All usages updated
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-09 | Created from PR #106 review | Consistent Ref suffix for all useRef variables |
+| 2026-02-09 | Renamed to `prefersReducedMotionRef` and updated all 3 usages | — |
 
 ## Resources
 

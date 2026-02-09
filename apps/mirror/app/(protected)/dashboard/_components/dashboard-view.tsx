@@ -19,17 +19,20 @@ export function DashboardView(
 
   if (isMobile) {
     return (
-      <MobileProfileLayout
-        profile={<ProfileInfoView profile={profile} />}
-        content={(scrollRoot) => (
-          <div className="px-3">
-            <ScrollableArticleList
-              articles={articles}
-              scrollRoot={scrollRoot}
-            />
-          </div>
-        )}
-      />
+      <main className="h-screen">
+        <DashboardHeader />
+        <MobileProfileLayout
+          profile={<ProfileInfoView profile={profile} />}
+          content={(scrollRoot) => (
+            <div className="px-3">
+              <ScrollableArticleList
+                articles={articles}
+                scrollRoot={scrollRoot}
+              />
+            </div>
+          )}
+        />
+      </main>
     );
   }
 

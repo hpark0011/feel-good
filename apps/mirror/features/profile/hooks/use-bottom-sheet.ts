@@ -31,9 +31,7 @@ export function useBottomSheet() {
   const [contentElement, setContentElement] = useState<HTMLDivElement | null>(
     null,
   );
-  const contentRef = useCallback((node: HTMLDivElement | null) => {
-    setContentElement(node);
-  }, []);
+  const contentRef = setContentElement;
 
   const isDraggingRef = useRef(false);
 
@@ -48,11 +46,12 @@ export function useBottomSheet() {
   const scrollToleranceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
+  const aliveRef = useRef(true);
 
-  const prefersReducedMotion = useRef(false);
+  const prefersReducedMotionRef = useRef(false);
 
   useEffect(() => {
-    prefersReducedMotion.current = window.matchMedia(
+    prefersReducedMotionRef.current = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
   }, []);
@@ -66,7 +65,7 @@ export function useBottomSheet() {
 
     sheet.style.transform = `translateY(${translateY}%)`;
 
-    if (animating && !prefersReducedMotion.current) {
+    if (animating && !prefersReducedMotionRef.current) {
       sheet.style.transition = `transform 300ms ${SHEET_EASING}`;
     } else {
       sheet.style.transition = "none";
@@ -75,7 +74,7 @@ export function useBottomSheet() {
     const bg = bgRef.current;
     if (bg) {
       bg.style.transform = `scale(${bgScale})`;
-      if (animating && !prefersReducedMotion.current) {
+      if (animating && !prefersReducedMotionRef.current) {
         bg.style.transition = `transform 300ms ${SHEET_EASING}`;
       } else {
         bg.style.transition = "none";
@@ -91,6 +90,7 @@ export function useBottomSheet() {
     const sheet = sheetRef.current;
     const bg = bgRef.current;
     return () => {
+      aliveRef.current = false;
       stateRef.current = "IDLE";
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current);
@@ -201,6 +201,7 @@ export function useBottomSheet() {
       progressRef.current = newProgress;
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(() => {
+        if (!aliveRef.current) return;
         applyTransform(newProgress, false);
       });
     },

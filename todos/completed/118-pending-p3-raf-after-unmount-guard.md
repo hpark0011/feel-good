@@ -35,14 +35,15 @@ rafRef.current = requestAnimationFrame(() => {
 
 ## Acceptance Criteria
 
-- [ ] RAF callback checks alive/mounted guard before DOM writes
-- [ ] No console errors on navigation during mid-drag
+- [x] RAF callback checks alive/mounted guard before DOM writes
+- [x] No console errors on navigation during mid-drag
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-09 | Created from PR #106 review | Guard RAF callbacks against unmount races |
+| 2026-02-09 | Implemented Option A fix | Added `aliveRef` guard in cleanup effect and RAF callback |
 
 ## Resources
 
