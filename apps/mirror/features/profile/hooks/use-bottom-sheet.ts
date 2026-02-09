@@ -2,13 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { SHEET_EASING } from "../lib/constants";
+
 type DragState = "IDLE" | "DRAGGING" | "SCROLLING";
 
 const SNAP_POINTS = [0.01, 1.0] as const;
 const PEEK = SNAP_POINTS[0];
 const VELOCITY_THRESHOLD = 0.3;
 const SCROLL_TO_DRAG_DELAY = 100;
-const SHEET_EASING = "cubic-bezier(0.32, 0.72, 0, 1)";
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
@@ -34,7 +35,7 @@ export function useBottomSheet() {
     setContentElement(node);
   }, []);
 
-  const [isDragging, setIsDragging] = useState(false);
+  const isDraggingRef = useRef(false);
 
   const stateRef = useRef<DragState>("IDLE");
   const progressRef = useRef<number>(PEEK);
@@ -43,7 +44,6 @@ export function useBottomSheet() {
   const lastYRef = useRef(0);
   const lastTimeRef = useRef(0);
   const velocityRef = useRef(0);
-  const scrollTopAtStartRef = useRef(0);
   const rafRef = useRef<number>(0);
   const scrollToleranceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
@@ -108,7 +108,7 @@ export function useBottomSheet() {
   const snapTo = useCallback(
     (target: number) => {
       progressRef.current = target;
-      setIsDragging(false);
+      isDraggingRef.current = false;
       stateRef.current = "IDLE";
       applyTransform(target, true);
 
@@ -135,14 +135,13 @@ export function useBottomSheet() {
         const scrollTop = scrollContainer?.scrollTop ?? 0;
         if (scrollTop > 0) {
           stateRef.current = "SCROLLING";
-          scrollTopAtStartRef.current = scrollTop;
           return;
         }
       }
 
       e.preventDefault();
       stateRef.current = "DRAGGING";
-      setIsDragging(true);
+      isDraggingRef.current = true;
 
       startYRef.current = e.clientY;
       startProgressRef.current = progressRef.current;
@@ -151,9 +150,15 @@ export function useBottomSheet() {
       velocityRef.current = 0;
 
       const sheet = sheetRef.current;
-      if (sheet) sheet.style.willChange = "transform";
+      if (sheet) {
+        sheet.style.willChange = "transform";
+        sheet.style.transition = "none";
+      }
       const bg = bgRef.current;
-      if (bg) bg.style.willChange = "transform";
+      if (bg) {
+        bg.style.willChange = "transform";
+        bg.style.transition = "none";
+      }
 
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
     },
@@ -298,6 +303,5 @@ export function useBottomSheet() {
     contentRef,
     contentElement,
     bgRef,
-    isDragging,
   };
 }

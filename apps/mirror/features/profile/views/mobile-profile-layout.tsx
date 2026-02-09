@@ -14,7 +14,7 @@ export function MobileProfileLayout({
   profile,
   content,
 }: MobileProfileLayoutProps) {
-  const { bgRef, sheetRef, handleRef, contentRef, contentElement, isDragging } =
+  const { bgRef, sheetRef, handleRef, contentRef, contentElement } =
     useBottomSheet();
 
   const resolvedContent =
@@ -32,7 +32,6 @@ export function MobileProfileLayout({
         ref={sheetRef}
         handleRef={handleRef}
         contentRef={contentRef}
-        isDragging={isDragging}
       >
         {resolvedContent}
       </SheetContainer>
