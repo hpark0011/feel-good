@@ -2,7 +2,7 @@ import { ProfileImage } from "@/app/(protected)/dashboard/_components/profile-im
 
 export function ProfileInfoView() {
   return (
-    <div className="flex-1 flex flex-col items-center justify-center border-r border-border-subtle pb-[80px]">
+    <div className="flex-1 flex flex-col items-center justify-center md:border-r md:border-border-subtle pb-[80px]">
       {/* Profile Name */}
       <div className="text-3xl font-medium text-center">
         Rick Rubin

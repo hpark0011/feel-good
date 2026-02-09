@@ -13,20 +13,22 @@ type ArticleListViewProps = {
   articles: Article[];
   hasMore: boolean;
   onLoadMore: () => void;
+  scrollContainerRef?: React.RefObject<HTMLElement | null>;
 };
 
 export function ArticleListView({
   articles,
   hasMore,
   onLoadMore,
+  scrollContainerRef,
 }: ArticleListViewProps) {
   return (
-    <section className="w-full mx-auto mt-0 pr-4">
+    <section className="w-full mx-auto mt-0 pr-0 lg:pr-4">
       <Table>
         <TableHeader className="[&_tr]:border-b-0">
           <TableRow className="border-b-0 hover:bg-transparent">
             <TableHead className="w-3/5 text-muted-foreground h-8">Title</TableHead>
-            <TableHead className="w-1/5 text-muted-foreground h-8">Category</TableHead>
+            <TableHead className="hidden md:table-cell w-1/5 text-muted-foreground h-8">Category</TableHead>
             <TableHead className="text-right w-1/5 text-muted-foreground h-8">Published</TableHead>
           </TableRow>
         </TableHeader>
@@ -36,7 +38,7 @@ export function ArticleListView({
           ))}
         </TableBody>
       </Table>
-      <ArticleListLoader hasMore={hasMore} onLoadMore={onLoadMore} />
+      <ArticleListLoader hasMore={hasMore} onLoadMore={onLoadMore} scrollContainerRef={scrollContainerRef} />
     </section>
   );
 }

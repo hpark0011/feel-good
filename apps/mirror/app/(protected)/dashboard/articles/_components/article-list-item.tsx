@@ -19,7 +19,7 @@ export function ArticleListItem({ article }: { article: Article }) {
 
   return (
     <TableRow
-      className="cursor-pointer border-b-0 group-hover/list:text-muted-foreground hover:text-secondary-foreground hover:bg-transparent"
+      className="cursor-pointer border-b-0 group-hover/list:text-muted-foreground hover:text-secondary-foreground hover:bg-transparent min-h-[44px]"
       tabIndex={0}
       onClick={() => router.push(href)}
       onKeyDown={(e) => {
@@ -29,7 +29,7 @@ export function ArticleListItem({ article }: { article: Article }) {
       <TableCell className="font-medium truncate max-w-0 py-0 text-lg">
         {article.title}
       </TableCell>
-      <TableCell className="py-0 font-medium">{article.category}</TableCell>
+      <TableCell className="hidden md:table-cell py-0 font-medium">{article.category}</TableCell>
       <TableCell className="text-right py-0 font-medium">
         <time dateTime={article.published_at}>
           {formatDate(article.published_at)}

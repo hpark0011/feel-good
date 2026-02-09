@@ -459,6 +459,9 @@ importers:
       '@feel-good/ui':
         specifier: workspace:*
         version: link:../../packages/ui
+      '@feel-good/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@radix-ui/colors':
         specifier: 'catalog:'
         version: 3.0.0

@@ -5,11 +5,13 @@ import { useEffect, useRef } from "react";
 type ArticleListLoaderProps = {
   hasMore: boolean;
   onLoadMore: () => void;
+  scrollContainerRef?: React.RefObject<HTMLElement | null>;
 };
 
 export function ArticleListLoader({
   hasMore,
   onLoadMore,
+  scrollContainerRef,
 }: ArticleListLoaderProps) {
   const sentinelRef = useRef<HTMLDivElement>(null);
 
@@ -25,7 +27,10 @@ export function ArticleListLoader({
           onLoadMore();
         }
       },
-      { rootMargin: "200px" },
+      {
+        rootMargin: "200px",
+        root: scrollContainerRef?.current ?? null,
+      },
     );
 
     observer.observe(sentinel);
@@ -33,7 +38,7 @@ export function ArticleListLoader({
     return () => {
       observer.disconnect();
     };
-  }, [hasMore, onLoadMore]);
+  }, [hasMore, onLoadMore, scrollContainerRef]);
 
   if (!hasMore) return null;
 
