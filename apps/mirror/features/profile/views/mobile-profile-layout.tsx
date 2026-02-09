@@ -66,7 +66,8 @@ export function MobileProfileLayout({
           <DrawerContent
             role="region"
             aria-label="Articles"
-            className="!absolute !inset-x-0 !bottom-0 !top-0 !rounded-t-4xl !border-t !border-border-subtle !bg-background [corner-shape:superellipse(1.1)] [&>div:first-child]:hidden"
+            showHandle={false}
+            className="absolute inset-0 data-[vaul-drawer-direction=bottom]:rounded-t-4xl border-border-subtle [corner-shape:superellipse(1.1)]"
           >
             <DrawerHeader className="sr-only">
               <DrawerTitle>Articles</DrawerTitle>
