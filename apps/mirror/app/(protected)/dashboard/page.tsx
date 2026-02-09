@@ -1,5 +1,5 @@
 import { ProfileInfoView } from "@/features/profile";
-import { DashboardView } from "./_views/dashboard-view";
+import { DashboardView } from "./_components/dashboard-view";
 import { MOCK_ARTICLES } from "@/features/articles";
 
 export default function DashboardPage() {
