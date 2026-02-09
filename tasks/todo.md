@@ -1,3 +1,26 @@
+# 2026-02-09 Monorepo File Organization Convention
+
+- [x] Run best-practice research for Next.js and feature-folder architecture
+- [x] Inspect current folder organization in `apps/mirror`, `apps/greyboard`, `apps/ui-factory`, and `packages/features`
+- [x] Inspect convention evolution from git history, local todos, and available PR metadata
+- [x] Write planner output in `docs/plans/2026-02-09-feat-file-organization-convention-plan.md`
+- [x] Write living convention doc in `docs/conventions/file-organization-convention.md`
+- [x] Add review summary and limitations
+
+## Review
+
+- Added a planner document that consolidates three requested research streams (best-practice research, code inspection, code history) and turns them into a phased migration strategy:
+  - `docs/plans/2026-02-09-feat-file-organization-convention-plan.md`
+- Added a living convention document to be referenced by future work:
+  - `docs/conventions/file-organization-convention.md`
+- Convention decision captured:
+  - Feature-first organization is the default.
+  - Route-private folders are limited to `app/**/_components` for new code.
+  - Feature-specific code goes in `features/<feature>/{components,hooks,store,types,utils,lib,views}`.
+  - Cross-app features go in `packages/features/<feature>`.
+- Historian limitation:
+  - `gh` CLI could not reach GitHub API in this environment, so history used local git + tracked todo artifacts, with direct PR pages referenced where accessible.
+
 # 2026-02-06 ui-factory Turbopack Panic Fix
 
 - [x] Confirm failure mode and available Next.js dev flags in current version

@@ -31,6 +31,25 @@ pnpm dev --filter=@feel-good/mirror
 - `@feel-good/features` - Auth components and hooks
 - `@feel-good/ui` - Shared UI components
 
+## Project Structure
+
+```
+app/
+  (auth)/                # Auth flow (sign-in, sign-up, callback)
+  (protected)/dashboard/ # Dashboard page
+    _views/              # Route-specific view components
+    articles/            # Articles sub-route
+      _data/             # Mock/static article data
+      _hooks/            # Article-specific hooks
+      _views/            # Article view components
+  _views/                # App root view components
+
+lib/                     # Auth client, env, services
+providers/               # React context providers
+```
+
+**Path aliases:** `@/*` maps to `apps/mirror/` root
+
 ## Key Patterns
 
 - Server components by default

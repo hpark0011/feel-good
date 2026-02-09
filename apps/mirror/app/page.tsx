@@ -1,4 +1,4 @@
-import { MirrorHomePageView } from "@/app/_view/home-page-view";
+import { MirrorHomePageView } from "@/app/_views/home-page-view";
 
 export default function HomePage() {
   return (

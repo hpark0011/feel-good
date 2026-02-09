@@ -1,10 +1,10 @@
 "use client";
 
 import { useSession } from "@/lib/auth-client";
-import { ProfileInfoView } from "./_view/profile-info-view";
+import { ProfileInfoView } from "./_views/profile-info-view";
 import { MOCK_ARTICLES } from "./articles/_data/mock-articles";
 import { useArticleList } from "./articles/_hooks/use-article-list";
-import { ArticleListView } from "./articles/_view/article-list-view";
+import { ArticleListView } from "./articles/_views/article-list-view";
 
 export default function DashboardPage() {
   const { isLoading } = useSession();

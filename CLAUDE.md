@@ -169,6 +169,7 @@ Shared Prettier configuration.
 │   ├── react-components.md  # Component patterns
 │   ├── forms.md             # Form handling
 │   ├── state-management.md  # State patterns
+│   ├── folder-structure.md  # Folder organization convention
 │   └── apps/greyboard/      # App-specific rules
 ├── skills/                   # Detailed documentation
 ├── commands/                 # Custom commands
