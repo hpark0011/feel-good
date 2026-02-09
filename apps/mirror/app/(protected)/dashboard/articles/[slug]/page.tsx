@@ -1,10 +1,11 @@
-"use client";
-
-import { useParams } from "next/navigation";
 import Link from "next/link";
 
-export default function ArticlePage() {
-  const { slug } = useParams<{ slug: string }>();
+export default async function ArticlePage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
 
   return (
     <div className="min-h-screen">

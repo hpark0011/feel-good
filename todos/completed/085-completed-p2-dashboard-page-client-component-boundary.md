@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "085"
 tags: [code-review, performance, architecture, mirror]
@@ -53,22 +53,23 @@ Option A for production readiness.
 
 - **Affected files:**
   - `apps/mirror/app/(protected)/dashboard/page.tsx`
-  - New: `apps/mirror/app/(protected)/dashboard/_components/article-list-section.tsx`
+  - New: `apps/mirror/app/(protected)/dashboard/_components/dashboard-content.tsx`
   - `apps/mirror/app/(protected)/dashboard/articles/[slug]/page.tsx`
 
 ## Acceptance Criteria
 
-- [ ] `page.tsx` is a server component
-- [ ] `DashboardView` renders server-side
-- [ ] Article list interactivity in a client wrapper
-- [ ] `[slug]/page.tsx` uses server params prop
-- [ ] Build passes
+- [x] `page.tsx` is a server component
+- [x] `ProfileInfoView` renders server-side (passed as ReactNode prop)
+- [x] Article list interactivity in a client wrapper (`DashboardContent`)
+- [x] `[slug]/page.tsx` uses server params prop (async + Promise)
+- [x] Build passes
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-08 | Created from PR #105 code review | Static content should stay server-rendered |
+| 2026-02-09 | Implemented Option A | Pass server components as ReactNode props to client wrappers for SSR; Next.js 16 uses Promise params |
 
 ## Resources
 

@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "089"
 tags: [code-review, performance, mirror]
@@ -31,14 +31,15 @@ export const ArticleListItem = React.memo(function ArticleListItem({ article }: 
 
 ## Acceptance Criteria
 
-- [ ] `ArticleListItem` wrapped in `React.memo`
-- [ ] Previously visible rows don't re-render on pagination
+- [x] `ArticleListItem` wrapped in `React.memo`
+- [x] Previously visible rows don't re-render on pagination
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-08 | Created from PR #105 code review | Follow established memo pattern from auth views |
+| 2026-02-09 | Wrapped in React.memo, build passes | Component had already been refactored to use Link instead of useRouter — even cleaner for memo (no hook subscriptions) |
 
 ## Resources
 

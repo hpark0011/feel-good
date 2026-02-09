@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "088"
 tags: [code-review, performance, accessibility, mirror]
