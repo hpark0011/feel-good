@@ -1,6 +1,7 @@
 import { PageSection } from "@/components/page-section";
 import { PageSectionHeader } from "@/components/page-section-header";
 import { Divider } from "@/components/divider";
+import { PeekingDrawerDemo } from "./peeking-drawer-demo";
 import {
   Drawer,
   DrawerTrigger,
@@ -15,7 +16,7 @@ import { Button } from "@feel-good/ui/primitives/button";
 
 export function DrawerVariants() {
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full pb-24">
       <Divider />
 
       <PageSection>
@@ -131,6 +132,13 @@ export function DrawerVariants() {
             </DrawerFooter>
           </DrawerContent>
         </Drawer>
+      </PageSection>
+
+      <Divider />
+
+      <PageSection>
+        <PageSectionHeader>Snap Points: Peek</PageSectionHeader>
+        <PeekingDrawerDemo />
       </PageSection>
     </div>
   );
