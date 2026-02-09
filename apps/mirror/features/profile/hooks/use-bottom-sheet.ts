@@ -8,6 +8,7 @@ const SNAP_POINTS = [0.01, 1.0] as const;
 const PEEK = SNAP_POINTS[0];
 const VELOCITY_THRESHOLD = 0.3;
 const SCROLL_TO_DRAG_DELAY = 100;
+const SHEET_EASING = "cubic-bezier(0.32, 0.72, 0, 1)";
 
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max);
@@ -24,9 +25,15 @@ function nearestSnap(progress: number, velocity: number): number {
 export function useBottomSheet() {
   const sheetRef = useRef<HTMLDivElement>(null);
   const handleRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
 
-  const [progress, setProgress] = useState<number>(PEEK);
+  const [contentElement, setContentElement] = useState<HTMLDivElement | null>(
+    null,
+  );
+  const contentRef = useCallback((node: HTMLDivElement | null) => {
+    setContentElement(node);
+  }, []);
+
   const [isDragging, setIsDragging] = useState(false);
 
   const stateRef = useRef<DragState>("IDLE");
@@ -37,6 +44,7 @@ export function useBottomSheet() {
   const lastTimeRef = useRef(0);
   const velocityRef = useRef(0);
   const scrollTopAtStartRef = useRef(0);
+  const rafRef = useRef<number>(0);
   const scrollToleranceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
@@ -59,43 +67,55 @@ export function useBottomSheet() {
     sheet.style.transform = `translateY(${translateY}%)`;
 
     if (animating && !prefersReducedMotion.current) {
-      sheet.style.transition = "transform 300ms cubic-bezier(0.32, 0.72, 0, 1)";
+      sheet.style.transition = `transform 300ms ${SHEET_EASING}`;
     } else {
       sheet.style.transition = "none";
     }
 
-    const container = sheet.parentElement;
-    if (container) {
-      const bg = container.firstElementChild as HTMLElement | null;
-      if (bg) {
-        bg.style.transform = `scale(${bgScale})`;
-        if (animating && !prefersReducedMotion.current) {
-          bg.style.transition =
-            "transform 300ms cubic-bezier(0.32, 0.72, 0, 1)";
-        } else {
-          bg.style.transition = "none";
-        }
+    const bg = bgRef.current;
+    if (bg) {
+      bg.style.transform = `scale(${bgScale})`;
+      if (animating && !prefersReducedMotion.current) {
+        bg.style.transition = `transform 300ms ${SHEET_EASING}`;
+      } else {
+        bg.style.transition = "none";
       }
     }
+  }, []);
+
+  useEffect(() => {
+    applyTransform(progressRef.current, false);
+  }, [applyTransform]);
+
+  useEffect(() => {
+    const sheet = sheetRef.current;
+    const bg = bgRef.current;
+    return () => {
+      stateRef.current = "IDLE";
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = 0;
+      }
+      if (scrollToleranceTimerRef.current) {
+        clearTimeout(scrollToleranceTimerRef.current);
+        scrollToleranceTimerRef.current = null;
+      }
+      if (sheet) sheet.style.willChange = "";
+      if (bg) bg.style.willChange = "";
+    };
   }, []);
 
   const snapTo = useCallback(
     (target: number) => {
       progressRef.current = target;
-      setProgress(target);
       setIsDragging(false);
       stateRef.current = "IDLE";
       applyTransform(target, true);
 
       const sheet = sheetRef.current;
-      if (sheet) {
-        sheet.style.willChange = "";
-        const container = sheet.parentElement;
-        if (container) {
-          const bg = container.firstElementChild as HTMLElement | null;
-          if (bg) bg.style.willChange = "";
-        }
-      }
+      if (sheet) sheet.style.willChange = "";
+      const bg = bgRef.current;
+      if (bg) bg.style.willChange = "";
     },
     [applyTransform],
   );
@@ -104,7 +124,12 @@ export function useBottomSheet() {
     (e: PointerEvent, isHandle: boolean) => {
       if (e.button !== 0) return;
 
-      const scrollContainer = contentRef.current;
+      if (scrollToleranceTimerRef.current) {
+        clearTimeout(scrollToleranceTimerRef.current);
+        scrollToleranceTimerRef.current = null;
+      }
+
+      const scrollContainer = contentElement;
 
       if (!isHandle && progressRef.current >= 1) {
         const scrollTop = scrollContainer?.scrollTop ?? 0;
@@ -126,18 +151,13 @@ export function useBottomSheet() {
       velocityRef.current = 0;
 
       const sheet = sheetRef.current;
-      if (sheet) {
-        sheet.style.willChange = "transform";
-        const container = sheet.parentElement;
-        if (container) {
-          const bg = container.firstElementChild as HTMLElement | null;
-          if (bg) bg.style.willChange = "transform";
-        }
-      }
+      if (sheet) sheet.style.willChange = "transform";
+      const bg = bgRef.current;
+      if (bg) bg.style.willChange = "transform";
 
       (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
     },
-    [],
+    [contentElement],
   );
 
   const handlePointerMove = useCallback(
@@ -162,12 +182,20 @@ export function useBottomSheet() {
       lastTimeRef.current = e.timeStamp;
 
       progressRef.current = newProgress;
-      applyTransform(newProgress, false);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        applyTransform(newProgress, false);
+      });
     },
     [applyTransform],
   );
 
   const handlePointerUp = useCallback(() => {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
+    }
+
     if (stateRef.current !== "DRAGGING") {
       stateRef.current = "IDLE";
       return;
@@ -201,7 +229,7 @@ export function useBottomSheet() {
 
   // Pointer events on the scrollable content for pull-to-collapse
   useEffect(() => {
-    const scrollContainer = contentRef.current;
+    const scrollContainer = contentElement;
     if (!scrollContainer) return;
 
     const onDown = (e: PointerEvent) => handlePointerDown(e, false);
@@ -219,11 +247,11 @@ export function useBottomSheet() {
       scrollContainer.removeEventListener("pointerup", onUp);
       scrollContainer.removeEventListener("pointercancel", onUp);
     };
-  }, [handlePointerDown, handlePointerMove, handlePointerUp]);
+  }, [contentElement, handlePointerDown, handlePointerMove, handlePointerUp]);
 
   // Scroll-to-drag transition: at scrollTop=0 pulling down collapses the sheet
   useEffect(() => {
-    const scrollContainer = contentRef.current;
+    const scrollContainer = contentElement;
     if (!scrollContainer) return;
 
     let lastScrollTop = 0;
@@ -239,6 +267,7 @@ export function useBottomSheet() {
         if (!scrollToleranceTimerRef.current) {
           scrollToleranceTimerRef.current = setTimeout(() => {
             scrollToleranceTimerRef.current = null;
+            if (stateRef.current !== "SCROLLING") return;
             if (scrollContainer.scrollTop <= 0) {
               snapTo(PEEK);
             }
@@ -261,16 +290,14 @@ export function useBottomSheet() {
         clearTimeout(scrollToleranceTimerRef.current);
       }
     };
-  }, [snapTo]);
-
-  const bgScale = 1 - progress * 0.2;
+  }, [contentElement, snapTo]);
 
   return {
-    progress,
-    bgScale,
     sheetRef,
     handleRef,
     contentRef,
+    contentElement,
+    bgRef,
     isDragging,
   };
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { useSession } from "@/lib/auth-client";
 import { useMediaQuery } from "@feel-good/ui/hooks/use-media-query";
 import { MobileProfileLayout } from "@/features/profile";
 import { useArticleList, ArticleListView } from "@/features/articles";
@@ -15,29 +14,20 @@ export function DashboardContent({
   profile,
   articles: allArticles,
 }: DashboardContentProps) {
-  const { isLoading } = useSession();
   const { articles, hasMore, loadMore } = useArticleList(allArticles);
   const isMobile = useMediaQuery("(max-width: 767px)");
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-muted-foreground/20 border-t-muted-foreground" />
-      </div>
-    );
-  }
 
   if (isMobile) {
     return (
       <MobileProfileLayout
         profile={profile}
-        content={(scrollContainerRef) => (
+        content={(scrollRoot) => (
           <div className="px-3">
             <ArticleListView
               articles={articles}
               hasMore={hasMore}
               onLoadMore={loadMore}
-              scrollContainerRef={scrollContainerRef}
+              scrollRoot={scrollRoot}
             />
           </div>
         )}

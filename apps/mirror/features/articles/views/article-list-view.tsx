@@ -15,14 +15,14 @@ type ArticleListViewProps = {
   articles: Article[];
   hasMore: boolean;
   onLoadMore: () => void;
-  scrollContainerRef?: React.RefObject<HTMLElement | null>;
+  scrollRoot?: HTMLElement | null;
 };
 
 export function ArticleListView({
   articles,
   hasMore,
   onLoadMore,
-  scrollContainerRef,
+  scrollRoot,
 }: ArticleListViewProps) {
   return (
     <section className="w-full mx-auto mt-0 pr-0 lg:pr-4">
@@ -40,7 +40,7 @@ export function ArticleListView({
           ))}
         </TableBody>
       </Table>
-      <ArticleListLoader hasMore={hasMore} onLoadMore={onLoadMore} scrollContainerRef={scrollContainerRef} />
+      <ArticleListLoader hasMore={hasMore} onLoadMore={onLoadMore} scrollRoot={scrollRoot} />
     </section>
   );
 }
