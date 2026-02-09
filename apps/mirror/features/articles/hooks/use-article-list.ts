@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import type { Article } from "../_data/mock-articles";
+import type { Article } from "../lib/mock-articles";
 
 const PAGE_SIZE = 30;
 

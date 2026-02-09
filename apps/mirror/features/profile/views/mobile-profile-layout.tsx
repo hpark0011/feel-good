@@ -1,8 +1,8 @@
 "use client";
 
 import type { RefObject } from "react";
-import { SheetContainer } from "../_components/sheet-container";
-import { useBottomSheet } from "../_hooks/use-bottom-sheet";
+import { SheetContainer } from "../components/sheet-container";
+import { useBottomSheet } from "../hooks/use-bottom-sheet";
 
 type MobileProfileLayoutProps = {
   profile: React.ReactNode;

@@ -1,4 +1,4 @@
-import { ProfileMedia } from "@/app/(protected)/dashboard/_components/profile-media";
+import { ProfileMedia } from "../components/profile-media";
 
 export function ProfileInfoView() {
   return (

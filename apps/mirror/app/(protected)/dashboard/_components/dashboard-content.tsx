@@ -2,10 +2,9 @@
 
 import { useSession } from "@/lib/auth-client";
 import { useMediaQuery } from "@feel-good/ui/hooks/use-media-query";
-import { MobileProfileLayout } from "../_views/mobile-profile-layout";
-import type { Article } from "../articles/_data/mock-articles";
-import { useArticleList } from "../articles/_hooks/use-article-list";
-import { ArticleListView } from "../articles/_views/article-list-view";
+import { MobileProfileLayout } from "@/features/profile";
+import { useArticleList, ArticleListView } from "@/features/articles";
+import type { Article } from "@/features/articles";
 
 type DashboardContentProps = {
   profile: React.ReactNode;

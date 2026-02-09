@@ -7,9 +7,9 @@ import {
   TableHeader,
   TableRow,
 } from "@feel-good/ui/primitives/table";
-import type { Article } from "../_data/mock-articles";
-import { ArticleListItem } from "../_components/article-list-item";
-import { ArticleListLoader } from "../_components/article-list-loader";
+import type { Article } from "../lib/mock-articles";
+import { ArticleListItem } from "../components/article-list-item";
+import { ArticleListLoader } from "../components/article-list-loader";
 
 type ArticleListViewProps = {
   articles: Article[];

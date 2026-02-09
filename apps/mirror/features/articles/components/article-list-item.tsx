@@ -1,7 +1,7 @@
 import { memo } from "react";
 import Link from "next/link";
 import { TableRow, TableCell } from "@feel-good/ui/primitives/table";
-import type { Article } from "../_data/mock-articles";
+import type { Article } from "../lib/mock-articles";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   month: "short",

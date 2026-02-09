@@ -34,18 +34,22 @@ pnpm dev --filter=@feel-good/mirror
 ## Project Structure
 
 ```
-app/
-  (auth)/                # Auth flow (sign-in, sign-up, callback)
-  (protected)/dashboard/ # Dashboard page
-    _views/              # Route-specific view components
-    articles/            # Articles sub-route
-      _data/             # Mock/static article data
-      _hooks/            # Article-specific hooks
-      _views/            # Article view components
-  _views/                # App root view components
+features/
+  home/               # Landing page feature
+  profile/            # Profile display + bottom sheet
+  articles/           # Article list, pagination, mock data
 
-lib/                     # Auth client, env, services
-providers/               # React context providers
+app/
+  (auth)/             # Auth flow (sign-in, sign-up, callback)
+  (protected)/
+    _components/      # Route composition (header)
+    dashboard/
+      _components/    # Route-level client boundary (dashboard-content)
+      articles/
+        [slug]/       # Article detail page
+
+lib/                  # Auth client, env, services
+providers/            # React context providers
 ```
 
 **Path aliases:** `@/*` maps to `apps/mirror/` root

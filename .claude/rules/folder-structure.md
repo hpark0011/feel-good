@@ -23,16 +23,16 @@ Only create directories when there is code to put in them.
 
 ## Route-Level Private Folders
 
-| Directory | Purpose |
-|-----------|---------|
-| `_views/` | Page-level view components (pure UI composition) |
-| `_components/` | Route-specific UI components |
-| `_hooks/` | Route-specific hooks |
-| `_utils/` | Route-specific utilities |
-| `_data/` | Route-specific static/mock data |
-| `_lib/` | Route-specific services/schemas |
+| Directory | Status | Purpose |
+|-----------|--------|---------|
+| `_components/` | **Active** | Route-specific UI components |
+| `_views/` | Legacy | Migrate to `features/<name>/views/` |
+| `_hooks/` | Legacy | Migrate to `features/<name>/hooks/` |
+| `_utils/` | Legacy | Migrate to `features/<name>/utils/` |
+| `_data/` | Legacy | Migrate to `features/<name>/lib/` |
+| `_lib/` | Legacy | Migrate to `features/<name>/lib/` |
 
-All names are **plural**. The underscore prefix prevents Next.js routing.
+Only `_components/` should be used for new code. All other route-private logic belongs in `features/<feature>/`. The underscore prefix prevents Next.js routing.
 
 ## Feature Module Structure
 
