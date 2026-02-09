@@ -23,12 +23,15 @@ export function SheetContainer(
         className,
       )}
     >
+      {/* Background gradient */}
+      <div className="absolute top-[28px] z-10 left-0 w-full h-3 bg-linear-to-b from-background to-transparent" />
+
       {/* Drag handle */}
       <div
         ref={handleRef}
-        className="flex items-center justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing touch-none"
+        className="flex items-center justify-center py-3 cursor-grab active:cursor-grabbing touch-none"
       >
-        <div className="h-1.5 w-12 rounded-full bg-muted-foreground/20" />
+        <div className="h-1 w-10 rounded-full bg-muted-foreground/20" />
       </div>
 
       {/* Scrollable content */}

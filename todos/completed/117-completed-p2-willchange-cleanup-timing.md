@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "117"
 tags: [code-review, performance, race-condition, mirror, profile]
@@ -33,14 +33,15 @@ setTimeout(cleanup, 350); // safety net
 
 ## Acceptance Criteria
 
-- [ ] `willChange` cleared after snap animation completes, not before
-- [ ] No mid-animation layer de-promotion jank
+- [x] `willChange` cleared after snap animation completes, not before
+- [x] No mid-animation layer de-promotion jank
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-09 | Created from PR #106 review | Clear willChange after transitionend, not during animation |
+| 2026-02-09 | Implemented Option A | Used `transitionend` listener with `{ once: true }` + 350ms setTimeout safety net. Build passes. |
 
 ## Resources
 

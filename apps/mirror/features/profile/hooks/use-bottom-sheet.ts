@@ -113,9 +113,21 @@ export function useBottomSheet() {
       applyTransform(target, true);
 
       const sheet = sheetRef.current;
-      if (sheet) sheet.style.willChange = "";
       const bg = bgRef.current;
-      if (bg) bg.style.willChange = "";
+
+      const cleanup = () => {
+        if (sheet) {
+          sheet.style.willChange = "";
+          sheet.removeEventListener("transitionend", cleanup);
+        }
+        if (bg) bg.style.willChange = "";
+      };
+
+      if (sheet) {
+        sheet.addEventListener("transitionend", cleanup, { once: true });
+      }
+      // Safety net in case transitionend never fires (e.g. reduced motion, display:none)
+      setTimeout(cleanup, 350);
     },
     [applyTransform],
   );

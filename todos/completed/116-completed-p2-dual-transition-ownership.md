@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "116"
 tags: [code-review, race-condition, mirror, profile]
@@ -33,14 +33,19 @@ Remove `style.transition` from `applyTransform` and rely solely on the `isDraggi
 
 ## Acceptance Criteria
 
-- [ ] Single authority for transition property on the sheet element
-- [ ] No visual teleport or stutter during drag-release-drag sequences
+- [x] Single authority for transition property on the sheet element
+- [x] No visual teleport or stutter during drag-release-drag sequences
+
+## Resolution
+
+Already resolved in commit `10f330e6` (refactor(mirror): resolve code review todos and refine dashboard layout). Option A was applied: the `isDragging` prop and its conditional Tailwind transition class were removed from `SheetContainer`. `applyTransform` in `use-bottom-sheet.ts` is now the sole owner of the `transition` property via inline styles.
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-09 | Created from PR #106 review | Never have two owners for the same CSS property on one element |
+| 2026-02-09 | Verified already resolved in 10f330e6 | Option A applied — isDragging prop + Tailwind class removed |
 
 ## Resources
 
