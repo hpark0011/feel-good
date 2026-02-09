@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 
 // ~15.85% of viewport — aligns the peek strip with the profile card's bottom edge
-const PEEK_SNAP_POINT = 0.1585;
+const PEEK_SNAP_POINT = 0.165;
 const MIDDLE_SNAP_POINT = 0.5;
 const EXPANDED_SNAP_POINT = 1;
 const SHEET_SNAP_POINTS: Array<number | string> = [
