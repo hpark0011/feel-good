@@ -4,17 +4,17 @@ import * as React from "react";
 import {
   Drawer,
   DrawerContent,
+  DrawerDescription,
   DrawerHeader,
   DrawerTitle,
-  DrawerDescription,
 } from "@feel-good/ui/primitives/drawer";
 
 export function PeekingDrawerDemo() {
-  const [snap, setSnap] = React.useState<number | string | null>("80px");
+  const [snap, setSnap] = React.useState<number | string | null>("48px");
 
   return (
     <Drawer
-      snapPoints={["80px", 0.5, 1]}
+      snapPoints={["48px", 0.5, 1]}
       activeSnapPoint={snap}
       setActiveSnapPoint={setSnap}
       fadeFromIndex={1}
@@ -24,14 +24,14 @@ export function PeekingDrawerDemo() {
       onOpenChange={() => {}}
     >
       <DrawerContent>
-        <DrawerHeader>
+        <DrawerHeader className="sr-only">
           <DrawerTitle>Peeking Drawer</DrawerTitle>
           <DrawerDescription>
             Drag up to expand. Snaps at 80px, half-screen, and full-screen.
           </DrawerDescription>
         </DrawerHeader>
-        <div className="flex-1 overflow-y-auto p-4">
-          <p className="text-muted-foreground text-sm">
+        <div className="flex-1 overflow-y-auto p-4 mt-4">
+          <p className="text-muted-foreground text-center max-w-md mx-auto leading-[1.2]">
             This drawer starts as a small peek at the bottom and can be dragged
             to larger snap points. The overlay only appears from the half-screen
             position onward.

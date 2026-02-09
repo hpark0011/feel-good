@@ -30,7 +30,9 @@ export function MobileProfileLayout({
   profile,
   content,
 }: MobileProfileLayoutProps) {
-  const [activeSnapPoint, setActiveSnapPoint] = useState<number | string | null>(
+  const [activeSnapPoint, setActiveSnapPoint] = useState<
+    number | string | null
+  >(
     PEEK_SNAP_POINT,
   );
   const [contentElement, setContentElement] = useState<HTMLDivElement | null>(
@@ -40,8 +42,9 @@ export function MobileProfileLayout({
     null,
   );
 
-  const resolvedContent =
-    typeof content === "function" ? content(contentElement) : content;
+  const resolvedContent = typeof content === "function"
+    ? content(contentElement)
+    : content;
   const isExpanded = activeSnapPoint === EXPANDED_SNAP_POINT;
 
   return (
@@ -53,7 +56,10 @@ export function MobileProfileLayout({
         {profile}
       </div>
 
-      <div ref={setDrawerContainer} className="absolute inset-x-0 bottom-0 top-[48px]">
+      <div
+        ref={setDrawerContainer}
+        className="absolute inset-x-0 bottom-0 top-[48px]"
+      >
         <Drawer
           open
           modal={false}
@@ -67,7 +73,7 @@ export function MobileProfileLayout({
             role="region"
             aria-label="Articles"
             showHandle={false}
-            className="absolute inset-0 data-[vaul-drawer-direction=bottom]:rounded-t-4xl border-border-subtle [corner-shape:superellipse(1.1)]"
+            className="absolute inset-0 data-[vaul-drawer-direction=bottom]:rounded-t-4xl border-border-subtle"
           >
             <DrawerHeader className="sr-only">
               <DrawerTitle>Articles</DrawerTitle>
