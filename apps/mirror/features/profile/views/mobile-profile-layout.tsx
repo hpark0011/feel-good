@@ -9,6 +9,7 @@ import {
 } from "@feel-good/ui/primitives/drawer";
 import { useState } from "react";
 
+// ~15.85% of viewport — aligns the peek strip with the profile card's bottom edge
 const PEEK_SNAP_POINT = 0.1585;
 const MIDDLE_SNAP_POINT = 0.5;
 const EXPANDED_SNAP_POINT = 1;
@@ -57,7 +58,6 @@ export function MobileProfileLayout({
           open
           modal={false}
           dismissible={false}
-          scrollLockTimeout={100}
           snapPoints={SHEET_SNAP_POINTS}
           activeSnapPoint={activeSnapPoint}
           setActiveSnapPoint={setActiveSnapPoint}
@@ -66,7 +66,7 @@ export function MobileProfileLayout({
           <DrawerContent
             role="region"
             aria-label="Articles"
-            className="!absolute !inset-x-0 !bottom-0 !top-0 !mt-0 !h-full !max-h-none !rounded-t-4xl !border-t !border-border-subtle !bg-background [corner-shape:superellipse(1.1)] [&>div:first-child]:hidden"
+            className="!absolute !inset-x-0 !bottom-0 !top-0 !rounded-t-4xl !border-t !border-border-subtle !bg-background [corner-shape:superellipse(1.1)] [&>div:first-child]:hidden"
           >
             <DrawerHeader className="sr-only">
               <DrawerTitle>Articles</DrawerTitle>

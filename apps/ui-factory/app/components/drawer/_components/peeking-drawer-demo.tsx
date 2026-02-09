@@ -20,6 +20,7 @@ export function PeekingDrawerDemo() {
       fadeFromIndex={1}
       modal={false}
       open
+      // no-op: keeps drawer always-open by preventing vaul's internal dismiss
       onOpenChange={() => {}}
     >
       <DrawerContent>
