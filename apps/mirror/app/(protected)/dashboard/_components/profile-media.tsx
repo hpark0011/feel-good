@@ -1,11 +1,10 @@
-export function ProfileImage() {
+export function ProfileMedia() {
   return (
-    <div
-      className="relative w-[200px] h-[200px] rounded-t-full overflow-hidden"
-      style={{ cornerShape: "superellipse(1.2)" } as React.CSSProperties}
-    >
+    <div className="relative w-[200px] h-[200px] overflow-hidden rounded-t-full [corner-shape:superellipse(1.2)]">
       <video
         src="/portrait-video.mp4"
+        poster="/rr.webp"
+        preload="metadata"
         autoPlay
         loop
         muted

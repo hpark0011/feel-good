@@ -1,4 +1,4 @@
-import { ProfileImage } from "@/app/(protected)/dashboard/_components/profile-image";
+import { ProfileMedia } from "@/app/(protected)/dashboard/_components/profile-media";
 
 export function ProfileInfoView() {
   return (
@@ -10,7 +10,7 @@ export function ProfileInfoView() {
 
       {/* Profile Image */}
       <div className="flex flex-col gap-2 items-center pt-[80px]">
-        <ProfileImage />
+        <ProfileMedia />
       </div>
 
       {/* Profile Bio */}

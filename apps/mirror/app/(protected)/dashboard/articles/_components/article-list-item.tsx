@@ -1,18 +1,19 @@
-import React from "react";
+import { memo } from "react";
 import Link from "next/link";
 import { TableRow, TableCell } from "@feel-good/ui/primitives/table";
 import type { Article } from "../_data/mock-articles";
 
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+});
+
 function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+  return dateFormatter.format(new Date(dateString));
 }
 
-export const ArticleListItem = React.memo(function ArticleListItem({ article }: { article: Article }) {
+export const ArticleListItem = memo(function ArticleListItem({ article }: { article: Article }) {
   const href = `/dashboard/articles/${article.slug}`;
 
   return (

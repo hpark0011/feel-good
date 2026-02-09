@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "092"
 tags: [code-review, typescript, mirror]
@@ -27,13 +27,14 @@ dependencies: []
 
 ## Acceptance Criteria
 
-- [ ] `"use client"` added to `article-list-view.tsx`
+- [x] `"use client"` added to `article-list-view.tsx`
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-08 | Created from PR #105 code review | Components receiving function props must be client components |
+| 2026-02-09 | Added `"use client"` directive, mirror build verified | Actual path uses `_views/` (plural), not `_view/` |
 
 ## Resources
 

@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "091"
 tags: [code-review, performance, mirror]
@@ -15,7 +15,7 @@ The profile video (`portrait-video.mp4`, 1.1MB) has `autoPlay` with no `preload`
 ## Findings
 
 - **Source:** performance-oracle agent
-- **Location:** `apps/mirror/app/(protected)/dashboard/_components/profile-image.tsx` lines 7-13
+- **Location:** `apps/mirror/app/(protected)/dashboard/_components/profile-media.tsx`
 - **Evidence:** 1.1MB video starts downloading immediately. Five image variants exist in `public/` (rr.webp at 56KB) that could serve as poster images.
 
 ## Proposed Solutions
@@ -39,15 +39,16 @@ The profile video (`portrait-video.mp4`, 1.1MB) has `autoPlay` with no `preload`
 
 ## Acceptance Criteria
 
-- [ ] Video has `poster` attribute pointing to an image
-- [ ] Video has `preload="metadata"` or `preload="none"`
-- [ ] LCP is not blocked by video download
+- [x] Video has `poster` attribute pointing to an image
+- [x] Video has `preload="metadata"` or `preload="none"`
+- [x] LCP is not blocked by video download
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-08 | Created from PR #105 code review | Video poster + preload strategy critical for LCP |
+| 2026-02-09 | Completed: added poster="/rr.webp" and preload="metadata" | File was renamed from profile-image.tsx to profile-media.tsx |
 
 ## Resources
 

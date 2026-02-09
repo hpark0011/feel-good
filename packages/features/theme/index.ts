@@ -1,1 +1,1 @@
-export * from "./components";
+export { ThemeToggleButton } from "./components";

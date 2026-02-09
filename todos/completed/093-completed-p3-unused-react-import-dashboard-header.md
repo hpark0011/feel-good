@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "093"
 tags: [code-review, cleanup, mirror]
@@ -38,16 +38,17 @@ Several small code quality issues across the PR:
 
 ## Acceptance Criteria
 
-- [ ] No unused imports
-- [ ] DateTimeFormat instance shared at module level
-- [ ] Spinner styling consistent
-- [ ] Named exports in theme barrel
+- [x] No unused imports
+- [x] DateTimeFormat instance shared at module level
+- [x] Spinner styling consistent
+- [x] Named exports in theme barrel
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-08 | Created from PR #105 code review | Small cleanups bundled for efficiency |
+| 2026-02-09 | Completed all 4 items | Also removed unused React import from article-list-item.tsx; spinner in dashboard-content.tsx (not page.tsx) was the actual location |
 
 ## Resources
 

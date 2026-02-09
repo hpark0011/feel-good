@@ -1,5 +1,4 @@
 import { ThemeToggleButton } from "@feel-good/features/theme/components";
-import React from "react";
 
 export function DashboardHeader() {
   return (
