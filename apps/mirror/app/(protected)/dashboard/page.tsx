@@ -1,10 +1,10 @@
 import { ProfileInfoView } from "@/features/profile";
-import { DashboardContent } from "./_components/dashboard-content";
+import { DashboardView } from "./_views/dashboard-view";
 import { MOCK_ARTICLES } from "@/features/articles";
 
 export default function DashboardPage() {
   return (
-    <DashboardContent
+    <DashboardView
       profile={<ProfileInfoView />}
       articles={MOCK_ARTICLES}
     />

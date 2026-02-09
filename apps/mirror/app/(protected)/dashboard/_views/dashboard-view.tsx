@@ -2,18 +2,18 @@
 
 import { useMediaQuery } from "@feel-good/ui/hooks/use-media-query";
 import { MobileProfileLayout } from "@/features/profile";
-import { useArticleList, ArticleListView } from "@/features/articles";
+import { ArticleListView, useArticleList } from "@/features/articles";
 import type { Article } from "@/features/articles";
 
-type DashboardContentProps = {
+type DashboardViewProps = {
   profile: React.ReactNode;
   articles: Article[];
 };
 
-export function DashboardContent({
+export function DashboardView({
   profile,
   articles: allArticles,
-}: DashboardContentProps) {
+}: DashboardViewProps) {
   const { articles, hasMore, loadMore } = useArticleList(allArticles);
   const isMobile = useMediaQuery("(max-width: 767px)");
 
