@@ -10,9 +10,11 @@ import {
 import { useState } from "react";
 
 const PEEK_SNAP_POINT = 0.1585;
+const MIDDLE_SNAP_POINT = 0.5;
 const EXPANDED_SNAP_POINT = 1;
 const SHEET_SNAP_POINTS: Array<number | string> = [
   PEEK_SNAP_POINT,
+  MIDDLE_SNAP_POINT,
   EXPANDED_SNAP_POINT,
 ];
 
