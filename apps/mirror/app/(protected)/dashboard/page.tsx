@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "@/lib/auth-client";
-import { DashboardView } from "./_view/dashboard-view";
+import { ProfileInfoView } from "./_view/profile-info-view";
 import { MOCK_ARTICLES } from "./articles/_data/mock-articles";
 import { useArticleList } from "./articles/_hooks/use-article-list";
 import { ArticleListView } from "./articles/_view/article-list-view";
@@ -20,7 +20,7 @@ export default function DashboardPage() {
 
   return (
     <main className="flex h-screen gap-4">
-      <DashboardView />
+      <ProfileInfoView />
       <div className="flex-1 min-w-0 overflow-y-auto py-12 pb-[200px]">
         <ArticleListView
           articles={articles}
