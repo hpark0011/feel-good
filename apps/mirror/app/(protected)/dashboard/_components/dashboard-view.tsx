@@ -52,10 +52,8 @@ export function DashboardView(
           </div>
         </ResizablePanel>
 
-        <ResizableHandle
-          withHandle
-          className="bg-border-subtle data-[resize-handle-state=hover]:shadow-[0_0_0_0.5px_var(--color-resizable-handle-hover)] data-[resize-handle-state=drag]:shadow-[0_0_0_0.5px_var(--color-resizable-handle-hover)]"
-        />
+        <ResizableHandle // withHandle
+         className="bg-border-subtle data-[resize-handle-state=hover]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] data-[resize-handle-state=drag]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)]" />
 
         <ResizablePanel defaultSize={50}>
           <div className="relative h-full min-w-0 overflow-y-auto pb-[64px]">
