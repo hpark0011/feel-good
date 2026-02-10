@@ -26,7 +26,7 @@ export function DashboardView(
   if (isMobile) {
     return (
       <main className="h-screen">
-        <DashboardHeader />
+        <DashboardHeader className="fixed top-0 inset-x-0" />
         <MobileProfileLayout
           profile={<ProfileInfoView profile={profile} />}
           content={(scrollRoot) => (
@@ -52,11 +52,14 @@ export function DashboardView(
           </div>
         </ResizablePanel>
 
-        <ResizableHandle withHandle />
+        <ResizableHandle
+          withHandle
+          className="bg-border-subtle data-[resize-handle-state=hover]:shadow-[0_0_0_0.5px_var(--color-resizable-handle-hover)] data-[resize-handle-state=drag]:shadow-[0_0_0_0.5px_var(--color-resizable-handle-hover)]"
+        />
 
         <ResizablePanel defaultSize={50}>
-          <div className="relative h-full min-w-0 overflow-y-auto px-0 py-10 pb-[64px]">
-            <DashboardHeader />
+          <div className="relative h-full min-w-0 overflow-y-auto pb-[64px]">
+            <DashboardHeader className="sticky top-0" />
             <div className="px-4">
               <ScrollableArticleList articles={articles} />
             </div>
