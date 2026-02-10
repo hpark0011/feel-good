@@ -115,6 +115,7 @@
   --color-border: var(--border);
   --color-border-subtle: var(--border-subtle);
   --color-ring: var(--ring);
+  --color-resizable-handle-hover: var(--border-subtle);
 
   /* Icon */
   --color-icon: var(--gray-8);
