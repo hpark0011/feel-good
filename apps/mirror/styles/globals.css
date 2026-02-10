@@ -30,3 +30,23 @@
 
 .dark {
 }
+
+/* View transition animations for dashboard content */
+::view-transition-old(dashboard-content) {
+  animation: content-fade-out 150ms ease-out;
+}
+::view-transition-new(dashboard-content) {
+  animation: content-fade-in 200ms ease-in;
+}
+@keyframes content-fade-out {
+  to {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+@keyframes content-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}

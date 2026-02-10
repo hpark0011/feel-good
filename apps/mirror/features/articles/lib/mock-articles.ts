@@ -280,3 +280,7 @@ export const MOCK_ARTICLES: Article[] = [
     body: "Learn the rules thoroughly. Understand why they exist. Then, when you break them, break them deliberately and with full awareness of what you're doing. The difference between innovation and incompetence is intention.\n\nEvery genre has its conventions. Every medium has its best practices. These exist for good reason — they represent accumulated wisdom about what works. But wisdom is not law. The rules describe what has worked, not what will always work.\n\nThe artists who change culture are the ones who know the rules well enough to violate them meaningfully. They don't break rules out of ignorance or laziness. They break rules because they've discovered something the rules don't account for.",
   },
 ];
+
+export function findArticleBySlug(slug: string): Article | undefined {
+  return MOCK_ARTICLES.find((a) => a.slug === slug);
+}
