@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { notFound } from "next/navigation";
+import { ArticleDetailView, findArticleBySlug } from "@/features/articles";
 
 export default async function ArticlePage({
   params,
@@ -6,21 +7,7 @@ export default async function ArticlePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-
-  return (
-    <div className="min-h-screen">
-      <main className="mx-auto max-w-2xl px-4 py-16">
-        <Link
-          href="/dashboard"
-          className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          &larr; Back to profile
-        </Link>
-        <h1 className="text-2xl font-semibold mt-6">{slug}</h1>
-        <p className="text-muted-foreground mt-4">
-          Article detail page — coming soon.
-        </p>
-      </main>
-    </div>
-  );
+  const article = findArticleBySlug(slug);
+  if (!article) notFound();
+  return <ArticleDetailView article={article} />;
 }

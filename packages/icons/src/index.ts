@@ -157,6 +157,7 @@ export { UnderlineIcon } from "./components/underline";
 export { UpvoteIcon } from "./components/upvote";
 export { VideoFillIcon } from "./components/video-fill";
 export { VideoSlashFillIcon } from "./components/video-slash-fill";
+export { WaveformIcon } from "./components/waveform";
 export { WaveformPathEcgIcon } from "./components/waveform-path-ecg";
 export { WonSignIcon } from "./components/won-sign";
 export { XCircleFillIcon } from "./components/x-circle-fill";

@@ -160,7 +160,7 @@ export const MOCK_ARTICLES: Article[] = [
     created_at: "2025-10-05T08:00:00Z",
     published_at: "2025-10-10T09:00:00Z",
     category: "Creativity",
-    body: "We live in an age of instant everything. Instant communication, instant gratification, instant feedback. But great art refuses to be rushed. It has its own timeline, its own rhythm, and it will not be hurried.\n\nSome albums take years. Not because the artist is lazy or unfocused, but because the work isn't ready. Forcing an album to be done before it's ready is like picking fruit before it's ripe — technically possible, but the result is never as good.\n\nPatience is not waiting passively. It's an active practice of trusting that the work will reveal itself when it's time. Your job is to stay engaged, stay attentive, and be ready when the moment arrives.",
+    body: "We live in an age of instant everything. Instant communication, instant gratification, instant feedback. But great art refuses to be rushed. It has its own timeline, its own rhythm, and it will not be hurried.\n\nSome albums take years. Not because the artist is lazy or unfocused, but because the work isn't ready. Forcing an album to be done before it's ready is like picking fruit before it's ripe — technically possible, but the result is never as good.\n\nPatience is not waiting passively. It's an active practice of trusting that the work will reveal itself when it's time. Your job is to stay engaged, stay attentive, and be ready when the moment arrives. We live in an age of instant everything. Instant communication, instant gratification, instant feedback. But great art refuses to be rushed. It has its own timeline, its own rhythm, and it will not be hurried.\n\nSome albums take years. Not because the artist is lazy or unfocused, but because the work isn't ready. Forcing an album to be done before it's ready is like picking fruit before it's ripe — technically possible, but the result is never as good.\n\nPatience is not waiting passively. It's an active practice of trusting that the work will reveal itself when it's time. Your job is to stay engaged, stay attentive, and be ready when the moment arrives. ",
   },
   {
     slug: "the-breath-between-notes",
@@ -280,3 +280,7 @@ export const MOCK_ARTICLES: Article[] = [
     body: "Learn the rules thoroughly. Understand why they exist. Then, when you break them, break them deliberately and with full awareness of what you're doing. The difference between innovation and incompetence is intention.\n\nEvery genre has its conventions. Every medium has its best practices. These exist for good reason — they represent accumulated wisdom about what works. But wisdom is not law. The rules describe what has worked, not what will always work.\n\nThe artists who change culture are the ones who know the rules well enough to violate them meaningfully. They don't break rules out of ignorance or laziness. They break rules because they've discovered something the rules don't account for.",
   },
 ];
+
+export function findArticleBySlug(slug: string): Article | undefined {
+  return MOCK_ARTICLES.find((a) => a.slug === slug);
+}

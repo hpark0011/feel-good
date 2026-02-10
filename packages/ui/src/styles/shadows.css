@@ -11,6 +11,27 @@
   --shadow-dock-icon-active: 0px 3px 3px -1.5px rgba(0, 0, 0, 0.04),
     0px 6px 6px -3px rgba(0, 0, 0, 0.04), 0px 12px 12px -6px rgba(0, 0, 0, 0.04),
     0px 24px 24px -12px rgba(0, 0, 0, 0.04);
+
+  /* Shiny Button — outer drop shadow */
+  --shadow-shiny-md: 0 12px 12px -6px rgba(255, 255, 255, 0.8),
+    0 14px 14px -6px rgba(0, 0, 0, 0.6);
+  --shadow-shiny-md-hover: 0 14px 8px -6px rgba(255, 255, 255, 0.9),
+    0 4px 4px -4px rgba(0, 0, 0, 0.4);
+  --shadow-shiny-lg: 0 20px 12px -16px rgba(255, 255, 255, 0.9),
+    0 16px 24px -8px rgba(0, 0, 0, 0.4);
+  --shadow-shiny-lg-hover: 0 24px 14px -12px rgba(255, 255, 255, 0.9),
+    0 4px 4px -4px rgba(0, 0, 0, 0.4);
+
+  /* Shiny Button — inner inset shadow */
+  --inset-shadow-shiny: 0 1px 0 2px rgba(0, 0, 0, 0.25);
+  --inset-shadow-shiny-hover: 0px 0px 0 2px rgba(0, 0, 0, 0.2);
+
+  /* Shiny Button — hover highlight inset glow */
+  --inset-shadow-shiny-highlight: 0 -6px 12px rgba(255, 255, 255, 0.9);
+
+  /* Shiny Button — label text shadow */
+  --drop-shadow-shiny-label: 1px 3px 1px rgba(0, 0, 0, 0.3);
+  --drop-shadow-shiny-label-hover: 1px 1px 0px rgba(0, 0, 0, 0.1);
 }
 
 .dark {
@@ -26,6 +47,31 @@
   --shadow-dock-icon-active: 0px 3px 3px -1.5px rgba(0, 0, 0, 0.2),
     0px 6px 6px -3px rgba(0, 0, 0, 0.2), 0px 12px 12px -6px rgba(0, 0, 0, 0.2),
     0px 24px 24px -12px rgba(0, 0, 0, 0.2);
+
+  /* Shiny Button — outer drop shadow */
+  --shadow-shiny-md: 0 14px 16px -12px rgba(255, 255, 255, 0.3),
+    0px 10px 20px -4px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  --shadow-shiny-md-hover: 0 14px 8px -6px rgba(255, 255, 255, 0.2),
+    0px 10px 20px -4px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  --shadow-shiny-lg: 0 14px 16px -12px rgba(255, 255, 255, 0.2),
+    0px 10px 20px -4px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  --shadow-shiny-lg-hover: 0 24px 14px -12px rgba(255, 255, 255, 0.2),
+    0px 10px 20px -4px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+
+  /* Shiny Button — inner inset shadow */
+  --inset-shadow-shiny: 0 2px 0 3px rgba(0, 0, 0, 0.6);
+  --inset-shadow-shiny-hover: 0px 0px 0 2px rgba(0, 0, 0, 0.2);
+
+  /* Shiny Button — hover highlight inset glow */
+  --inset-shadow-shiny-highlight: 0 -2px 12px 0px rgba(255, 255, 255, 0.8);
+
+  /* Shiny Button — label text shadow */
+  --drop-shadow-shiny-label: 1px 3px 1px rgba(0, 0, 0, 0.1);
+  --drop-shadow-shiny-label-hover: 1px 1px 0px rgba(255, 255, 255, 0.1);
 }
 
 @theme inline {
@@ -35,4 +81,15 @@
 
   /* Dock Icon Active */
   --shadow-dock-icon-active: var(--shadow-dock-icon-active);
+
+  /* Shiny Button */
+  --shadow-shiny-md: var(--shadow-shiny-md);
+  --shadow-shiny-md-hover: var(--shadow-shiny-md-hover);
+  --shadow-shiny-lg: var(--shadow-shiny-lg);
+  --shadow-shiny-lg-hover: var(--shadow-shiny-lg-hover);
+  --inset-shadow-shiny: var(--inset-shadow-shiny);
+  --inset-shadow-shiny-hover: var(--inset-shadow-shiny-hover);
+  --inset-shadow-shiny-highlight: var(--inset-shadow-shiny-highlight);
+  --drop-shadow-shiny-label: var(--drop-shadow-shiny-label);
+  --drop-shadow-shiny-label-hover: var(--drop-shadow-shiny-label-hover);
 }

@@ -1,9 +1,9 @@
 "use client";
 
-import type { Article } from "@/features/articles";
-import { ScrollableArticleList } from "@/features/articles";
+import { ViewTransition } from "react";
 import type { Profile } from "@/features/profile";
 import { MobileProfileLayout, ProfileInfoView } from "@/features/profile";
+import { ScrollRootProvider } from "@/features/articles";
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
 import {
   ResizableHandle,
@@ -12,17 +12,14 @@ import {
 } from "@feel-good/ui/primitives/resizable";
 import { DashboardHeader } from "./dashboard-header";
 
-type DashboardViewProps = {
+type DashboardShellProps = {
   profile: Profile;
-  articles: Article[];
+  children: React.ReactNode;
 };
 
-export function DashboardView(
-  { profile, articles }: DashboardViewProps,
-) {
+export function DashboardShell({ profile, children }: DashboardShellProps) {
   const isMobile = useIsMobile();
 
-  // Mobile layout
   if (isMobile) {
     return (
       <main className="h-screen">
@@ -30,19 +27,19 @@ export function DashboardView(
         <MobileProfileLayout
           profile={<ProfileInfoView profile={profile} />}
           content={(scrollRoot) => (
-            <div className="px-3">
-              <ScrollableArticleList
-                articles={articles}
-                scrollRoot={scrollRoot}
-              />
-            </div>
+            <ScrollRootProvider value={scrollRoot}>
+              <div className="px-3">
+                <ViewTransition name="dashboard-content">
+                  {children}
+                </ViewTransition>
+              </div>
+            </ScrollRootProvider>
           )}
         />
       </main>
     );
   }
 
-  // Desktop layout
   return (
     <main className="h-screen">
       <ResizablePanelGroup direction="horizontal" className="h-full">
@@ -52,14 +49,17 @@ export function DashboardView(
           </div>
         </ResizablePanel>
 
-        <ResizableHandle // withHandle
-         className="bg-border-subtle data-[resize-handle-state=hover]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] data-[resize-handle-state=drag]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)]" />
+        <ResizableHandle
+          className="bg-border-subtle data-[resize-handle-state=hover]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] data-[resize-handle-state=drag]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)]"
+        />
 
         <ResizablePanel defaultSize={50}>
           <div className="relative h-full min-w-0 overflow-y-auto pb-[64px]">
             <DashboardHeader className="sticky top-0" />
             <div className="px-4">
-              <ScrollableArticleList articles={articles} />
+              <ViewTransition name="dashboard-content">
+                {children}
+              </ViewTransition>
             </div>
           </div>
         </ResizablePanel>

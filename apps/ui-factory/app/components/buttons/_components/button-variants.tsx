@@ -5,6 +5,7 @@ import { Divider } from "@/components/divider";
 import { Button } from "@feel-good/ui/primitives/button";
 import { PlusIcon } from "lucide-react";
 import { BUTTON_VARIANTS } from "../_utils/button-variants.config";
+import { ShinyButton } from "@feel-good/ui/components/shiny-button";
 
 const variantLabels: Record<(typeof BUTTON_VARIANTS)[number], string> = {
   default: "Default",
@@ -123,6 +124,19 @@ export function ButtonVariants() {
             <Button key={variant} variant={variant} size="icon-lg">
               <PlusIcon />
             </Button>
+          ))}
+        </ButtonGroupWrapper>
+      </PageSection>
+
+      <Divider />
+
+      <PageSection>
+        <PageSectionHeader>Variant: Shiny</PageSectionHeader>
+        <ButtonGroupWrapper>
+          {BUTTON_VARIANTS.map((variant) => (
+            <ShinyButton key={variant}>
+              {variantLabels[variant]}
+            </ShinyButton>
           ))}
         </ButtonGroupWrapper>
       </PageSection>
