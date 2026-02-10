@@ -17,13 +17,15 @@ const buttonVariants = cva(
   },
 );
 
+const SHADOW_RADIUS = "rounded-[6px]";
+
 const shadowVariants = cva(
   "absolute inset-0 inset-shadow-shiny blur-[3px] m-0.5 mt-1 group-hover:inset-shadow-shiny-hover group-hover:blur-[2px] transition-all duration-300 ease-in-out dark:bg-gradient-to-b dark:from-white/0 dark:to-white/10",
   {
     variants: {
       size: {
-        sm: "rounded-[6px]",
-        md: "rounded-[6px]",
+        sm: SHADOW_RADIUS,
+        md: SHADOW_RADIUS,
         lg: "rounded-[8px]",
       },
     },
@@ -39,8 +41,6 @@ export interface ShinyButtonProps extends VariantProps<typeof buttonVariants> {
   onClick?: () => void;
   className?: string;
   shadowClassName?: string;
-  form?: string;
-  disabled?: boolean;
 }
 
 export function ShinyButton({
@@ -50,16 +50,12 @@ export function ShinyButton({
   className,
   shadowClassName,
   size,
-  form,
-  disabled,
 }: ShinyButtonProps) {
   return (
     <button
       className={cn(buttonVariants({ size }), className)}
       onClick={onClick}
       type={type}
-      form={form}
-      disabled={disabled}
     >
       {/* Shadow */}
       <div className={cn(shadowVariants({ size }), shadowClassName)} />

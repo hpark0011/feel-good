@@ -2,16 +2,7 @@ import { memo } from "react";
 import Link from "next/link";
 import { TableRow, TableCell } from "@feel-good/ui/primitives/table";
 import type { Article } from "../lib/mock-articles";
-
-const dateFormatter = new Intl.DateTimeFormat("en-US", {
-  month: "short",
-  day: "numeric",
-  year: "numeric",
-});
-
-function formatDate(dateString: string): string {
-  return dateFormatter.format(new Date(dateString));
-}
+import { formatShortDate } from "../lib/format-date";
 
 export const ArticleListItem = memo(function ArticleListItem({ article }: { article: Article }) {
   const href = `/dashboard/articles/${article.slug}`;
@@ -26,7 +17,7 @@ export const ArticleListItem = memo(function ArticleListItem({ article }: { arti
       <TableCell className="hidden md:table-cell py-0 font-medium">{article.category}</TableCell>
       <TableCell className="text-right py-0 font-medium">
         <time dateTime={article.published_at}>
-          {formatDate(article.published_at)}
+          {formatShortDate(article.published_at)}
         </time>
       </TableCell>
     </TableRow>

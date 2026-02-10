@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { findArticleBySlug, ArticleDetailView } from "@/features/articles";
+import { ArticleDetailView, findArticleBySlug } from "@/features/articles";
 
 export default async function ArticlePage({
   params,

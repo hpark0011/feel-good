@@ -1,14 +1,5 @@
 import type { Article } from "../lib/mock-articles";
-
-const dateFormatter = new Intl.DateTimeFormat("en-US", {
-  month: "long",
-  day: "numeric",
-  year: "numeric",
-});
-
-function formatDate(dateString: string): string {
-  return dateFormatter.format(new Date(dateString));
-}
+import { formatLongDate } from "../lib/format-date";
 
 type ArticleDetailViewProps = {
   article: Article;
@@ -30,7 +21,7 @@ export function ArticleDetailView({ article }: ArticleDetailViewProps) {
           dateTime={article.published_at}
           className="text-sm text-muted-foreground mt-2 block"
         >
-          {formatDate(article.published_at)}
+          {formatLongDate(article.published_at)}
         </time>
       </div>
 

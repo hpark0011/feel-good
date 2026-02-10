@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { Profile } from "../lib/mock-profile";
 import { ProfileMedia } from "../components/profile-media";
 import { ProfileActions } from "../components/profile-actions";
@@ -6,7 +7,7 @@ type ProfileInfoViewProps = {
   profile: Profile;
 };
 
-export function ProfileInfoView({ profile }: ProfileInfoViewProps) {
+export const ProfileInfoView = memo(function ProfileInfoView({ profile }: ProfileInfoViewProps) {
   return (
     <div className="flex flex-col items-center justify-center pb-[40px]">
       {/* Profile Name */}
@@ -31,4 +32,4 @@ export function ProfileInfoView({ profile }: ProfileInfoViewProps) {
       </div>
     </div>
   );
-}
+});

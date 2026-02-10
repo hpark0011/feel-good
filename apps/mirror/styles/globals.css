@@ -32,11 +32,14 @@
 }
 
 /* View transition animations for dashboard content */
+::view-transition-image-pair(dashboard-content) {
+  mix-blend-mode: plus-lighter;
+}
 ::view-transition-old(dashboard-content) {
-  animation: content-fade-out 150ms ease-out;
+  animation: content-fade-out 200ms ease-out both;
 }
 ::view-transition-new(dashboard-content) {
-  animation: content-fade-in 200ms ease-in;
+  animation: content-fade-in 200ms ease-in both;
 }
 @keyframes content-fade-out {
   to {
