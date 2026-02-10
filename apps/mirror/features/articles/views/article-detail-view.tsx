@@ -1,5 +1,6 @@
-import type { Article } from "../lib/mock-articles";
 import { formatLongDate } from "../lib/format-date";
+import type { Article } from "../lib/mock-articles";
+// import { formatLongDate } from "../lib/format-date";
 
 type ArticleDetailViewProps = {
   article: Article;
@@ -9,26 +10,24 @@ export function ArticleDetailView({ article }: ArticleDetailViewProps) {
   const paragraphs = article.body.split("\n\n");
 
   return (
-    <article className="max-w-2xl mx-auto py-8">
-      <div className="mb-6">
-        <span className="text-sm font-medium text-muted-foreground">
-          {article.category}
-        </span>
-        <h1 className="text-3xl font-semibold mt-2 leading-tight">
+    <article className="max-w-xl mx-auto py-8 px-4">
+      <div className="mb-[56px]">
+        <div className="flex flex-col items-start gap-0.5">
+          <span className="text-[15px] text-muted-foreground leading-[1.2]">
+            {formatLongDate(article.published_at)}
+          </span>
+
+          <span className="text-[15px] font-medium text-muted-foreground leading-[1.2]">
+            {article.category}
+          </span>
+        </div>
+        <h1 className="text-3xl font-medium mt-[56px] leading-tight tracking-[-0.02em] text-center">
           {article.title}
         </h1>
-        <time
-          dateTime={article.published_at}
-          className="text-sm text-muted-foreground mt-2 block"
-        >
-          {formatLongDate(article.published_at)}
-        </time>
       </div>
 
-      <div className="space-y-4 text-base leading-relaxed">
-        {paragraphs.map((paragraph, index) => (
-          <p key={index}>{paragraph}</p>
-        ))}
+      <div className="space-y-5 text-[19px] leading-[1.4] font-[480] text-secondary-foreground [&>p:not(:first-child)]:indent-14">
+        {paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
       </div>
     </article>
   );

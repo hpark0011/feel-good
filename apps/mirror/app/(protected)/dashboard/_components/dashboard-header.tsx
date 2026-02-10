@@ -1,10 +1,10 @@
 "use client";
 
+import { ThemeToggleButton } from "@feel-good/features/theme/components";
+import { Icon } from "@feel-good/ui/components/icon";
+import { cn } from "@feel-good/utils/cn";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
-import { ThemeToggleButton } from "@feel-good/features/theme/components";
-import { cn } from "@feel-good/utils/cn";
 
 type DashboardHeaderProps = {
   className?: string;
@@ -25,10 +25,13 @@ export function DashboardHeader({ className }: DashboardHeaderProps) {
       {isArticleDetail && (
         <Link
           href="/dashboard"
-          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-0.5 text-[14px] text-muted-foreground hover:text-foreground  group"
         >
-          <ArrowLeft className="h-4 w-4" />
-          <span>Back</span>
+          <Icon
+            name="ArrowLeftCircleFillIcon"
+            className="size-6 text-icon group-hover:text-foreground"
+          />
+          <span className="leading-[1.2]">Back</span>
         </Link>
       )}
       <ThemeToggleButton />
