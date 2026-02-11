@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { MOCK_PROFILE } from "@/features/profile";
 import { isReservedUsername } from "@/lib/reserved-usernames";
+import { isAuthenticated } from "@/lib/auth-server";
 import { ProfileShell } from "./_components/profile-shell";
 
 export default async function ProfileLayout({
@@ -13,8 +14,11 @@ export default async function ProfileLayout({
   const { username } = await params;
   if (isReservedUsername(username)) notFound();
   if (username !== MOCK_PROFILE.username) notFound();
+
+  const isOwner = await isAuthenticated();
+
   return (
-    <ProfileShell profile={MOCK_PROFILE}>
+    <ProfileShell profile={MOCK_PROFILE} isOwner={isOwner}>
       {children}
     </ProfileShell>
   );
