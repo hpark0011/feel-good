@@ -23,7 +23,9 @@ type ProfileShellProps = {
   children: React.ReactNode;
 };
 
-export function ProfileShell({ profile, isOwner, children }: ProfileShellProps) {
+export function ProfileShell(
+  { profile, isOwner, children }: ProfileShellProps,
+) {
   const { username } = profile;
   const isMobile = useIsMobile();
   const { isArticleDetail } = useNavDirection();
@@ -76,7 +78,7 @@ export function ProfileShell({ profile, isOwner, children }: ProfileShellProps) 
             </div>
           </ResizablePanel>
 
-          <ResizableHandle className="bg-border-subtle data-[resize-handle-state=hover]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] data-[resize-handle-state=drag]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)]z-200 relative" />
+          <ResizableHandle className="bg-border-subtle data-[resize-handle-state=hover]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] data-[resize-handle-state=drag]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] z-100 relative" />
 
           <ResizablePanel defaultSize={50} minSize={40} maxSize={80}>
             <div className="relative h-full min-w-0 flex flex-col">

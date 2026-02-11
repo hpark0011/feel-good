@@ -19,7 +19,7 @@ export function ProfileHeader({
   return (
     <header
       className={cn(
-        "z-10 flex h-10 items-center gap-2 px-4",
+        "z-10 flex h-10 items-center gap-2 px-4 bg-linear-to-b from-background via-background/70 to-transparent",
         isArticleDetail ? "justify-between" : "justify-end",
         className,
       )}
