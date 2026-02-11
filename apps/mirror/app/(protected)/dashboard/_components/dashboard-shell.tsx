@@ -11,7 +11,7 @@ import {
   ResizablePanelGroup,
 } from "@feel-good/ui/primitives/resizable";
 import { DashboardHeader } from "./dashboard-header";
-import { useNavDirection } from "./use-nav-direction";
+import { useNavDirection } from "@/hooks/use-nav-direction";
 
 type DashboardShellProps = {
   profile: Profile;
