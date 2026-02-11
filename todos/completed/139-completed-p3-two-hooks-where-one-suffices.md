@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "139"
 tags: [code-review, simplification, react, mirror]
@@ -30,14 +30,15 @@ Note: If #136 narrows the context to `{ isOwner: boolean }` only, then `useProfi
 
 ## Acceptance Criteria
 
-- [ ] Only the hooks that are consumed are exported from the barrel
-- [ ] Public API surface is minimal
+- [x] Only the hooks that are consumed are exported from the barrel
+- [x] Public API surface is minimal
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-11 | Created from PR #115 review | Don't export speculative API — export when consumed |
+| 2026-02-11 | Completed: removed `useProfileContext` export | Made hook module-private, removed from barrel |
 
 ## Resources
 

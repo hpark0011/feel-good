@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "136"
 tags: [code-review, architecture, react-context, mirror]
@@ -22,31 +22,26 @@ The context was motivated by `isOwner` — the value that actually needs to skip
 
 ## Proposed Solutions
 
-### Option A: Narrow context to isOwner only (Recommended)
+### Option A: Narrow context to isOwner only (Recommended) ✅ IMPLEMENTED
 - Change `ProfileContextValue` to `{ isOwner: boolean }`
 - Remove `profile` from `useMemo` deps and context value
 - Keep `useIsProfileOwner()` as the public hook
-- Rename or remove `useProfileContext` since it no longer returns anything beyond `isOwner`
+- Removed `useProfileContext` since it no longer returns anything beyond `isOwner`
 - **Effort:** Small
 - **Risk:** None
 
-### Option B: Keep profile in context, restrict exports
-- Keep `profile` in context for anticipated future use
-- Only export `useIsProfileOwner` from barrel; keep `useProfileContext` internal
-- **Effort:** Small
-- **Risk:** Low (but defers the dual-path concern)
-
 ## Acceptance Criteria
 
-- [ ] Only one delivery mechanism for `profile` data (props)
-- [ ] `isOwner` is available via context for deeply nested components
-- [ ] No dual-source confusion for consumers
+- [x] Only one delivery mechanism for `profile` data (props)
+- [x] `isOwner` is available via context for deeply nested components
+- [x] No dual-source confusion for consumers
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-11 | Created from PR #115 review | Context should hold only values that need to skip tree levels; avoid duplicating prop-drilled data |
+| 2026-02-11 | Implemented Option A | Removed `profile` from context, inlined `useProfileContext` into `useIsProfileOwner`, removed `Profile` type import |
 
 ## Resources
 

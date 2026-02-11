@@ -4,6 +4,5 @@ export { MOCK_PROFILE } from "./lib/mock-profile";
 export type { Profile } from "./lib/mock-profile";
 export {
   ProfileProvider,
-  useProfileContext,
   useIsProfileOwner,
 } from "./context/profile-context";

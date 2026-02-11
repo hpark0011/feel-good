@@ -35,13 +35,13 @@ export function ProfileShell(
   >(null);
 
   const contextValue = useMemo(
-    () => ({ profile, isOwner }),
-    [profile, isOwner],
+    () => ({ isOwner }),
+    [isOwner],
   );
 
-  if (isMobile) {
-    return (
-      <ProfileProvider value={contextValue}>
+  return (
+    <ProfileProvider value={contextValue}>
+      {isMobile ? (
         <main className="h-screen">
           <ProfileHeader
             username={username}
@@ -64,39 +64,35 @@ export function ProfileShell(
             )}
           />
         </main>
-      </ProfileProvider>
-    );
-  }
-
-  return (
-    <ProfileProvider value={contextValue}>
-      <main className="h-screen">
-        <ResizablePanelGroup direction="horizontal" className="h-full">
-          <ResizablePanel defaultSize={50} minSize={25} maxSize={80}>
-            <div className="relative z-20 h-full flex flex-col justify-center items-center px-6">
-              <ProfileInfoView profile={profile} />
-            </div>
-          </ResizablePanel>
-
-          <ResizableHandle className="bg-border-subtle data-[resize-handle-state=hover]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] data-[resize-handle-state=drag]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] z-100 relative" />
-
-          <ResizablePanel defaultSize={50} minSize={40} maxSize={80}>
-            <div className="relative h-full min-w-0 flex flex-col">
-              <ProfileHeader
-                username={username}
-                isArticleDetail={isArticleDetail}
-              />
-              <div className="flex-1 min-h-0 *:h-full">
-                <ViewTransition name="profile-content">
-                  <div className="overflow-y-auto h-full px-4 pb-[64px]">
-                    {children}
-                  </div>
-                </ViewTransition>
+      ) : (
+        <main className="h-screen">
+          <ResizablePanelGroup direction="horizontal" className="h-full">
+            <ResizablePanel defaultSize={50} minSize={25} maxSize={80}>
+              <div className="relative z-20 h-full flex flex-col justify-center items-center px-6">
+                <ProfileInfoView profile={profile} />
               </div>
-            </div>
-          </ResizablePanel>
-        </ResizablePanelGroup>
-      </main>
+            </ResizablePanel>
+
+            <ResizableHandle className="bg-border-subtle data-[resize-handle-state=hover]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] data-[resize-handle-state=drag]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] z-100 relative" />
+
+            <ResizablePanel defaultSize={50} minSize={40} maxSize={80}>
+              <div className="relative h-full min-w-0 flex flex-col">
+                <ProfileHeader
+                  username={username}
+                  isArticleDetail={isArticleDetail}
+                />
+                <div className="flex-1 min-h-0 *:h-full">
+                  <ViewTransition name="profile-content">
+                    <div className="overflow-y-auto h-full px-4 pb-[64px]">
+                      {children}
+                    </div>
+                  </ViewTransition>
+                </div>
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </main>
+      )}
     </ProfileProvider>
   );
 }
