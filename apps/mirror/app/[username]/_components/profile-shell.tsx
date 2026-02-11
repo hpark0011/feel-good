@@ -15,15 +15,11 @@ import { useNavDirection } from "@/hooks/use-nav-direction";
 
 type ProfileShellProps = {
   profile: Profile;
-  username: string;
   children: React.ReactNode;
 };
 
-export function ProfileShell({
-  profile,
-  username,
-  children,
-}: ProfileShellProps) {
+export function ProfileShell({ profile, children }: ProfileShellProps) {
+  const { username } = profile;
   const isMobile = useIsMobile();
   const { isArticleDetail } = useNavDirection();
 

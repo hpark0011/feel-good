@@ -12,7 +12,7 @@ export default async function ProfileLayout({
   const { username } = await params;
   if (username !== MOCK_PROFILE.username) notFound();
   return (
-    <ProfileShell profile={MOCK_PROFILE} username={username}>
+    <ProfileShell profile={MOCK_PROFILE}>
       {children}
     </ProfileShell>
   );
