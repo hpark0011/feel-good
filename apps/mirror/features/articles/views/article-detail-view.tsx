@@ -10,7 +10,7 @@ export function ArticleDetailView({ article }: ArticleDetailViewProps) {
   const paragraphs = article.body.split("\n\n");
 
   return (
-    <div className="py-8 px-4 bg-background min-h-[calc(100vh-40px)]">
+    <div className="py-22 px-4 bg-background min-h-[calc(100vh-40px)]">
       <article className="max-w-xl mx-auto">
         <div className="mb-[56px]">
           <div className="flex flex-col items-start gap-0.5">
@@ -22,7 +22,7 @@ export function ArticleDetailView({ article }: ArticleDetailViewProps) {
               {article.category}
             </span>
           </div>
-          <h1 className="text-3xl font-medium mt-[56px] leading-tight tracking-[-0.02em] text-center">
+          <h1 className="text-3xl font-medium mt-[48px] leading-tight tracking-[-0.02em] text-center">
             {article.title}
           </h1>
         </div>
