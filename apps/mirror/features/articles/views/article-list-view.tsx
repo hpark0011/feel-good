@@ -16,7 +16,7 @@ type ArticleListViewProps = {
   hasMore: boolean;
   onLoadMore: () => void;
   scrollRoot?: HTMLElement | null;
-  username?: string;
+  username: string;
 };
 
 export function ArticleListView({

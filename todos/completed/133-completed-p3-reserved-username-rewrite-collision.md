@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "133"
 tags: [code-review, routing, mirror, pr-114]
@@ -73,15 +73,16 @@ Option A when user registration is built. No action needed now with mock data.
 
 ## Acceptance Criteria
 
-- [ ] Reserved route names cannot be registered as usernames
-- [ ] `/@dashboard` either shows a 404 or is handled gracefully
-- [ ] No route collision between usernames and static segments
+- [x] Reserved route names cannot be registered as usernames
+- [x] `/@dashboard` either shows a 404 or is handled gracefully
+- [x] No route collision between usernames and static segments
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-11 | Created from PR #114 code review | Vanity URL systems need reserved name blocklists |
+| 2026-02-11 | Implemented Option A — reserved username blocklist in `lib/reserved-usernames.ts`, guard in `[username]/layout.tsx` | Use `Set` for O(1) lookups on blocklists |
 
 ## Resources
 

@@ -6,11 +6,11 @@ import { formatShortDate } from "../lib/format-date";
 
 type ArticleListItemProps = {
   article: Article;
-  username?: string;
+  username: string;
 };
 
 export const ArticleListItem = memo(function ArticleListItem({ article, username }: ArticleListItemProps) {
-  const href = username ? `/@${username}/${article.slug}` : `/dashboard/articles/${article.slug}`;
+  const href = `/@${username}/${article.slug}`;
 
   return (
     <TableRow className="relative border-b-0 group-hover/list:text-muted-foreground hover:text-secondary-foreground hover:bg-transparent min-h-[44px]">

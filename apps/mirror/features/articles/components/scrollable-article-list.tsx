@@ -7,7 +7,7 @@ import { useScrollRoot } from "../context/scroll-root-context";
 
 type ScrollableArticleListProps = {
   articles: Article[];
-  username?: string;
+  username: string;
 };
 
 export function ScrollableArticleList({

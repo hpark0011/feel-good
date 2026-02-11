@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "132"
 tags: [code-review, typescript, dead-code, mirror, pr-114]
