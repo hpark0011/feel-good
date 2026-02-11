@@ -6,6 +6,7 @@ import {
 } from "@feel-good/ui/primitives/alert-dialog";
 import { Button } from "@feel-good/ui/primitives/button";
 import { Icon } from "@feel-good/ui/components/icon";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@feel-good/ui/primitives/tooltip";
 import { DeleteArticlesDialog } from "../views/delete-articles-dialog";
 
 type ArticleToolbarProps = {
@@ -30,38 +31,64 @@ export function ArticleToolbar(
 
           <AlertDialog>
             <DeleteArticlesDialog count={selectedCount} onConfirm={onDelete} />
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon-sm"
-                disabled={!hasSelection}
-                aria-label={hasSelection
-                  ? `Delete ${selectedCount} selected`
-                  : "Delete"}
-              >
-                <Icon name="TrashFillIcon" />
-              </Button>
-            </AlertDialogTrigger>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    disabled={!hasSelection}
+                    aria-label={hasSelection
+                      ? `Delete ${selectedCount} selected`
+                      : "Delete"}
+                  >
+                    <Icon name="TrashFillIcon" />
+                  </Button>
+                </AlertDialogTrigger>
+              </TooltipTrigger>
+              <TooltipContent>Delete</TooltipContent>
+            </Tooltip>
           </AlertDialog>
         </div>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-        >
-          <Icon name="MagnifyingGlassIcon" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-        >
-          <Icon name="ArrowUpAndDownIcon" className="size-4.5" />
-        </Button>
-        <Button
-          variant="ghost"
-          size="icon-sm"
-        >
-          <Icon name="Line3Icon" />
-        </Button>
+
+        {/* Search */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+            >
+              <Icon name="MagnifyingGlassIcon" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Search</TooltipContent>
+        </Tooltip>
+
+        {/* Sort */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+            >
+              <Icon name="ArrowUpAndDownIcon" className="size-4.5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Sort</TooltipContent>
+        </Tooltip>
+
+        {/* Filter */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+            >
+              <Icon name="Line3Icon" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Filter</TooltipContent>
+        </Tooltip>
       </div>
       <Button
         variant="primary"
