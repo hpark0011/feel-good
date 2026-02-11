@@ -11,6 +11,7 @@ import {
   ResizablePanelGroup,
 } from "@feel-good/ui/primitives/resizable";
 import { DashboardHeader } from "./dashboard-header";
+import { useNavDirection } from "./use-nav-direction";
 
 type DashboardShellProps = {
   profile: Profile;
@@ -19,6 +20,7 @@ type DashboardShellProps = {
 
 export function DashboardShell({ profile, children }: DashboardShellProps) {
   const isMobile = useIsMobile();
+  useNavDirection();
 
   if (isMobile) {
     return (

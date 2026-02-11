@@ -86,3 +86,15 @@
   - `pnpm --filter @feel-good/mirror lint` (passes).
   - `pnpm --filter @feel-good/mirror exec tsc --noEmit` (passes).
   - `pnpm --filter @feel-good/mirror build` (fails in sandbox due blocked Google Fonts fetch for Geist Mono).
+
+# 2026-02-11 Mirror Article Detail Slide-In Transition Plan
+
+- [ ] Confirm transition intent signaling mechanism for list -> detail navigation (recommended: set a temporary navigation intent on click in `article-list-item.tsx`)
+- [ ] Update `dashboard-shell.tsx` to support transition clipping/layering for content snapshots (ensure the animated content region is treated as an overlay container)
+- [ ] Rewrite `dashboard-content` view-transition CSS in `globals.css` so old content remains visible while new content slides in from the right on top
+- [ ] Keep reduced-motion behavior intact and avoid affecting non-article transitions
+- [ ] Verify behavior manually for list -> detail and detail -> list routes, then run `pnpm --filter @feel-good/mirror lint`
+
+## Review
+
+- Planning only. Waiting for implementation approval.
