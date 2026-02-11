@@ -1,6 +1,6 @@
 import { memo } from "react";
 import Link from "next/link";
-import { TableRow, TableCell } from "@feel-good/ui/primitives/table";
+import { TableCell, TableRow } from "@feel-good/ui/primitives/table";
 import { Checkbox } from "@feel-good/ui/primitives/checkbox";
 import type { Article } from "../lib/mock-articles";
 import { formatShortDate } from "../lib/format-date";
@@ -28,7 +28,7 @@ export const ArticleListItem = memo(function ArticleListItem({
       data-state={isSelected ? "selected" : undefined}
     >
       {isOwner && (
-        <TableCell className="relative z-10 w-10 py-0">
+        <TableCell className="relative z-10 w-12 py-0 pl-1.5 [&:has([role=checkbox])]:pr-2 rounded-l-md">
           <Checkbox
             checked={isSelected}
             onCheckedChange={() => onToggle?.(article.slug)}
@@ -41,8 +41,10 @@ export const ArticleListItem = memo(function ArticleListItem({
           {article.title}
         </Link>
       </TableCell>
-      <TableCell className="hidden md:table-cell py-0 font-medium">{article.category}</TableCell>
-      <TableCell className="text-right py-0 font-medium">
+      <TableCell className="hidden md:table-cell py-0 font-medium">
+        {article.category}
+      </TableCell>
+      <TableCell className="text-right py-0 font-medium rounded-r-md">
         <time dateTime={article.published_at}>
           {formatShortDate(article.published_at)}
         </time>

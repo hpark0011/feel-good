@@ -1,11 +1,11 @@
 import {
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogAction,
-  AlertDialogCancel,
 } from "@feel-good/ui/primitives/alert-dialog";
 
 type DeleteArticlesDialogProps = {
@@ -13,20 +13,27 @@ type DeleteArticlesDialogProps = {
   onConfirm: () => void;
 };
 
-export function DeleteArticlesDialog({ count, onConfirm }: DeleteArticlesDialogProps) {
+export function DeleteArticlesDialog(
+  { count, onConfirm }: DeleteArticlesDialogProps,
+) {
   const label = count === 1 ? "article" : "articles";
 
   return (
-    <AlertDialogContent size="sm">
-      <AlertDialogHeader>
-        <AlertDialogTitle>Delete {label}</AlertDialogTitle>
+    <AlertDialogContent
+      size="sm"
+      className="data-[size=sm]:max-w-sm"
+    >
+      <AlertDialogHeader className="mb-2">
+        <AlertDialogTitle className="text-lg">Delete {label}</AlertDialogTitle>
         <AlertDialogDescription>
-          This will permanently delete {count} {label}. This action cannot be
-          undone.
+          This will permanently delete {count}{" "}
+          {label}. This action cannot be undone.
         </AlertDialogDescription>
       </AlertDialogHeader>
       <AlertDialogFooter>
-        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogCancel variant="outline" className="dark:bg-dialog">
+          Cancel
+        </AlertDialogCancel>
         <AlertDialogAction variant="destructive" onClick={onConfirm}>
           Delete
         </AlertDialogAction>
