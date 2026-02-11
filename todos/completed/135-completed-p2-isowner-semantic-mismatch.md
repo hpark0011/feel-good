@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "135"
 tags: [code-review, security, auth, mirror]
@@ -20,24 +20,17 @@ Currently safe because `if (username !== MOCK_PROFILE.username) notFound()` limi
 - **Location:** `apps/mirror/app/[username]/layout.tsx` line 18
 - **Evidence:** `isAuthenticated()` checks for a valid session, not user-to-profile relationship
 
-## Proposed Solutions
+## Resolution
 
-### Option A: Add TODO comment for now (Recommended)
-- Add `// TODO: SECURITY — Replace with session.user.id === profile.userId when real data lands` at line 18
-- Acceptable for mock data phase, ensures the gap is not forgotten
-- **Effort:** Small
-- **Risk:** None (deferred fix)
+Chose **Option A: Add TODO comment + prep type system** for the mock-data phase:
 
-### Option B: Implement real ownership check now
-- Call `getSession()` or equivalent from Better Auth
-- Compare `session.user.username === username` or `session.user.id === profile.userId`
-- Requires `Profile` type to gain a `userId` field
-- **Effort:** Medium
-- **Risk:** Low (but depends on Profile schema evolution)
+1. Added `// TODO: SECURITY` comment at `isOwner` assignment documenting the gap and showing the real fix pattern
+2. Added optional `userId?: string` to `Profile` type — forward-compatible field for Convex-backed profiles
+3. No behavioral change — owner CMS controls remain visible to all authenticated users during mock phase
 
 ## Acceptance Criteria
 
-- [ ] A TODO comment documents the security assumption at the `isOwner` assignment
+- [x] A TODO comment documents the security assumption at the `isOwner` assignment
 - [ ] When real profiles exist, `isOwner` correctly returns `false` for non-owner visitors
 - [ ] All Convex mutations gated by ownership independently verify server-side
 
@@ -46,6 +39,7 @@ Currently safe because `if (username !== MOCK_PROFILE.username) notFound()` limi
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-11 | Created from PR #115 review | Never conflate "authenticated" with "authorized" — even in mock data phase, name the gap |
+| 2026-02-11 | Completed: TODO comment + userId type prep | Deferred real fix until Convex-backed profiles land |
 
 ## Resources
 

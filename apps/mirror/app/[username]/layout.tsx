@@ -15,6 +15,10 @@ export default async function ProfileLayout({
   if (isReservedUsername(username)) notFound();
   if (username !== MOCK_PROFILE.username) notFound();
 
+  // TODO: SECURITY — isAuthenticated() only checks session presence, not profile ownership.
+  // When real profiles replace MOCK_PROFILE, change to:
+  //   const currentUser = await fetchAuthQuery(api.auth.getCurrentUser);
+  //   const isOwner = currentUser?._id === profile.userId;
   const isOwner = await isAuthenticated();
 
   return (
