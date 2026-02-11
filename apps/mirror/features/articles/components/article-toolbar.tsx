@@ -19,7 +19,7 @@ export function ArticleToolbar(
   const hasSelection = selectedCount > 0;
 
   return (
-    <div className="flex items-center gap-2 px-px justify-end my-3 pr-[2px]">
+    <div className="flex items-center gap-2 px-px justify-end mb-3 mt-2 pr-[2px]">
       <div className="flex items-center gap-0">
         <div className="flex items-center gap-2">
           {hasSelection && (
