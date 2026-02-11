@@ -1,6 +1,5 @@
 import { formatLongDate } from "../lib/format-date";
 import type { Article } from "../lib/mock-articles";
-// import { formatLongDate } from "../lib/format-date";
 
 type ArticleDetailViewProps = {
   article: Article;

@@ -1,6 +1,6 @@
 "use client";
 
-import { ViewTransition } from "react";
+import { ViewTransition, useState } from "react";
 import type { Profile } from "@/features/profile";
 import { MobileProfileLayout, ProfileInfoView } from "@/features/profile";
 import { ScrollRootProvider } from "@/features/articles";
@@ -20,22 +20,27 @@ type DashboardShellProps = {
 
 export function DashboardShell({ profile, children }: DashboardShellProps) {
   const isMobile = useIsMobile();
-  useNavDirection();
+  const { isArticleDetail } = useNavDirection();
+
+  const [mobileScrollRoot, setMobileScrollRoot] = useState<HTMLDivElement | null>(null);
 
   if (isMobile) {
     return (
       <main className="h-screen">
-        <DashboardHeader className="fixed top-0 inset-x-0" />
+        <DashboardHeader isArticleDetail={isArticleDetail} className="fixed top-0 inset-x-0" />
         <MobileProfileLayout
           profile={<ProfileInfoView profile={profile} />}
-          content={(scrollRoot) => (
-            <ScrollRootProvider value={scrollRoot}>
-              <div className="px-3">
-                <ViewTransition name="dashboard-content">
+          content={() => (
+            <ViewTransition name="dashboard-content">
+              <div
+                ref={setMobileScrollRoot}
+                className="overflow-y-auto overscroll-y-contain h-full px-3"
+              >
+                <ScrollRootProvider value={mobileScrollRoot}>
                   {children}
-                </ViewTransition>
+                </ScrollRootProvider>
               </div>
-            </ScrollRootProvider>
+            </ViewTransition>
           )}
         />
       </main>
@@ -56,11 +61,13 @@ export function DashboardShell({ profile, children }: DashboardShellProps) {
         />
 
         <ResizablePanel defaultSize={50}>
-          <div className="relative h-full min-w-0 overflow-y-auto pb-[64px]">
-            <DashboardHeader className="sticky top-0" />
-            <div className="px-4">
+          <div className="relative h-full min-w-0 flex flex-col">
+            <DashboardHeader isArticleDetail={isArticleDetail} />
+            <div className="flex-1 min-h-0 *:h-full">
               <ViewTransition name="dashboard-content">
-                {children}
+                <div className="overflow-y-auto h-full px-4 pb-[64px]">
+                  {children}
+                </div>
               </ViewTransition>
             </div>
           </div>

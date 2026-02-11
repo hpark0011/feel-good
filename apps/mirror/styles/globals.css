@@ -31,7 +31,9 @@
 .dark {
 }
 
-/* View transition animations for dashboard content */
+/* View transition animations for dashboard content.
+   When data-nav-direction is unset (e.g. lateral navigation, first load),
+   the browser's default crossfade applies — this is intentional. */
 
 /* Forward (list → detail): new slides over old from right */
 html[data-nav-direction="forward"]::view-transition-old(dashboard-content) {
@@ -60,7 +62,7 @@ html[data-nav-direction="back"]::view-transition-new(dashboard-content) {
   to { transform: translateX(100%); }
 }
 
-@media (prefers-reduced-motion) {
+@media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*),
   ::view-transition-old(*),
   ::view-transition-new(*) {

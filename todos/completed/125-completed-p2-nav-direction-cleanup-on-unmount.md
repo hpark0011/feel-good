@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "125"
 tags: [code-review, view-transitions, react-hooks, mirror]

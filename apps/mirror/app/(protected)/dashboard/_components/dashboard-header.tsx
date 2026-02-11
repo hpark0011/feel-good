@@ -5,16 +5,16 @@ import { Icon } from "@feel-good/ui/components/icon";
 import { Button } from "@feel-good/ui/primitives/button";
 import { cn } from "@feel-good/utils/cn";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 type DashboardHeaderProps = {
+  isArticleDetail: boolean;
   className?: string;
 };
 
-export function DashboardHeader({ className }: DashboardHeaderProps) {
-  const pathname = usePathname();
-  const isArticleDetail = pathname.startsWith("/dashboard/articles/");
-
+export function DashboardHeader({
+  isArticleDetail,
+  className,
+}: DashboardHeaderProps) {
   return (
     <header
       className={cn(
