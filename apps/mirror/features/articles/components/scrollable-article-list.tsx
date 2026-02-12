@@ -35,7 +35,7 @@ export function ScrollableArticleList({
   const { articles: paginatedArticles, hasMore, loadMore } = useArticleList(
     filteredByFilter,
     sortOrder,
-    search.isFiltered || filter.hasActiveFilters,
+    search.isFiltered,
   );
   const scrollRoot = useScrollRoot();
 

@@ -29,19 +29,23 @@ export function useLocalStorage<T>(
     if (typeof window === "undefined") return;
 
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === key && e.newValue !== null) {
-        try {
-          const newValue = JSON.parse(e.newValue);
-          setStoredValue(newValue);
-        } catch (error) {
-          console.warn(`Error parsing storage event for key "${key}":`, error);
+      if (e.key === key) {
+        if (e.newValue === null) {
+          setStoredValue(initialValue);
+        } else {
+          try {
+            const newValue = JSON.parse(e.newValue);
+            setStoredValue(newValue);
+          } catch (error) {
+            console.warn(`Error parsing storage event for key "${key}":`, error);
+          }
         }
       }
     };
 
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
-  }, [key]);
+  }, [key, initialValue]);
 
   // Listen for same-tab localStorage changes via custom event
   useEffect(() => {
