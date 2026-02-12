@@ -18,7 +18,10 @@ export function useArticleList(allArticles: Article[], sortOrder: SortOrder) {
     });
   }, [allArticles, sortOrder]);
 
-  const articles = sorted.slice(0, page * PAGE_SIZE);
+  const articles = useMemo(
+    () => sorted.slice(0, page * PAGE_SIZE),
+    [sorted, page],
+  );
   const hasMore = articles.length < sorted.length;
 
   const loadMore = useCallback(() => {

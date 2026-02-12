@@ -21,6 +21,10 @@ type ArticleSortDropdownProps = {
   onChange: (order: SortOrder) => void;
 };
 
+function isSortOrder(value: unknown): value is SortOrder {
+  return value === "newest" || value === "oldest";
+}
+
 export function ArticleSortDropdown({
   value,
   onChange,
@@ -40,7 +44,11 @@ export function ArticleSortDropdown({
       <DropdownMenuContent align="end">
         <DropdownMenuRadioGroup
           value={value}
-          onValueChange={(v) => onChange(v as SortOrder)}
+          onValueChange={(v) => {
+            if (isSortOrder(v)) {
+              onChange(v);
+            }
+          }}
         >
           <DropdownMenuRadioItem value="newest">Newest</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="oldest">Oldest</DropdownMenuRadioItem>
