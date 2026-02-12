@@ -6,7 +6,11 @@ import {
 } from "@feel-good/ui/primitives/alert-dialog";
 import { Button } from "@feel-good/ui/primitives/button";
 import { Icon } from "@feel-good/ui/components/icon";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@feel-good/ui/primitives/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@feel-good/ui/primitives/tooltip";
 import { DeleteArticlesDialog } from "../views/delete-articles-dialog";
 import { ArticleSortDropdown } from "./article-sort-dropdown";
 import type { SortOrder } from "../hooks/use-article-sort";
@@ -28,7 +32,7 @@ export function ArticleToolbar(
       <div className="flex items-center gap-0">
         <div className="flex items-center gap-2">
           {hasSelection && (
-            <span className="text-sm text-muted-foreground">
+            <span className="text-sm text-muted-foreground text-information">
               {selectedCount} selected
             </span>
           )}

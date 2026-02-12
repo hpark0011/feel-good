@@ -1,0 +1,23 @@
+/*
+* popover.css
+*
+* Popover-specific styles and CSS variables
+*/
+
+:root {
+  /* Popover Default */
+  --popover: var(--gray-1);
+  --popover-foreground: var(--gray-12);
+}
+
+.dark {
+  /* Popover Default */
+  --popover: var(--gray-3);
+  --popover-foreground: var(--gray-12);
+}
+
+@theme inline {
+  /* Popover Default */
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+}
