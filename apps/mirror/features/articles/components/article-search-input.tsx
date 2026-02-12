@@ -82,7 +82,7 @@ export function ArticleSearchInput({
           placeholder="Search..."
           aria-label="Search articles"
           tabIndex={isOpen ? 0 : -1}
-          className="h-7 w-full min-w-0 rounded-md bg-transparent px-2 text-sm outline-none placeholder:text-muted-foreground"
+          className="h-7 w-full min-w-0 rounded-md bg-transparent px-2 text-sm outline-none placeholder:text-muted-foreground [&::-webkit-search-cancel-button]:hidden"
         />
       </div>
 
