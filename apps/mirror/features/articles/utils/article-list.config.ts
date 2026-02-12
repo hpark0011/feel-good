@@ -11,7 +11,7 @@ export const articleRowVariants: Variants = {
     y: 0,
     scale: 1,
     transition: {
-      delay: index * 0.05,
+      delay: index * 0.01,
       type: "spring",
       damping: 20,
       stiffness: 300,

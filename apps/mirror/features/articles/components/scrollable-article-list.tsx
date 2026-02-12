@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo, useRef } from "react";
+import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import type { SortOrder } from "../hooks/use-article-sort";
 import type { Article } from "../lib/mock-articles";
 import { useArticleList } from "../hooks/use-article-list";
@@ -32,6 +32,12 @@ export function ScrollableArticleList({
   // Animation trigger on sort change — driven from event handler, not effect
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const animationTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
+
+  useEffect(() => {
+    return () => {
+      if (animationTimerRef.current) clearTimeout(animationTimerRef.current);
+    };
+  }, []);
 
   const handleSortChange = useCallback(
     (order: SortOrder) => {
