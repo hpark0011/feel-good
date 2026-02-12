@@ -9,6 +9,14 @@ const PAGE_SIZE = 30;
 export function useArticleList(allArticles: Article[], sortOrder: SortOrder) {
   const [page, setPage] = useState(1);
 
+  // Reset page when filtered articles change (e.g. search query changes)
+  // Uses React-recommended "store previous props" pattern instead of effect
+  const [prevArticles, setPrevArticles] = useState(allArticles);
+  if (prevArticles !== allArticles) {
+    setPrevArticles(allArticles);
+    setPage(1);
+  }
+
   const sorted = useMemo(() => {
     return [...allArticles].sort((a, b) => {
       const diff =
