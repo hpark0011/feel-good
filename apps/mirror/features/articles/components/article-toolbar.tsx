@@ -32,7 +32,7 @@ export function ArticleToolbar(
       <div className="flex items-center gap-0">
         <div className="flex items-center gap-2">
           {hasSelection && (
-            <span className="text-sm text-muted-foreground text-information">
+            <span className="text-sm text-information">
               {selectedCount} selected
             </span>
           )}

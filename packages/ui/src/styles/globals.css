@@ -51,7 +51,7 @@
   --ghost-foreground: var(--gray-11);
 
   /* Text */
-  --information: var(--color-blue-400);
+  --information: var(--color-blue-500);
 
   /* Dialog */
   --dialog: var(--gray-1);
