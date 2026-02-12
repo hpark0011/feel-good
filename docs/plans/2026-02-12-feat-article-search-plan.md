@@ -12,20 +12,20 @@ Add keyword search to the article list. Users can search across article titles, 
 
 ## Acceptance Criteria
 
-- [ ] Clicking the search icon button reveals a text input (w-24 / 96px) with a smooth width transition
-- [ ] The expanding input pushes the search icon and neighboring buttons to the left
-- [ ] When the input opens, it auto-focuses
-- [ ] Typing filters articles by keyword (case-insensitive) with 300ms debounce
-- [ ] Search priority: title matches first, then body matches, then category matches
-- [ ] Clicking the close (✕) button collapses the input, clears the query, and restores the full list
-- [ ] Search works for all visitors (not just profile owners)
-- [ ] Pagination resets when search query changes
-- [ ] Empty search results show a "No articles found" message
-- [ ] Pressing Escape closes the search input
-- [ ] Opening search clears any active selection (owner)
-- [ ] Closing search cancels any pending debounce timer
-- [ ] Sort dropdown is visible to all visitors (alongside search)
-- [ ] Focus returns to search button when input is closed
+- [x] Clicking the search icon button reveals a text input (w-24 / 96px) with a smooth width transition
+- [x] The expanding input pushes the search icon and neighboring buttons to the left
+- [x] When the input opens, it auto-focuses
+- [x] Typing filters articles by keyword (case-insensitive) with 300ms debounce
+- [x] Search priority: title matches first, then body matches, then category matches
+- [x] Clicking the close (✕) button collapses the input, clears the query, and restores the full list
+- [x] Search works for all visitors (not just profile owners)
+- [x] Pagination resets when search query changes
+- [x] Empty search results show a "No articles found" message
+- [x] Pressing Escape closes the search input
+- [x] Opening search clears any active selection (owner)
+- [x] Closing search cancels any pending debounce timer
+- [x] Sort dropdown is visible to all visitors (alongside search)
+- [x] Focus returns to search button when input is closed
 
 ## Architecture
 

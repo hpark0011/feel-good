@@ -4,6 +4,7 @@ import { useState, useCallback, useMemo, useRef, useEffect } from "react";
 import type { SortOrder } from "../hooks/use-article-sort";
 import type { Article } from "../lib/mock-articles";
 import { useArticleList } from "../hooks/use-article-list";
+import { useArticleSearch } from "../hooks/use-article-search";
 import { useArticleSelection } from "../hooks/use-article-selection";
 import { useArticleSort } from "../hooks/use-article-sort";
 import { useIsProfileOwner } from "@/features/profile";
@@ -21,10 +22,12 @@ export function ScrollableArticleList({
   username,
 }: ScrollableArticleListProps) {
   const [articles, setArticles] = useState(initialArticles);
+  const search = useArticleSearch(articles);
   const { sortOrder, setSortOrder } = useArticleSort();
   const { articles: paginatedArticles, hasMore, loadMore } = useArticleList(
-    articles,
+    search.filteredArticles,
     sortOrder,
+    search.isFiltered,
   );
   const isOwner = useIsProfileOwner();
   const scrollRoot = useScrollRoot();
@@ -46,6 +49,15 @@ export function ScrollableArticleList({
 
   const selection = useArticleSelection(allSlugs);
 
+  // Clear selection when search opens
+  const prevSearchOpen = useRef(search.isOpen);
+  useEffect(() => {
+    if (search.isOpen && !prevSearchOpen.current) {
+      selection.clear();
+    }
+    prevSearchOpen.current = search.isOpen;
+  }, [search.isOpen, selection]);
+
   const handleSortChange = useCallback(
     (order: SortOrder) => {
       setSortOrder(order);
@@ -61,11 +73,15 @@ export function ScrollableArticleList({
   );
 
   const handleDelete = useCallback(() => {
+    const visibleSlugs = new Set(allSlugs);
     setArticles((prev) =>
-      prev.filter((a) => !selection.selectedSlugs.has(a.slug)),
+      prev.filter(
+        (a) =>
+          !(selection.selectedSlugs.has(a.slug) && visibleSlugs.has(a.slug)),
+      ),
     );
     selection.clear();
-  }, [selection]);
+  }, [selection, allSlugs]);
 
   if (articles.length === 0) {
     return (
@@ -75,30 +91,43 @@ export function ScrollableArticleList({
     );
   }
 
+  const showEmptySearch =
+    search.query.trim() !== "" && paginatedArticles.length === 0;
+
   return (
     <>
-      {isOwner && (
-        <ArticleToolbar
-          selectedCount={selection.count}
-          onDelete={handleDelete}
-          sortOrder={sortOrder}
-          onSortChange={handleSortChange}
+      <ArticleToolbar
+        isOwner={isOwner}
+        selectedCount={selection.count}
+        onDelete={handleDelete}
+        sortOrder={sortOrder}
+        onSortChange={handleSortChange}
+        searchQuery={search.query}
+        onSearchQueryChange={search.setQuery}
+        isSearchOpen={search.isOpen}
+        onSearchOpen={search.open}
+        onSearchClose={search.close}
+      />
+      {showEmptySearch ? (
+        <div className="flex items-center justify-center py-16 text-muted-foreground">
+          No articles found
+        </div>
+      ) : (
+        <ArticleListView
+          articles={paginatedArticles}
+          hasMore={hasMore}
+          onLoadMore={loadMore}
+          scrollRoot={scrollRoot}
+          username={username}
+          isOwner={isOwner}
+          isAllSelected={selection.isAllSelected}
+          isIndeterminate={selection.isIndeterminate}
+          onToggleAll={selection.toggleAll}
+          isSelected={selection.isSelected}
+          onToggle={selection.toggle}
+          shouldAnimate={shouldAnimate}
         />
       )}
-      <ArticleListView
-        articles={paginatedArticles}
-        hasMore={hasMore}
-        onLoadMore={loadMore}
-        scrollRoot={scrollRoot}
-        username={username}
-        isOwner={isOwner}
-        isAllSelected={selection.isAllSelected}
-        isIndeterminate={selection.isIndeterminate}
-        onToggleAll={selection.toggleAll}
-        isSelected={selection.isSelected}
-        onToggle={selection.toggle}
-        shouldAnimate={shouldAnimate}
-      />
     </>
   );
 }
