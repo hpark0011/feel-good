@@ -1,15 +1,28 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import type { Article } from "../lib/mock-articles";
+import type { SortOrder } from "./use-article-sort";
 
 const PAGE_SIZE = 30;
 
-export function useArticleList(allArticles: Article[]) {
+export function useArticleList(allArticles: Article[], sortOrder: SortOrder) {
   const [page, setPage] = useState(1);
 
-  const articles = allArticles.slice(0, page * PAGE_SIZE);
-  const hasMore = articles.length < allArticles.length;
+  const sorted = useMemo(() => {
+    return [...allArticles].sort((a, b) => {
+      const diff =
+        new Date(b.published_at).getTime() -
+        new Date(a.published_at).getTime();
+      return sortOrder === "newest" ? diff : -diff;
+    });
+  }, [allArticles, sortOrder]);
+
+  const articles = useMemo(
+    () => sorted.slice(0, page * PAGE_SIZE),
+    [sorted, page],
+  );
+  const hasMore = articles.length < sorted.length;
 
   const loadMore = useCallback(() => {
     setPage((prev) => prev + 1);

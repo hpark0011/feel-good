@@ -1,16 +1,15 @@
 "use client";
 
+import { Card, CardContent } from "@/components/ui/card";
+import { TicketCard } from "@/features/ticket-card";
+import { cn } from "@/lib/utils";
+import type { Column, SubTask, Ticket } from "@/types/board.types";
 import { useDroppable } from "@dnd-kit/core";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import { TicketCard } from "@/features/ticket-card";
-import { AddTicketButton } from "@/features/task-board-core";
-import type { Column, SubTask, Ticket } from "@/types/board.types";
 import { ListSectionHeader } from "./list-section-header";
 
 interface ListSectionProps {

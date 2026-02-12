@@ -19,6 +19,7 @@
     "@radix-ui/colors": "catalog:",
     "better-auth": "catalog:",
     "convex": "^1.31.7",
+    "framer-motion": "^12.23.12",
     "lucide-react": "catalog:",
     "next": "catalog:",
     "next-themes": "catalog:",

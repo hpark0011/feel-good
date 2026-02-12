@@ -24,6 +24,8 @@ const buttonVariants = cva(
     "aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",
     // Active states
     "active:scale-97 cursor-pointer transition-all duration-100 ease-out",
+    // Shape
+    "[corner-shape:superellipse(1.2)]",
   ),
   {
     variants: {
@@ -46,7 +48,8 @@ const buttonVariants = cva(
         default: "h-8 px-3 py-2 has-[>svg]:px-3 rounded-[9px]",
         xs:
           "h-6 gap-1 rounded-[7px] px-2 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-7 rounded-[8px] gap-1.5 px-2.5 has-[>svg]:px-2.5 text-[13px]",
+        sm:
+          "h-7 rounded-[8px] gap-1.5 px-2.5 has-[>svg]:px-2.5 has-[>svg]:pl-2 has-[>svg]:gap-1 text-[13px]",
         lg: "h-10 rounded-[11px] px-6 has-[>svg]:px-4",
         // Icon button sizes
         icon: "size-8 rounded-[9px]",

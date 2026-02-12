@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import type { SortOrder } from "../hooks/use-article-sort";
 import type { Article } from "../lib/mock-articles";
 import { useArticleList } from "../hooks/use-article-list";
 import { useArticleSelection } from "../hooks/use-article-selection";
+import { useArticleSort } from "../hooks/use-article-sort";
 import { useIsProfileOwner } from "@/features/profile";
 import { ArticleListView } from "../views/article-list-view";
 import { ArticleToolbar } from "./article-toolbar";
@@ -19,9 +21,23 @@ export function ScrollableArticleList({
   username,
 }: ScrollableArticleListProps) {
   const [articles, setArticles] = useState(initialArticles);
-  const { articles: paginatedArticles, hasMore, loadMore } = useArticleList(articles);
+  const { sortOrder, setSortOrder } = useArticleSort();
+  const { articles: paginatedArticles, hasMore, loadMore } = useArticleList(
+    articles,
+    sortOrder,
+  );
   const isOwner = useIsProfileOwner();
   const scrollRoot = useScrollRoot();
+
+  // Animation trigger on sort change — driven from event handler, not effect
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+  const animationTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
+
+  useEffect(() => {
+    return () => {
+      if (animationTimerRef.current) clearTimeout(animationTimerRef.current);
+    };
+  }, []);
 
   const allSlugs = useMemo(
     () => paginatedArticles.map((a) => a.slug),
@@ -29,6 +45,20 @@ export function ScrollableArticleList({
   );
 
   const selection = useArticleSelection(allSlugs);
+
+  const handleSortChange = useCallback(
+    (order: SortOrder) => {
+      setSortOrder(order);
+      selection.clear();
+      setShouldAnimate(true);
+      if (animationTimerRef.current) clearTimeout(animationTimerRef.current);
+      animationTimerRef.current = setTimeout(
+        () => setShouldAnimate(false),
+        1000,
+      );
+    },
+    [setSortOrder, selection],
+  );
 
   const handleDelete = useCallback(() => {
     setArticles((prev) =>
@@ -51,6 +81,8 @@ export function ScrollableArticleList({
         <ArticleToolbar
           selectedCount={selection.count}
           onDelete={handleDelete}
+          sortOrder={sortOrder}
+          onSortChange={handleSortChange}
         />
       )}
       <ArticleListView
@@ -65,6 +97,7 @@ export function ScrollableArticleList({
         onToggleAll={selection.toggleAll}
         isSelected={selection.isSelected}
         onToggle={selection.toggle}
+        shouldAnimate={shouldAnimate}
       />
     </>
   );

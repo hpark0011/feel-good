@@ -22,6 +22,7 @@
 @import "./input.css";
 @import "./switch.css";
 @import "./field.css";
+@import "./popover.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -48,6 +49,9 @@
 
   --ghost: transparent;
   --ghost-foreground: var(--gray-11);
+
+  /* Text */
+  --information: var(--color-blue-500);
 
   /* Dialog */
   --dialog: var(--gray-1);
@@ -83,6 +87,9 @@
   --ghost: transparent;
   --ghost-foreground: var(--gray-12);
 
+  /* Text */
+  --information: var(--color-blue-400);
+
   /* Dialog */
   --dialog: var(--gray-1);
 
@@ -116,6 +123,9 @@
 
   --color-ghost: var(--ghost);
   --color-ghost-foreground: var(--ghost-foreground);
+
+  /* Text */
+  --color-information: var(--information);
 
   /* Dialog */
   --color-dialog: var(--dialog);

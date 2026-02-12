@@ -1,9 +1,10 @@
 import { memo } from "react";
 import Link from "next/link";
-import { TableCell, TableRow } from "@feel-good/ui/primitives/table";
+import { TableCell } from "@feel-good/ui/primitives/table";
 import { Checkbox } from "@feel-good/ui/primitives/checkbox";
 import type { Article } from "../lib/mock-articles";
 import { formatShortDate } from "../lib/format-date";
+import { AnimatedArticleRow } from "./animated-article-row";
 
 type ArticleListItemProps = {
   article: Article;
@@ -11,6 +12,8 @@ type ArticleListItemProps = {
   isOwner?: boolean;
   isSelected?: boolean;
   onToggle?: (slug: string) => void;
+  shouldAnimate?: boolean;
+  index?: number;
 };
 
 export const ArticleListItem = memo(function ArticleListItem({
@@ -19,11 +22,15 @@ export const ArticleListItem = memo(function ArticleListItem({
   isOwner = false,
   isSelected = false,
   onToggle,
+  shouldAnimate = false,
+  index = 0,
 }: ArticleListItemProps) {
   const href = `/@${username}/${article.slug}`;
 
   return (
-    <TableRow
+    <AnimatedArticleRow
+      shouldAnimate={shouldAnimate}
+      index={index}
       className="relative border-b-0 group-hover/list:text-muted-foreground hover:text-secondary-foreground hover:bg-transparent min-h-[44px]"
       data-state={isSelected ? "selected" : undefined}
     >
@@ -49,6 +56,6 @@ export const ArticleListItem = memo(function ArticleListItem({
           {formatShortDate(article.published_at)}
         </time>
       </TableCell>
-    </TableRow>
+    </AnimatedArticleRow>
   );
 });

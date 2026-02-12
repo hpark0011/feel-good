@@ -21,9 +21,9 @@ export function DeleteArticlesDialog(
   return (
     <AlertDialogContent
       size="sm"
-      className="data-[size=sm]:max-w-sm"
+      className="data-[size=sm]:max-w-md"
     >
-      <AlertDialogHeader className="mb-2">
+      <AlertDialogHeader className="mx-12 mb-4 mt-3">
         <AlertDialogTitle className="text-lg">Delete {label}</AlertDialogTitle>
         <AlertDialogDescription>
           This will permanently delete {count}{" "}
