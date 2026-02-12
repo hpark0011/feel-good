@@ -27,6 +27,7 @@ export function ScrollableArticleList({
   const { articles: paginatedArticles, hasMore, loadMore } = useArticleList(
     search.filteredArticles,
     sortOrder,
+    search.isFiltered,
   );
   const isOwner = useIsProfileOwner();
   const scrollRoot = useScrollRoot();
@@ -72,11 +73,15 @@ export function ScrollableArticleList({
   );
 
   const handleDelete = useCallback(() => {
+    const visibleSlugs = new Set(allSlugs);
     setArticles((prev) =>
-      prev.filter((a) => !selection.selectedSlugs.has(a.slug)),
+      prev.filter(
+        (a) =>
+          !(selection.selectedSlugs.has(a.slug) && visibleSlugs.has(a.slug)),
+      ),
     );
     selection.clear();
-  }, [selection]);
+  }, [selection, allSlugs]);
 
   if (articles.length === 0) {
     return (

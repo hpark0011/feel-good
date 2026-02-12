@@ -8,6 +8,7 @@ type UseArticleSearchReturn = {
   query: string;
   setQuery: (q: string) => void;
   isOpen: boolean;
+  isFiltered: boolean;
   open: () => void;
   close: () => void;
 };
@@ -55,5 +56,7 @@ export function useArticleSearch(
     setDebouncedQuery("");
   }, []);
 
-  return { filteredArticles, query, setQuery, isOpen, open, close };
+  const isFiltered = debouncedQuery.trim() !== "";
+
+  return { filteredArticles, query, setQuery, isOpen, isFiltered, open, close };
 }

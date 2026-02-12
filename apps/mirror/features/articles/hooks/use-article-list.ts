@@ -6,7 +6,11 @@ import type { SortOrder } from "./use-article-sort";
 
 const PAGE_SIZE = 30;
 
-export function useArticleList(allArticles: Article[], sortOrder: SortOrder) {
+export function useArticleList(
+  allArticles: Article[],
+  sortOrder: SortOrder,
+  preserveOrder = false,
+) {
   const [page, setPage] = useState(1);
 
   // Reset page when filtered articles change (e.g. search query changes)
@@ -18,13 +22,14 @@ export function useArticleList(allArticles: Article[], sortOrder: SortOrder) {
   }
 
   const sorted = useMemo(() => {
+    if (preserveOrder) return allArticles;
     return [...allArticles].sort((a, b) => {
       const diff =
         new Date(b.published_at).getTime() -
         new Date(a.published_at).getTime();
       return sortOrder === "newest" ? diff : -diff;
     });
-  }, [allArticles, sortOrder]);
+  }, [allArticles, sortOrder, preserveOrder]);
 
   const articles = useMemo(
     () => sorted.slice(0, page * PAGE_SIZE),
