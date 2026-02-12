@@ -16,7 +16,11 @@ import { cn } from "@feel-good/utils/cn";
 import { DeleteArticlesDialog } from "../views/delete-articles-dialog";
 import { ArticleSortDropdown } from "./article-sort-dropdown";
 import { ArticleSearchInput } from "./article-search-input";
+import { ArticleFilterDropdown } from "./article-filter-dropdown";
 import type { SortOrder } from "../hooks/use-article-sort";
+import type { ArticleFilterState } from "../utils/article-filter";
+import type { DatePreset } from "../utils/date-preset";
+import type { Article } from "../lib/mock-articles";
 
 type ArticleToolbarProps = {
   isOwner: boolean;
@@ -29,6 +33,14 @@ type ArticleToolbarProps = {
   isSearchOpen: boolean;
   onSearchOpen: () => void;
   onSearchClose: () => void;
+  articles: Article[];
+  filterState: ArticleFilterState;
+  hasActiveFilters: boolean;
+  onToggleCategory: (name: string) => void;
+  onSetPublishedDatePreset: (preset: DatePreset | null) => void;
+  onSetCreatedDatePreset: (preset: DatePreset | null) => void;
+  onSetPublishedStatus: (status: "draft" | "published" | null) => void;
+  onClearAll: () => void;
 };
 
 export function ArticleToolbar({
@@ -42,6 +54,14 @@ export function ArticleToolbar({
   isSearchOpen,
   onSearchOpen,
   onSearchClose,
+  articles,
+  filterState,
+  hasActiveFilters,
+  onToggleCategory,
+  onSetPublishedDatePreset,
+  onSetCreatedDatePreset,
+  onSetPublishedStatus,
+  onClearAll,
 }: ArticleToolbarProps) {
   const hasSelection = selectedCount > 0;
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -94,17 +114,17 @@ export function ArticleToolbar({
         <ArticleSortDropdown value={sortOrder} onChange={onSortChange} />
 
         {/* Filter */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-            >
-              <Icon name="Line3Icon" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Filter</TooltipContent>
-        </Tooltip>
+        <ArticleFilterDropdown
+          isOwner={isOwner}
+          articles={articles}
+          filterState={filterState}
+          hasActiveFilters={hasActiveFilters}
+          onToggleCategory={onToggleCategory}
+          onSetPublishedDatePreset={onSetPublishedDatePreset}
+          onSetCreatedDatePreset={onSetCreatedDatePreset}
+          onSetPublishedStatus={onSetPublishedStatus}
+          onClearAll={onClearAll}
+        />
       </div>
       {isOwner && (
         <Button

@@ -1,0 +1,155 @@
+"use client";
+
+import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
+} from "@feel-good/ui/primitives/dropdown-menu";
+import { Button } from "@feel-good/ui/primitives/button";
+import { Icon } from "@feel-good/ui/components/icon";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@feel-good/ui/primitives/tooltip";
+import { cn } from "@feel-good/utils/cn";
+import type { Article } from "../lib/mock-articles";
+import type { ArticleFilterState } from "../utils/article-filter";
+import type { DatePreset } from "../utils/date-preset";
+import { CategoryFilterContent } from "./filter/category-filter-content";
+import { DateFilterContent } from "./filter/date-filter-content";
+import { StatusFilterContent } from "./filter/status-filter-content";
+
+type ArticleFilterDropdownProps = {
+  isOwner: boolean;
+  articles: Article[];
+  filterState: ArticleFilterState;
+  hasActiveFilters: boolean;
+  onToggleCategory: (name: string) => void;
+  onSetPublishedDatePreset: (preset: DatePreset | null) => void;
+  onSetCreatedDatePreset: (preset: DatePreset | null) => void;
+  onSetPublishedStatus: (status: "draft" | "published" | null) => void;
+  onClearAll: () => void;
+};
+
+function formatPresetLabel(preset: DatePreset): string {
+  const labels: Record<DatePreset, string> = {
+    today: "Today",
+    this_week: "This week",
+    this_month: "This month",
+    this_year: "This year",
+  };
+  return labels[preset];
+}
+
+export function ArticleFilterDropdown({
+  isOwner,
+  articles,
+  filterState,
+  hasActiveFilters,
+  onToggleCategory,
+  onSetPublishedDatePreset,
+  onSetCreatedDatePreset,
+  onSetPublishedStatus,
+  onClearAll,
+}: ArticleFilterDropdownProps) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Tooltip>
+      <DropdownMenu open={open} onOpenChange={setOpen}>
+        <TooltipTrigger asChild>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              className={cn(
+                (open || hasActiveFilters) && "[&_svg]:text-information"
+              )}
+            >
+              <Icon name="Line3Icon" />
+            </Button>
+          </DropdownMenuTrigger>
+        </TooltipTrigger>
+        <TooltipContent>{open ? undefined : "Filter"}</TooltipContent>
+        <DropdownMenuContent align="end">
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>
+              {filterState.categories.length > 0
+                ? `Category (${filterState.categories.length})`
+                : "Category"}
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <CategoryFilterContent
+                articles={articles}
+                selectedCategories={filterState.categories}
+                onToggleCategory={onToggleCategory}
+              />
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger>
+              {filterState.publishedDatePreset
+                ? `Published · ${formatPresetLabel(filterState.publishedDatePreset)}`
+                : "Published"}
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DateFilterContent
+                value={filterState.publishedDatePreset}
+                onChange={onSetPublishedDatePreset}
+              />
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+
+          {isOwner && (
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                {filterState.createdDatePreset
+                  ? `Created · ${formatPresetLabel(filterState.createdDatePreset)}`
+                  : "Created"}
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DateFilterContent
+                  value={filterState.createdDatePreset}
+                  onChange={onSetCreatedDatePreset}
+                />
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+          )}
+
+          {isOwner && (
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                {filterState.publishedStatus
+                  ? `Status · ${filterState.publishedStatus === "draft" ? "Draft" : "Published"}`
+                  : "Status"}
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <StatusFilterContent
+                  value={filterState.publishedStatus}
+                  onChange={onSetPublishedStatus}
+                />
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+          )}
+
+          {hasActiveFilters && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onSelect={onClearAll}>
+                Clear all filters
+              </DropdownMenuItem>
+            </>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </Tooltip>
+  );
+}

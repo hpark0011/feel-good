@@ -89,7 +89,22 @@ function DropdownMenuItem({
       data-inset={inset}
       data-variant={variant}
       className={cn(
-        "focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 px-2 py-1.5 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 h-7 rounded-[8px] has-[svg]:pl-1 has-[svg]:gap-0.5",
+        // positioning
+        "relative",
+        // layout
+        "flex items-center gap-2 px-2 py-1.5",
+        // shape
+        "h-7 rounded-[8px]",
+        // background & typography
+        "text-sm focus:bg-accent focus:text-accent-foreground",
+        // sizing (child svg)
+        "[&_svg:not([class*='size-'])]:size-4",
+        // alignment & behavior
+        "cursor-default outline-hidden select-none data-[inset]:pl-8 has-[svg]:pl-1 has-[svg]:gap-0.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='text-'])]:text-muted-foreground",
+        // variant states
+        "data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive",
+        // interactive states
+        "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         className,
       )}
       {...props}
