@@ -39,9 +39,17 @@ export function ScrollableArticleList({
     };
   }, []);
 
+  const allSlugs = useMemo(
+    () => paginatedArticles.map((a) => a.slug),
+    [paginatedArticles],
+  );
+
+  const selection = useArticleSelection(allSlugs);
+
   const handleSortChange = useCallback(
     (order: SortOrder) => {
       setSortOrder(order);
+      selection.clear();
       setShouldAnimate(true);
       if (animationTimerRef.current) clearTimeout(animationTimerRef.current);
       animationTimerRef.current = setTimeout(
@@ -49,15 +57,8 @@ export function ScrollableArticleList({
         1000,
       );
     },
-    [setSortOrder],
+    [setSortOrder, selection],
   );
-
-  const allSlugs = useMemo(
-    () => paginatedArticles.map((a) => a.slug),
-    [paginatedArticles],
-  );
-
-  const selection = useArticleSelection(allSlugs);
 
   const handleDelete = useCallback(() => {
     setArticles((prev) =>
