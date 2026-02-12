@@ -26,25 +26,22 @@ export function ArticleSearchInput({
 }: ArticleSearchInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const hasBeenOpen = useRef(false);
 
-  // Auto-focus input when opened
+  // Manage focus: into input when opening, back to button when closing.
+  // The ref guard prevents stealing focus on initial mount.
   useEffect(() => {
     if (isOpen) {
-      // Small delay to let the transition start before focusing
-      const timer = setTimeout(() => inputRef.current?.focus(), 50);
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen]);
-
-  // Return focus to search button when closed
-  useEffect(() => {
-    if (!isOpen) {
+      hasBeenOpen.current = true;
+      inputRef.current?.focus();
+    } else if (hasBeenOpen.current) {
       buttonRef.current?.focus();
     }
   }, [isOpen]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
+      e.stopPropagation();
       onClose();
     }
   };
@@ -83,6 +80,7 @@ export function ArticleSearchInput({
           placeholder="Search..."
           aria-label="Search articles"
           role="searchbox"
+          tabIndex={isOpen ? 0 : -1}
           className="h-7 w-full min-w-0 rounded-md bg-transparent px-2 text-sm outline-none placeholder:text-muted-foreground"
         />
       </div>

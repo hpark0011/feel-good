@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "151"
 tags: [code-review, accessibility, mirror, articles]
@@ -45,3 +45,4 @@ const handleKeyDown = (e: React.KeyboardEvent) => {
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-12 | Created from multi-agent code review | Escape handlers in nested interactive regions should stop propagation to prevent ancestor components from also responding |
+| 2026-02-12 | Fixed — added `e.stopPropagation()` before `onClose()` | — |

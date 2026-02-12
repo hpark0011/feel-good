@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "149"
 tags: [code-review, accessibility, mirror, articles]
@@ -44,4 +44,5 @@ dependencies: []
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-12 | Created from commit review | Focus management should react to state transitions, not mount state |
+| 2026-02-12 | Fixed — merged two effects into one with `hasBeenOpen` ref guard | Single effect with ref guard is cleaner than separate open/close effects |
 

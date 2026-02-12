@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p1
 issue_id: "148"
 tags: [code-review, regression, mirror, articles]
@@ -47,3 +47,4 @@ Commit `cf6502fc` adds `ArticleSearchInput`, but the toolbar still renders the o
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-12 | Created from commit review | Component-only fixes are inert unless wired into runtime surfaces |
+| 2026-02-12 | Resolved in `63ab65ff` — toolbar now mounts ArticleSearchInput with full props | — |

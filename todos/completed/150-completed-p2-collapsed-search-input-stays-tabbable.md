@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "150"
 tags: [code-review, accessibility, mirror, articles]
@@ -45,3 +45,4 @@ When search is closed, the input is visually hidden via width/opacity but remain
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-12 | Created from commit review | Visual hiding must be paired with interaction/accessibility hiding |
+| 2026-02-12 | Fixed — added `tabIndex={isOpen ? 0 : -1}` to input | — |
