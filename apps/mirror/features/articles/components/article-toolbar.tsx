@@ -69,11 +69,9 @@ export function ArticleToolbar({
                       aria-label={hasSelection
                         ? `Delete ${selectedCount} selected`
                         : "Delete"}
+                      className={cn(isDeleteOpen && "[&_svg]:text-information")}
                     >
-                      <Icon
-                        name="TrashFillIcon"
-                        className={cn(isDeleteOpen && "text-information")}
-                      />
+                      <Icon name="TrashFillIcon" />
                     </Button>
                   </AlertDialogTrigger>
                 </TooltipTrigger>

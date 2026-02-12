@@ -60,11 +60,9 @@ export function ArticleSearchInput({
             onClick={isOpen ? onClose : onOpen}
             aria-label="Search articles"
             aria-expanded={isOpen}
+            className={cn(isOpen && "[&_svg]:text-information")}
           >
-            <Icon
-              name="MagnifyingGlassIcon"
-              className={cn(isOpen && "text-information")}
-            />
+            <Icon name="MagnifyingGlassIcon" />
           </Button>
         </TooltipTrigger>
         <TooltipContent>Search</TooltipContent>

@@ -49,7 +49,7 @@ function DropdownMenuContent({
           // layout / overflow
           "overflow-x-hidden overflow-y-auto",
           // shape / border
-          "rounded-[10px] border border-popover-border/90",
+          "rounded-[11px] border border-popover-border/90",
           // spacing
           "p-0.5",
           // positioning

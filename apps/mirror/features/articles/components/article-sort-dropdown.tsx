@@ -38,11 +38,12 @@ export function ArticleSortDropdown({
       <Tooltip>
         <TooltipTrigger asChild>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon-sm">
-              <Icon
-                name="ArrowUpAndDownIcon"
-                className={cn("size-4.5", open && "text-information")}
-              />
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              className={cn(open && "[&_svg]:text-information")}
+            >
+              <Icon name="ArrowUpAndDownIcon" className="size-4.5" />
             </Button>
           </DropdownMenuTrigger>
         </TooltipTrigger>
