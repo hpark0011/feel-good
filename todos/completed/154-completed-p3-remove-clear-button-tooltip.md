@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "154"
 tags: [code-review, simplicity, mirror, articles]
@@ -49,3 +49,4 @@ The clear button has a Tooltip wrapper saying "Clear search", but this button on
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-12 | Created from multi-agent code review | Tooltips on contextually obvious controls mid-interaction add noise, not clarity |
+| 2026-02-12 | Fixed — removed Tooltip wrapper, kept `aria-label="Clear search"` on bare Button | — |

@@ -8,6 +8,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@feel-good/ui/primitives/tooltip";
+import { cn } from "@feel-good/utils/cn";
 
 type ArticleSearchInputProps = {
   query: string;
@@ -67,19 +68,19 @@ export function ArticleSearchInput({
 
       {/* Expandable input wrapper */}
       <div
-        className={`overflow-hidden transition-all duration-200 ease-out ${
-          isOpen ? "w-[160px] opacity-100" : "w-0 opacity-0"
-        }`}
+        className={cn(
+          "overflow-hidden transition-all duration-200 ease-out",
+          isOpen ? "w-[160px] opacity-100" : "w-0 opacity-0",
+        )}
       >
         <input
           ref={inputRef}
-          type="text"
+          type="search"
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Search..."
           aria-label="Search articles"
-          role="searchbox"
           tabIndex={isOpen ? 0 : -1}
           className="h-7 w-full min-w-0 rounded-md bg-transparent px-2 text-sm outline-none placeholder:text-muted-foreground"
         />
@@ -87,19 +88,14 @@ export function ArticleSearchInput({
 
       {/* Clear button — only when input has text */}
       {isOpen && query.length > 0 && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              onClick={() => onQueryChange("")}
-              aria-label="Clear search"
-            >
-              <Icon name="XmarkCircleFillIcon" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Clear search</TooltipContent>
-        </Tooltip>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          onClick={() => onQueryChange("")}
+          aria-label="Clear search"
+        >
+          <Icon name="XmarkCircleFillIcon" />
+        </Button>
       )}
     </div>
   );

@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "152"
 tags: [code-review, consistency, mirror, articles]
@@ -45,3 +45,4 @@ className={cn(
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-12 | Created from multi-agent code review | Codebase convention: always use cn() for conditional classes per react-components.md |
+| 2026-02-12 | Fixed — switched template literal to `cn()` with import from `@feel-good/utils/cn` | — |

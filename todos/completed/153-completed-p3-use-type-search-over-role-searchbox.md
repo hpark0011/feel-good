@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "153"
 tags: [code-review, accessibility, mirror, articles]
@@ -44,3 +44,4 @@ The search input uses `type="text"` with an explicit `role="searchbox"`. Native 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-12 | Created from multi-agent code review | Prefer native HTML semantics over explicit ARIA roles when equivalent |
+| 2026-02-12 | Fixed — changed `type="text"` to `type="search"`, removed `role="searchbox"` | — |
