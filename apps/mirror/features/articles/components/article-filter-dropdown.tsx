@@ -83,7 +83,7 @@ export function ArticleFilterDropdown({
         <DropdownMenuContent align="end">
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Icon name="TagFillIcon" className="size-4" />
+              <Icon name="TagFillIcon" className="size-4.5" />
               {filterState.categories.length > 0
                 ? `Category (${filterState.categories.length})`
                 : "Category"}
@@ -100,6 +100,7 @@ export function ArticleFilterDropdown({
 
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
+              <Icon name="CalendarFillIcon" className="size-4.5" />
               {filterState.publishedDatePreset
                 ? `Published · ${
                   formatPresetLabel(filterState.publishedDatePreset)
@@ -117,6 +118,7 @@ export function ArticleFilterDropdown({
           {isOwner && (
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
+                <Icon name="CalendarFillIcon" className="size-4.5" />
                 {filterState.createdDatePreset
                   ? `Created · ${
                     formatPresetLabel(filterState.createdDatePreset)
@@ -135,6 +137,7 @@ export function ArticleFilterDropdown({
           {isOwner && (
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
+                <Icon name="GlobeIcon" className="size-4.5" />
                 {filterState.publishedStatus
                   ? `Status · ${
                     filterState.publishedStatus === "draft"

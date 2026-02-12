@@ -102,7 +102,7 @@ function DropdownMenuItem({
         // sizing (child svg)
         "[&_svg:not([class*='size-'])]:size-4",
         // alignment & behavior
-        "cursor-default outline-hidden select-none data-[inset]:pl-8 has-[svg]:pl-1 has-[svg]:gap-0.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='text-'])]:text-muted-foreground",
+        "cursor-default outline-hidden select-none data-[inset]:pl-8 has-[svg]:pl-1.5 has-[svg]:gap-1 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='text-'])]:text-muted-foreground ",
         // variant states
         "data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive",
         // interactive states
@@ -275,7 +275,7 @@ function DropdownMenuSubTrigger({
       className={cn(
         "flex h-6 cursor-default items-center gap-2 px-2 text-[13px]",
         "rounded-[8px] select-none outline-hidden",
-        "data-[inset]:pl-8",
+        "data-[inset]:pl-8 has-[>svg~svg]:pl-1.5 has-[>svg~svg]:gap-1",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0",
         "[&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-icon",
         "focus:bg-popover-focus focus:text-popover-foreground",
