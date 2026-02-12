@@ -96,9 +96,9 @@ function DropdownMenuItem({
         // layout
         "flex items-center gap-2 px-2 py-1.5",
         // shape
-        "h-7 rounded-[8px]",
+        "h-6 rounded-[8px]",
         // background & typography
-        "text-sm focus:bg-accent focus:text-accent-foreground",
+        "text-[13px] focus:bg-popover-focus focus:text-popover-foreground",
         // sizing (child svg)
         "[&_svg:not([class*='size-'])]:size-4",
         // alignment & behavior
@@ -131,7 +131,7 @@ function DropdownMenuCheckboxItem({
         // shape
         "rounded-[8px]",
         // background & typography
-        "text-[13px] focus:bg-popover-focus focus:text-accent-foreground",
+        "text-[13px] focus:bg-popover-focus focus:text-popover-foreground",
         // sizing (child svg)
         "[&_svg:not([class*='size-'])]:size-4",
         // alignment & behavior
@@ -214,7 +214,7 @@ function DropdownMenuLabel({
       data-slot="dropdown-menu-label"
       data-inset={inset}
       className={cn(
-        "px-2 py-1.5 text-sm font-medium data-[inset]:pl-8",
+        "px-2 py-1.5 text-[13px] font-medium data-[inset]:pl-8",
         className,
       )}
       {...props}
@@ -277,7 +277,7 @@ function DropdownMenuSubTrigger({
         "rounded-[8px] select-none outline-hidden",
         "data-[inset]:pl-8",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0",
-        "[&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-muted-foreground",
+        "[&_svg:not([class*='size-'])]:size-4 [&_svg:not([class*='text-'])]:text-icon",
         "focus:bg-popover-focus focus:text-popover-foreground",
         "data-[state=open]:bg-popover-focus data-[state=open]:text-popover-foreground",
         className,

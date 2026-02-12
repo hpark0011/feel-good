@@ -83,6 +83,7 @@ export function ArticleFilterDropdown({
         <DropdownMenuContent align="end">
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
+              <Icon name="TagFillIcon" className="size-4" />
               {filterState.categories.length > 0
                 ? `Category (${filterState.categories.length})`
                 : "Category"}
