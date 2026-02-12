@@ -11,6 +11,7 @@ import {
 type UseArticleFilterReturn = {
   filterState: ArticleFilterState;
   toggleCategory: (name: string) => void;
+  clearCategories: () => void;
   setPublishedDatePreset: (preset: DatePreset | null) => void;
   setCreatedDatePreset: (preset: DatePreset | null) => void;
   setPublishedStatus: (status: "draft" | "published" | null) => void;
@@ -66,6 +67,10 @@ export function useArticleFilter(): UseArticleFilterReturn {
     [setFilterState]
   );
 
+  const clearCategories = useCallback(() => {
+    setFilterState((prev) => ({ ...prev, categories: [] }));
+  }, [setFilterState]);
+
   const clearAll = useCallback(() => {
     setFilterState(INITIAL_FILTER_STATE);
   }, [setFilterState]);
@@ -82,6 +87,7 @@ export function useArticleFilter(): UseArticleFilterReturn {
   return {
     filterState,
     toggleCategory,
+    clearCategories,
     setPublishedDatePreset,
     setCreatedDatePreset,
     setPublishedStatus,

@@ -12,12 +12,14 @@ type CategoryFilterContentProps = {
   articles: Article[];
   selectedCategories: string[];
   onToggleCategory: (name: string) => void;
+  onClearFilter: () => void;
 };
 
 export function CategoryFilterContent({
   articles,
   selectedCategories,
   onToggleCategory,
+  onClearFilter,
 }: CategoryFilterContentProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -37,6 +39,7 @@ export function CategoryFilterContent({
       <CategoryFilterBadges
         selectedCategories={selectedCategories}
         onRemove={onToggleCategory}
+        onClearFilter={onClearFilter}
       />
       {selectedCategories.length > 0 && <DropdownMenuSeparator />}
       <CategoryFilterList

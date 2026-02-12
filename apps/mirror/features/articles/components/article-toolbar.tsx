@@ -41,6 +41,7 @@ type ArticleToolbarProps = {
   onSetCreatedDatePreset: (preset: DatePreset | null) => void;
   onSetPublishedStatus: (status: "draft" | "published" | null) => void;
   onClearAll: () => void;
+  onClearCategories: () => void;
 };
 
 export function ArticleToolbar({
@@ -62,6 +63,7 @@ export function ArticleToolbar({
   onSetCreatedDatePreset,
   onSetPublishedStatus,
   onClearAll,
+  onClearCategories,
 }: ArticleToolbarProps) {
   const hasSelection = selectedCount > 0;
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -124,6 +126,7 @@ export function ArticleToolbar({
           onSetCreatedDatePreset={onSetCreatedDatePreset}
           onSetPublishedStatus={onSetPublishedStatus}
           onClearAll={onClearAll}
+          onClearCategories={onClearCategories}
         />
       </div>
       {isOwner && (

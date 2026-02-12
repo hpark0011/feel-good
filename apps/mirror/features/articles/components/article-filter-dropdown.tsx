@@ -4,12 +4,12 @@ import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuTrigger,
-  DropdownMenuSub,
-  DropdownMenuSubTrigger,
-  DropdownMenuSubContent,
-  DropdownMenuSeparator,
   DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
 } from "@feel-good/ui/primitives/dropdown-menu";
 import { Button } from "@feel-good/ui/primitives/button";
 import { Icon } from "@feel-good/ui/components/icon";
@@ -36,6 +36,7 @@ type ArticleFilterDropdownProps = {
   onSetCreatedDatePreset: (preset: DatePreset | null) => void;
   onSetPublishedStatus: (status: "draft" | "published" | null) => void;
   onClearAll: () => void;
+  onClearCategories: () => void;
 };
 
 function formatPresetLabel(preset: DatePreset): string {
@@ -58,6 +59,7 @@ export function ArticleFilterDropdown({
   onSetCreatedDatePreset,
   onSetPublishedStatus,
   onClearAll,
+  onClearCategories,
 }: ArticleFilterDropdownProps) {
   const [open, setOpen] = useState(false);
 
@@ -70,7 +72,7 @@ export function ArticleFilterDropdown({
               variant="ghost"
               size="icon-sm"
               className={cn(
-                (open || hasActiveFilters) && "[&_svg]:text-information"
+                (open || hasActiveFilters) && "[&_svg]:text-information",
               )}
             >
               <Icon name="Line3Icon" />
@@ -85,11 +87,12 @@ export function ArticleFilterDropdown({
                 ? `Category (${filterState.categories.length})`
                 : "Category"}
             </DropdownMenuSubTrigger>
-            <DropdownMenuSubContent>
+            <DropdownMenuSubContent className="max-w-[240px]">
               <CategoryFilterContent
                 articles={articles}
                 selectedCategories={filterState.categories}
                 onToggleCategory={onToggleCategory}
+                onClearFilter={onClearCategories}
               />
             </DropdownMenuSubContent>
           </DropdownMenuSub>
@@ -97,7 +100,9 @@ export function ArticleFilterDropdown({
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
               {filterState.publishedDatePreset
-                ? `Published · ${formatPresetLabel(filterState.publishedDatePreset)}`
+                ? `Published · ${
+                  formatPresetLabel(filterState.publishedDatePreset)
+                }`
                 : "Published"}
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent>
@@ -112,7 +117,9 @@ export function ArticleFilterDropdown({
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
                 {filterState.createdDatePreset
-                  ? `Created · ${formatPresetLabel(filterState.createdDatePreset)}`
+                  ? `Created · ${
+                    formatPresetLabel(filterState.createdDatePreset)
+                  }`
                   : "Created"}
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent>
@@ -128,7 +135,11 @@ export function ArticleFilterDropdown({
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>
                 {filterState.publishedStatus
-                  ? `Status · ${filterState.publishedStatus === "draft" ? "Draft" : "Published"}`
+                  ? `Status · ${
+                    filterState.publishedStatus === "draft"
+                      ? "Draft"
+                      : "Published"
+                  }`
                   : "Status"}
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent>

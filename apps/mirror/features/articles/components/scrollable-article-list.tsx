@@ -136,6 +136,7 @@ export function ScrollableArticleList({
         onSetCreatedDatePreset={filter.setCreatedDatePreset}
         onSetPublishedStatus={filter.setPublishedStatus}
         onClearAll={filter.clearAll}
+        onClearCategories={filter.clearCategories}
       />
       {showEmpty ? (
         <div className="flex items-center justify-center py-16 text-muted-foreground">
