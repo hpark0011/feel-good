@@ -1,0 +1,51 @@
+"use client";
+
+import { Button } from "@feel-good/ui/primitives/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@feel-good/ui/primitives/dropdown-menu";
+import { Icon } from "@feel-good/ui/components/icon";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@feel-good/ui/primitives/tooltip";
+import type { SortOrder } from "../hooks/use-article-sort";
+
+type ArticleSortDropdownProps = {
+  value: SortOrder;
+  onChange: (order: SortOrder) => void;
+};
+
+export function ArticleSortDropdown({
+  value,
+  onChange,
+}: ArticleSortDropdownProps) {
+  return (
+    <DropdownMenu>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon-sm">
+              <Icon name="ArrowUpAndDownIcon" className="size-4.5" />
+            </Button>
+          </DropdownMenuTrigger>
+        </TooltipTrigger>
+        <TooltipContent>Sort</TooltipContent>
+      </Tooltip>
+      <DropdownMenuContent align="end">
+        <DropdownMenuRadioGroup
+          value={value}
+          onValueChange={(v) => onChange(v as SortOrder)}
+        >
+          <DropdownMenuRadioItem value="newest">Newest</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="oldest">Oldest</DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}

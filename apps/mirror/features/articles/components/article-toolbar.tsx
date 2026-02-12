@@ -8,14 +8,18 @@ import { Button } from "@feel-good/ui/primitives/button";
 import { Icon } from "@feel-good/ui/components/icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@feel-good/ui/primitives/tooltip";
 import { DeleteArticlesDialog } from "../views/delete-articles-dialog";
+import { ArticleSortDropdown } from "./article-sort-dropdown";
+import type { SortOrder } from "../hooks/use-article-sort";
 
 type ArticleToolbarProps = {
   selectedCount: number;
   onDelete: () => void;
+  sortOrder: SortOrder;
+  onSortChange: (order: SortOrder) => void;
 };
 
 export function ArticleToolbar(
-  { selectedCount, onDelete }: ArticleToolbarProps,
+  { selectedCount, onDelete, sortOrder, onSortChange }: ArticleToolbarProps,
 ) {
   const hasSelection = selectedCount > 0;
 
@@ -65,17 +69,7 @@ export function ArticleToolbar(
         </Tooltip>
 
         {/* Sort */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-            >
-              <Icon name="ArrowUpAndDownIcon" className="size-4.5" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>Sort</TooltipContent>
-        </Tooltip>
+        <ArticleSortDropdown value={sortOrder} onChange={onSortChange} />
 
         {/* Filter */}
         <Tooltip>

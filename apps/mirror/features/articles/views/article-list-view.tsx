@@ -24,6 +24,7 @@ type ArticleListViewProps = {
   onToggleAll?: () => void;
   isSelected?: (slug: string) => boolean;
   onToggle?: (slug: string) => void;
+  shouldAnimate?: boolean;
 };
 
 export function ArticleListView({
@@ -37,6 +38,7 @@ export function ArticleListView({
   onToggleAll,
   isSelected,
   onToggle,
+  shouldAnimate = false,
 }: ArticleListViewProps) {
   return (
     <section className="w-full mx-auto **:data-[slot=table-container]:overflow-visible">
@@ -64,7 +66,7 @@ export function ArticleListView({
           </TableRow>
         </TableHeader>
         <TableBody className="group/list">
-          {articles.map((article) => (
+          {articles.map((article, index) => (
             <ArticleListItem
               key={article.slug}
               article={article}
@@ -72,6 +74,8 @@ export function ArticleListView({
               isOwner={isOwner}
               isSelected={isSelected?.(article.slug) ?? false}
               onToggle={onToggle}
+              shouldAnimate={shouldAnimate}
+              index={index}
             />
           ))}
         </TableBody>
