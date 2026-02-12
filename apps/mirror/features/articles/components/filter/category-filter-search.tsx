@@ -33,7 +33,7 @@ export function CategoryFilterSearch({
       onKeyDown={handleKeyDown}
       onPointerDown={handlePointerDown}
       onMouseDown={handleMouseDown}
-      className={cn("h-6 border-none focus-visible:ring-0")}
+      className={cn("h-6 border-none focus-visible:ring-0 px-1.5")}
     />
   );
 }

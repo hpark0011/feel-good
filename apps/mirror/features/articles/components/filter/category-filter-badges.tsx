@@ -16,19 +16,19 @@ export function CategoryFilterBadges({
   }
 
   return (
-    <div className="flex flex-wrap gap-1 px-2 py-1.5">
+    <div className="flex flex-wrap gap-1 px-px py-0.5">
       {selectedCategories.map((category) => (
         <div
           key={category}
-          className="inline-flex items-center gap-1 rounded-md bg-muted px-1.5 py-0.5 text-xs"
+          className="inline-flex items-center gap-1 rounded-md bg-muted/50 px-1.5 pr-1 py-0.5 text-xs"
         >
           {category}
           <button
             onClick={() => onRemove(category)}
-            className="flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center justify-center text-muted-foreground hover:text-information transition-colors"
             aria-label={`Remove ${category} filter`}
           >
-            <Icon name="XmarkCircleFillIcon" className="size-3.5" />
+            <Icon name="XmarkIcon" className="size-3" />
           </button>
         </div>
       ))}
