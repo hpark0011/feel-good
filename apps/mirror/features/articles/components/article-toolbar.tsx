@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -11,6 +12,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@feel-good/ui/primitives/tooltip";
+import { cn } from "@feel-good/utils/cn";
 import { DeleteArticlesDialog } from "../views/delete-articles-dialog";
 import { ArticleSortDropdown } from "./article-sort-dropdown";
 import { ArticleSearchInput } from "./article-search-input";
@@ -42,6 +44,7 @@ export function ArticleToolbar({
   onSearchClose,
 }: ArticleToolbarProps) {
   const hasSelection = selectedCount > 0;
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   return (
     <div className="flex items-center gap-2 px-px justify-end mb-3 mt-2 pr-[2px]">
@@ -54,7 +57,7 @@ export function ArticleToolbar({
               </span>
             )}
 
-            <AlertDialog>
+            <AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
               <DeleteArticlesDialog count={selectedCount} onConfirm={onDelete} />
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -67,7 +70,10 @@ export function ArticleToolbar({
                         ? `Delete ${selectedCount} selected`
                         : "Delete"}
                     >
-                      <Icon name="TrashFillIcon" />
+                      <Icon
+                        name="TrashFillIcon"
+                        className={cn(isDeleteOpen && "text-information")}
+                      />
                     </Button>
                   </AlertDialogTrigger>
                 </TooltipTrigger>

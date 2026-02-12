@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@feel-good/ui/primitives/button";
 import {
   DropdownMenu,
@@ -14,6 +15,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@feel-good/ui/primitives/tooltip";
+import { cn } from "@feel-good/utils/cn";
 import type { SortOrder } from "../hooks/use-article-sort";
 
 type ArticleSortDropdownProps = {
@@ -29,13 +31,18 @@ export function ArticleSortDropdown({
   value,
   onChange,
 }: ArticleSortDropdownProps) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <Tooltip>
         <TooltipTrigger asChild>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon-sm">
-              <Icon name="ArrowUpAndDownIcon" className="size-4.5" />
+              <Icon
+                name="ArrowUpAndDownIcon"
+                className={cn("size-4.5", open && "text-information")}
+              />
             </Button>
           </DropdownMenuTrigger>
         </TooltipTrigger>
