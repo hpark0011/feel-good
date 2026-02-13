@@ -49,5 +49,5 @@ export function usePathnameTransition(): NavTransition {
     notifyListeners();
   }, [pathname]);
 
-  return useSyncExternalStore(subscribe, getTransition);
+  return useSyncExternalStore(subscribe, getTransition, getTransition);
 }
