@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
-const isArticleDetailRoute = (path: string) =>
+export const isArticleDetailRoute = (path: string) =>
   /^\/@[^/]+\/.+/.test(path);
 
 export function useNavDirection() {

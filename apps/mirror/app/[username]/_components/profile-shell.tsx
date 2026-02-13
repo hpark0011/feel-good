@@ -17,6 +17,7 @@ import {
 import { WorkspaceNavbar } from "@/components/workspace-navbar";
 import { ToolbarSlotProvider, ToolbarSlotTarget } from "@/components/workspace-toolbar-slot";
 import { useNavDirection } from "@/hooks/use-nav-direction";
+import { useScrollMemory } from "@/hooks/use-scroll-memory";
 
 type ProfileShellProps = {
   profile: Profile;
@@ -33,6 +34,11 @@ export function ProfileShell(
   const [mobileScrollRoot, setMobileScrollRoot] = useState<
     HTMLDivElement | null
   >(null);
+  const [desktopScrollRoot, setDesktopScrollRoot] = useState<
+    HTMLDivElement | null
+  >(null);
+
+  useScrollMemory(isMobile ? mobileScrollRoot : desktopScrollRoot);
 
   const contextValue = useMemo(
     () => ({ isOwner }),
@@ -87,7 +93,10 @@ export function ProfileShell(
                     <ToolbarSlotTarget />
                     <div className="flex-1 min-h-0 *:h-full">
                       <ViewTransition name="profile-content">
-                        <div className="overflow-y-auto h-full px-4 pb-[64px]">
+                        <div
+                          ref={setDesktopScrollRoot}
+                          className="overflow-y-auto h-full px-4 pb-[64px]"
+                        >
                           {children}
                         </div>
                       </ViewTransition>
