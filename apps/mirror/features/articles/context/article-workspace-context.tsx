@@ -96,6 +96,7 @@ export function ArticleWorkspaceProvider({
   );
 
   const selection = useArticleSelection(allSlugs);
+  const { clear: clearSelection, selectedSlugs } = selection;
 
   const uniqueCategories = useMemo(
     () => getUniqueCategories(articles),
@@ -107,20 +108,20 @@ export function ArticleWorkspaceProvider({
   const prevFilterState = useRef(filter.filterState);
   useEffect(() => {
     if (search.isOpen && !prevSearchOpen.current) {
-      selection.clear();
+      clearSelection();
     }
     prevSearchOpen.current = search.isOpen;
 
     if (prevFilterState.current !== filter.filterState) {
-      selection.clear();
+      clearSelection();
     }
     prevFilterState.current = filter.filterState;
-  }, [search.isOpen, filter.filterState, selection]);
+  }, [search.isOpen, filter.filterState, clearSelection]);
 
   const handleSortChange = useCallback(
     (order: SortOrder) => {
       setSortOrder(order);
-      selection.clear();
+      clearSelection();
       setShouldAnimate(true);
       if (animationTimerRef.current) clearTimeout(animationTimerRef.current);
       animationTimerRef.current = setTimeout(
@@ -128,7 +129,7 @@ export function ArticleWorkspaceProvider({
         1000,
       );
     },
-    [setSortOrder, selection],
+    [setSortOrder, clearSelection],
   );
 
   const handleDelete = useCallback(() => {
@@ -136,11 +137,11 @@ export function ArticleWorkspaceProvider({
     setArticles((prev) =>
       prev.filter(
         (a) =>
-          !(selection.selectedSlugs.has(a.slug) && visibleSlugs.has(a.slug)),
+          !(selectedSlugs.has(a.slug) && visibleSlugs.has(a.slug)),
       ),
     );
-    selection.clear();
-  }, [selection, allSlugs]);
+    clearSelection();
+  }, [selectedSlugs, clearSelection, allSlugs]);
 
   // Empty state derivations
   const hasNoArticles = articles.length === 0;
@@ -165,7 +166,7 @@ export function ArticleWorkspaceProvider({
       search,
       filter,
       categories: uniqueCategories,
-      selectedCount: selection.selectedSlugs.size,
+      selectedCount: selectedSlugs.size,
       onDelete: handleDelete,
 
       // List state
@@ -192,7 +193,7 @@ export function ArticleWorkspaceProvider({
       search,
       filter,
       uniqueCategories,
-      selection.selectedSlugs.size,
+      selectedSlugs.size,
       selection.isAllSelected,
       selection.isIndeterminate,
       selection.toggleAll,

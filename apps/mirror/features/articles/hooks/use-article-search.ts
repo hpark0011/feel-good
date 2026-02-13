@@ -74,5 +74,8 @@ export function useArticleSearch(
 
   const isFiltered = debouncedQuery.trim() !== "";
 
-  return { filteredArticles, query, setQuery, isOpen, isFiltered, open, close };
+  return useMemo(
+    () => ({ filteredArticles, query, setQuery, isOpen, isFiltered, open, close }),
+    [filteredArticles, query, setQuery, isOpen, isFiltered, open, close],
+  );
 }
