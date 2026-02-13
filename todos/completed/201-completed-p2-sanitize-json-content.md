@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "201"
 tags: [code-review, pr-124, security, xss, editor, tiptap]
@@ -46,13 +46,14 @@ Convert JSONContent to HTML, sanitize with DOMPurify, then render.
 
 ## Acceptance Criteria
 
-- [ ] JSONContent is sanitized before being passed to Tiptap editor
-- [ ] Only allowlisted node types are rendered
-- [ ] URLs with `javascript:` or `data:text/html` schemes are stripped
-- [ ] Existing mock content renders identically after sanitization
+- [x] JSONContent is sanitized before being passed to Tiptap editor
+- [x] Only allowlisted node types are rendered
+- [x] URLs with `javascript:` or `data:text/html` schemes are stripped
+- [x] Existing mock content renders identically after sanitization
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-13 | Created from PR #124 security review | Tiptap renders JSONContent nodes into DOM without built-in sanitization |
+| 2026-02-13 | Implemented Option A: sanitizeContent utility | Allowlists node types, marks, attrs; validates URL schemes; integrated into RichTextViewer with useMemo; mirror build passes |

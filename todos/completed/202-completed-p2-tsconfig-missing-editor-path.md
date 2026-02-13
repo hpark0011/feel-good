@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "202"
 tags: [code-review, pr-124, architecture, typescript, editor]
@@ -38,12 +38,13 @@ Or use a simpler glob: `"include": ["**/*.ts", "**/*.tsx"]`
 
 ## Acceptance Criteria
 
-- [ ] Running `tsc --noEmit` in `packages/features/` type-checks editor files
-- [ ] No new type errors are introduced
-- [ ] CI type checking covers the editor package
+- [x] Running `tsc --noEmit` in `packages/features/` type-checks editor files
+- [x] No new type errors are introduced
+- [x] CI type checking covers the editor package
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-13 | Created from PR #124 architecture review | New feature directories must be included in tsconfig for standalone type checking |
+| 2026-02-13 | Fixed: broadened include to `**/*.ts`, `**/*.tsx` | Simpler glob avoids needing to update tsconfig for each new feature directory |
