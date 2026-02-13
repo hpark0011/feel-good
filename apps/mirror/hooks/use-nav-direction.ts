@@ -9,7 +9,6 @@ const isArticleDetailRoute = (path: string) =>
 export function useNavDirection() {
   const pathname = usePathname();
   const prevPathname = useRef(pathname);
-  const isArticleDetail = isArticleDetailRoute(pathname);
 
   useLayoutEffect(() => {
     if (pathname === prevPathname.current) return;
@@ -29,6 +28,4 @@ export function useNavDirection() {
       delete document.documentElement.dataset.navDirection;
     };
   }, [pathname]);
-
-  return { isArticleDetail };
 }

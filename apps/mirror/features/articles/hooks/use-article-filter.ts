@@ -84,14 +84,17 @@ export function useArticleFilter(): UseArticleFilterReturn {
     );
   }, [filterState]);
 
-  return {
-    filterState,
-    toggleCategory,
-    clearCategories,
-    setPublishedDatePreset,
-    setCreatedDatePreset,
-    setPublishedStatus,
-    clearAll,
-    hasActiveFilters,
-  };
+  return useMemo(
+    () => ({
+      filterState,
+      toggleCategory,
+      clearCategories,
+      setPublishedDatePreset,
+      setCreatedDatePreset,
+      setPublishedStatus,
+      clearAll,
+      hasActiveFilters,
+    }),
+    [filterState, toggleCategory, clearCategories, setPublishedDatePreset, setCreatedDatePreset, setPublishedStatus, clearAll, hasActiveFilters],
+  );
 }

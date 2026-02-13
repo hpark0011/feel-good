@@ -94,6 +94,7 @@ export { LogoIcon } from "./components/logo";
 export { MagnifyingGlassIcon } from "./components/magnifying-glass";
 export { MicFillIcon } from "./components/mic-fill";
 export { MicSlashFillIcon } from "./components/mic-slash-fill";
+export { MinusSmallIcon } from "./components/minus-small";
 export { MinusSquareFillIcon } from "./components/minus-square-fill";
 export { MoonFillIcon } from "./components/moon-fill";
 export { MoonStarsFillIcon } from "./components/moon-stars-fill";

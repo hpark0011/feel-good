@@ -8,6 +8,7 @@ import { cn } from "../lib/utils";
 
 function Checkbox({
   className,
+  checked,
   ...props
 }: React.ComponentProps<typeof CheckboxPrimitive.Root>) {
   return (
@@ -22,6 +23,7 @@ function Checkbox({
         "rounded-full border border-input",
         // Background
         "dark:bg-input/30 data-[state=checked]:bg-primary dark:data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground data-[state=checked]:border-primary",
+        "data-[state=indeterminate]:bg-primary dark:data-[state=indeterminate]:bg-primary data-[state=indeterminate]:text-primary-foreground data-[state=indeterminate]:border-primary",
         // Shadow & transition
         "transition-shadow outline-none",
         // Focus
@@ -32,16 +34,26 @@ function Checkbox({
         "disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
+      checked={checked}
       {...props}
     >
       <CheckboxPrimitive.Indicator
         data-slot="checkbox-indicator"
         className="grid place-content-center text-current transition-none relative"
       >
-        <Icon
-          name="CheckmarkSmallIcon"
-          className="size-4 relative"
-        />
+        {checked === "indeterminate"
+          ? (
+            <Icon
+              name="MinusSmallIcon"
+              className="size-4 relative"
+            />
+          )
+          : (
+            <Icon
+              name="CheckmarkSmallIcon"
+              className="size-4 relative"
+            />
+          )}
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   );

@@ -39,9 +39,9 @@ ResizablePanel (right)
 |--------|-------|
 | **Gaps addressed** | Gap 1 (toolbar in scroll), Gap 2 (navbar/toolbar split) |
 | **Phases** | 3 |
-| **New files** | 4 |
-| **Modified files** | 5 |
-| **Deleted files** | 0 |
+| **New files** | 5 |
+| **Modified files** | 6 |
+| **Deleted files** | 1 (ProfileHeader) |
 | **Quality gate** | `pnpm build --filter=@feel-good/mirror` after every phase |
 
 ## Affected Files
@@ -54,16 +54,18 @@ ResizablePanel (right)
 | 2 | `apps/mirror/features/articles/views/article-toolbar-view.tsx` | 2 | Thin toolbar wrapper consuming from context |
 | 3 | `apps/mirror/features/articles/views/article-detail-toolbar-view.tsx` | 2 | Toolbar for article detail page (back button) |
 | 4 | `apps/mirror/components/workspace-navbar.tsx` | 2 | Global navbar extracted from ProfileHeader |
+| 5 | `apps/mirror/components/workspace-toolbar-slot.tsx` | 3 | Context-based toolbar slot (register toolbar from pages, render in shell) |
 
 ### Modified Files
 
 | # | File | Phase | Change |
 |---|------|-------|--------|
-| 5 | `apps/mirror/features/articles/components/scrollable-article-list.tsx` | 1 | Move hook calls to context, consume from context |
-| 6 | `apps/mirror/features/articles/index.ts` | 1 | Export new context provider and toolbar views |
-| 7 | `apps/mirror/app/[username]/_components/profile-shell.tsx` | 3 | Restructure right panel with navbar + toolbar slot + content |
-| 8 | `apps/mirror/app/[username]/page.tsx` | 3 | Wrap with ArticleWorkspaceProvider, pass toolbar slot |
-| 9 | `apps/mirror/app/[username]/[slug]/page.tsx` | 3 | Pass article detail toolbar slot |
+| 6 | `apps/mirror/features/articles/components/scrollable-article-list.tsx` | 1 | Move hook calls to context, consume from context |
+| 7 | `apps/mirror/features/articles/index.ts` | 1 | Export new context provider and toolbar views |
+| 8 | `apps/mirror/app/[username]/_components/profile-shell.tsx` | 3 | Restructure right panel with navbar + toolbar slot + content |
+| 9 | `apps/mirror/app/[username]/page.tsx` | 3 | Wrap with ArticleWorkspaceProvider, pass toolbar slot |
+| 10 | `apps/mirror/app/[username]/[slug]/page.tsx` | 3 | Pass article detail toolbar slot |
+| 11 | `apps/mirror/hooks/use-nav-direction.ts` | 3 | Remove `isArticleDetail` return, keep ViewTransition side effect |
 
 ---
 
@@ -94,17 +96,19 @@ All phases are sequential — each depends on the previous.
 Currently `ScrollableArticleList` (`features/articles/components/scrollable-article-list.tsx`) calls 5 hooks and passes their returns as props to both `ArticleToolbar` and `ArticleListView`. To separate them in the DOM, the shared state needs to live in a context that wraps both.
 
 **What moves into context:**
-- `useArticleSearch(articles)` — needs `articles` prop on provider
+- `useState(initialArticles)` — local mutable copy of the articles prop (mutated by `handleDelete`)
+- `useArticleSearch(articles)` — operates on the mutable `articles` state, not the raw prop
 - `useArticleSort()` — no dependencies
 - `useArticleFilter()` — no dependencies (reads from localStorage)
 - `useArticleSelection(allSlugs)` — depends on derived `allSlugs`
 - `useArticleList(filteredByFilter, sortOrder, isFiltered)` — depends on pipeline output
 - Derived: `filteredByFilter`, `uniqueCategories`, `shouldAnimate`, `handleSortChange`, `handleDelete`
 
-**What stays in the consuming components:**
+**What stays in consuming components (not in context):**
+- `useScrollRoot()` — layout-level concern from `ScrollRootProvider`, not article workspace state. Each consuming component that needs it calls it directly.
 - `ArticleToolbar` reads toolbar-relevant slices from context
 - `ArticleListView` reads list-relevant slices from context
-- `ScrollableArticleList` becomes a thin wrapper or is replaced by direct context consumption
+- `ScrollableArticleList` becomes a thin wrapper that reads from context
 
 ### Files
 
@@ -157,30 +161,36 @@ Requirements:
      shouldAnimate: boolean;
 
      // Empty state
+     hasNoArticles: boolean;
      showEmpty: boolean;
      emptyMessage: string;
    };
    ```
 
+   **Two distinct empty states:**
+   - `hasNoArticles` = the raw `articles` state has length 0 (no articles exist at all — toolbar should NOT render)
+   - `showEmpty` = articles exist but `paginatedArticles` is empty due to search/filter (toolbar SHOULD render so user can clear filters)
+
 3. Create context with `createContext<ArticleWorkspaceContextValue | null>(null)`
 
 4. Create `ArticleWorkspaceProvider` component:
    - Props: `{ articles: Article[]; username: string; children: React.ReactNode }`
-   - Move ALL hook calls from `ScrollableArticleList` into this provider:
+   - Move ALL hook calls and state from `ScrollableArticleList` into this provider:
+     - `const [articles, setArticles] = useState(initialArticles)` — **critical:** local mutable copy. The `articles` prop from page.tsx is immutable server data; `handleDelete` calls `setArticles` to remove deleted articles. `useArticleSearch` operates on this mutable state.
      - `useIsProfileOwner()` from `@/features/profile`
-     - `useArticleSearch(articles)`
+     - `useArticleSearch(articles)` — pass the mutable `articles` state, not the raw prop
      - `useArticleSort()`
      - `useArticleFilter()`
      - The `filteredByFilter` memo
      - `useArticleList(filteredByFilter, sortOrder, isFiltered)`
-     - `useScrollRoot()`
      - `useArticleSelection(allSlugs)`
      - The `uniqueCategories` memo
      - The `shouldAnimate` state + timer ref + cleanup effect
      - The selection-clear effect (search open + filter change)
      - `handleSortChange` callback
-     - `handleDelete` callback
-     - The `showEmpty` and `emptyMessage` derivations
+     - `handleDelete` callback — uses `setArticles` to filter out deleted articles
+     - The `hasNoArticles`, `showEmpty`, and `emptyMessage` derivations
+   - **Do NOT move** `useScrollRoot()` — it's a layout-level concern, not article workspace state. Consuming components call it directly.
    - Wrap children in context provider with memoized value
 
 5. Create `useArticleWorkspace()` hook:
@@ -194,7 +204,7 @@ Requirements:
 
 6. Export `ArticleWorkspaceProvider` and `useArticleWorkspace`
 
-**Critical:** The `articles` and `username` props come from the server component page.tsx. The provider is a client component boundary. `scrollRoot` comes from `useScrollRoot()` which reads from `ScrollRootProvider` — this context must wrap the provider or be consumed inside it.
+**Critical:** The `articles` and `username` props come from the server component page.tsx. The provider is a client component boundary. The provider maintains its own mutable copy of `articles` via `useState(initialArticles)` — this is what `handleDelete` mutates.
 
 ### Agent B — Simplify ScrollableArticleList
 
@@ -213,17 +223,40 @@ Refactor `ScrollableArticleList` to consume from `ArticleWorkspaceProvider` cont
 2. Import `useArticleWorkspace` from `../context/article-workspace-context`
 3. The component now:
    - Calls `useArticleWorkspace()` to get all state
+   - Calls `useScrollRoot()` directly (this is a layout concern, not part of the workspace context)
+   - Handles two empty states: `hasNoArticles` (zero articles total) and `showEmpty` (filtered to empty)
    - Renders ONLY the content portion (no toolbar):
      ```tsx
+     import { useArticleWorkspace } from "../context/article-workspace-context";
+     import { useScrollRoot } from "../context/scroll-root-context";
+     import { ArticleListView } from "../views/article-list-view";
+
      export function ScrollableArticleList() {
        const ctx = useArticleWorkspace();
-       if (ctx.showEmpty) return <div className="...">{ctx.emptyMessage}</div>;
+       const scrollRoot = useScrollRoot();
+
+       if (ctx.hasNoArticles) {
+         return (
+           <div className="flex items-center justify-center py-16 text-muted-foreground">
+             No articles yet
+           </div>
+         );
+       }
+
+       if (ctx.showEmpty) {
+         return (
+           <div className="flex items-center justify-center py-16 text-muted-foreground">
+             {ctx.emptyMessage}
+           </div>
+         );
+       }
+
        return (
          <ArticleListView
            articles={ctx.articles}
            hasMore={ctx.hasMore}
            onLoadMore={ctx.onLoadMore}
-           scrollRoot={...}
+           scrollRoot={scrollRoot}
            username={ctx.username}
            isOwner={ctx.isOwner}
            isAllSelected={ctx.isAllSelected}
@@ -250,11 +283,14 @@ Also update `features/articles/index.ts`:
 
 Check:
 - `ArticleWorkspaceProvider` contains ALL hook calls that were previously in `ScrollableArticleList`
-- No hook calls remain in `ScrollableArticleList` (it only reads from context)
+- Provider has `const [articles, setArticles] = useState(initialArticles)` — local mutable copy, not just passing through the prop
+- `handleDelete` calls `setArticles`, and `useArticleSearch` receives the mutable `articles` state
+- `useScrollRoot()` is NOT inside the provider — it's called directly in `ScrollableArticleList`
+- No hook calls remain in `ScrollableArticleList` except `useArticleWorkspace()` and `useScrollRoot()`
 - `useArticleWorkspace` throws if used outside provider
 - Context value is memoized to prevent unnecessary re-renders
 - `ScrollableArticleList` no longer renders `ArticleToolbar`
-- The `scrollRoot` from `useScrollRoot()` is correctly consumed (provider must be inside `ScrollRootProvider`)
+- `ScrollableArticleList` handles both empty states: `hasNoArticles` (no toolbar) and `showEmpty` (toolbar still visible)
 - `articles/index.ts` exports the new context provider
 - No unused imports remain
 
@@ -304,7 +340,7 @@ Create 3 files. Read these first:
 
 **File 1: `apps/mirror/components/workspace-navbar.tsx`**
 
-Extract the global controls from `ProfileHeader` into a standalone navbar.
+Extract the global controls from `ProfileHeader` into a standalone navbar. Carry over the gradient overlay from `ProfileHeader` (`bg-linear-to-b from-background via-background/70 to-transparent`) so scrolled content fades under the fixed header area.
 
 ```tsx
 "use client";
@@ -320,7 +356,7 @@ export function WorkspaceNavbar({ className }: WorkspaceNavbarProps) {
   return (
     <nav
       className={cn(
-        "flex h-10 items-center justify-end gap-2 px-4",
+        "z-10 flex h-10 items-center justify-end gap-2 px-4 bg-linear-to-b from-background via-background/70 to-transparent",
         className,
       )}
     >
@@ -425,43 +461,98 @@ pnpm build --filter=@feel-good/mirror
 
 ### Analysis
 
-`ProfileShell` needs to accept a `toolbar` slot from its children (page routes). Each page provides its own toolbar:
-- `[username]/page.tsx` → `ArticleToolbarView` (wrapped in `ArticleWorkspaceProvider`)
-- `[username]/[slug]/page.tsx` → `ArticleDetailToolbarView`
+Each page provides its own toolbar via a context-based slot mechanism:
+- `[username]/page.tsx` → `<WorkspaceToolbar><ArticleToolbarView /></WorkspaceToolbar>` (inside `ArticleWorkspaceProvider`)
+- `[username]/[slug]/page.tsx` → `<WorkspaceToolbar><ArticleDetailToolbarView /></WorkspaceToolbar>`
 
-The layout pattern: page.tsx wraps its content in the workspace provider and passes both toolbar and content through the layout's slot mechanism.
-
-**Slot approach:** Use a React context to pass the toolbar from child pages up to the layout shell. This avoids Next.js parallel routes complexity while keeping the layout generic.
-
-Alternative: Pass toolbar as a prop through the layout. Since Next.js layouts receive `children`, we need a mechanism. Options:
-1. **Toolbar context** — child page renders a `<WorkspaceToolbar>` component that portals/registers its content
-2. **Compound component** — page wraps content in `<WorkspaceLayout toolbar={...}>content</WorkspaceLayout>`
-3. **Direct in ProfileShell** — ProfileShell renders the workspace provider internally and conditionally shows toolbar based on route
-
-The simplest approach for now: **ProfileShell accepts an optional `toolbar` prop** and page components pass it through a wrapper. Since the layout already receives `isOwner` and `children`, we can restructure so page.tsx provides both toolbar and content.
-
-Actually, the cleanest Next.js approach: use the existing layout/page boundary. The **layout** renders the fixed zones (navbar + toolbar slot) and the scrollable wrapper. Pages provide their content. For the toolbar, we use a **context-based slot**: child mounts a toolbar via context, layout reads it.
+**Slot mechanism:** `ToolbarSlotProvider` wraps the right panel internals in `ProfileShell`. Pages render `<WorkspaceToolbar>` which registers toolbar content via `useLayoutEffect`. A `ToolbarSlotRenderer` helper in ProfileShell reads the toolbar from context and renders it in the fixed zone. This avoids Next.js parallel routes complexity and keeps `layout.tsx` unchanged.
 
 ### Files
 
 | # | File | Status | Agent |
 |---|------|--------|-------|
-| 1 | `apps/mirror/app/[username]/_components/profile-shell.tsx` | modified | A |
-| 2 | `apps/mirror/app/[username]/page.tsx` | modified | B |
-| 3 | `apps/mirror/app/[username]/[slug]/page.tsx` | modified | B |
+| 1 | `apps/mirror/components/workspace-toolbar-slot.tsx` | new | A |
+| 2 | `apps/mirror/app/[username]/_components/profile-shell.tsx` | modified | A |
+| 3 | `apps/mirror/hooks/use-nav-direction.ts` | modified | A |
+| 4 | `apps/mirror/app/[username]/page.tsx` | modified | B |
+| 5 | `apps/mirror/app/[username]/[slug]/page.tsx` | modified | B |
 
-### Agent A — Restructure ProfileShell
+### Agent A — Create Toolbar Slot + Restructure ProfileShell
 
 - **Type:** `general-purpose` · **Model:** `sonnet` · **Mode:** `bypassPermissions`
 
 **Task:**
 
-Modify `apps/mirror/app/[username]/_components/profile-shell.tsx`.
+Create `apps/mirror/components/workspace-toolbar-slot.tsx` and modify `apps/mirror/app/[username]/_components/profile-shell.tsx`.
 
 Read these files first:
 - Current `profile-shell.tsx`
 - `apps/mirror/components/workspace-navbar.tsx` (new from Phase 2)
 - `apps/mirror/features/articles/context/article-workspace-context.tsx` (from Phase 1)
+- `apps/mirror/features/profile/views/mobile-profile-layout.tsx` (mobile drawer layout)
+- `apps/mirror/hooks/use-nav-direction.ts` (nav direction hook to refactor)
+
+**Step 0: Create `apps/mirror/components/workspace-toolbar-slot.tsx`**
+
+This is a context-based slot that lets child pages register a toolbar node, and the layout shell reads it.
+
+**Important implementation detail:** Use `useLayoutEffect` (not `useEffect`) to avoid a one-frame flash where the toolbar zone is empty. Extract `setToolbar` from the context object to get a stable reference — otherwise `[children, ctx]` would cause an infinite re-render loop since both are new references every render.
+
+```tsx
+"use client";
+import { createContext, useContext, useLayoutEffect, useMemo, useRef, useState } from "react";
+
+type ToolbarSlotContextValue = {
+  toolbar: React.ReactNode;
+  setToolbar: (node: React.ReactNode) => void;
+};
+
+const ToolbarSlotContext = createContext<ToolbarSlotContextValue | null>(null);
+
+export function ToolbarSlotProvider({ children }: { children: React.ReactNode }) {
+  const [toolbar, setToolbar] = useState<React.ReactNode>(null);
+  const value = useMemo(() => ({ toolbar, setToolbar }), [toolbar]);
+  return (
+    <ToolbarSlotContext.Provider value={value}>
+      {children}
+    </ToolbarSlotContext.Provider>
+  );
+}
+
+export function useToolbarSlot() {
+  const ctx = useContext(ToolbarSlotContext);
+  if (!ctx) throw new Error("useToolbarSlot must be used within ToolbarSlotProvider");
+  return ctx.toolbar;
+}
+
+export function WorkspaceToolbar({ children }: { children: React.ReactNode }) {
+  const ctx = useContext(ToolbarSlotContext);
+  if (!ctx) throw new Error("WorkspaceToolbar must be used within ToolbarSlotProvider");
+  const { setToolbar } = ctx;
+  const childrenRef = useRef(children);
+  childrenRef.current = children;
+
+  useLayoutEffect(() => {
+    setToolbar(childrenRef.current);
+    return () => setToolbar(null);
+  }, [setToolbar]);
+
+  // Also update when children change (re-render with new toolbar content)
+  useLayoutEffect(() => {
+    setToolbar(children);
+  }, [children, setToolbar]);
+
+  return null;
+}
+```
+
+**Why this pattern:**
+- `useMemo` on the provider value prevents unnecessary re-renders of consumers that only read `setToolbar`
+- `setToolbar` is a stable reference (from `useState`), so the dependency array is safe
+- `useLayoutEffect` runs synchronously after DOM mutations but before paint, preventing the toolbar flash
+- `childrenRef` captures children without creating a dependency cycle on mount
+
+---
 
 Changes to the desktop layout (right `ResizablePanel`):
 
@@ -487,46 +578,97 @@ Changes to the desktop layout (right `ResizablePanel`):
    </ResizablePanel>
    ```
 
-3. **Important decision — toolbar slot mechanism:**
+3. **Toolbar slot mechanism — `ToolbarSlotProvider` inside ProfileShell:**
 
-   For this phase, use the simplest approach: each page renders its toolbar ABOVE its content, but we restructure the scroll container so the toolbar is OUTSIDE it.
+   `ProfileShellProps` does NOT change (no `toolbar` prop needed). Instead, wrap the right panel internals in `ToolbarSlotProvider` and use a small `ToolbarSlotRenderer` component to read and render the toolbar.
 
-   Change the right panel structure to accept `toolbar` as a separate prop:
    ```tsx
-   type ProfileShellProps = {
-     profile: Profile;
-     isOwner: boolean;
-     toolbar?: React.ReactNode;
-     children: React.ReactNode;
-   };
+   // Private helper inside profile-shell.tsx
+   function ToolbarSlotRenderer() {
+     const toolbar = useToolbarSlot();
+     if (!toolbar) return null;
+     return <div className="shrink-0">{toolbar}</div>;
+   }
    ```
 
    Desktop right panel becomes:
    ```tsx
-   <div className="relative h-full min-w-0 flex flex-col">
-     <WorkspaceNavbar />
-     {toolbar && <div className="shrink-0">{toolbar}</div>}
-     <div className="flex-1 min-h-0">
-       <ViewTransition name="profile-content">
-         <div className="overflow-y-auto h-full px-4 pb-[64px]">
-           {children}
-         </div>
-       </ViewTransition>
+   <ToolbarSlotProvider>
+     <div className="relative h-full min-w-0 flex flex-col">
+       <WorkspaceNavbar />
+       <ToolbarSlotRenderer />
+       <div className="flex-1 min-h-0">
+         <ViewTransition name="profile-content">
+           <div className="overflow-y-auto h-full px-4 pb-[64px]">
+             {children}
+           </div>
+         </ViewTransition>
+       </div>
      </div>
-   </div>
+   </ToolbarSlotProvider>
    ```
+
+   This works because both `ToolbarSlotRenderer` (consumer) and `{children}` (which contain `<WorkspaceToolbar>` registrar components from pages) are inside the same `ToolbarSlotProvider`.
+
+   **No changes needed in layout.tsx** — the provider lives entirely in profile-shell.tsx.
 
 4. Remove `ProfileHeader` import and usage from the right panel (it's replaced by `WorkspaceNavbar`)
 
-5. Remove `isArticleDetail` detection (`useNavDirection` hook) — no longer needed since each page provides its own toolbar
+5. **Refactor `useNavDirection` — keep the ViewTransition side effect, remove `isArticleDetail` return:**
 
-6. Update mobile layout similarly:
-   - Replace `ProfileHeader` with `WorkspaceNavbar`
-   - Add toolbar slot above the mobile scroll content
+   The `useNavDirection` hook (`hooks/use-nav-direction.ts`) does two things:
+   - Returns `isArticleDetail` — no longer needed since each page provides its own toolbar
+   - Sets `document.documentElement.dataset.navDirection` to `"forward"` or `"back"` — **this is still needed** for CSS ViewTransition directional animations
 
-7. Delete `apps/mirror/app/[username]/_components/profile-header.tsx` if it is no longer imported anywhere. If the mobile layout still uses it, keep it for now and note it as cleanup.
+   Refactor the hook to only do the side effect (rename to `useNavDirectionEffect` or keep name). Remove the `isArticleDetail` return value. Call the hook in `ProfileShell` purely for its side effect:
+   ```tsx
+   useNavDirection(); // side effect only — sets data-navDirection for ViewTransition CSS
+   ```
+   Remove the destructuring `const { isArticleDetail } = useNavDirection()` and replace with a bare call.
 
-8. Remove `useNavDirection` import if no longer used.
+6. **Update mobile layout with detailed toolbar slot placement:**
+
+   Current mobile structure in `profile-shell.tsx`:
+   ```
+   main.h-screen
+     ProfileHeader (fixed top-0 inset-x-0)     ← replace with WorkspaceNavbar
+     MobileProfileLayout
+       DrawerContent
+         drag handle
+         div.h-[calc(100%-36px)]                ← content area
+           ViewTransition
+             div.overflow-y-auto (ref=mobileScrollRoot)
+               ScrollRootProvider
+                 {children}                      ← toolbar is inside here (scrolls)
+   ```
+
+   Target mobile structure:
+   ```
+   main.h-screen
+     WorkspaceNavbar (className="fixed top-0 inset-x-0")
+     MobileProfileLayout
+       DrawerContent
+         drag handle
+         div.h-[calc(100%-36px)]                ← content area
+           {toolbarSlot}                         ← toolbar rendered here (fixed within drawer)
+           ViewTransition
+             div.overflow-y-auto (ref=mobileScrollRoot)
+               ScrollRootProvider
+                 {children}                      ← only content scrolls
+   ```
+
+   Key details:
+   - `WorkspaceNavbar` gets `className="fixed top-0 inset-x-0"` to match mobile `ProfileHeader` positioning
+   - The toolbar slot renders inside the drawer content area but ABOVE the scroll container
+   - `ScrollRootProvider` still wraps the scroll div (unchanged)
+   - `ToolbarSlotProvider` must wrap the entire content tree including both the toolbar render site and the `{children}` that register toolbars
+
+7. Delete `apps/mirror/app/[username]/_components/profile-header.tsx` — it's fully replaced by `WorkspaceNavbar` + toolbar views.
+
+8. Clean up `useNavDirection`:
+   - Remove `isArticleDetail` from the return value
+   - Remove `isArticleDetailRoute` helper if only used for the return value (keep it if used for the side effect logic, which it is)
+   - Update the hook to return `void` or remove the return entirely
 
 ### Agent B — Update Page Components
 
@@ -543,57 +685,9 @@ Read these files first:
 - `apps/mirror/app/[username]/[slug]/page.tsx`
 - `apps/mirror/app/[username]/layout.tsx`
 
-**Challenge:** Next.js layouts receive only `children`. The `toolbar` prop needs to flow from page → layout → ProfileShell. Options:
+**Note:** `workspace-toolbar-slot.tsx` is created by Agent A. The `ToolbarSlotProvider` and `ToolbarSlotRenderer` are wired into `profile-shell.tsx` by Agent A. Agent B only updates the page components to register their toolbars via `<WorkspaceToolbar>`.
 
-**Option 1 — Layout reads toolbar from context:** Page mounts a context value, layout reads it. Requires a `WorkspaceToolbarProvider`.
-
-**Option 2 — Page renders both toolbar and content as children:** The page renders toolbar + content together as children. ProfileShell uses a convention (e.g., a wrapper component) to extract the toolbar from children.
-
-**Option 3 — Restructure to use Next.js parallel routes:** Add `@toolbar` slot in the layout.
-
-**Recommended: Option 1 — Context-based toolbar slot.**
-
-Create a small toolbar slot context:
-
-In `apps/mirror/components/workspace-toolbar-slot.tsx`:
-```tsx
-"use client";
-import { createContext, useContext, useState, useCallback, useEffect } from "react";
-
-type ToolbarSlotContextValue = {
-  toolbar: React.ReactNode;
-  setToolbar: (node: React.ReactNode) => void;
-};
-
-const ToolbarSlotContext = createContext<ToolbarSlotContextValue | null>(null);
-
-export function ToolbarSlotProvider({ children }: { children: React.ReactNode }) {
-  const [toolbar, setToolbar] = useState<React.ReactNode>(null);
-  return (
-    <ToolbarSlotContext.Provider value={{ toolbar, setToolbar }}>
-      {children}
-    </ToolbarSlotContext.Provider>
-  );
-}
-
-export function useToolbarSlot() {
-  const ctx = useContext(ToolbarSlotContext);
-  if (!ctx) throw new Error("useToolbarSlot must be used within ToolbarSlotProvider");
-  return ctx.toolbar;
-}
-
-export function WorkspaceToolbar({ children }: { children: React.ReactNode }) {
-  const ctx = useContext(ToolbarSlotContext);
-  if (!ctx) throw new Error("WorkspaceToolbar must be used within ToolbarSlotProvider");
-  useEffect(() => {
-    ctx.setToolbar(children);
-    return () => ctx.setToolbar(null);
-  }, [children, ctx]);
-  return null;
-}
-```
-
-Then update pages:
+Read the updated `profile-shell.tsx` and `workspace-toolbar-slot.tsx` from Agent A before making changes.
 
 **File 1: `apps/mirror/app/[username]/page.tsx`**
 ```tsx
@@ -637,12 +731,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ userna
 }
 ```
 
-**File 3: Update `profile-shell.tsx`** to use toolbar slot context:
-- Wrap children in `ToolbarSlotProvider`
-- Use `useToolbarSlot()` to read the toolbar
-- Render toolbar in the fixed zone
-
-**File 4: Update `apps/mirror/app/[username]/layout.tsx`** if needed to pass toolbar through.
+**No changes needed in `layout.tsx`** — the `ToolbarSlotProvider` lives inside `profile-shell.tsx` (Agent A places it there).
 
 ### Validator
 
@@ -650,15 +739,19 @@ export default async function ArticlePage({ params }: { params: Promise<{ userna
 
 Check:
 - Right panel has three distinct zones: navbar (fixed), toolbar (fixed), content (scrolls)
-- `ArticleToolbar` renders in the fixed zone, NOT inside the scroll container
+- `ToolbarSlotProvider` wraps both `ToolbarSlotRenderer` and `{children}` in profile-shell.tsx
+- `ArticleToolbar` renders in the fixed zone via `ToolbarSlotRenderer`, NOT inside the scroll container
 - `ArticleDetailToolbarView` renders in the fixed zone on detail pages
 - `WorkspaceNavbar` is route-independent (no content-type logic)
-- `WorkspaceToolbar` context slot correctly mounts/unmounts on route changes
-- Mobile layout also has the toolbar outside the scroll container
-- `ProfileHeader` is deleted or planned for deletion
-- `useNavDirection` hook is removed if no longer used
-- `ViewTransition` still wraps the scrollable content correctly
+- `WorkspaceNavbar` carries the gradient overlay (`bg-linear-to-b from-background via-background/70 to-transparent`)
+- `WorkspaceToolbar` uses `useLayoutEffect` (not `useEffect`) and has stable dependency references
+- `WorkspaceToolbar` context slot correctly mounts/unmounts on route changes without infinite loops
+- Mobile layout has toolbar outside the scroll container but inside the drawer content area
+- Mobile `WorkspaceNavbar` has `fixed top-0 inset-x-0` positioning (matches old `ProfileHeader` mobile behavior)
 - `ScrollRootProvider` still wraps the correct scroll container on mobile
+- `ProfileHeader` is deleted
+- `useNavDirection` keeps the `data-navDirection` side effect but no longer returns `isArticleDetail`
+- `ViewTransition` still wraps the scrollable content correctly
 
 ### Quality Gate
 
@@ -681,6 +774,9 @@ pnpm build --filter=@feel-good/mirror
 | Navbar extraction | Separate `WorkspaceNavbar` component at `components/` level | Global control, not feature-specific — app-level per code promotion ladder |
 | Existing `ArticleToolbar` | Unchanged — wrapped by `ArticleToolbarView` | Preserves working component, new view is a thin context-consuming adapter |
 | `ProfileHeader` | Deleted (replaced by `WorkspaceNavbar` + toolbar views) | Its responsibilities split cleanly into the two zones |
+| `useNavDirection` | Refactored, not deleted | Keep ViewTransition `data-navDirection` side effect; remove `isArticleDetail` return since pages own their own toolbars |
+| `scrollRoot` | Stays outside workspace context | Layout-level concern from `ScrollRootProvider`; consuming components call `useScrollRoot()` directly |
+| Local `articles` state | Moved into provider as `useState(initialArticles)` | `handleDelete` mutates this state; `useArticleSearch` operates on it; the server prop is immutable |
 
 ---
 
@@ -688,10 +784,12 @@ pnpm build --filter=@feel-good/mirror
 
 | Risk | Likelihood | Mitigation |
 |------|------------|------------|
-| Context re-renders — large context value triggers unnecessary renders | Medium | Memoize context value; consider splitting into toolbar + list contexts if perf issues arise |
-| Toolbar slot effect timing — toolbar flickers on route change | Low | `ViewTransition` should handle this; test with nav between list and detail |
-| Mobile layout breakage | Medium | Validate mobile separately; the mobile layout has different scroll mechanics (drawer) |
-| `ScrollRootProvider` ordering — provider must wrap content correctly | Low | Validate scroll root is still accessible inside `ArticleWorkspaceProvider` |
+| Context re-renders — large context value triggers unnecessary renders | Medium | Memoize context value with `useMemo`; consider splitting into toolbar + list contexts if perf issues arise |
+| Toolbar slot effect timing — toolbar flickers on route change | Medium | Use `useLayoutEffect` (not `useEffect`) in `WorkspaceToolbar` to register before paint; `ViewTransition` handles cross-route animation |
+| Toolbar slot infinite re-render — unstable deps in effect | High if wrong | Extract `setToolbar` from context (stable `useState` setter); use `childrenRef` pattern; do NOT put `ctx` object in dependency array |
+| Mobile layout breakage — drawer toolbar placement | Medium | Toolbar must go inside drawer content area but above scroll div; validate with real scroll + drawer snap points |
+| `ScrollRootProvider` ordering — provider must wrap content correctly | Low | `useScrollRoot()` stays in consuming component, not in workspace context; no ordering change needed |
+| ViewTransition direction loss | Low | `useNavDirection` is refactored (not deleted) — keeps `data-navDirection` side effect, only removes `isArticleDetail` return |
 
 ---
 

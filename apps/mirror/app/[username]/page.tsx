@@ -1,5 +1,11 @@
-import { ScrollableArticleList, MOCK_ARTICLES } from "@/features/articles";
+import {
+  ArticleToolbarView,
+  ArticleWorkspaceProvider,
+  MOCK_ARTICLES,
+  ScrollableArticleList,
+} from "@/features/articles";
 import { isAuthenticated } from "@/lib/auth-server";
+import { WorkspaceToolbar } from "@/components/workspace-toolbar-slot";
 
 export default async function ProfilePage({
   params,
@@ -11,5 +17,12 @@ export default async function ProfilePage({
   const articles = isOwner
     ? MOCK_ARTICLES
     : MOCK_ARTICLES.filter((a) => a.status === "published");
-  return <ScrollableArticleList articles={articles} username={username} />;
+  return (
+    <ArticleWorkspaceProvider articles={articles} username={username}>
+      <WorkspaceToolbar>
+        <ArticleToolbarView />
+      </WorkspaceToolbar>
+      <ScrollableArticleList />
+    </ArticleWorkspaceProvider>
+  );
 }
