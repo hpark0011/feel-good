@@ -2,7 +2,7 @@
 name: Features Pattern
 category: Component Organization
 applies_to: [features, shared]
-updated: 2025-01-13
+updated: 2026-02-13
 documented_in: CLAUDE.md
 ---
 

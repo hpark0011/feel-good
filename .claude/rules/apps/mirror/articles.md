@@ -7,30 +7,14 @@ paths:
 
 ## Workspace Context Architecture
 
-The articles feature uses a nested context provider pattern to separate concerns:
+The articles feature uses a layered context pattern split by concern:
 
-**ArticleWorkspaceProvider** — Root provider that:
-- Accepts initial articles data and username
-- Manages search state via `useArticleSearch()`
-- Manages sort state via `useArticleSort()`
-- Manages filter state via `useArticleFilter()`
-- Manages pagination via `useArticlePagination()`
-- Manages selection state via `useArticleSelection()`
-- Computes derived state (filtered articles, unique categories, empty states)
-- Passes toolbar context and list context separately to children
+- `ArticleWorkspaceProvider` — root provider that composes all three contexts
+- `ArticleToolbarContext` — owner state, sort, search, filter, categories, selected count, delete
+- `ArticleListContext` — articles, pagination, username, selection, animation, empty state
+- `ScrollRootContext` — scroll container ref for virtualized list
 
-**Toolbar Context** (`ArticleToolbarContext`) — Consumed by toolbar components:
-- Contains: `isOwner`, `sortOrder`, `onSortChange`, `search`, `filter`, `categories`, `selectedCount`, `onDelete`
-- Used by: `ArticleToolbar`, `ArticleToolbarView`, dropdown components
-
-**List Context** (`ArticleListContext`) — Consumed by list components:
-- Contains: `articles`, `hasMore`, `onLoadMore`, `username`, `isOwner`, selection state, animation state, empty state
-- Used by: `ScrollableArticleList`, `ArticleListView`, list items
-
-**ScrollRootContext** — Provides scroll container reference:
-- For mobile: supplies drawer's scroll container
-- For desktop: null (uses document viewport)
-- Used by: `ArticleListLoader` for IntersectionObserver root
+Consumers import from focused contexts to avoid cross-concern re-renders.
 
 ## Component Organization
 

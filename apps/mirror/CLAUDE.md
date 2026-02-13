@@ -117,6 +117,8 @@ providers/             # React context providers
 - Better Auth for session management
 - Convex for real-time data synchronization
 - Uses shared auth components from @feel-good/features
+- Workspace layout: navbar / toolbar slot / content separation
+- Feature contexts split by concern (toolbar vs list vs scroll-root)
 
 ## URL Routing
 

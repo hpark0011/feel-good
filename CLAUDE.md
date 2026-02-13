@@ -170,7 +170,8 @@ Shared Prettier configuration.
 │   ├── forms.md             # Form handling
 │   ├── state-management.md  # State patterns
 │   ├── folder-structure.md  # Folder organization convention
-│   └── apps/greyboard/      # App-specific rules
+│   ├── apps/greyboard/      # App-specific rules
+│   └── apps/mirror/         # Mirror-specific rules
 ├── skills/                   # Detailed documentation
 ├── commands/                 # Custom commands
 └── agents/                   # AI agents
@@ -178,4 +179,4 @@ Shared Prettier configuration.
 
 ### Personal Preferences
 
-Copy `CLAUDE.local.md.example` to `CLAUDE.local.md` for personal preferences (gitignored).
+Create a `CLAUDE.local.md` file for personal preferences (gitignored).
