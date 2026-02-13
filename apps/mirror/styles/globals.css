@@ -7,6 +7,7 @@
 /* import tailwindcss */
 @import "tailwindcss";
 @import "tw-animate-css";
+@plugin "@tailwindcss/typography";
 
 /* import radix colors */
 @import "@radix-ui/colors/gray.css";
@@ -19,6 +20,9 @@
 
 /* import shared styles from @feel-good/ui */
 @import "@feel-good/ui/styles.css";
+
+/* import tiptap content styles (direct path — PostCSS needs 'style' condition which package exports don't provide) */
+@import "../node_modules/@feel-good/features/editor/styles/tiptap-content.css";
 
 /* content sources */
 @source "../node_modules/@feel-good/ui";

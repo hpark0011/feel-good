@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo, useEffect } from "react";
+import { getPlainText } from "@feel-good/features/editor/lib";
 import type { Article } from "../lib/mock-articles";
 
 export type UseArticleSearchReturn = {
@@ -36,7 +37,7 @@ export function useArticleSearch(
     const scored = articles
       .map((article) => {
         const titleLower = article.title.toLowerCase();
-        const bodyLower = article.body.toLowerCase();
+        const bodyLower = getPlainText(article.body).toLowerCase();
         const categoryLower = article.category.toLowerCase();
 
         if (

@@ -1,3 +1,6 @@
+"use client";
+
+import { RichTextViewer } from "@feel-good/features/editor/components";
 import { formatLongDate } from "../lib/format-date";
 import type { Article } from "../lib/mock-articles";
 
@@ -6,8 +9,6 @@ type ArticleDetailViewProps = {
 };
 
 export function ArticleDetailView({ article }: ArticleDetailViewProps) {
-  const paragraphs = article.body.split("\n\n");
-
   return (
     <div className="py-22 px-4 bg-background min-h-[calc(100vh-40px)]">
       <article className="max-w-xl mx-auto">
@@ -26,9 +27,7 @@ export function ArticleDetailView({ article }: ArticleDetailViewProps) {
           </h1>
         </div>
 
-        <div className="space-y-5 text-[19px] leading-[1.4] font-[480] text-secondary-foreground [&>p:not(:first-child)]:indent-14">
-          {paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
-        </div>
+        <RichTextViewer content={article.body} />
       </article>
     </div>
   );
