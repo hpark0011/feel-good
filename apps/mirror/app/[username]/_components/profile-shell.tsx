@@ -16,8 +16,7 @@ import {
 } from "@feel-good/ui/primitives/resizable";
 import { WorkspaceNavbar } from "@/components/workspace-navbar";
 import { ToolbarSlotProvider, ToolbarSlotTarget } from "@/components/workspace-toolbar-slot";
-import { useNavDirection } from "@/hooks/use-nav-direction";
-import { useScrollMemory } from "@/hooks/use-scroll-memory";
+import { useProfileNavigationEffects } from "@/hooks/use-profile-navigation-effects";
 
 type ProfileShellProps = {
   profile: Profile;
@@ -29,7 +28,6 @@ export function ProfileShell(
   { profile, isOwner, children }: ProfileShellProps,
 ) {
   const isMobile = useIsMobile();
-  useNavDirection(); // side effect only — sets data-navDirection for ViewTransition CSS
 
   const [mobileScrollRoot, setMobileScrollRoot] = useState<
     HTMLDivElement | null
@@ -38,7 +36,7 @@ export function ProfileShell(
     HTMLDivElement | null
   >(null);
 
-  useScrollMemory({ mobile: mobileScrollRoot, desktop: desktopScrollRoot });
+  useProfileNavigationEffects({ mobile: mobileScrollRoot, desktop: desktopScrollRoot });
 
   const contextValue = useMemo(
     () => ({ isOwner }),
@@ -57,18 +55,18 @@ export function ProfileShell(
                 content={() => (
                   <div className="flex h-full min-h-0 flex-col">
                     <ToolbarSlotTarget />
-                    <div className="flex-1 min-h-0 *:h-full">
-                      <div
-                        ref={setMobileScrollRoot}
-                        className="overflow-y-auto overscroll-y-contain h-full px-3"
-                      >
-                        <ScrollRootProvider value={mobileScrollRoot}>
-                          <ViewTransition name="profile-content">
+                    <ViewTransition name="profile-content">
+                      <div className="flex-1 min-h-0 *:h-full">
+                        <div
+                          ref={setMobileScrollRoot}
+                          className="overflow-y-auto overscroll-y-contain h-full px-3"
+                        >
+                          <ScrollRootProvider value={mobileScrollRoot}>
                             {children}
-                          </ViewTransition>
-                        </ScrollRootProvider>
+                          </ScrollRootProvider>
+                        </div>
                       </div>
-                    </div>
+                    </ViewTransition>
                   </div>
                 )}
               />
@@ -91,16 +89,16 @@ export function ProfileShell(
                   <div className="relative h-full min-w-0 flex flex-col">
                     <WorkspaceNavbar />
                     <ToolbarSlotTarget />
-                    <div className="flex-1 min-h-0 *:h-full">
-                      <div
-                        ref={setDesktopScrollRoot}
-                        className="overflow-y-auto h-full px-4 pb-[64px]"
-                      >
-                        <ViewTransition name="profile-content">
+                    <ViewTransition name="profile-content">
+                      <div className="flex-1 min-h-0 *:h-full">
+                        <div
+                          ref={setDesktopScrollRoot}
+                          className="overflow-y-auto h-full px-4 pb-[64px]"
+                        >
                           {children}
-                        </ViewTransition>
+                        </div>
                       </div>
-                    </div>
+                    </ViewTransition>
                   </div>
                 </ToolbarSlotProvider>
               </ResizablePanel>

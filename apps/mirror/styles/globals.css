@@ -64,6 +64,31 @@ html[data-nav-direction="back"]::view-transition-new(profile-content) {
   to { transform: translateX(100%); }
 }
 
+/* Prevent default root cross-fade from affecting toolbar/navbar during directional nav */
+html[data-nav-direction="forward"]::view-transition-old(root),
+html[data-nav-direction="forward"]::view-transition-new(root),
+html[data-nav-direction="back"]::view-transition-old(root),
+html[data-nav-direction="back"]::view-transition-new(root) {
+  animation: none;
+}
+
+/* Toolbar cross-fade during navigation transitions */
+html[data-nav-direction="forward"]::view-transition-old(profile-toolbar),
+html[data-nav-direction="back"]::view-transition-old(profile-toolbar) {
+  animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both fade-out;
+}
+html[data-nav-direction="forward"]::view-transition-new(profile-toolbar),
+html[data-nav-direction="back"]::view-transition-new(profile-toolbar) {
+  animation: 300ms cubic-bezier(0.4, 0, 0.2, 1) both fade-in;
+}
+
+@keyframes fade-out {
+  to { opacity: 0; }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*),
   ::view-transition-old(*),
