@@ -37,6 +37,8 @@
 .tiptap-content .tiptap {
   font-weight: 480;
   letter-spacing: -0.04em;
+  font-size: 19px;
+  line-height: 1.4;
 }
 
 /* --- 3. Block elements --- */
