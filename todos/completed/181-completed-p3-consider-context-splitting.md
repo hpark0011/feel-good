@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "181"
 tags: [code-review, architecture, performance, mirror]
@@ -37,12 +37,13 @@ Both providers can live in the same `ArticleWorkspaceProvider` component — jus
 
 ## Acceptance Criteria
 
-- [ ] Split only when a third consumer is added or profiling shows measurable bottleneck
-- [ ] After split, toolbar state changes do not re-render list and vice versa
-- [ ] Shared state (selectedCount bridging toolbar ↔ list) handled correctly
+- [x] Split only when a third consumer is added or profiling shows measurable bottleneck
+- [x] After split, toolbar state changes do not re-render list and vice versa
+- [x] Shared state (selectedCount bridging toolbar ↔ list) handled correctly
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-13 | Created from PR #121 review | YAGNI for now — 2 consumers is fine. Revisit when adding more. |
+| 2026-02-13 | Completed in PR #122 (868af0c9) | Split into ArticleToolbarContext + ArticleListContext + ScrollRootContext. Provider still composes all three. |
