@@ -4,24 +4,24 @@ import { useArticleWorkspace } from "../context/article-workspace-context";
 import { useScrollRoot } from "../context/scroll-root-context";
 import { ArticleListView } from "../views/article-list-view";
 
+function EmptyMessage({ message }: { message: string }) {
+  return (
+    <div className="flex items-center justify-center py-16 text-muted-foreground">
+      {message}
+    </div>
+  );
+}
+
 export function ScrollableArticleList() {
   const ctx = useArticleWorkspace();
   const scrollRoot = useScrollRoot();
 
   if (ctx.hasNoArticles) {
-    return (
-      <div className="flex items-center justify-center py-16 text-muted-foreground">
-        No articles yet
-      </div>
-    );
+    return <EmptyMessage message="No articles yet" />;
   }
 
   if (ctx.showEmpty) {
-    return (
-      <div className="flex items-center justify-center py-16 text-muted-foreground">
-        {ctx.emptyMessage}
-      </div>
-    );
+    return <EmptyMessage message={ctx.emptyMessage} />;
   }
 
   return (

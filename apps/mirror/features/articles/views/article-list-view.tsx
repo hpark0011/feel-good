@@ -35,6 +35,7 @@ export function ArticleListView({
   username,
   isOwner = false,
   isAllSelected = false,
+  isIndeterminate = false,
   onToggleAll,
   isSelected,
   onToggle,
@@ -48,7 +49,7 @@ export function ArticleListView({
             {isOwner && (
               <TableHead className="w-12 h-8 pl-1.5 [&:has([role=checkbox])]:pr-2">
                 <Checkbox
-                  checked={isAllSelected && true}
+                  checked={isIndeterminate ? "indeterminate" : isAllSelected}
                   onCheckedChange={onToggleAll}
                   aria-label="Select all articles"
                 />

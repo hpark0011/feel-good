@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "174"
 tags: [code-review, regression, layout, css, mirror]

@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "175"
 tags: [code-review, convention, naming, mirror]

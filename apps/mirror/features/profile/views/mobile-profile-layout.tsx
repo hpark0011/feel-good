@@ -84,7 +84,7 @@ export function MobileProfileLayout({
                 <div className="h-1 w-10 rounded-full bg-muted-foreground/20" />
               </div>
 
-              <div className="h-[calc(100%-36px)] pt-2 *:h-full">
+              <div className="h-[calc(100%-36px)] pt-2">
                 {resolvedContent}
               </div>
             </div>

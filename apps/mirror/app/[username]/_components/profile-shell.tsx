@@ -49,19 +49,21 @@ export function ProfileShell(
               <MobileProfileLayout
                 profile={<ProfileInfoView profile={profile} />}
                 content={() => (
-                  <>
+                  <div className="flex h-full min-h-0 flex-col">
                     <ToolbarSlotTarget />
-                    <ViewTransition name="profile-content">
-                      <div
-                        ref={setMobileScrollRoot}
-                        className="overflow-y-auto overscroll-y-contain h-full px-3"
-                      >
-                        <ScrollRootProvider value={mobileScrollRoot}>
-                          {children}
-                        </ScrollRootProvider>
-                      </div>
-                    </ViewTransition>
-                  </>
+                    <div className="flex-1 min-h-0 *:h-full">
+                      <ViewTransition name="profile-content">
+                        <div
+                          ref={setMobileScrollRoot}
+                          className="overflow-y-auto overscroll-y-contain h-full px-3"
+                        >
+                          <ScrollRootProvider value={mobileScrollRoot}>
+                            {children}
+                          </ScrollRootProvider>
+                        </div>
+                      </ViewTransition>
+                    </div>
+                  </div>
                 )}
               />
             </ToolbarSlotProvider>
@@ -83,7 +85,7 @@ export function ProfileShell(
                   <div className="relative h-full min-w-0 flex flex-col">
                     <WorkspaceNavbar />
                     <ToolbarSlotTarget />
-                    <div className="flex-1 min-h-0">
+                    <div className="flex-1 min-h-0 *:h-full">
                       <ViewTransition name="profile-content">
                         <div className="overflow-y-auto h-full px-4 pb-[64px]">
                           {children}

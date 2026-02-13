@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "180"
 tags: [code-review, duplication, ui, mirror]

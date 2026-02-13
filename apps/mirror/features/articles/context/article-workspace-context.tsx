@@ -98,6 +98,11 @@ export function ArticleWorkspaceProvider({
   const selection = useArticleSelection(allSlugs);
   const { clear: clearSelection, selectedSlugs } = selection;
 
+  const selectedSlugsRef = useRef(selectedSlugs);
+  useEffect(() => {
+    selectedSlugsRef.current = selectedSlugs;
+  });
+
   const uniqueCategories = useMemo(
     () => getUniqueCategories(articles),
     [articles],
@@ -133,15 +138,16 @@ export function ArticleWorkspaceProvider({
   );
 
   const handleDelete = useCallback(() => {
+    const currentSelection = selectedSlugsRef.current;
     const visibleSlugs = new Set(allSlugs);
     setArticles((prev) =>
       prev.filter(
         (a) =>
-          !(selectedSlugs.has(a.slug) && visibleSlugs.has(a.slug)),
+          !(currentSelection.has(a.slug) && visibleSlugs.has(a.slug)),
       ),
     );
     clearSelection();
-  }, [selectedSlugs, clearSelection, allSlugs]);
+  }, [clearSelection, allSlugs]);
 
   // Empty state derivations
   const hasNoArticles = articles.length === 0;

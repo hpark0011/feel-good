@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "177"
 tags: [code-review, api-surface, barrel-export, mirror]
