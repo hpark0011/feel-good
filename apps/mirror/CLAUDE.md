@@ -34,11 +34,6 @@ pnpm dev --filter=@feel-good/mirror
 ## Project Structure
 
 ```
-features/
-  home/               # Landing page feature
-  profile/            # Profile display + bottom sheet
-  articles/           # Article list, pagination, mock data
-
 app/
   [username]/          # Public profile routes (/@username via rewrites)
     _components/       # Profile shell and header
@@ -46,6 +41,29 @@ app/
   (auth)/              # Auth flow (sign-in, sign-up, callback)
   (protected)/
     dashboard/         # Insights (auth required)
+
+components/            # App-wide shared components
+  workspace-navbar.tsx
+  workspace-toolbar-slot.tsx
+
+hooks/                 # App-wide hooks
+  use-local-storage.ts
+  use-nav-direction.ts
+
+features/
+  articles/            # Article list, filtering, sorting, pagination
+    components/        # Interactive components (toolbar, list, search, sort, filter)
+      filter/          # Filter submenu components (category, date, status)
+    context/           # Workspace contexts (toolbar, list, scroll-root)
+    hooks/             # Feature hooks (filter, pagination, search, selection, sort)
+    views/             # Presentational components (detail, list, toolbar, dialog)
+    utils/             # Pure utilities (filter logic, config, date presets)
+    lib/               # Data layer (mock data, formatters)
+  home/                # Landing page feature
+  profile/             # Profile display, actions, media
+    components/        # Profile actions, media
+    context/           # Profile context
+    views/             # Profile info, mobile layout
 
 lib/                   # Auth client, env, services
 providers/             # React context providers
@@ -59,6 +77,8 @@ providers/             # React context providers
 - Better Auth for session management
 - Convex for real-time data synchronization
 - Uses shared auth components from @feel-good/features
+- Workspace layout: navbar / toolbar slot / content separation
+- Feature contexts split by concern (toolbar vs list vs scroll-root)
 
 ## URL Routing
 
