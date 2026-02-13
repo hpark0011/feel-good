@@ -35,9 +35,57 @@ pnpm dev --filter=@feel-good/mirror
 
 ```
 features/
-  home/               # Landing page feature
-  profile/            # Profile display + bottom sheet
-  articles/           # Article list, pagination, mock data
+  home/                 # Landing page feature
+    views/
+      home-page-view.tsx
+
+  profile/              # Profile display + bottom sheet
+    components/
+      profile-actions.tsx
+      profile-media.tsx
+    context/
+      profile-context.tsx
+    views/
+      mobile-profile-layout.tsx
+      profile-info-view.tsx
+    lib/
+      mock-profile.ts
+
+  articles/             # Article list, pagination, filtering, search, sort
+    components/
+      animated-article-row.tsx
+      article-filter-dropdown.tsx
+      article-list-item.tsx
+      article-list-loader.tsx
+      article-search-input.tsx
+      article-sort-dropdown.tsx
+      article-toolbar.tsx
+      article-toolbar-view.tsx
+      scrollable-article-list.tsx
+      filter/            # Nested filter UI components
+    context/
+      article-list-context.tsx
+      article-toolbar-context.tsx
+      article-workspace-context.tsx
+      scroll-root-context.tsx
+    hooks/
+      use-article-filter.ts
+      use-article-pagination.ts
+      use-article-search.ts
+      use-article-selection.ts
+      use-article-sort.ts
+    views/
+      article-detail-toolbar-view.tsx
+      article-detail-view.tsx
+      article-list-view.tsx
+      delete-articles-dialog.tsx
+    lib/
+      format-date.ts
+      mock-articles.ts
+    utils/
+      article-filter.ts
+      article-list.config.ts
+      date-preset.ts
 
 app/
   [username]/          # Public profile routes (/@username via rewrites)
@@ -46,6 +94,16 @@ app/
   (auth)/              # Auth flow (sign-in, sign-up, callback)
   (protected)/
     dashboard/         # Insights (auth required)
+
+components/            # App-level shared components
+  workspace-navbar.tsx
+  workspace-toolbar-slot.tsx
+
+hooks/                 # App-level shared hooks
+  use-local-storage.ts
+  use-nav-direction.ts
+  use-pathname-transition.ts
+  use-scroll-memory.ts
 
 lib/                   # Auth client, env, services
 providers/             # React context providers

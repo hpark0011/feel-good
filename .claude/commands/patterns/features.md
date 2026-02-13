@@ -8,7 +8,7 @@ documented_in: CLAUDE.md
 
 # Features Pattern
 
-This document outlines the features pattern for organizing shared functionality in the Delphi codebase.
+This document outlines the features pattern for organizing shared functionality in the Feel Good monorepo.
 
 ## Overview
 

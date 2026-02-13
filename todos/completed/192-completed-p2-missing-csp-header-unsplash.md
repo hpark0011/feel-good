@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "192"
 tags: [code-review, pr-124, security, csp, images]

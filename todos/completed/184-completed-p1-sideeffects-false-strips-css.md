@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p1
 issue_id: "184"
 tags: [code-review, pr-124, editor, css, bundler]

@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p1
 issue_id: "186"
 tags: [code-review, pr-124, scroll, hydration, mobile]

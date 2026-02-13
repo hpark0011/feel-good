@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "188"
 tags: [code-review, pr-124, scroll, view-transition, animation]

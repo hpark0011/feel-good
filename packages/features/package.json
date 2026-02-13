@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "sideEffects": false,
+  "sideEffects": ["**/*.css"],
   "exports": {
     "./auth": "./auth/index.ts",
     "./auth/blocks": "./auth/blocks/index.ts",
@@ -28,9 +28,11 @@
     "./editor": "./editor/index.ts",
     "./editor/components": "./editor/components/index.ts",
     "./editor/lib": "./editor/lib/index.ts",
-    "./editor/types": "./editor/types.ts"
+    "./editor/types": "./editor/types.ts",
+    "./editor/styles/tiptap-content.css": "./editor/styles/tiptap-content.css"
   },
   "peerDependencies": {
+    "@tailwindcss/typography": "^4.0.0",
     "next": "^16.0.0",
     "react": "^19.0.0"
   },

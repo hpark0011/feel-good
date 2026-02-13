@@ -23,6 +23,10 @@ const nextConfig: NextConfig = {
           key: "Strict-Transport-Security",
           value: "max-age=31536000; includeSubDomains",
         },
+        {
+          key: "Content-Security-Policy",
+          value: "img-src 'self' https://images.unsplash.com data:",
+        },
       ],
     },
   ],

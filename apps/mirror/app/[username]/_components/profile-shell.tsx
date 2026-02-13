@@ -58,16 +58,16 @@ export function ProfileShell(
                   <div className="flex h-full min-h-0 flex-col">
                     <ToolbarSlotTarget />
                     <div className="flex-1 min-h-0 *:h-full">
-                      <ViewTransition name="profile-content">
-                        <div
-                          ref={setMobileScrollRoot}
-                          className="overflow-y-auto overscroll-y-contain h-full px-3"
-                        >
-                          <ScrollRootProvider value={mobileScrollRoot}>
+                      <div
+                        ref={setMobileScrollRoot}
+                        className="overflow-y-auto overscroll-y-contain h-full px-3"
+                      >
+                        <ScrollRootProvider value={mobileScrollRoot}>
+                          <ViewTransition name="profile-content">
                             {children}
-                          </ScrollRootProvider>
-                        </div>
-                      </ViewTransition>
+                          </ViewTransition>
+                        </ScrollRootProvider>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -92,14 +92,14 @@ export function ProfileShell(
                     <WorkspaceNavbar />
                     <ToolbarSlotTarget />
                     <div className="flex-1 min-h-0 *:h-full">
-                      <ViewTransition name="profile-content">
-                        <div
-                          ref={setDesktopScrollRoot}
-                          className="overflow-y-auto h-full px-4 pb-[64px]"
-                        >
+                      <div
+                        ref={setDesktopScrollRoot}
+                        className="overflow-y-auto h-full px-4 pb-[64px]"
+                      >
+                        <ViewTransition name="profile-content">
                           {children}
-                        </div>
-                      </ViewTransition>
+                        </ViewTransition>
+                      </div>
                     </div>
                   </div>
                 </ToolbarSlotProvider>

@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "191"
 tags: [code-review, pr-124, css, imports, monorepo]

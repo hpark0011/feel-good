@@ -1,9 +1,12 @@
 "use client";
 
+import { useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import type { JSONContent } from "@tiptap/core";
 import { cn } from "@feel-good/utils/cn";
 import { createArticleExtensions } from "../lib/extensions";
+
+const ARTICLE_EXTENSIONS = createArticleExtensions();
 
 type RichTextViewerProps = {
   content: JSONContent;
@@ -12,13 +15,28 @@ type RichTextViewerProps = {
 
 export function RichTextViewer({ content, className }: RichTextViewerProps) {
   const editor = useEditor({
-    extensions: createArticleExtensions(),
+    extensions: ARTICLE_EXTENSIONS,
     content,
     editable: false,
     immediatelyRender: false,
   });
 
-  if (!editor) return null;
+  useEffect(() => {
+    if (editor && content) {
+      editor.commands.setContent(content);
+    }
+  }, [editor, content]);
+
+  if (!editor) {
+    return (
+      <div
+        className={cn(
+          "tiptap-content prose dark:prose-invert max-w-none min-h-[200px]",
+          className,
+        )}
+      />
+    );
+  }
 
   return (
     <EditorContent

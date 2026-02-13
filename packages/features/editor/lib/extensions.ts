@@ -18,7 +18,7 @@ export function createArticleExtensions(): Extensions {
       openOnClick: true,
       HTMLAttributes: {
         target: "_blank",
-        rel: "noopener noreferrer",
+        rel: "noopener noreferrer nofollow",
       },
     }),
   ];

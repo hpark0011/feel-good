@@ -61,7 +61,7 @@ function inlineCode(text: string) {
   return { text, marks: [{ type: "code" }] };
 }
 
-function heading(level: number, text: string): JSONContent {
+function heading(level: 2 | 3 | 4, text: string): JSONContent {
   return {
     type: "heading",
     attrs: { level },
