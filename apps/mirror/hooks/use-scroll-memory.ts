@@ -1,29 +1,30 @@
 "use client";
 
 import { useLayoutEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
-import { isArticleDetailRoute } from "./use-nav-direction";
+import { usePathnameTransition } from "./use-pathname-transition";
 
-export function useScrollMemory(scrollContainer: HTMLElement | null) {
-  const pathname = usePathname();
-  const prevPathname = useRef(pathname);
+type ScrollContainers = {
+  mobile: HTMLElement | null;
+  desktop: HTMLElement | null;
+};
+
+export function useScrollMemory(containers: ScrollContainers) {
+  const transition = usePathnameTransition();
   const savedScrollTop = useRef(0);
 
   useLayoutEffect(() => {
-    if (!scrollContainer || pathname === prevPathname.current) return;
+    if (transition === "none") return;
 
-    const wasDetail = isArticleDetailRoute(prevPathname.current);
-    const isDetail = isArticleDetailRoute(pathname);
+    // Pick whichever container is currently rendered — fixes hydration race
+    // where useIsMobile flips and the mobile container isn't ref'd yet
+    const scrollContainer = containers.mobile ?? containers.desktop;
+    if (!scrollContainer) return;
 
-    if (isDetail && !wasDetail) {
-      // Forward: save list scroll, reset to top
+    if (transition === "forward") {
       savedScrollTop.current = scrollContainer.scrollTop;
       scrollContainer.scrollTo(0, 0);
-    } else if (!isDetail && wasDetail) {
-      // Back: restore list scroll
+    } else if (transition === "back") {
       scrollContainer.scrollTo(0, savedScrollTop.current);
     }
-
-    prevPathname.current = pathname;
-  }, [pathname, scrollContainer]);
+  }, [transition, containers.mobile, containers.desktop]);
 }

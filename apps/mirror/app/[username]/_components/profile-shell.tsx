@@ -38,7 +38,7 @@ export function ProfileShell(
     HTMLDivElement | null
   >(null);
 
-  useScrollMemory(isMobile ? mobileScrollRoot : desktopScrollRoot);
+  useScrollMemory({ mobile: mobileScrollRoot, desktop: desktopScrollRoot });
 
   const contextValue = useMemo(
     () => ({ isOwner }),
