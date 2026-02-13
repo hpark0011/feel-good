@@ -1,5 +1,3 @@
-"use client";
-
 import { Icon } from "@feel-good/ui/components/icon";
 
 type CategoryFilterBadgesProps = {

@@ -18,9 +18,8 @@ import { ArticleSortDropdown } from "./article-sort-dropdown";
 import { ArticleSearchInput } from "./article-search-input";
 import { ArticleFilterDropdown } from "./article-filter-dropdown";
 import type { SortOrder } from "../hooks/use-article-sort";
-import type { ArticleFilterState } from "../utils/article-filter";
-import type { DatePreset } from "../utils/date-preset";
-import type { Article } from "../lib/mock-articles";
+import type { UseArticleFilterReturn } from "../hooks/use-article-filter";
+import type { UseArticleSearchReturn } from "../hooks/use-article-search";
 
 type ArticleToolbarProps = {
   isOwner: boolean;
@@ -28,20 +27,9 @@ type ArticleToolbarProps = {
   onDelete: () => void;
   sortOrder: SortOrder;
   onSortChange: (order: SortOrder) => void;
-  searchQuery: string;
-  onSearchQueryChange: (q: string) => void;
-  isSearchOpen: boolean;
-  onSearchOpen: () => void;
-  onSearchClose: () => void;
-  articles: Article[];
-  filterState: ArticleFilterState;
-  hasActiveFilters: boolean;
-  onToggleCategory: (name: string) => void;
-  onSetPublishedDatePreset: (preset: DatePreset | null) => void;
-  onSetCreatedDatePreset: (preset: DatePreset | null) => void;
-  onSetPublishedStatus: (status: "draft" | "published" | null) => void;
-  onClearAll: () => void;
-  onClearCategories: () => void;
+  search: UseArticleSearchReturn;
+  categories: { name: string; count: number }[];
+  filter: UseArticleFilterReturn;
 };
 
 export function ArticleToolbar({
@@ -50,20 +38,9 @@ export function ArticleToolbar({
   onDelete,
   sortOrder,
   onSortChange,
-  searchQuery,
-  onSearchQueryChange,
-  isSearchOpen,
-  onSearchOpen,
-  onSearchClose,
-  articles,
-  filterState,
-  hasActiveFilters,
-  onToggleCategory,
-  onSetPublishedDatePreset,
-  onSetCreatedDatePreset,
-  onSetPublishedStatus,
-  onClearAll,
-  onClearCategories,
+  search,
+  categories,
+  filter,
 }: ArticleToolbarProps) {
   const hasSelection = selectedCount > 0;
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -111,11 +88,11 @@ export function ArticleToolbar({
 
           {/* Search */}
           <ArticleSearchInput
-            query={searchQuery}
-            onQueryChange={onSearchQueryChange}
-            isOpen={isSearchOpen}
-            onOpen={onSearchOpen}
-            onClose={onSearchClose}
+            query={search.query}
+            onQueryChange={search.setQuery}
+            isOpen={search.isOpen}
+            onOpen={search.open}
+            onClose={search.close}
           />
 
           {/* Sort */}
@@ -124,15 +101,15 @@ export function ArticleToolbar({
           {/* Filter */}
           <ArticleFilterDropdown
             isOwner={isOwner}
-            articles={articles}
-            filterState={filterState}
-            hasActiveFilters={hasActiveFilters}
-            onToggleCategory={onToggleCategory}
-            onSetPublishedDatePreset={onSetPublishedDatePreset}
-            onSetCreatedDatePreset={onSetCreatedDatePreset}
-            onSetPublishedStatus={onSetPublishedStatus}
-            onClearAll={onClearAll}
-            onClearCategories={onClearCategories}
+            categories={categories}
+            filterState={filter.filterState}
+            hasActiveFilters={filter.hasActiveFilters}
+            onToggleCategory={filter.toggleCategory}
+            onSetPublishedDatePreset={filter.setPublishedDatePreset}
+            onSetCreatedDatePreset={filter.setCreatedDatePreset}
+            onSetPublishedStatus={filter.setPublishedStatus}
+            onClearAll={filter.clearAll}
+            onClearCategories={filter.clearCategories}
           />
 
           {isOwner && (

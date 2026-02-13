@@ -8,7 +8,7 @@ import { useArticleSearch } from "../hooks/use-article-search";
 import { useArticleSelection } from "../hooks/use-article-selection";
 import { useArticleSort } from "../hooks/use-article-sort";
 import { useArticleFilter } from "../hooks/use-article-filter";
-import { filterArticles } from "../utils/article-filter";
+import { filterArticles, getUniqueCategories } from "../utils/article-filter";
 import { useIsProfileOwner } from "@/features/profile";
 import { ArticleListView } from "../views/article-list-view";
 import { ArticleToolbar } from "./article-toolbar";
@@ -55,6 +55,12 @@ export function ScrollableArticleList({
   );
 
   const selection = useArticleSelection(allSlugs);
+
+  // Compute unique categories once and pass down instead of full articles array
+  const uniqueCategories = useMemo(
+    () => getUniqueCategories(articles),
+    [articles],
+  );
 
   // Clear selection when search opens or filter changes
   const prevSearchOpen = useRef(search.isOpen);
@@ -123,20 +129,9 @@ export function ScrollableArticleList({
         onDelete={handleDelete}
         sortOrder={sortOrder}
         onSortChange={handleSortChange}
-        searchQuery={search.query}
-        onSearchQueryChange={search.setQuery}
-        isSearchOpen={search.isOpen}
-        onSearchOpen={search.open}
-        onSearchClose={search.close}
-        articles={articles}
-        filterState={filter.filterState}
-        hasActiveFilters={filter.hasActiveFilters}
-        onToggleCategory={filter.toggleCategory}
-        onSetPublishedDatePreset={filter.setPublishedDatePreset}
-        onSetCreatedDatePreset={filter.setCreatedDatePreset}
-        onSetPublishedStatus={filter.setPublishedStatus}
-        onClearAll={filter.clearAll}
-        onClearCategories={filter.clearCategories}
+        search={search}
+        categories={uniqueCategories}
+        filter={filter}
       />
       {showEmpty ? (
         <div className="flex items-center justify-center py-16 text-muted-foreground">

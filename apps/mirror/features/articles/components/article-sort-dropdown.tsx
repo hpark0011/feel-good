@@ -34,8 +34,8 @@ export function ArticleSortDropdown({
   const [open, setOpen] = useState(false);
 
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
-      <Tooltip>
+    <Tooltip>
+      <DropdownMenu open={open} onOpenChange={setOpen}>
         <TooltipTrigger asChild>
           <DropdownMenuTrigger asChild>
             <Button
@@ -47,9 +47,8 @@ export function ArticleSortDropdown({
             </Button>
           </DropdownMenuTrigger>
         </TooltipTrigger>
-        <TooltipContent>Sort</TooltipContent>
-      </Tooltip>
-      <DropdownMenuContent align="end">
+        <TooltipContent>{open ? undefined : "Sort"}</TooltipContent>
+        <DropdownMenuContent align="end">
         <DropdownMenuRadioGroup
           value={value}
           onValueChange={(v) => {
@@ -62,6 +61,7 @@ export function ArticleSortDropdown({
           <DropdownMenuRadioItem value="oldest">Oldest</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>
-    </DropdownMenu>
+      </DropdownMenu>
+    </Tooltip>
   );
 }

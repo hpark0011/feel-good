@@ -8,7 +8,7 @@ import {
   INITIAL_FILTER_STATE,
 } from "../utils/article-filter";
 
-type UseArticleFilterReturn = {
+export type UseArticleFilterReturn = {
   filterState: ArticleFilterState;
   toggleCategory: (name: string) => void;
   clearCategories: () => void;

@@ -19,16 +19,22 @@ import {
   TooltipTrigger,
 } from "@feel-good/ui/primitives/tooltip";
 import { cn } from "@feel-good/utils/cn";
-import type { Article } from "../lib/mock-articles";
 import type { ArticleFilterState } from "../utils/article-filter";
 import type { DatePreset } from "../utils/date-preset";
 import { CategoryFilterContent } from "./filter/category-filter-content";
 import { DateFilterContent } from "./filter/date-filter-content";
 import { StatusFilterContent } from "./filter/status-filter-content";
 
+const DATE_PRESET_LABELS: Record<DatePreset, string> = {
+  today: "Today",
+  this_week: "This week",
+  this_month: "This month",
+  this_year: "This year",
+};
+
 type ArticleFilterDropdownProps = {
   isOwner: boolean;
-  articles: Article[];
+  categories: { name: string; count: number }[];
   filterState: ArticleFilterState;
   hasActiveFilters: boolean;
   onToggleCategory: (name: string) => void;
@@ -39,19 +45,10 @@ type ArticleFilterDropdownProps = {
   onClearCategories: () => void;
 };
 
-function formatPresetLabel(preset: DatePreset): string {
-  const labels: Record<DatePreset, string> = {
-    today: "Today",
-    this_week: "This week",
-    this_month: "This month",
-    this_year: "This year",
-  };
-  return labels[preset];
-}
 
 export function ArticleFilterDropdown({
   isOwner,
-  articles,
+  categories,
   filterState,
   hasActiveFilters,
   onToggleCategory,
@@ -90,7 +87,7 @@ export function ArticleFilterDropdown({
             </DropdownMenuSubTrigger>
             <DropdownMenuSubContent className="max-w-[240px]">
               <CategoryFilterContent
-                articles={articles}
+                categories={categories}
                 selectedCategories={filterState.categories}
                 onToggleCategory={onToggleCategory}
                 onClearFilter={onClearCategories}
@@ -103,7 +100,7 @@ export function ArticleFilterDropdown({
               <Icon name="CalendarFillIcon" className="size-4.5" />
               {filterState.publishedDatePreset
                 ? `Published · ${
-                  formatPresetLabel(filterState.publishedDatePreset)
+                  DATE_PRESET_LABELS[filterState.publishedDatePreset]
                 }`
                 : "Published"}
             </DropdownMenuSubTrigger>
@@ -121,7 +118,7 @@ export function ArticleFilterDropdown({
                 <Icon name="CalendarFillIcon" className="size-4.5" />
                 {filterState.createdDatePreset
                   ? `Created · ${
-                    formatPresetLabel(filterState.createdDatePreset)
+                    DATE_PRESET_LABELS[filterState.createdDatePreset]
                   }`
                   : "Created"}
               </DropdownMenuSubTrigger>

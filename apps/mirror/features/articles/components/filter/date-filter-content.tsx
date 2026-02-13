@@ -11,6 +11,15 @@ type DateFilterContentProps = {
   onChange: (preset: DatePreset | null) => void;
 };
 
+function isDatePreset(value: unknown): value is DatePreset {
+  return (
+    value === "today" ||
+    value === "this_week" ||
+    value === "this_month" ||
+    value === "this_year"
+  );
+}
+
 export function DateFilterContent({
   value,
   onChange,
@@ -18,9 +27,13 @@ export function DateFilterContent({
   return (
     <DropdownMenuRadioGroup
       value={value ?? "any_time"}
-      onValueChange={(val) =>
-        onChange(val === "any_time" ? null : (val as DatePreset))
-      }
+      onValueChange={(val) => {
+        if (val === "any_time") {
+          onChange(null);
+        } else if (isDatePreset(val)) {
+          onChange(val);
+        }
+      }}
     >
       <DropdownMenuRadioItem value="any_time">
         Any time

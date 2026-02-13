@@ -21,6 +21,29 @@ export function filterArticles(
   filter: ArticleFilterState,
   isOwner: boolean
 ): Article[] {
+  // Compute date ranges once outside the filter loop
+  const publishedDateRange =
+    filter.publishedDatePreset !== null
+      ? (() => {
+          const range = getDateRange(filter.publishedDatePreset);
+          return {
+            start: range.start.getTime(),
+            end: range.end.getTime(),
+          };
+        })()
+      : null;
+
+  const createdDateRange =
+    isOwner && filter.createdDatePreset !== null
+      ? (() => {
+          const range = getDateRange(filter.createdDatePreset);
+          return {
+            start: range.start.getTime(),
+            end: range.end.getTime(),
+          };
+        })()
+      : null;
+
   return articles.filter((article) => {
     // Category filter (AND logic with others)
     if (filter.categories.length > 0) {
@@ -30,21 +53,25 @@ export function filterArticles(
     }
 
     // Published date filter (AND logic with others)
-    if (filter.publishedDatePreset !== null) {
-      const dateRange = getDateRange(filter.publishedDatePreset);
-      const publishedDate = new Date(article.published_at);
+    if (publishedDateRange !== null) {
+      const publishedTimestamp = new Date(article.published_at).getTime();
 
-      if (publishedDate < dateRange.start || publishedDate > dateRange.end) {
+      if (
+        publishedTimestamp < publishedDateRange.start ||
+        publishedTimestamp > publishedDateRange.end
+      ) {
         return false;
       }
     }
 
     // Created date filter (only applies if isOwner and filter is active)
-    if (isOwner && filter.createdDatePreset !== null) {
-      const dateRange = getDateRange(filter.createdDatePreset);
-      const createdDate = new Date(article.created_at);
+    if (createdDateRange !== null) {
+      const createdTimestamp = new Date(article.created_at).getTime();
 
-      if (createdDate < dateRange.start || createdDate > dateRange.end) {
+      if (
+        createdTimestamp < createdDateRange.start ||
+        createdTimestamp > createdDateRange.end
+      ) {
         return false;
       }
     }
