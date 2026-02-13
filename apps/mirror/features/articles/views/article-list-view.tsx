@@ -55,7 +55,7 @@ export function ArticleListView({
                 />
               </TableHead>
             )}
-            <TableHead className="w-3/5 text-muted-foreground h-8">
+            <TableHead className="w-4/5 md:w-3/5 text-muted-foreground h-8">
               Title
             </TableHead>
             <TableHead className="hidden md:table-cell w-1/5 text-muted-foreground h-8">

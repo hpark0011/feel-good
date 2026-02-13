@@ -1,5 +1,9 @@
 import { notFound } from "next/navigation";
-import { ArticleDetailView, ArticleDetailToolbarView, findArticleBySlug } from "@/features/articles";
+import {
+  ArticleDetailToolbarView,
+  ArticleDetailView,
+  findArticleBySlug,
+} from "@/features/articles";
 import { isAuthenticated } from "@/lib/auth-server";
 import { WorkspaceToolbar } from "@/components/workspace-toolbar-slot";
 
@@ -14,7 +18,9 @@ export default async function ArticlePage({
   if (article.status === "draft" && !(await isAuthenticated())) notFound();
   return (
     <>
-      <WorkspaceToolbar><ArticleDetailToolbarView username={username} /></WorkspaceToolbar>
+      <WorkspaceToolbar>
+        <ArticleDetailToolbarView username={username} />
+      </WorkspaceToolbar>
       <ArticleDetailView article={article} />
     </>
   );

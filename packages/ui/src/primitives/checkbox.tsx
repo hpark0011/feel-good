@@ -41,14 +41,19 @@ function Checkbox({
         data-slot="checkbox-indicator"
         className="grid place-content-center text-current transition-none relative"
       >
-        {checked === "indeterminate" ? (
-          <span className="block h-[1.5px] w-2 rounded-full bg-current" />
-        ) : (
-          <Icon
-            name="CheckmarkSmallIcon"
-            className="size-4 relative"
-          />
-        )}
+        {checked === "indeterminate"
+          ? (
+            <Icon
+              name="MinusSmallIcon"
+              className="size-4 relative"
+            />
+          )
+          : (
+            <Icon
+              name="CheckmarkSmallIcon"
+              className="size-4 relative"
+            />
+          )}
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>
   );
