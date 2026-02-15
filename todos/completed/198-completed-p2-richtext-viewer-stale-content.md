@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "198"
 tags: [code-review, pr-124, editor, tiptap, react]
@@ -18,37 +18,23 @@ dependencies: []
 - `useEditor` is initialized without dependency keys and no follow-up `setContent` sync.
 - Prop updates can therefore diverge from the displayed ProseMirror document.
 
-## Proposed Solutions
+## Resolution
 
-### Option A: Sync via `setContent` effect (Recommended)
-
-Add an effect that applies incoming `content` when it changes:
+Already fixed — duplicate of #185. The `setContent` sync effect (Option A) is present at lines 27–31 of `rich-text-viewer.tsx`:
 
 ```tsx
 useEffect(() => {
-  if (!editor) return;
-  editor.commands.setContent(content);
-}, [editor, content]);
+  if (editor && safeContent) {
+    editor.commands.setContent(safeContent);
+  }
+}, [editor, safeContent]);
 ```
 
-- **Effort:** Small
-- **Risk:** Low
-
-### Option B: Recreate editor on content dependency
-
-Pass a stable dependency key to `useEditor(..., deps)` so the editor remounts when content changes.
-
-- **Effort:** Small
-- **Risk:** Low (higher churn than Option A)
-
-## Acceptance Criteria
-
-- [ ] Article body updates correctly when `content` prop changes
-- [ ] No stale content when navigating between detail routes
-- [ ] Viewer remains read-only and behaviorally unchanged otherwise
+All acceptance criteria are satisfied by the existing implementation.
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-13 | Created from PR #124 review findings | `useEditor` initialization content is not reactive by default |
+| 2026-02-13 | Closed as duplicate of #185 | Fix already in place |
