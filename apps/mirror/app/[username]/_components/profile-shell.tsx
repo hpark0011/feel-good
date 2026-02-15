@@ -7,7 +7,11 @@ import {
   ProfileInfoView,
   ProfileProvider,
 } from "@/features/profile";
-import { ScrollRootProvider } from "@/features/articles";
+import {
+  ArticleWorkspaceProvider,
+  ScrollRootProvider,
+} from "@/features/articles";
+import type { Article } from "@/features/articles";
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
 import {
   ResizableHandle,
@@ -21,11 +25,12 @@ import { useProfileNavigationEffects } from "@/hooks/use-profile-navigation-effe
 type ProfileShellProps = {
   profile: Profile;
   isOwner: boolean;
+  articles: Article[];
   children: React.ReactNode;
 };
 
 export function ProfileShell(
-  { profile, isOwner, children }: ProfileShellProps,
+  { profile, isOwner, articles, children }: ProfileShellProps,
 ) {
   const isMobile = useIsMobile();
 
@@ -45,6 +50,7 @@ export function ProfileShell(
 
   return (
     <ProfileProvider value={contextValue}>
+      <ArticleWorkspaceProvider articles={articles} username={profile.username}>
       {isMobile
         ? (
           <main className="h-screen">
@@ -105,6 +111,7 @@ export function ProfileShell(
             </ResizablePanelGroup>
           </main>
         )}
+      </ArticleWorkspaceProvider>
     </ProfileProvider>
   );
 }

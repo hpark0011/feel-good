@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "200"
 tags: [code-review, pr-124, security, csp, mirror]
@@ -49,13 +49,14 @@ Use the `next-safe` package for automatic CSP generation.
 
 ## Acceptance Criteria
 
-- [ ] CSP header includes `default-src 'self'` as baseline
-- [ ] All resource types used by the app are explicitly allowed
-- [ ] Dev mode still works (Next.js requires `unsafe-inline`/`unsafe-eval` for HMR)
-- [ ] Production build serves pages without CSP violations
+- [x] CSP header includes `default-src 'self'` as baseline
+- [x] All resource types used by the app are explicitly allowed
+- [x] Dev mode still works (Next.js requires `unsafe-inline`/`unsafe-eval` for HMR)
+- [x] Production build serves pages without CSP violations
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-13 | Created from PR #124 security review | A partial CSP with only `img-src` provides minimal protection |
+| 2026-02-15 | Implemented Option A: comprehensive CSP in `next.config.ts` | Added `default-src`, `script-src`, `style-src`, `font-src`, `connect-src` (incl. `wss://` for Convex WebSockets), `frame-ancestors`; `img-src` scoped to `images.unsplash.com` instead of broad `https:` |
