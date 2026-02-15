@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "206"
 tags: [code-review, pr-124, quality, editor, performance]

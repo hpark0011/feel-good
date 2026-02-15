@@ -24,6 +24,17 @@ export function getPlainText(content: JSONContent): string {
   return result;
 }
 
+const BLOCK_TYPES = new Set([
+  "paragraph",
+  "heading",
+  "blockquote",
+  "codeBlock",
+  "bulletList",
+  "orderedList",
+  "listItem",
+  "horizontalRule",
+]);
+
 /**
  * Internal recursive extraction logic.
  * Handles the actual text traversal without caching.
@@ -40,19 +51,7 @@ function extractPlainText(content: JSONContent): string {
   return content.content
     .map((node) => {
       const text = extractPlainText(node);
-
-      // Add newlines after block-level nodes for readable output
-      const isBlock =
-        node.type === "paragraph" ||
-        node.type === "heading" ||
-        node.type === "blockquote" ||
-        node.type === "codeBlock" ||
-        node.type === "bulletList" ||
-        node.type === "orderedList" ||
-        node.type === "listItem" ||
-        node.type === "horizontalRule";
-
-      return isBlock ? `${text}\n` : text;
+      return BLOCK_TYPES.has(node.type!) ? `${text}\n` : text;
     })
     .join("")
     .trim();
