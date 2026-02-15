@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "205"
 tags: [code-review, pr-124, security, headers, mirror]
@@ -35,12 +35,13 @@ The Mirror app sets several security headers (`X-Frame-Options`, `X-Content-Type
 
 ## Acceptance Criteria
 
-- [ ] Permissions-Policy header is present in all responses
-- [ ] Unnecessary browser features are explicitly disabled
-- [ ] No functionality is broken by the new restrictions
+- [x] Permissions-Policy header is present in all responses
+- [x] Unnecessary browser features are explicitly disabled
+- [x] No functionality is broken by the new restrictions
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-13 | Created from PR #124 security review | Permissions-Policy complements other security headers |
+| 2026-02-15 | Implemented Option A in next.config.ts | Simple addition to existing headers array, build passes |
