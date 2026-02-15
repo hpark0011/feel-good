@@ -1,3 +1,5 @@
+import { ArcContainer } from "./arc-container";
+
 type ProfileMediaProps = {
   video: string;
   poster: string;
@@ -5,7 +7,7 @@ type ProfileMediaProps = {
 
 export function ProfileMedia({ video, poster }: ProfileMediaProps) {
   return (
-    <div className="relative w-[200px] h-[200px] overflow-hidden rounded-t-full [corner-shape:superellipse(1.2)]">
+    <ArcContainer className="w-[200px] h-[200px]">
       <video
         src={video}
         poster={poster}
@@ -16,6 +18,6 @@ export function ProfileMedia({ video, poster }: ProfileMediaProps) {
         playsInline
         className="absolute inset-0 w-full h-full object-cover object-center"
       />
-    </div>
+    </ArcContainer>
   );
 }
