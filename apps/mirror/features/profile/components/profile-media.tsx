@@ -16,7 +16,7 @@ export function ProfileMedia({ video, poster }: ProfileMediaProps) {
         loop
         muted
         playsInline
-        className="absolute inset-0 w-full h-full object-cover object-center"
+        className="absolute inset-0 w-full max-w-[200px] h-full max-h-[200px] object-cover object-center"
       />
     </ArcContainer>
   );
