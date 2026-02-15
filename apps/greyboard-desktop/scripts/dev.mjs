@@ -1,4 +1,4 @@
-import { build } from 'esbuild'
+import { context } from 'esbuild'
 import { createServer } from 'vite'
 import { spawn } from 'node:child_process'
 import path from 'node:path'
@@ -51,7 +51,7 @@ process.env.VITE_DEV_SERVER_URL = viteUrl
 console.log(`Vite dev server running at ${viteUrl}`)
 
 // 2. Build electron main + preload with watch
-await build({
+const ctx = await context({
   ...sharedEsbuild,
   entryPoints: [
     path.resolve(root, 'electron/main.ts'),
@@ -70,5 +70,5 @@ await build({
       },
     },
   ],
-  watch: true,
 })
+await ctx.watch()

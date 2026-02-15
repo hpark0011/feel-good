@@ -34,5 +34,5 @@ dmg:
 
 publish:
   provider: github
-  owner: feel-good
+  owner: hpark0011
   repo: feel-good

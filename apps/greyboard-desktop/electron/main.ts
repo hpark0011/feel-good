@@ -7,14 +7,20 @@ const VITE_DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL
 let mainWindow: BrowserWindow | null = null
 
 function setupContentSecurityPolicy() {
-  const devConnectSrc = VITE_DEV_SERVER_URL ? ` ${VITE_DEV_SERVER_URL} ws:` : ''
+  const isDev = !!VITE_DEV_SERVER_URL
+  const scriptSrc = isDev
+    ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'"
+    : "script-src 'self'"
+  const connectSrc = isDev
+    ? `connect-src 'self' ${VITE_DEV_SERVER_URL} ws:`
+    : "connect-src 'self'"
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     callback({
       responseHeaders: {
         ...details.responseHeaders,
         'Content-Security-Policy': [
-          `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'${devConnectSrc}`,
+          `default-src 'self'; ${scriptSrc}; style-src 'self' 'unsafe-inline'; img-src 'self' data:; ${connectSrc}`,
         ],
       },
     })
@@ -37,8 +43,6 @@ function createWindow() {
     },
   })
 
-  registerAllHandlers(mainWindow)
-
   if (VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(VITE_DEV_SERVER_URL)
   } else {
@@ -49,6 +53,7 @@ function createWindow() {
 app.whenReady().then(() => {
   setupContentSecurityPolicy()
   createWindow()
+  registerAllHandlers(mainWindow!)
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
