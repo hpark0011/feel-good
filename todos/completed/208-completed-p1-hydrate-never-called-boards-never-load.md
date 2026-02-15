@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p1
 issue_id: "208"
 tags: [code-review, bug, greyboard-desktop, state-management]
@@ -19,31 +19,25 @@ The Zustand board store defines `_hydrate()` to load boards from localStorage, b
 - **Impact:** Boards saved via import/export are lost on app restart
 - **Flagged by:** Architecture, Pattern Recognition, Code Simplicity, Git History, TypeScript reviewers (6/7 agents)
 
-## Proposed Solutions
+## Resolution
 
-### Option A: Replace with zustand `persist` middleware (Recommended)
-Replace the manual `_hydrate/_persist` pattern with zustand's built-in `persist` middleware, which handles hydration, persistence, and serialization automatically.
+Implemented **Option A: zustand `persist` middleware**.
 
-- **Pros:** Eliminates entire class of "forgot to call hydrate" bugs, removes `loadBoards`/`saveBoards`/`clearBoards` boilerplate
-- **Cons:** Slightly different API (async hydration), requires testing
-- **Effort:** Medium
-- **Risk:** Low
-
-### Option B: Add `_hydrate()` call in `main.tsx` or `App.tsx`
-Call `useBoardStore.getState()._hydrate()` at app initialization.
-
-- **Pros:** Minimal change, keeps existing architecture
-- **Cons:** Leaves manual hydrate/persist pattern in place, still needs debouncing fix
-- **Effort:** Small
-- **Risk:** Low
+- Replaced manual `_hydrate()` / `_persist()` pattern with zustand's built-in `persist` middleware
+- Created custom `boardStorage` adapter that preserves Zod validation on read and the version-wrapped `BoardList` format on write
+- Removed `_hydrate` and `_persist` from the store interface — hydration is now automatic
+- Removed manual `get()._persist()` calls from every mutation — persist middleware handles this
+- Deleted `lib/persistence/local-storage.ts` (no remaining consumers — `clearBoards` had zero call sites)
+- Same storage key (`greyboard-desktop:boards`) ensures backward compatibility with existing data
 
 ## Acceptance Criteria
 
-- [ ] Boards persisted to localStorage are restored on app restart
-- [ ] Persistence write and read paths both validated
+- [x] Boards persisted to localStorage are restored on app restart
+- [x] Persistence write and read paths both validated
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-15 | Created from PR #127 code review | All 7 agents identified this as broken persistence |
+| 2026-02-15 | Fixed via zustand persist middleware | Custom storage adapter preserves Zod validation + version envelope |
