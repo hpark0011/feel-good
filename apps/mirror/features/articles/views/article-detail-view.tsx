@@ -1,8 +1,21 @@
 "use client";
 
-import { RichTextViewer } from "@feel-good/features/editor/components";
+import dynamic from "next/dynamic";
 import { formatLongDate } from "../lib/format-date";
 import type { Article } from "../lib/mock-articles";
+
+const RichTextViewer = dynamic(
+  () =>
+    import("@feel-good/features/editor/components").then(
+      (m) => m.RichTextViewer,
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="prose dark:prose-invert max-w-none min-h-[200px]" />
+    ),
+  },
+);
 
 type ArticleDetailViewProps = {
   article: Article;
