@@ -3,8 +3,6 @@
 import { useLayoutEffect } from "react";
 import { usePathnameTransition } from "./use-pathname-transition";
 
-export { isArticleDetailRoute } from "./use-pathname-transition";
-
 export function useNavDirection() {
   const transition = usePathnameTransition();
 

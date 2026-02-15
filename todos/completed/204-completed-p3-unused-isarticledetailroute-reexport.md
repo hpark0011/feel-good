@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "204"
 tags: [code-review, pr-124, cleanup, mirror]
@@ -30,12 +30,13 @@ Delete the re-export line from `use-nav-direction.ts`.
 
 ## Acceptance Criteria
 
-- [ ] `isArticleDetailRoute` is no longer re-exported from `use-nav-direction.ts`
-- [ ] All existing imports still resolve correctly
-- [ ] Build passes
+- [x] `isArticleDetailRoute` is no longer re-exported from `use-nav-direction.ts`
+- [x] All existing imports still resolve correctly
+- [x] Build passes
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-13 | Created from PR #124 simplicity review | Dead re-exports create ambiguity about canonical import paths |
+| 2026-02-15 | Removed re-export, build verified | — |

@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "199"
 tags: [code-review, pr-124, search, performance, editor]
@@ -36,12 +36,13 @@ Memoize parsed output by JSONContent object identity to avoid repeated deep trav
 
 ## Acceptance Criteria
 
-- [ ] Search no longer reparses article body JSON on every keystroke
-- [ ] Search results and ranking remain unchanged
-- [ ] Behavior stays stable for both draft and published article lists
+- [x] Search no longer reparses article body JSON on every keystroke
+- [x] Search results and ranking remain unchanged
+- [x] Behavior stays stable for both draft and published article lists
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-13 | Created from PR #124 review findings | Recursive rich-text extraction should be computed once per dataset, not per query |
+| 2026-02-15 | Implemented Option A: precomputed `searchableArticles` memo | Separate `useMemo` keyed on `articles` avoids re-parsing; filtering memo reads precomputed values |
