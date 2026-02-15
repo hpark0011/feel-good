@@ -7,6 +7,8 @@ node_modules
 # Build outputs
 .next
 dist
+dist-electron
+release
 out
 *.tsbuildinfo
 
