@@ -1,7 +1,6 @@
 import { createHashRouter } from 'react-router-dom'
 import { App } from './App'
 import { Dashboard } from './routes/dashboard'
-import { Settings } from './routes/settings'
 
 export const router = createHashRouter([
   {
@@ -11,10 +10,6 @@ export const router = createHashRouter([
       {
         index: true,
         element: <Dashboard />,
-      },
-      {
-        path: 'settings',
-        element: <Settings />,
       },
     ],
   },

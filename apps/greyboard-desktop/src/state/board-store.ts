@@ -1,32 +1,32 @@
 import { create } from 'zustand'
-import { persist, type StateStorage } from 'zustand/middleware'
+import { persist, type PersistStorage, type StorageValue } from 'zustand/middleware'
 import {
   boardListSchema,
+  persistedBoardV1Schema,
   type PersistedBoardV1,
 } from '../lib/persistence/schema'
 
 const STORAGE_KEY = 'greyboard-desktop:boards'
 
+let persistTimer: ReturnType<typeof setTimeout> | null = null
+
 interface BoardState {
   boards: PersistedBoardV1[]
-  selectedBoardId: string | null
 }
 
 interface BoardActions {
   addBoard: (board: PersistedBoardV1) => void
   removeBoard: (id: string) => void
   updateBoard: (id: string, updates: Partial<PersistedBoardV1>) => void
-  selectBoard: (id: string | null) => void
   importBoard: (json: string) => PersistedBoardV1 | null
   exportBoard: (id: string) => string | null
-  getSelectedBoard: () => PersistedBoardV1 | undefined
 }
 
 /**
  * Custom storage adapter that preserves the version-wrapped BoardList format
  * and validates data with Zod on read.
  */
-const boardStorage: StateStorage = {
+const boardStorage: PersistStorage<BoardState> = {
   getItem: (key) => {
     try {
       const raw = localStorage.getItem(key)
@@ -39,21 +39,21 @@ const boardStorage: StateStorage = {
         return null
       }
 
-      // Return zustand-persist envelope with validated boards
-      return JSON.stringify({ state: { boards: parsed.data.boards }, version: 0 })
+      return { state: { boards: parsed.data.boards }, version: 0 }
     } catch {
       console.warn('Failed to load boards from localStorage')
       return null
     }
   },
-  setItem: (key, value) => {
-    try {
-      const { state } = JSON.parse(value) as { state: BoardState }
-      // Write in the version-wrapped BoardList format
-      localStorage.setItem(key, JSON.stringify({ version: 1, boards: state.boards }))
-    } catch {
-      console.warn('Failed to save boards to localStorage')
-    }
+  setItem: (key, value: StorageValue<BoardState>) => {
+    if (persistTimer) clearTimeout(persistTimer)
+    persistTimer = setTimeout(() => {
+      try {
+        localStorage.setItem(key, JSON.stringify({ version: 1, boards: value.state.boards }))
+      } catch {
+        console.warn('Failed to save boards to localStorage')
+      }
+    }, 300)
   },
   removeItem: (key) => {
     localStorage.removeItem(key)
@@ -64,7 +64,6 @@ export const useBoardStore = create<BoardState & BoardActions>()(
   persist(
     (set, get) => ({
       boards: [],
-      selectedBoardId: null,
 
       addBoard: (board) => {
         set((state) => ({ boards: [...state.boards, board] }))
@@ -73,7 +72,6 @@ export const useBoardStore = create<BoardState & BoardActions>()(
       removeBoard: (id) => {
         set((state) => ({
           boards: state.boards.filter((b) => b.id !== id),
-          selectedBoardId: state.selectedBoardId === id ? null : state.selectedBoardId,
         }))
       },
 
@@ -85,15 +83,15 @@ export const useBoardStore = create<BoardState & BoardActions>()(
         }))
       },
 
-      selectBoard: (id) => {
-        set({ selectedBoardId: id })
-      },
-
       importBoard: (json) => {
         try {
-          const parsed = JSON.parse(json) as PersistedBoardV1
+          const result = persistedBoardV1Schema.safeParse(JSON.parse(json))
+          if (!result.success) {
+            console.warn('Failed to import board: invalid format')
+            return null
+          }
           const board: PersistedBoardV1 = {
-            ...parsed,
+            ...result.data,
             id: crypto.randomUUID(),
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
@@ -101,7 +99,7 @@ export const useBoardStore = create<BoardState & BoardActions>()(
           get().addBoard(board)
           return board
         } catch {
-          console.warn('Failed to import board')
+          console.warn('Failed to import board: invalid JSON')
           return null
         }
       },
@@ -110,11 +108,6 @@ export const useBoardStore = create<BoardState & BoardActions>()(
         const board = get().boards.find((b) => b.id === id)
         if (!board) return null
         return JSON.stringify(board, null, 2)
-      },
-
-      getSelectedBoard: () => {
-        const { boards, selectedBoardId } = get()
-        return boards.find((b) => b.id === selectedBoardId)
       },
     }),
     {

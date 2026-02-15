@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p1
 issue_id: "210"
 tags: [code-review, bug, greyboard-desktop, memory-leak, electron]

@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "222"
 tags: [code-review, greyboard-desktop, yagni]

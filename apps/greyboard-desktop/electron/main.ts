@@ -1,10 +1,25 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, session } from 'electron'
 import path from 'node:path'
 import { registerAllHandlers } from './ipc/index'
 
 const VITE_DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL
 
 let mainWindow: BrowserWindow | null = null
+
+function setupContentSecurityPolicy() {
+  const devConnectSrc = VITE_DEV_SERVER_URL ? ` ${VITE_DEV_SERVER_URL} ws:` : ''
+
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': [
+          `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'${devConnectSrc}`,
+        ],
+      },
+    })
+  })
+}
 
 function createWindow() {
   const preloadPath = path.join(__dirname, 'preload.cjs')
@@ -32,6 +47,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  setupContentSecurityPolicy()
   createWindow()
 
   app.on('activate', () => {

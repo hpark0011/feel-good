@@ -1,11 +1,12 @@
 import { app, ipcMain } from 'electron'
+import { CHANNELS } from '../lib/channels'
 
 export function registerAppHandlers() {
-  ipcMain.handle('greyboard:app:getVersion', () => {
+  ipcMain.handle(CHANNELS.APP_GET_VERSION, () => {
     return app.getVersion()
   })
 
-  ipcMain.handle('greyboard:app:getPlatform', () => {
+  ipcMain.handle(CHANNELS.APP_GET_PLATFORM, () => {
     return process.platform
   })
 }

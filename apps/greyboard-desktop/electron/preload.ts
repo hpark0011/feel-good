@@ -1,14 +1,6 @@
 import { contextBridge, ipcRenderer } from 'electron'
-
-const CHANNELS = {
-  APP_GET_VERSION: 'greyboard:app:getVersion',
-  APP_GET_PLATFORM: 'greyboard:app:getPlatform',
-  FILES_IMPORT_BOARD: 'greyboard:files:importBoard',
-  FILES_EXPORT_BOARD: 'greyboard:files:exportBoard',
-  NOTIFICATIONS_SHOW: 'greyboard:notifications:show',
-  UPDATES_CHECK: 'greyboard:updates:check',
-  UPDATES_ON_STATUS: 'greyboard:updates:onStatus',
-} as const
+import { CHANNELS } from './lib/channels'
+import { type DesktopAPI } from './lib/desktop-api'
 
 contextBridge.exposeInMainWorld('greyboardDesktop', {
   app: {
@@ -22,7 +14,7 @@ contextBridge.exposeInMainWorld('greyboardDesktop', {
   },
   notifications: {
     show: (title: string, body: string) =>
-      ipcRenderer.invoke(CHANNELS.NOTIFICATIONS_SHOW, title, body),
+      ipcRenderer.invoke(CHANNELS.NOTIFICATIONS_SHOW, { title, body }),
   },
   updates: {
     check: () => ipcRenderer.invoke(CHANNELS.UPDATES_CHECK),
@@ -40,4 +32,4 @@ contextBridge.exposeInMainWorld('greyboardDesktop', {
       }
     },
   },
-})
+} satisfies DesktopAPI)

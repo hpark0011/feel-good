@@ -1,4 +1,4 @@
-import { type DesktopAPI } from '../../types/desktop-api'
+import { type DesktopAPI } from '../../../electron/lib/desktop-api'
 
 function getDesktopAPI(): DesktopAPI | null {
   if (typeof window !== 'undefined' && window.greyboardDesktop) {
@@ -44,5 +44,4 @@ export const desktopAPI = {
       return api?.updates.onStatus(callback) ?? (() => {})
     },
   },
-  isAvailable: () => getDesktopAPI() !== null,
 }

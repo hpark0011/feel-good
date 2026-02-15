@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router-dom'
+import { ErrorBoundary } from './components/error-boundary'
 
 export function App() {
   return (
@@ -7,7 +8,9 @@ export function App() {
         <h1 className="text-sm font-semibold">Greyboard Desktop</h1>
       </header>
       <main className="flex-1 overflow-auto">
-        <Outlet />
+        <ErrorBoundary>
+          <Outlet />
+        </ErrorBoundary>
       </main>
     </div>
   )
