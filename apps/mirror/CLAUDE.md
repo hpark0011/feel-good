@@ -101,7 +101,6 @@ components/            # App-level shared components
 
 hooks/                 # App-level shared hooks
   use-local-storage.ts
-  use-pathname-transition.ts
   use-profile-navigation-effects.ts
 
 lib/                   # Auth client, env, services

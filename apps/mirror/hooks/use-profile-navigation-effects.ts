@@ -2,7 +2,8 @@
 
 import { useLayoutEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { isArticleDetailRoute } from "./use-pathname-transition";
+
+const isArticleDetailRoute = (path: string) => /^\/@[^/]+\/.+/.test(path);
 
 type ScrollContainers = {
   mobile: HTMLElement | null;

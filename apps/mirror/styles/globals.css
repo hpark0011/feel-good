@@ -28,10 +28,3 @@
 @source "../node_modules/@feel-good/ui";
 @source "../node_modules/@feel-good/features";
 
-/* mirror-specific overrides */
-:root {
-}
-
-.dark {
-}
-

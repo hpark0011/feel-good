@@ -19,4 +19,4 @@ Profile routes (`/@username`, `/@username/slug`) preserve scroll position across
 
 ### Key file
 
-`apps/mirror/hooks/use-profile-navigation-effects.ts` — the single hook that owns scroll memory. Uses `isArticleDetailRoute` from `use-pathname-transition.ts` to detect navigation direction.
+`apps/mirror/hooks/use-profile-navigation-effects.ts` — the single hook that owns scroll memory. Uses a local `isArticleDetailRoute` helper to detect navigation direction.
