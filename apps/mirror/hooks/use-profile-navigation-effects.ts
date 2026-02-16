@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { isArticleDetailRoute } from "./use-pathname-transition";
 
@@ -50,7 +50,13 @@ export function useProfileNavigationEffects(containers: ScrollContainers) {
         scrollContainer.scrollTo(0, savedScrollTop.current);
       }
     }
+  }, [pathname]);
 
+  // Clear data-nav-direction after the navigation commit cycle.
+  // useEffect runs post-paint, so the view transition has already picked up
+  // the directional CSS. Clearing here prevents lazy-loaded chunks (e.g.
+  // next/dynamic Suspense resolves) from re-triggering the slide animation.
+  useEffect(() => {
     return () => {
       delete document.documentElement.dataset.navDirection;
     };
