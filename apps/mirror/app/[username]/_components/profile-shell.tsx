@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, ViewTransition } from "react";
+import { useMemo, useState } from "react";
 import type { Profile } from "@/features/profile";
 import {
   MobileProfileLayout,
@@ -61,18 +61,16 @@ export function ProfileShell(
                 content={() => (
                   <div className="flex h-full min-h-0 flex-col">
                     <ToolbarSlotTarget />
-                    <ViewTransition name="profile-content">
-                      <div className="flex-1 min-h-0 *:h-full">
-                        <div
-                          ref={setMobileScrollRoot}
-                          className="overflow-y-auto overscroll-y-contain h-full px-3"
-                        >
-                          <ScrollRootProvider value={mobileScrollRoot}>
-                            {children}
-                          </ScrollRootProvider>
-                        </div>
+                    <div className="flex-1 min-h-0 *:h-full">
+                      <div
+                        ref={setMobileScrollRoot}
+                        className="overflow-y-auto overscroll-y-contain h-full px-3"
+                      >
+                        <ScrollRootProvider value={mobileScrollRoot}>
+                          {children}
+                        </ScrollRootProvider>
                       </div>
-                    </ViewTransition>
+                    </div>
                   </div>
                 )}
               />
@@ -95,16 +93,14 @@ export function ProfileShell(
                   <div className="relative h-full min-w-0 flex flex-col">
                     <WorkspaceNavbar />
                     <ToolbarSlotTarget />
-                    <ViewTransition name="profile-content">
-                      <div className="flex-1 min-h-0 *:h-full">
-                        <div
-                          ref={setDesktopScrollRoot}
-                          className="overflow-y-auto h-full px-4 pb-[64px]"
-                        >
-                          {children}
-                        </div>
+                    <div className="flex-1 min-h-0 *:h-full">
+                      <div
+                        ref={setDesktopScrollRoot}
+                        className="overflow-y-auto h-full px-4 pb-[64px]"
+                      >
+                        {children}
                       </div>
-                    </ViewTransition>
+                    </div>
                   </div>
                 </ToolbarSlotProvider>
               </ResizablePanel>

@@ -1,24 +1,14 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { isArticleDetailRoute } from "./use-pathname-transition";
+
+const isArticleDetailRoute = (path: string) => /^\/@[^/]+\/.+/.test(path);
 
 type ScrollContainers = {
   mobile: HTMLElement | null;
   desktop: HTMLElement | null;
 };
-
-type NavTransition = "forward" | "back" | "none";
-
-function getTransition(prevPath: string, nextPath: string): NavTransition {
-  const wasDetail = isArticleDetailRoute(prevPath);
-  const isDetail = isArticleDetailRoute(nextPath);
-
-  if (isDetail && !wasDetail) return "forward";
-  if (!isDetail && wasDetail) return "back";
-  return "none";
-}
 
 export function useProfileNavigationEffects(containers: ScrollContainers) {
   const pathname = usePathname();
@@ -34,31 +24,20 @@ export function useProfileNavigationEffects(containers: ScrollContainers) {
   useLayoutEffect(() => {
     if (pathname === prevPathname.current) return;
 
-    const transition = getTransition(prevPathname.current, pathname);
+    const wasDetail = isArticleDetailRoute(prevPathname.current);
+    const isDetail = isArticleDetailRoute(pathname);
     prevPathname.current = pathname;
 
-    if (transition === "none") return;
-
-    document.documentElement.dataset.navDirection = transition;
-
     const scrollContainer = activeContainer.current;
-    if (scrollContainer) {
-      if (transition === "forward") {
-        savedScrollTop.current = scrollContainer.scrollTop;
-        scrollContainer.scrollTo(0, 0);
-      } else {
-        scrollContainer.scrollTo(0, savedScrollTop.current);
-      }
-    }
-  }, [pathname]);
+    if (!scrollContainer) return;
 
-  // Clear data-nav-direction after the navigation commit cycle.
-  // useEffect runs post-paint, so the view transition has already picked up
-  // the directional CSS. Clearing here prevents lazy-loaded chunks (e.g.
-  // next/dynamic Suspense resolves) from re-triggering the slide animation.
-  useEffect(() => {
-    return () => {
-      delete document.documentElement.dataset.navDirection;
-    };
+    if (isDetail && !wasDetail) {
+      // Forward: save scroll position and scroll to top
+      savedScrollTop.current = scrollContainer.scrollTop;
+      scrollContainer.scrollTo(0, 0);
+    } else if (!isDetail && wasDetail) {
+      // Back: restore saved scroll position
+      scrollContainer.scrollTo(0, savedScrollTop.current);
+    }
   }, [pathname]);
 }

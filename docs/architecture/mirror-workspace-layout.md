@@ -62,9 +62,8 @@ ResizablePanel (right)
   div.flex.flex-col
     ProfileHeader              ← fixed (outside scroll container)
     div.flex-1.min-h-0
-      ViewTransition
-        div.overflow-y-auto    ← scrolls
-          {children}           ← page.tsx content
+      div.overflow-y-auto      ← scrolls
+        {children}             ← page.tsx content
 ```
 
 ### Gaps
