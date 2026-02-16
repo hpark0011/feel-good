@@ -12,9 +12,6 @@ const cspDirectives = [
 ].join("; ");
 
 const nextConfig: NextConfig = {
-  experimental: {
-    viewTransition: true,
-  },
   images: {
     remotePatterns: [
       {
