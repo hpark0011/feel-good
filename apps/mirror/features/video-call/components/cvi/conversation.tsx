@@ -1,7 +1,7 @@
 "use client";
 
-import { useDaily, useParticipantIds, useDailyEvent, DailyVideo } from "@daily-co/daily-react";
-import { useEffect, useCallback } from "react";
+import { useDaily, useDailyEvent } from "@daily-co/daily-react";
+import { useEffect, useCallback, useRef } from "react";
 
 type ConversationProps = {
   conversationUrl: string;
@@ -10,6 +10,11 @@ type ConversationProps = {
   onError?: (error: string) => void;
 };
 
+/**
+ * Headless component that manages the Daily.co room lifecycle.
+ * Joins the room on mount and leaves on unmount.
+ * Video rendering is handled by VideoCallView.
+ */
 export function Conversation({
   conversationUrl,
   onJoined,
@@ -17,34 +22,33 @@ export function Conversation({
   onError,
 }: ConversationProps) {
   const daily = useDaily();
-  const participantIds = useParticipantIds();
+  const hasJoinedRef = useRef(false);
 
-  const joinRoom = useCallback(async () => {
-    if (!daily) return;
-    try {
-      await daily.join({ url: conversationUrl });
-      onJoined?.();
-    } catch (err) {
-      onError?.(err instanceof Error ? err.message : "Failed to join conversation");
-    }
-  }, [daily, conversationUrl, onJoined, onError]);
-
-  useDailyEvent("left-meeting", useCallback(() => {
-    onLeft?.();
-  }, [onLeft]));
+  useDailyEvent(
+    "left-meeting",
+    useCallback(() => {
+      onLeft?.();
+    }, [onLeft])
+  );
 
   useEffect(() => {
-    joinRoom();
-    return () => {
-      daily?.leave();
-    };
-  }, [joinRoom, daily]);
+    if (!daily || hasJoinedRef.current) return;
+    hasJoinedRef.current = true;
 
-  return (
-    <div className="relative h-full w-full">
-      {participantIds.map((id) => (
-        <DailyVideo key={id} sessionId={id} type="video" fit="cover" />
-      ))}
-    </div>
-  );
+    daily
+      .join({ url: conversationUrl })
+      .then(() => onJoined?.())
+      .catch((err) => {
+        hasJoinedRef.current = false;
+        onError?.(
+          err instanceof Error ? err.message : "Failed to join conversation"
+        );
+      });
+
+    return () => {
+      daily.leave().catch(() => {});
+    };
+  }, [daily, conversationUrl, onJoined, onError]);
+
+  return null;
 }

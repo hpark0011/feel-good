@@ -56,6 +56,17 @@ export function useVideoCall() {
     dispatch({ type: "reset" });
   }, [dispatch]);
 
+  const markConnected = useCallback(() => {
+    dispatch({ type: "connected" });
+  }, [dispatch]);
+
+  const markError = useCallback(
+    (message: string) => {
+      dispatch({ type: "error", message });
+    },
+    [dispatch]
+  );
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -80,5 +91,5 @@ export function useVideoCall() {
     };
   }, [callState.status]);
 
-  return { callState, startCall, endCall, resetCall };
+  return { callState, startCall, endCall, resetCall, markConnected, markError };
 }

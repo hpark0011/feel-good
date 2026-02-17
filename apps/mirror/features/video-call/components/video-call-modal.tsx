@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 import { useEffect } from "react";
 import type { Article } from "@feel-good/tavus";
 import { CVIProvider } from "./cvi/cvi-provider";
+import { Conversation } from "./cvi/conversation";
 import { VideoCallView } from "./video-call-view";
 import { useVideoCall } from "../hooks/use-video-call";
 
@@ -14,7 +15,11 @@ type VideoCallModalProps = {
 };
 
 function VideoCallContent({ articles, onClose }: VideoCallModalProps) {
-  const { callState, startCall, endCall, resetCall } = useVideoCall();
+  const { callState, startCall, endCall, resetCall, markConnected, markError } =
+    useVideoCall();
+
+  const shouldRenderConversation =
+    callState.status === "connecting" || callState.status === "connected";
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
@@ -55,6 +60,14 @@ function VideoCallContent({ articles, onClose }: VideoCallModalProps) {
       >
         <X className="h-5 w-5" />
       </button>
+      {shouldRenderConversation && (
+        <Conversation
+          conversationUrl={callState.conversationUrl}
+          onJoined={markConnected}
+          onLeft={handleClose}
+          onError={markError}
+        />
+      )}
       <VideoCallView
         callState={callState}
         onEndCall={handleClose}
