@@ -7,6 +7,12 @@ Rules for how Claude and the developer work together. Derived from retrospective
 - **One focused outcome per session.** Define the single deliverable before starting. Commit progress and start fresh for the next piece.
 - **State the branch and plan file** at session start if they exist.
 - **Don't let sessions balloon.** If context is getting heavy, commit what's done and continue in a new session rather than losing context.
+- **Hard ceiling: ~150 turns.** Sessions approaching 150 turns should checkpoint-commit and continue fresh. The 700-turn Tavus session proved that quality degrades well before context limits.
+
+## Tool Discipline
+
+- **Never use Bash for file reading or searching.** Use `Read` instead of `cat`/`head`/`tail`, `Grep` instead of `grep`/`rg`, `Glob` instead of `find`/`ls`. This was flagged in 5/9 recent sessions.
+- **Infrastructure sessions still need investigation.** Even for worktree/setup tasks, use Read/Grep to check existing state before running Bash commands.
 
 ## Debugging UI/Visual Bugs
 
