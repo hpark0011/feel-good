@@ -25,8 +25,10 @@ export default function RootLayout({
       <body
         className={`${Inter.variable} ${InstrumentSerif.variable} ${geistMono.variable} antialiased`}
       >
-        <RootProvider>{children}</RootProvider>
-        <Toaster />
+        <RootProvider>
+          {children}
+          <Toaster />
+        </RootProvider>
       </body>
     </html>
   );
