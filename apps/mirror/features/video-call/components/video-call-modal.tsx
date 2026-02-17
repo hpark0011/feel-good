@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import type { Article } from "@feel-good/tavus";
 import { CVIProvider } from "./cvi/cvi-provider";
 import { Conversation } from "./cvi/conversation";
@@ -21,30 +21,31 @@ function VideoCallContent({ articles, onClose }: VideoCallModalProps) {
   const shouldRenderConversation =
     callState.status === "connecting" || callState.status === "connected";
 
+  const handleClose = useCallback(() => {
+    endCall();
+    onClose();
+  }, [endCall, onClose]);
+
+  const handleRetry = useCallback(() => {
+    resetCall();
+    startCall(articles);
+  }, [resetCall, startCall, articles]);
+
+  const handleCloseRef = useRef(handleClose);
+  handleCloseRef.current = handleClose;
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     startCall(articles);
   }, []);
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        handleClose();
-      }
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleCloseRef.current();
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
-
-  const handleClose = () => {
-    endCall();
-    onClose();
-  };
-
-  const handleRetry = () => {
-    resetCall();
-    startCall(articles);
-  };
 
   return (
     <motion.div
