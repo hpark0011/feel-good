@@ -33,6 +33,7 @@
     "react-dom": "catalog:",
     "react-i18next": "catalog:",
     "server-only": "^0.0.1",
+    "sonner": "catalog:",
     "tw-animate-css": "catalog:",
     "zod": "catalog:"
   },

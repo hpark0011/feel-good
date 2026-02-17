@@ -1,5 +1,6 @@
 import { InstrumentSerif, Inter } from "@/app/fonts/font";
 import { RootProvider } from "@/providers/root-provider";
+import { Toaster } from "@feel-good/ui/primitives/sonner";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
@@ -25,6 +26,7 @@ export default function RootLayout({
         className={`${Inter.variable} ${InstrumentSerif.variable} ${geistMono.variable} antialiased`}
       >
         <RootProvider>{children}</RootProvider>
+        <Toaster />
       </body>
     </html>
   );
