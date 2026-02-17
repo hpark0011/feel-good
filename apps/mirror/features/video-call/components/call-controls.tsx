@@ -14,12 +14,12 @@ export function CallControls({ onEndCall }: CallControlsProps) {
   const [isCameraMuted, setIsCameraMuted] = useState(false);
 
   const toggleMic = () => {
-    daily?.setLocalAudio(!isMicMuted);
+    daily?.setLocalAudio(isMicMuted);
     setIsMicMuted(!isMicMuted);
   };
 
   const toggleCamera = () => {
-    daily?.setLocalVideo(!isCameraMuted);
+    daily?.setLocalVideo(isCameraMuted);
     setIsCameraMuted(!isCameraMuted);
   };
 
