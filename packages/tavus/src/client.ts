@@ -5,6 +5,16 @@ import type {
 
 const TAVUS_API_BASE = "https://tavusapi.com/v2";
 
+export class TavusApiError extends Error {
+  constructor(
+    public readonly status: number,
+    message: string,
+  ) {
+    super(message);
+    this.name = "TavusApiError";
+  }
+}
+
 export async function createConversation(
   apiKey: string,
   request: CreateConversationRequest,
@@ -19,11 +29,12 @@ export async function createConversation(
   });
 
   if (!response.ok) {
-    const error = await response
+    const body = await response
       .json()
       .catch(() => ({ message: "Unknown error" }));
-    throw new Error(
-      `Tavus API error (${response.status}): ${error.message || "Failed to create conversation"}`,
+    throw new TavusApiError(
+      response.status,
+      body.message || body.error || body.detail || "Failed to create conversation",
     );
   }
 
@@ -43,6 +54,6 @@ export async function endConversation(
   );
 
   if (!response.ok) {
-    throw new Error(`Failed to end conversation: ${response.status}`);
+    throw new TavusApiError(response.status, "Failed to end conversation");
   }
 }

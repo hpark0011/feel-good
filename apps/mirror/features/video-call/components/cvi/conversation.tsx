@@ -1,7 +1,7 @@
 "use client";
 
 import { useDaily, useDailyEvent } from "@daily-co/daily-react";
-import { useEffect, useCallback, useRef } from "react";
+import { useEffect, useCallback } from "react";
 
 type ConversationProps = {
   conversationUrl: string;
@@ -22,7 +22,6 @@ export function Conversation({
   onError,
 }: ConversationProps) {
   const daily = useDaily();
-  const hasJoinedRef = useRef(false);
 
   useDailyEvent(
     "left-meeting",
@@ -32,20 +31,24 @@ export function Conversation({
   );
 
   useEffect(() => {
-    if (!daily || hasJoinedRef.current) return;
-    hasJoinedRef.current = true;
+    if (!daily) return;
+    let cancelled = false;
 
     daily
       .join({ url: conversationUrl })
-      .then(() => onJoined?.())
+      .then(() => {
+        if (!cancelled) onJoined?.();
+      })
       .catch((err) => {
-        hasJoinedRef.current = false;
-        onError?.(
-          err instanceof Error ? err.message : "Failed to join conversation"
-        );
+        if (!cancelled) {
+          onError?.(
+            err instanceof Error ? err.message : "Failed to join conversation"
+          );
+        }
       });
 
     return () => {
+      cancelled = true;
       daily.leave().catch(() => {});
     };
   }, [daily, conversationUrl, onJoined, onError]);

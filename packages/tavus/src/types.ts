@@ -5,7 +5,7 @@ export type CreateConversationRequest = {
   conversational_context?: string;
   custom_greeting?: string;
   properties?: {
-    max_duration?: number;
+    max_call_duration?: number;
     enable_recording?: boolean;
   };
 };

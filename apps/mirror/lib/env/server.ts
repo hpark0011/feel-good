@@ -10,7 +10,7 @@ import { z } from "zod";
 
 const serverEnvSchema = z.object({
   TAVUS_API_KEY: z.string().min(1, "TAVUS_API_KEY is required"),
-  TAVUS_PERSONA_ID: z.string().min(1).default("pdced222244b"),
+  TAVUS_PERSONA_ID: z.string().min(1).default("p2679f6eae3f"),
 });
 
 function validateServerEnv() {

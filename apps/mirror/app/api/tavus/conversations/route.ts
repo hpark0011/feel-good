@@ -2,6 +2,7 @@ import "server-only";
 
 import { NextResponse } from "next/server";
 import {
+  TavusApiError,
   createConversation,
   serializeArticlesToContext,
   type Article,
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
       persona_id: serverEnv.TAVUS_PERSONA_ID,
       conversational_context: conversationalContext,
       properties: {
-        max_duration: 600,
+        max_call_duration: 600,
       },
     });
 
@@ -28,10 +29,17 @@ export async function POST(request: Request) {
       conversation_id: response.conversation_id,
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unknown error occurred";
+    console.error("[tavus/conversations]", error);
+
+    if (error instanceof TavusApiError && error.status === 429) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 },
+      );
+    }
+
     return NextResponse.json(
-      { error: message },
+      { error: "Failed to start conversation" },
       { status: 500 },
     );
   }
