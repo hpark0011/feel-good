@@ -54,6 +54,27 @@ If `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, or `SENTRY_PROJECT` are missing, Mirror bu
 
 Environment variables are validated at startup. Missing or invalid variables will cause clear error messages.
 
+### Sentry Developer CLI
+
+Interactive issue triaging and AI debugging (separate from the build-time `@sentry/cli`):
+
+```bash
+# Install (one-time, global)
+curl -fsSL https://cli.sentry.dev/install | bash
+
+# Authenticate
+sentry auth login
+
+# List issues (auto-detects project from NEXT_PUBLIC_SENTRY_DSN)
+sentry issue list
+
+# AI root cause analysis
+sentry issue explain PROJ-123
+
+# Generate fix plan
+sentry issue plan PROJ-123
+```
+
 ## Getting Started
 
 First, run the development server:
