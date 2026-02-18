@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p3
 issue_id: "177"
 tags: [code-review, quality, tavus]
@@ -67,3 +67,4 @@ If `TavusApiError` class (from #174) carries the structured body, the standalone
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-19 | Created from code review of unstaged changes on mirror/fix-tavus-server-error | Type exists but is never used at runtime |
+| 2026-02-19 | Renamed TavusErrorResponse → TavusErrorBody with optional fields, applied to client.ts .json() call | Old name had zero consumers outside completed plans |
