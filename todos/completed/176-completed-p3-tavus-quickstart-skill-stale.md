@@ -40,3 +40,4 @@ Change `"max_duration": 600` to `"max_call_duration": 600` in the skill SKILL.md
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-19 | Created from code review of unstaged changes on mirror/fix-tavus-server-error | Stale skill doc was the root cause of the original 400 error |
+| 2026-02-19 | Updated `max_duration` → `max_call_duration` in SKILL.md | No other stale references found in active skill docs |

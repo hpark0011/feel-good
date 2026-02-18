@@ -16,7 +16,8 @@ export type CreateConversationResponse = {
   status: string;
 };
 
-export type TavusErrorResponse = {
-  error: string;
-  message: string;
+export type TavusErrorBody = {
+  message?: string;
+  error?: string;
+  detail?: string;
 };

@@ -1,6 +1,7 @@
 import type {
   CreateConversationRequest,
   CreateConversationResponse,
+  TavusErrorBody,
 } from "./types";
 
 const TAVUS_API_BASE = "https://tavusapi.com/v2";
@@ -29,7 +30,7 @@ export async function createConversation(
   });
 
   if (!response.ok) {
-    const body = await response
+    const body: TavusErrorBody = await response
       .json()
       .catch(() => ({ message: "Unknown error" }));
     throw new TavusApiError(

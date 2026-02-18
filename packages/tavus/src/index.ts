@@ -1,7 +1,7 @@
 export type {
   CreateConversationRequest,
   CreateConversationResponse,
-  TavusErrorResponse,
+  TavusErrorBody,
 } from "./types";
 
 export { TavusApiError, createConversation, endConversation } from "./client";
