@@ -27,7 +27,7 @@ Determine the mode from the argument:
 
 All branch names must follow these conventions:
 
-- **Prefix**: `feature-`, `fix-`, or `refactor-`
+- **Prefix**: `feature-`, `fix-`, `chore-`, `docs-`, `improvements-` or `refactor-`
 - **Slug**: 2-4 words, kebab-case, lowercase
 - **Max length**: 40 characters total
 - **No special characters** beyond hyphens
