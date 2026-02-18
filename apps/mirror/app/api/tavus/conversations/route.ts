@@ -6,27 +6,17 @@ import {
   serializeArticlesToContext,
   type Article,
 } from "@feel-good/tavus";
+import { serverEnv } from "@/lib/env/server";
 
 export async function POST(request: Request) {
   try {
-    const apiKey = process.env.TAVUS_API_KEY;
-
-    if (!apiKey) {
-      return NextResponse.json(
-        { error: "Tavus API key not configured" },
-        { status: 500 },
-      );
-    }
-
-    const personaId = process.env.TAVUS_PERSONA_ID ?? "pdced222244b";
-
     const body = (await request.json()) as { articles: Article[] };
     const { articles } = body;
 
     const conversationalContext = serializeArticlesToContext(articles);
 
-    const response = await createConversation(apiKey, {
-      persona_id: personaId,
+    const response = await createConversation(serverEnv.TAVUS_API_KEY, {
+      persona_id: serverEnv.TAVUS_PERSONA_ID,
       conversational_context: conversationalContext,
       properties: {
         max_duration: 600,
