@@ -34,9 +34,10 @@ function VideoCallContent({ articles, onClose }: VideoCallModalProps) {
   const handleCloseRef = useRef(handleClose);
   handleCloseRef.current = handleClose;
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     startCall(articles);
+    // Intentionally run only on mount — startCall and articles are stable refs
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

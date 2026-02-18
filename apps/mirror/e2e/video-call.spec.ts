@@ -173,7 +173,9 @@ test.describe("Tavus CVI Video Calling", () => {
 
       // Check window.__NEXT_DATA__ for leaked env vars
       const nextData = await page.evaluate(() => {
-        return JSON.stringify((window as any).__NEXT_DATA__ || {});
+        return JSON.stringify(
+        (window as Record<string, unknown>).__NEXT_DATA__ || {},
+      );
       });
       expect(nextData).not.toContain("TAVUS_API_KEY");
       expect(nextData).not.toContain("tavus");
