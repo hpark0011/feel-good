@@ -36,17 +36,61 @@ tooling/        Shared configs (eslint, prettier, typescript)
 | mirror | Interactive blogging platform | 3001 |
 | ui-factory | Design system showcase | 3002 |
 
-## Package Import Patterns
+## Packages
 
-| Package | Import Example |
-|---------|----------------|
-| @feel-good/ui | `@feel-good/ui/primitives/button` |
-| @feel-good/features | `@feel-good/features/auth/blocks` |
-| @feel-good/icons | `@feel-good/icons` |
-| @feel-good/utils | `@feel-good/utils/cn` |
-| @feel-good/convex | `@feel-good/convex` |
+| Package | Purpose | Example Import |
+|---------|---------|----------------|
+| @feel-good/ui | shadcn/ui primitives | `@feel-good/ui/primitives/button` |
+| @feel-good/features | Feature components (auth, dock) | `@feel-good/features/auth/blocks` |
+| @feel-good/icons | SVG icon components | `@feel-good/icons` |
+| @feel-good/utils | Utilities (cn, etc.) | `@feel-good/utils/cn` |
+| @feel-good/convex | Convex backend | `@feel-good/convex` |
 
-### Auth Package Layers
+### @feel-good/utils
+
+Shared utility functions.
+
+```typescript
+import { cn } from "@feel-good/utils/cn";
+```
+
+### @feel-good/icons
+
+SVG icon components as React components.
+
+```typescript
+import { CheckIcon, CloseIcon } from "@feel-good/icons";
+```
+
+### @feel-good/ui
+
+Shared UI component library based on shadcn/ui primitives.
+
+```typescript
+import { Button } from "@feel-good/ui/primitives/button";
+import { Card } from "@feel-good/ui/primitives/card";
+import { Dialog } from "@feel-good/ui/primitives/dialog";
+```
+
+### @feel-good/features
+
+Shared feature components (auth, dock).
+
+```typescript
+// Auth forms
+import { MagicLinkLoginForm, MagicLinkSignUpForm, OTPLoginForm, OTPSignUpForm } from "@feel-good/features/auth/components/forms";
+
+// Auth hooks
+import { useMagicLinkRequest, useOTPAuth, createUseSession } from "@feel-good/features/auth/hooks";
+
+// Auth blocks (drop-in page sections)
+import { LoginBlock, SignUpBlock } from "@feel-good/features/auth/blocks";
+
+// Dock
+import { AppDock } from "@feel-good/features/dock/blocks";
+```
+
+#### Auth Package Layers
 
 | Layer | Import | Purpose |
 |-------|--------|---------|
@@ -55,15 +99,45 @@ tooling/        Shared configs (eslint, prettier, typescript)
 | Views | `@feel-good/features/auth/views` | Pure UI components |
 | Hooks | `@feel-good/features/auth/hooks` | Headless auth logic |
 
-## TypeScript Configs
+### @feel-good/convex
 
-Extend from `@feel-good/tsconfig`:
+Shared Convex backend configuration and functions.
 
-| Config | Use Case |
-|--------|----------|
-| `base.json` | Backend/non-browser packages (e.g., Convex) |
-| `react-library.json` | React component libraries (ui, icons, features) |
-| `nextjs.json` | Next.js applications (greyboard, mirror) |
+```typescript
+import { api } from "@feel-good/convex";
+```
+
+### @feel-good/tsconfig
+
+Shared TypeScript configurations. Choose based on package type:
+
+| Config               | Use Case                                           |
+|----------------------|----------------------------------------------------|
+| `base.json`          | Backend/non-browser packages (e.g., Convex)        |
+| `react-library.json` | React component libraries (ui, icons, features)   |
+| `nextjs.json`        | Next.js applications (greyboard, mirror)           |
+
+```json
+{
+  "extends": "@feel-good/tsconfig/react-library.json"
+}
+```
+
+Available configs in `tooling/typescript/`:
+
+```
+├── base.json             # ES2022, strict mode, bundler resolution
+├── react-library.json    # Extends base + DOM libs + react-jsx
+└── nextjs.json           # Extends base + Next.js plugin + jsx preserve
+```
+
+### @feel-good/eslint-config
+
+Shared ESLint configurations.
+
+### @feel-good/prettier-config
+
+Shared Prettier configuration.
 
 ## Core Principles
 
