@@ -51,17 +51,20 @@ function createSharedSentryOptions(appName: string): SharedSentryOptions {
 export function createClientSentryOptions(appName: string): BrowserOptions {
   return {
     ...createSharedSentryOptions(appName),
+    enableLogs: true,
   };
 }
 
 export function createServerSentryOptions(appName: string): NodeOptions {
   return {
     ...createSharedSentryOptions(appName),
+    enableLogs: true,
   };
 }
 
 export function createEdgeSentryOptions(appName: string): EdgeOptions {
   return {
     ...createSharedSentryOptions(appName),
+    enableLogs: true,
   };
 }
