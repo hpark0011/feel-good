@@ -5,7 +5,7 @@ export type CreateConversationRequest = {
   conversational_context?: string;
   custom_greeting?: string;
   properties?: {
-    max_duration?: number;
+    max_call_duration?: number;
     enable_recording?: boolean;
   };
 };
@@ -16,7 +16,8 @@ export type CreateConversationResponse = {
   status: string;
 };
 
-export type TavusErrorResponse = {
-  error: string;
-  message: string;
+export type TavusErrorBody = {
+  message?: string;
+  error?: string;
+  detail?: string;
 };

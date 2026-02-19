@@ -93,7 +93,7 @@ curl -X POST https://tavusapi.com/v2/conversations \
   "callback_url": "https://your-webhook.com/tavus",
   "properties": {
     "enable_recording": true,
-    "max_duration": 600
+    "max_call_duration": 600
   }
 }
 ```

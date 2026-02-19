@@ -7,7 +7,7 @@ const cspDirectives = [
   "style-src 'self' 'unsafe-inline'", // Tailwind and runtime style injection
   "img-src 'self' https://images.unsplash.com data:", // data: for Tiptap/ProseMirror inline images
   "font-src 'self'", // next/font self-hosts all fonts
-  "connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.ingest.sentry.io https://*.daily.co wss://*.daily.co https://tavusapi.com", // Convex real-time backend + Sentry telemetry + Daily.co + Tavus API
+  "connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://*.daily.co wss://*.daily.co https://tavusapi.com", // Convex real-time backend + Sentry telemetry + Daily.co + Tavus API
   "frame-src https://*.daily.co", // Daily.co video iframe
   "media-src 'self' https://*.daily.co blob:", // Daily.co media + blob URLs
   "frame-ancestors 'none'", // mirrors X-Frame-Options: DENY

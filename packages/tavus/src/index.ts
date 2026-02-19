@@ -1,10 +1,10 @@
 export type {
   CreateConversationRequest,
   CreateConversationResponse,
-  TavusErrorResponse,
+  TavusErrorBody,
 } from "./types";
 
-export { createConversation, endConversation } from "./client";
+export { TavusApiError, createConversation, endConversation } from "./client";
 
 export {
   serializeArticlesToContext,

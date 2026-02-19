@@ -1,17 +1,19 @@
 import { ShinyButton } from "@feel-good/ui/components/shiny-button";
 import { Icon, type IconName } from "@feel-good/ui/components/icon";
-import { toast } from "sonner";
+
+export type ProfileActionId = "text" | "video" | "voice";
 
 type ProfileAction = {
+  id: ProfileActionId;
   label: string;
   icon: IconName;
   iconClassName?: string;
 };
 
 const PROFILE_ACTIONS: ProfileAction[] = [
-  { label: "Text", icon: "BubbleLeftFillIcon", iconClassName: "size-5.5" },
-  { label: "Video", icon: "VideoFillIcon", iconClassName: "size-5.5" },
-  { label: "Voice", icon: "WaveformIcon", iconClassName: "size-6" },
+  { id: "text", label: "Text", icon: "BubbleLeftFillIcon", iconClassName: "size-5.5" },
+  { id: "video", label: "Video", icon: "VideoFillIcon", iconClassName: "size-5.5" },
+  { id: "voice", label: "Voice", icon: "WaveformIcon", iconClassName: "size-6" },
 ];
 
 const shinyButtonClass =
@@ -20,26 +22,18 @@ const shinyButtonShadowClass =
   "rounded-[20px] [corner-shape:superellipse(1.3)]";
 
 type ProfileActionsProps = {
-  onVideoClick?: () => void;
+  onAction?: (id: ProfileActionId) => void;
 };
 
-export function ProfileActions({ onVideoClick }: ProfileActionsProps) {
-  const handleClick = (label: string) => {
-    if (label === "Video") {
-      onVideoClick?.();
-    } else {
-      toast("Coming soon", { description: `${label} conversations are not yet available.` });
-    }
-  };
-
+export function ProfileActions({ onAction }: ProfileActionsProps) {
   return (
     <div className="flex gap-2.5 items-center">
-      {PROFILE_ACTIONS.map(({ label, icon, iconClassName }) => (
-        <div key={label} className="flex flex-col gap-2">
+      {PROFILE_ACTIONS.map(({ id, label, icon, iconClassName }) => (
+        <div key={id} className="flex flex-col gap-2">
           <ShinyButton
             className={shinyButtonClass}
             shadowClassName={shinyButtonShadowClass}
-            onClick={() => handleClick(label)}
+            onClick={() => onAction?.(id)}
           >
             <Icon name={icon} className={iconClassName} />
           </ShinyButton>
