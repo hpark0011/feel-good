@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { desktopAPI } from '../../../lib/ipc/client'
+import { desktopAPI } from '@/src/lib/ipc/client'
 
 export function useDocumentFile(name: string | undefined) {
   const [content, setContent] = useState<string | null>(null)

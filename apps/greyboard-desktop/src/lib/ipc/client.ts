@@ -1,7 +1,7 @@
 import {
   type DesktopAPI,
   type DocumentFile,
-} from '../../../electron/lib/desktop-api'
+} from '@/electron/lib/desktop-api'
 
 function getDesktopAPI(): DesktopAPI | null {
   if (typeof window !== 'undefined' && window.greyboardDesktop) {

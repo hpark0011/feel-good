@@ -1,8 +1,8 @@
 import { memo } from 'react'
 import { DocFillIcon } from '@feel-good/icons'
-import { type DocumentFile } from '../../../../electron/lib/desktop-api'
-import { formatBytes } from '../utils/format-bytes'
-import { formatRelativeDate } from '../utils/format-relative-date'
+import { type DocumentFile } from '@/electron/lib/desktop-api'
+import { formatBytes } from '@/src/features/documents/utils/format-bytes'
+import { formatRelativeDate } from '@/src/features/documents/utils/format-relative-date'
 
 export const FileListItem = memo(function FileListItem({
   file,

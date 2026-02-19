@@ -1,6 +1,6 @@
 import { create } from 'zustand'
-import { type DocumentFile } from '../../electron/lib/desktop-api'
-import { desktopAPI } from '../lib/ipc/client'
+import { type DocumentFile } from '@/electron/lib/desktop-api'
+import { desktopAPI } from '@/src/lib/ipc/client'
 
 interface DocumentState {
   folderPath: string | null

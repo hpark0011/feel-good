@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { useDocumentFile } from '../features/documents/hooks/use-document-file'
-import { DocumentViewHeader } from '../features/documents/components/document-view-header'
-import { DocumentViewContent } from '../features/documents/components/document-view-content'
+import { useDocumentFile } from '@/src/features/documents/hooks/use-document-file'
+import { DocumentViewHeader } from '@/src/features/documents/components/document-view-header'
+import { DocumentViewContent } from '@/src/features/documents/components/document-view-content'
 
 export function DocumentView() {
   const { name } = useParams<{ name: string }>()

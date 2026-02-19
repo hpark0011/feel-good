@@ -1,10 +1,10 @@
 import { useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@feel-good/ui/primitives/button'
-import { useDocumentStore } from '../state/document-store'
-import { EmptyState } from '../features/documents/components/empty-state'
-import { DocumentListHeader } from '../features/documents/components/document-list-header'
-import { DocumentListContent } from '../features/documents/components/document-list-content'
+import { useDocumentStore } from '@/src/state/document-store'
+import { EmptyState } from '@/src/features/documents/components/empty-state'
+import { DocumentListHeader } from '@/src/features/documents/components/document-list-header'
+import { DocumentListContent } from '@/src/features/documents/components/document-list-content'
 
 export function DocumentList() {
   const { folderPath, files, isLoading, error, selectFolder, loadFolder } = useDocumentStore()

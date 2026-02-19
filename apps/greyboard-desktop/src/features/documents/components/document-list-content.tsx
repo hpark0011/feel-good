@@ -1,4 +1,4 @@
-import { type DocumentFile } from '../../../../electron/lib/desktop-api'
+import { type DocumentFile } from '@/electron/lib/desktop-api'
 import { FileListItem } from './file-list-item'
 
 export function DocumentListContent({
