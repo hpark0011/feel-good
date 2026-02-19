@@ -1,1 +1,1 @@
-export { MirrorHomePageView } from "./views/home-page-view";
+export { MirrorHomePageView } from "./components/home-page-view";

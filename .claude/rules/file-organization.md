@@ -1,4 +1,4 @@
-# Folder Structure Convention
+# File Organization Convention
 
 > Canonical source: `docs/conventions/file-organization-convention.md`
 
@@ -18,14 +18,14 @@ Key highlights:
 
 Within a feature module, placement is mechanical:
 
-| File type | Directory |
-|-----------|-----------|
-| React component (any kind) | `components/` |
-| Custom hook | `hooks/` |
-| Context provider | `context/` |
-| Types/interfaces | `types/` or co-located |
-| Utility functions | `utils/` |
-| Adapters, schemas, mock data | `lib/` |
-| State store | `store/` |
+| File type                    | Directory              |
+| ---------------------------- | ---------------------- |
+| React component (any kind)   | `components/`          |
+| Custom hook                  | `hooks/`               |
+| Context provider             | `context/`             |
+| Types/interfaces             | `types/` or co-located |
+| Utility functions            | `utils/`               |
+| Adapters, schemas, mock data | `lib/`                 |
+| State store                  | `store/`               |
 
 See the canonical source for full rules, import boundaries, and migration direction.

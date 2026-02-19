@@ -2,7 +2,7 @@
 
 import { useArticleList } from "../context/article-list-context";
 import { useScrollRoot } from "../context/scroll-root-context";
-import { ArticleListView } from "../views/article-list-view";
+import { ArticleListView } from "./article-list-view";
 
 function EmptyMessage({ message }: { message: string }) {
   return (

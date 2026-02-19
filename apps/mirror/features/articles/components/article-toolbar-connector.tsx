@@ -3,7 +3,7 @@
 import { useArticleToolbar } from "../context/article-toolbar-context";
 import { ArticleToolbar } from "../components/article-toolbar";
 
-export function ArticleToolbarView() {
+export function ArticleToolbarConnector() {
   const ctx = useArticleToolbar();
   return (
     <ArticleToolbar

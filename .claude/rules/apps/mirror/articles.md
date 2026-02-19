@@ -18,19 +18,23 @@ Consumers import from focused contexts to avoid cross-concern re-renders.
 
 ## Component Organization
 
-All React components live in `components/` (see `docs/conventions/file-organization-convention.md`). Existing `views/` directory is legacy and should be merged into `components/` when files are touched.
+All React components live in `components/` (see `docs/conventions/file-organization-convention.md`).
 
 ```
 components/
   article-toolbar.tsx              # Toolbar UI (delete, search, sort, filter, new)
-  article-toolbar-view.tsx         # Context connector: reads toolbar context, passes to ArticleToolbar
+  article-toolbar-connector.tsx    # Context connector: reads toolbar context, passes to ArticleToolbar
   article-search-input.tsx         # Search input with open/close state
   article-sort-dropdown.tsx        # Sort order dropdown (newest/oldest/alphabetical)
   article-filter-dropdown.tsx      # Filter menu with sub-menus
   scrollable-article-list.tsx      # List wrapper with context consumers
+  article-list-view.tsx            # Pure UI table component (receives all props)
   article-list-item.tsx            # Individual article table row
   article-list-loader.tsx          # Infinite scroll loader (IntersectionObserver)
   animated-article-row.tsx         # Row with animation trigger on sort
+  article-detail-view.tsx          # Article detail display
+  article-detail-toolbar-view.tsx  # Toolbar for detail view (pure, props only)
+  delete-articles-dialog.tsx       # Confirmation dialog for deletion
   filter/
     category-filter-content.tsx    # Category filter UI (search, badges, list)
     category-filter-search.tsx     # Search input within category filter
@@ -38,18 +42,12 @@ components/
     category-filter-list.tsx       # Category list with checkboxes
     date-filter-content.tsx        # Date preset buttons (today, week, month, year)
     status-filter-content.tsx      # Draft/published status filter
-
-views/ (LEGACY — merge into components/ when touched)
-  article-list-view.tsx            # Pure UI table component (receives all props)
-  article-detail-view.tsx          # Article detail display
-  article-detail-toolbar-view.tsx  # Toolbar for detail view (pure, props only)
-  delete-articles-dialog.tsx       # Confirmation dialog for deletion
 ```
 
 ### Component Patterns
 
 - **Pure presentational** (`*-view.tsx` suffix): Receive all data via props. No context or hook calls.
-- **Context connectors**: Read context/hooks, pass values as props to pure components. Example: `ArticleToolbarView` reads `useArticleToolbar()` and passes to `ArticleToolbar`.
+- **Context connectors** (`*-connector.tsx` suffix): Read context/hooks, pass values as props to pure components. Example: `ArticleToolbarConnector` reads `useArticleToolbar()` and passes to `ArticleToolbar`.
 - **Dropdown/Filter Content Components**: Used inside DropdownMenuSubContent slots.
 - **Container Components** (e.g., `ScrollableArticleList`): Wrap views and manage context consumption.
 

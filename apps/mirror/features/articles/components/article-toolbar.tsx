@@ -13,7 +13,7 @@ import {
   TooltipTrigger,
 } from "@feel-good/ui/primitives/tooltip";
 import { cn } from "@feel-good/utils/cn";
-import { DeleteArticlesDialog } from "../views/delete-articles-dialog";
+import { DeleteArticlesDialog } from "./delete-articles-dialog";
 import { ArticleSortDropdown } from "./article-sort-dropdown";
 import { ArticleSearchInput } from "./article-search-input";
 import { ArticleFilterDropdown } from "./article-filter-dropdown";
