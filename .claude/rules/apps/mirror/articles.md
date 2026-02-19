@@ -46,10 +46,10 @@ components/
 
 ### Component Patterns
 
-- **Pure presentational** (`*-view.tsx` suffix): Receive all data via props. No context or hook calls.
-- **Context connectors** (`*-connector.tsx` suffix): Read context/hooks, pass values as props to pure components. Example: `ArticleToolbarConnector` reads `useArticleToolbar()` and passes to `ArticleToolbar`.
+- **Context connectors** (`*-connector.tsx` suffix): Read context/hooks, pass values as props to a UI component. No markup of their own. Example: `ArticleListToolbarConnector` reads `useArticleToolbar()` and passes to `ArticleListToolbar`.
+- **Pure presentational**: Receive all data via props. No context or hook calls. No special suffix required (legacy files may have `-view`).
 - **Dropdown/Filter Content Components**: Used inside DropdownMenuSubContent slots.
-- **Container Components** (e.g., `ScrollableArticleList`): Wrap views and manage context consumption.
+- **Container Components** (e.g., `ScrollableArticleList`): Wrap presentational components and manage context consumption.
 
 ## Toolbar / Content Separation
 

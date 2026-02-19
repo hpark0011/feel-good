@@ -14,6 +14,15 @@ Key highlights:
 
 **`views/` is only for cross-app packages** (`packages/features/<feature>/views/`) where it defines a package API boundary — the pure-UI layer that consuming apps can customize.
 
+## Component naming suffixes
+
+| Suffix | Meaning | Example |
+|--------|---------|---------|
+| `-connector.tsx` | Reads context/hooks, delegates to a UI component. No markup of its own. | `article-list-toolbar-connector.tsx` |
+| *(none)* | Everything else — UI, presentational, interactive, dialogs. | `article-list-toolbar.tsx` |
+
+**`-connector` is required** when a component exists solely to bridge context to props. Do not use `-view` suffix for new files.
+
 ## Feature file placement
 
 Within a feature module, placement is mechanical:

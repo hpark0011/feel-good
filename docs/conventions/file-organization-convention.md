@@ -69,7 +69,16 @@ Use only the folders needed by that feature.
 
 Do **not** create a `views/` directory in app-level feature modules. The `components/` + hooks separation already provides logic/UI decoupling. Adding a second directory creates an ambiguous placement decision that AI agents consistently get wrong.
 
-**Naming signal for purity:** Optionally use a `-view` filename suffix (e.g., `article-list-view.tsx`) to signal that a component is pure-presentational. This is a naming convention, not a directory requirement — the file still lives in `components/`.
+#### Component naming suffixes
+
+| Suffix | Meaning | Example |
+|--------|---------|---------|
+| `-connector.tsx` | Reads context/hooks and delegates to a UI component. No markup of its own beyond the child it renders. | `article-list-toolbar-connector.tsx` |
+| *(none)* | Everything else — UI, presentational, interactive, dialogs, dropdowns. Use a descriptive name. | `article-list-toolbar.tsx`, `delete-articles-dialog.tsx` |
+
+The `-connector` suffix is **required** when a component exists solely to bridge context to props. This makes context subscription boundaries visible at a glance and prevents agents from mixing context reads into UI components.
+
+Do not use a `-view` suffix for new files. It doesn't carry information that distinguishes it from any other props-receiving component.
 
 #### `views/` in cross-app packages only
 
@@ -146,7 +155,7 @@ into:
 
 Keep route-only composition pieces in `app/**/_components`.
 
-Note: existing `views/` directories in Mirror features should be merged into `components/` opportunistically. See `docs/2026-02-19-report-file-organization-consistency.md` for the full rationale.
+Note: `views/` directories in Mirror features have been merged into `components/`. See `docs/2026-02-19-report-file-organization-consistency.md` for the full rationale.
 
 ### Greyboard
 
@@ -162,5 +171,6 @@ Existing `_view` / `_views` route directories are legacy and should be migrated 
 
 ## Change Log
 
+1. 2026-02-19: Added `-connector.tsx` naming convention for context-bridging components. Deprecated `-view` suffix for new files. Completed Mirror `views/` → `components/` migration.
 1. 2026-02-19: Removed `views/` from app-level feature module template. All React components go in `components/`. `views/` is reserved for cross-app packages where it defines a package API boundary. Added mechanical placement table for AI agents.
 1. 2026-02-09: Adopted repo-wide feature-first placement with `app/**/_components` as the only route-private folder pattern for new code.
