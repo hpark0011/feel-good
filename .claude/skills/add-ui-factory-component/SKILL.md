@@ -1,6 +1,6 @@
 ---
 name: add-ui-factory-component
-description: Scaffold a new component showcase page in the UI Factory app. Creates page, view, and variants files, updates navigation config, and verifies the build. Invoke with /add-ui-factory-component <component-name>.
+description: Scaffold a new component showcase page in the UI Factory app. Creates page and _components/ files, updates navigation config, and verifies the build. Invoke with /add-ui-factory-component <component-name>.
 ---
 
 # Add UI Factory Component
@@ -35,16 +35,16 @@ All three files go under `apps/ui-factory/app/components/{name}/`.
 
 **`page.tsx`**
 ```tsx
-import { {Name}View } from "./_views/{name}-view";
+import { {Name}View } from "./_components/{name}-view";
 
 export default function {Name}Page() {
   return <{Name}View />;
 }
 ```
 
-**`_views/{name}-view.tsx`**
+**`_components/{name}-view.tsx`**
 ```tsx
-import { {Name}Variants } from "../_components/{name}-variants";
+import { {Name}Variants } from "./{name}-variants";
 
 export function {Name}View() {
   return <{Name}Variants />;

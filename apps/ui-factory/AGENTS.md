@@ -36,8 +36,7 @@ UI Factory uses atomic design with two levels:
 | Blocks     | `app/blocks`     | Feature blocks composed from components   | login, sign-up       |
 
 Each component/block folder uses:
-- `_components/` - Implementation files
-- `_views/` - Display views
+- `_components/` - Implementation and display components
 - `_utils/` - Optional utilities
 
 ## Purpose

@@ -1,4 +1,4 @@
-import { DrawerView } from "./_views/drawer-view";
+import { DrawerView } from "./_components/drawer-view";
 
 export default function DrawerPage() {
   return <DrawerView />;
