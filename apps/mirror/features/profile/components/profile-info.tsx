@@ -4,12 +4,12 @@ import type { ProfileActionId } from "../components/profile-actions";
 import { ProfileMedia } from "../components/profile-media";
 import { ProfileActions } from "../components/profile-actions";
 
-type ProfileInfoViewProps = {
+type ProfileInfoProps = {
   profile: Profile;
   onAction?: (id: ProfileActionId) => void;
 };
 
-export const ProfileInfoView = memo(function ProfileInfoView({ profile, onAction }: ProfileInfoViewProps) {
+export const ProfileInfo = memo(function ProfileInfo({ profile, onAction }: ProfileInfoProps) {
   return (
     <div className="flex flex-col items-center justify-center pb-[40px]">
       <div className="text-3xl font-medium text-center">{profile.name}</div>

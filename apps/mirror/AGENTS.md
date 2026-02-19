@@ -36,31 +36,34 @@ pnpm dev --filter=@feel-good/mirror
 ```
 features/
   home/                 # Landing page feature
-    views/
-      home-page-view.tsx
+    components/
+      home-page.tsx
 
   profile/              # Profile display + bottom sheet
     components/
       profile-actions.tsx
       profile-media.tsx
+      profile-info.tsx
+      mobile-profile-layout.tsx
     context/
       profile-context.tsx
-    views/
-      mobile-profile-layout.tsx
-      profile-info-view.tsx
     lib/
       mock-profile.ts
 
   articles/             # Article list, pagination, filtering, search, sort
     components/
       animated-article-row.tsx
+      article-detail-toolbar.tsx
+      article-detail.tsx
       article-filter-dropdown.tsx
       article-list-item.tsx
       article-list-loader.tsx
+      article-list.tsx
       article-search-input.tsx
       article-sort-dropdown.tsx
       article-toolbar.tsx
-      article-toolbar-view.tsx
+      article-toolbar-connector.tsx
+      delete-articles-dialog.tsx
       scrollable-article-list.tsx
       filter/            # Nested filter UI components
     context/
@@ -74,11 +77,6 @@ features/
       use-article-search.ts
       use-article-selection.ts
       use-article-sort.ts
-    views/
-      article-detail-toolbar-view.tsx
-      article-detail-view.tsx
-      article-list-view.tsx
-      delete-articles-dialog.tsx
     lib/
       format-date.ts
       mock-articles.ts

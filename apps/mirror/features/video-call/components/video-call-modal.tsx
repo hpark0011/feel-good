@@ -6,7 +6,7 @@ import { useEffect, useRef, useCallback } from "react";
 import type { Article } from "@feel-good/tavus";
 import { CVIProvider } from "./cvi/cvi-provider";
 import { Conversation } from "./cvi/conversation";
-import { VideoCallView } from "./video-call-view";
+import { VideoCall } from "./video-call";
 import { useVideoCall } from "../hooks/use-video-call";
 
 type VideoCallModalProps = {
@@ -70,7 +70,7 @@ function VideoCallContent({ articles, onClose }: VideoCallModalProps) {
           onError={markError}
         />
       )}
-      <VideoCallView
+      <VideoCall
         callState={callState}
         onEndCall={handleClose}
         onRetry={handleRetry}

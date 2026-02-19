@@ -12,7 +12,7 @@ import type { Article } from "../lib/mock-articles";
 import { ArticleListItem } from "../components/article-list-item";
 import { ArticleListLoader } from "../components/article-list-loader";
 
-type ArticleListViewProps = {
+type ArticleListProps = {
   articles: Article[];
   hasMore: boolean;
   onLoadMore: () => void;
@@ -27,7 +27,7 @@ type ArticleListViewProps = {
   shouldAnimate?: boolean;
 };
 
-export function ArticleListView({
+export function ArticleList({
   articles,
   hasMore,
   onLoadMore,
@@ -40,7 +40,7 @@ export function ArticleListView({
   isSelected,
   onToggle,
   shouldAnimate = false,
-}: ArticleListViewProps) {
+}: ArticleListProps) {
   return (
     <section className="w-full mx-auto **:data-[slot=table-container]:overflow-visible">
       <Table>

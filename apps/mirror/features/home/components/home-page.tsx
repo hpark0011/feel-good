@@ -1,7 +1,7 @@
 import { Button } from "@feel-good/ui/primitives/button";
 import Link from "next/link";
 
-export function MirrorHomePageView() {
+export function MirrorHomePage() {
   return (
     <div className="flex flex-col items-center justify-center h-full min-h-screen gap-10">
       <div className="text-2xl font-semibold">

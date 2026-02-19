@@ -1,12 +1,12 @@
 "use client";
 
 import { useArticleToolbar } from "../context/article-toolbar-context";
-import { ArticleToolbar } from "../components/article-toolbar";
+import { ArticleListToolbar } from "./article-list-toolbar";
 
-export function ArticleToolbarView() {
+export function ArticleListToolbarConnector() {
   const ctx = useArticleToolbar();
   return (
-    <ArticleToolbar
+    <ArticleListToolbar
       isOwner={ctx.isOwner}
       selectedCount={ctx.selectedCount}
       onDelete={ctx.onDelete}

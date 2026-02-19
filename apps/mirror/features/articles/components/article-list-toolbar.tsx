@@ -13,7 +13,7 @@ import {
   TooltipTrigger,
 } from "@feel-good/ui/primitives/tooltip";
 import { cn } from "@feel-good/utils/cn";
-import { DeleteArticlesDialog } from "../views/delete-articles-dialog";
+import { DeleteArticlesDialog } from "./delete-articles-dialog";
 import { ArticleSortDropdown } from "./article-sort-dropdown";
 import { ArticleSearchInput } from "./article-search-input";
 import { ArticleFilterDropdown } from "./article-filter-dropdown";
@@ -21,7 +21,7 @@ import type { SortOrder } from "../hooks/use-article-sort";
 import type { UseArticleFilterReturn } from "../hooks/use-article-filter";
 import type { UseArticleSearchReturn } from "../hooks/use-article-search";
 
-type ArticleToolbarProps = {
+type ArticleListToolbarProps = {
   isOwner: boolean;
   selectedCount: number;
   onDelete: () => void;
@@ -32,7 +32,7 @@ type ArticleToolbarProps = {
   filter: UseArticleFilterReturn;
 };
 
-export function ArticleToolbar({
+export function ArticleListToolbar({
   isOwner,
   selectedCount,
   onDelete,
@@ -41,7 +41,7 @@ export function ArticleToolbar({
   search,
   categories,
   filter,
-}: ArticleToolbarProps) {
+}: ArticleListToolbarProps) {
   const hasSelection = selectedCount > 0;
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
