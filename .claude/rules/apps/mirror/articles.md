@@ -18,10 +18,12 @@ Consumers import from focused contexts to avoid cross-concern re-renders.
 
 ## Component Organization
 
+All React components live in `components/` (see `docs/conventions/file-organization-convention.md`). Existing `views/` directory is legacy and should be merged into `components/` when files are touched.
+
 ```
 components/
   article-toolbar.tsx              # Toolbar UI (delete, search, sort, filter, new)
-  article-toolbar-view.tsx         # View wrapper that reads toolbar context
+  article-toolbar-view.tsx         # Context connector: reads toolbar context, passes to ArticleToolbar
   article-search-input.tsx         # Search input with open/close state
   article-sort-dropdown.tsx        # Sort order dropdown (newest/oldest/alphabetical)
   article-filter-dropdown.tsx      # Filter menu with sub-menus
@@ -37,19 +39,19 @@ components/
     date-filter-content.tsx        # Date preset buttons (today, week, month, year)
     status-filter-content.tsx      # Draft/published status filter
 
-views/
+views/ (LEGACY — merge into components/ when touched)
   article-list-view.tsx            # Pure UI table component (receives all props)
   article-detail-view.tsx          # Article detail display
-  article-detail-toolbar-view.tsx  # Toolbar for detail view
+  article-detail-toolbar-view.tsx  # Toolbar for detail view (pure, props only)
   delete-articles-dialog.tsx       # Confirmation dialog for deletion
 ```
 
 ### Component Patterns
 
-- **Views** are pure UI components that receive all state as props
-- **_View Components** (e.g., `ArticleToolbarView`) read context and pass to underlying components
-- **Dropdown/Filter Content Components** are used inside DropdownMenuSubContent slots
-- **Container Components** (e.g., `ScrollableArticleList`) wrap views and manage context consumption
+- **Pure presentational** (`*-view.tsx` suffix): Receive all data via props. No context or hook calls.
+- **Context connectors**: Read context/hooks, pass values as props to pure components. Example: `ArticleToolbarView` reads `useArticleToolbar()` and passes to `ArticleToolbar`.
+- **Dropdown/Filter Content Components**: Used inside DropdownMenuSubContent slots.
+- **Container Components** (e.g., `ScrollableArticleList`): Wrap views and manage context consumption.
 
 ## Toolbar / Content Separation
 

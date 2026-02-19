@@ -1,6 +1,6 @@
 # File Organization Convention (Living Document)
 
-Last updated: 2026-02-09  
+Last updated: 2026-02-19
 Status: active  
 Scope: all apps and shared packages in this monorepo
 
@@ -46,21 +46,37 @@ All feature-specific code lives in a feature folder:
 
 ```text
 features/<feature>/
-  components/
-  hooks/
-  store/
-  types/
-  utils/
-  lib/
-  views/
-  index.ts
+  components/    # All React components (pure UI, connectors, dialogs, etc.)
+  hooks/         # Custom hooks
+  context/       # Context providers and consumers
+  store/         # Zustand or other state stores
+  types/         # TypeScript types/interfaces
+  utils/         # Utility functions
+  lib/           # Adapters, schemas, data sources, mock data
+  index.ts       # Public exports
 ```
 
 Use only the folders needed by that feature.
 
+#### Where React components go
+
+**All React components go in `components/`.** This includes:
+
+- Pure presentational components (receive all data via props)
+- Context-reading connectors (read context/hooks and pass to children)
+- Dialogs, modals, dropdowns
+- Composition wrappers
+
+Do **not** create a `views/` directory in app-level feature modules. The `components/` + hooks separation already provides logic/UI decoupling. Adding a second directory creates an ambiguous placement decision that AI agents consistently get wrong.
+
+**Naming signal for purity:** Optionally use a `-view` filename suffix (e.g., `article-list-view.tsx`) to signal that a component is pure-presentational. This is a naming convention, not a directory requirement — the file still lives in `components/`.
+
+#### `views/` in cross-app packages only
+
+The `views/` directory is appropriate in `packages/features/<feature>/` where it represents a package API layer — the customizable pure-UI boundary that consuming apps can swap out. Example: `packages/features/auth/views/` exports pure UI forms that apps wire up with their own hooks.
+
 Naming:
 
-1. Use `views/` (plural) inside `features`.
 1. Use `lib/` (singular) for adapters, schemas, data sources, mock data.
 1. Keep feature public exports in `index.ts`.
 
@@ -85,14 +101,28 @@ Promotion triggers:
 
 ## Decision Tree
 
-1. Is it specific to one feature domain?  
+1. Is it specific to one feature domain?
    Place in `features/<feature>/...`
-1. Is it only UI glue for one route segment?  
+1. Is it only UI glue for one route segment?
    Place in `app/<route>/_components/...`
-1. Is it generic within one app?  
+1. Is it generic within one app?
    Place in `components/...`
-1. Is it shared across apps?  
+1. Is it shared across apps?
    Place in `packages/features/<feature>/...`
+
+### Feature file placement (for AI agents)
+
+Within a feature module, placement is mechanical — one answer per file type:
+
+| File type | Directory |
+|-----------|-----------|
+| React component (any kind) | `components/` |
+| Custom hook | `hooks/` |
+| Context provider | `context/` |
+| Types/interfaces | `types/` or co-located |
+| Utility functions | `utils/` |
+| Adapters, schemas, mock data | `lib/` |
+| State store | `store/` |
 
 ## Current Migration Direction
 
@@ -108,13 +138,15 @@ Move current route-local feature logic from:
 
 into:
 
-- `features/home/views/*`
-- `features/profile/views/*`
+- `features/home/components/*`
+- `features/profile/components/*`
+- `features/articles/components/*`
 - `features/articles/hooks/*`
 - `features/articles/lib/*`
-- `features/articles/views/*`
 
 Keep route-only composition pieces in `app/**/_components`.
+
+Note: existing `views/` directories in Mirror features should be merged into `components/` opportunistically. See `docs/2026-02-19-report-file-organization-consistency.md` for the full rationale.
 
 ### Greyboard
 
@@ -130,4 +162,5 @@ Existing `_view` / `_views` route directories are legacy and should be migrated 
 
 ## Change Log
 
+1. 2026-02-19: Removed `views/` from app-level feature module template. All React components go in `components/`. `views/` is reserved for cross-app packages where it defines a package API boundary. Added mechanical placement table for AI agents.
 1. 2026-02-09: Adopted repo-wide feature-first placement with `app/**/_components` as the only route-private folder pattern for new code.
