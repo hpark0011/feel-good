@@ -35,6 +35,9 @@ function createWindow() {
     height: 800,
     minWidth: 800,
     minHeight: 600,
+    titleBarStyle: 'hidden',
+    trafficLightPosition: { x: 16, y: 14 },
+    titleBarOverlay: { color: '#00000000', height: 48 },
     webPreferences: {
       preload: preloadPath,
       contextIsolation: true,

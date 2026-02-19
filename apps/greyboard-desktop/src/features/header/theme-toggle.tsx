@@ -7,7 +7,7 @@ export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="no-drag flex items-center gap-1">
       <div className="-mr-0.5">
         <Icon name="SunMaxFillIcon" className="size-5 text-icon" />
       </div>

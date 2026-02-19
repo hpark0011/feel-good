@@ -42,3 +42,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .drag { -webkit-app-region: drag; }
+  .no-drag { -webkit-app-region: no-drag; }
+}
+
+[data-platform="darwin"] .titlebar-padded {
+  padding-left: 80px;
+}
