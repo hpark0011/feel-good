@@ -3,7 +3,10 @@ import { createRoot } from 'react-dom/client'
 import { RouterProvider } from 'react-router-dom'
 
 import { router } from './router'
+import { initTheme } from './hooks/use-theme'
 import '../styles/globals.css'
+
+initTheme()
 
 const root = document.getElementById('root')
 if (!root) throw new Error('Root element not found')
