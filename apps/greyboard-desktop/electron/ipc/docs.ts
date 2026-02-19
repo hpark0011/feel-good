@@ -1,5 +1,5 @@
 import { type BrowserWindow, app, dialog, ipcMain } from 'electron'
-import { readFile, readdir, stat, writeFile } from 'node:fs/promises'
+import { lstat, readFile, readdir, realpath, stat, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { CHANNELS } from '../lib/channels'
 import { type DocumentFile } from '../lib/desktop-api'
@@ -42,11 +42,9 @@ async function persistFolder(folderPath: string | null): Promise<void> {
   }
 }
 
-export function registerDocHandlers(mainWindow: BrowserWindow) {
-  // Load persisted folder on registration
-  loadPersistedFolder().then((folder) => {
-    selectedFolderPath = folder
-  })
+export async function registerDocHandlers(mainWindow: BrowserWindow) {
+  // Load persisted folder before registering handlers
+  selectedFolderPath = await loadPersistedFolder()
 
   ipcMain.handle(CHANNELS.DOCS_SELECT_FOLDER, async () => {
     const result = await dialog.showOpenDialog(mainWindow, {
@@ -68,11 +66,12 @@ export function registerDocHandlers(mainWindow: BrowserWindow) {
   })
 
   ipcMain.handle(CHANNELS.DOCS_GET_FOLDER, async () => {
-    if (!selectedFolderPath) return null
+    const folder = selectedFolderPath
+    if (!folder) return null
 
     // Verify the folder still exists
     try {
-      const info = await stat(selectedFolderPath)
+      const info = await stat(folder)
       if (!info.isDirectory()) {
         selectedFolderPath = null
         await persistFolder(null)
@@ -84,38 +83,46 @@ export function registerDocHandlers(mainWindow: BrowserWindow) {
       return null
     }
 
-    return { path: selectedFolderPath }
+    return { path: folder }
   })
 
   ipcMain.handle(CHANNELS.DOCS_LIST_FILES, async () => {
-    if (!selectedFolderPath) return []
+    const folder = selectedFolderPath
+    if (!folder) return []
 
     try {
-      const entries = await readdir(selectedFolderPath, { withFileTypes: true })
+      const entries = await readdir(folder, { withFileTypes: true })
+
+      const mdEntries = entries.filter(
+        (entry) =>
+          entry.isFile() &&
+          !entry.isSymbolicLink() &&
+          !entry.name.startsWith('.') &&
+          entry.name.endsWith('.md')
+      )
+
+      const STAT_CONCURRENCY = 20
       const files: DocumentFile[] = []
 
-      for (const entry of entries) {
-        // Skip non-files, symlinks, and hidden files
-        if (!entry.isFile()) continue
-        if (entry.name.startsWith('.')) continue
-        if (!entry.name.endsWith('.md')) continue
-
-        try {
-          const filePath = path.join(selectedFolderPath, entry.name)
-          const fileInfo = await stat(filePath)
-
-          files.push({
-            name: entry.name,
-            lastModified: fileInfo.mtime.toISOString(),
-            sizeBytes: fileInfo.size,
+      for (let i = 0; i < mdEntries.length; i += STAT_CONCURRENCY) {
+        const batch = mdEntries.slice(i, i + STAT_CONCURRENCY)
+        const results = await Promise.allSettled(
+          batch.map(async (entry) => {
+            const filePath = path.join(folder, entry.name)
+            const fileInfo = await stat(filePath)
+            return {
+              name: entry.name,
+              lastModified: fileInfo.mtime.toISOString(),
+              sizeBytes: fileInfo.size,
+            }
           })
-        } catch {
-          // Skip files we can't stat
+        )
+        for (const result of results) {
+          if (result.status === 'fulfilled') {
+            files.push(result.value)
+          }
         }
       }
-
-      // Sort alphabetically
-      files.sort((a, b) => a.name.localeCompare(b.name))
 
       return files
     } catch {
@@ -128,29 +135,52 @@ export function registerDocHandlers(mainWindow: BrowserWindow) {
     async (_event: Electron.IpcMainInvokeEvent, payload: unknown) => {
       const parsed = readFilePayloadSchema.safeParse(payload)
       if (!parsed.success) {
-        throw new Error(`Invalid file name: ${parsed.error.message}`)
+        throw new Error('Invalid file name')
       }
 
-      if (!selectedFolderPath) {
+      const folder = selectedFolderPath
+      if (!folder) {
         throw new Error('No folder selected')
       }
 
-      const filePath = path.join(selectedFolderPath, parsed.data.name)
+      const filePath = path.join(folder, parsed.data.name)
 
-      // Validate resolved path stays within the selected folder
-      const resolvedPath = path.resolve(filePath)
-      const resolvedFolder = path.resolve(selectedFolderPath)
-      if (!resolvedPath.startsWith(resolvedFolder + path.sep) && resolvedPath !== resolvedFolder) {
-        throw new Error('Access denied: path is outside selected folder')
+      try {
+        // Resolve symlinks and validate path stays within the selected folder
+        const resolvedFolder = await realpath(folder)
+        let realFilePath: string
+        try {
+          realFilePath = await realpath(filePath)
+        } catch {
+          throw new Error('File not found')
+        }
+        if (!realFilePath.startsWith(resolvedFolder + path.sep)) {
+          throw new Error('Access denied: path is outside selected folder')
+        }
+
+        // Reject symlinks explicitly
+        const fileInfo = await lstat(filePath)
+        if (fileInfo.isSymbolicLink()) {
+          throw new Error('Access denied: symlinks are not allowed')
+        }
+        if (fileInfo.size > MAX_FILE_SIZE) {
+          throw new Error('File too large (max 10MB)')
+        }
+
+        const content = await readFile(filePath, 'utf-8')
+        return { name: parsed.data.name, content }
+      } catch (err) {
+        if (err instanceof Error && (
+          err.message === 'File not found' ||
+          err.message === 'Access denied: path is outside selected folder' ||
+          err.message === 'Access denied: symlinks are not allowed' ||
+          err.message === 'File too large (max 10MB)'
+        )) {
+          throw err
+        }
+        console.error('DOCS_READ_FILE error:', err)
+        throw new Error('Could not read file. It may have been moved or deleted.')
       }
-
-      const fileInfo = await stat(filePath)
-      if (fileInfo.size > MAX_FILE_SIZE) {
-        throw new Error('File too large (max 10MB)')
-      }
-
-      const content = await readFile(filePath, 'utf-8')
-      return { name: parsed.data.name, content }
     }
   )
 }

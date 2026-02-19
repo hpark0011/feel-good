@@ -1,5 +1,7 @@
-import { useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { FolderFillIcon, DocFillIcon, ArrowClockwiseIcon } from '@feel-good/icons'
+import { Button } from '@feel-good/ui/primitives/button'
 import { type DocumentFile } from '../../electron/lib/desktop-api'
 import { useDocumentStore } from '../state/document-store'
 
@@ -24,62 +26,6 @@ function formatRelativeDate(iso: string): string {
   return date.toLocaleDateString()
 }
 
-function FolderIcon() {
-  return (
-    <svg
-      width="48"
-      height="48"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />
-    </svg>
-  )
-}
-
-function FileIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="shrink-0 text-muted-foreground"
-    >
-      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-      <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-    </svg>
-  )
-}
-
-function RefreshIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-      <path d="M3 3v5h5" />
-      <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
-      <path d="M16 16h5v5" />
-    </svg>
-  )
-}
-
 function EmptyState({
   title,
   description,
@@ -93,7 +39,7 @@ function EmptyState({
     <div className="flex h-full items-center justify-center p-8">
       <div className="flex max-w-sm flex-col items-center gap-4 text-center">
         <div className="text-muted-foreground">
-          <FolderIcon />
+          <FolderFillIcon className="size-12" />
         </div>
         <div className="space-y-1">
           <h2 className="text-lg font-medium">{title}</h2>
@@ -105,32 +51,39 @@ function EmptyState({
   )
 }
 
-function FileListItem({ file }: { file: DocumentFile }) {
-  const navigate = useNavigate()
+const FileListItem = React.memo(function FileListItem({
+  file,
+  onSelect,
+}: {
+  file: DocumentFile
+  onSelect: (name: string) => void
+}) {
   const displayName = file.name.replace(/\.md$/, '')
-
   return (
     <button
       type="button"
-      onClick={() => navigate(`/document/${encodeURIComponent(file.name)}`)}
+      onClick={() => onSelect(file.name)}
       className="flex w-full items-center gap-3 rounded-lg border border-border bg-card px-4 py-3 text-left transition-colors hover:bg-accent/50"
     >
-      <FileIcon />
+      <DocFillIcon className="size-4 shrink-0 text-muted-foreground" />
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-card-foreground">
-          {displayName}
-        </p>
+        <p className="truncate text-sm font-medium text-card-foreground">{displayName}</p>
         <p className="text-xs text-muted-foreground">
           {formatRelativeDate(file.lastModified)} · {formatBytes(file.sizeBytes)}
         </p>
       </div>
     </button>
   )
-}
+})
 
 export function DocumentList() {
-  const { folderPath, files, isLoading, error, selectFolder, loadFolder, refreshFiles } =
-    useDocumentStore()
+  const { folderPath, files, isLoading, error, selectFolder, loadFolder } = useDocumentStore()
+
+  const navigate = useNavigate()
+  const handleSelectFile = React.useCallback(
+    (name: string) => navigate(`/document/${encodeURIComponent(name)}`),
+    [navigate],
+  )
 
   useEffect(() => {
     loadFolder()
@@ -150,15 +103,7 @@ export function DocumentList() {
       <EmptyState
         title="Folder not found"
         description={error}
-        action={
-          <button
-            type="button"
-            onClick={selectFolder}
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            Select New Folder
-          </button>
-        }
+        action={<Button onClick={selectFolder}>Select New Folder</Button>}
       />
     )
   }
@@ -169,20 +114,12 @@ export function DocumentList() {
       <EmptyState
         title="No folder selected"
         description="Select a folder containing your markdown documents to get started."
-        action={
-          <button
-            type="button"
-            onClick={selectFolder}
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            Select Folder
-          </button>
-        }
+        action={<Button onClick={selectFolder}>Select Folder</Button>}
       />
     )
   }
 
-  const folderName = folderPath.split('/').pop() ?? folderPath
+  const folderName = folderPath.split(/[/\\]/).pop() ?? folderPath
 
   return (
     <div className="flex h-full flex-col">
@@ -197,23 +134,18 @@ export function DocumentList() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={refreshFiles}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={loadFolder}
             disabled={isLoading}
-            className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium hover:bg-accent/50 disabled:opacity-50"
-            title="Refresh file list"
           >
-            <RefreshIcon />
+            <ArrowClockwiseIcon className="size-4" />
             Refresh
-          </button>
-          <button
-            type="button"
-            onClick={selectFolder}
-            className="rounded-md border border-border px-3 py-1.5 text-xs font-medium hover:bg-accent/50"
-          >
+          </Button>
+          <Button variant="outline" size="sm" onClick={selectFolder}>
             Change Folder
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -239,7 +171,7 @@ export function DocumentList() {
         ) : (
           <div className="space-y-2">
             {files.map((file) => (
-              <FileListItem key={file.name} file={file} />
+              <FileListItem key={file.name} file={file} onSelect={handleSelectFile} />
             ))}
           </div>
         )}

@@ -4,9 +4,9 @@ import { registerDocHandlers } from './docs'
 import { registerNotificationHandlers } from './notifications'
 import { registerUpdateHandlers } from './updates'
 
-export function registerAllHandlers(mainWindow: BrowserWindow) {
+export async function registerAllHandlers(mainWindow: BrowserWindow) {
   registerAppHandlers()
-  registerDocHandlers(mainWindow)
+  await registerDocHandlers(mainWindow)
   registerNotificationHandlers()
   registerUpdateHandlers(mainWindow)
 }
