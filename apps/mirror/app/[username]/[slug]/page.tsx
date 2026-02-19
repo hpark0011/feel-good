@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import {
-  ArticleDetailToolbarView,
-  ArticleDetailView,
+  ArticleDetailToolbar,
+  ArticleDetail,
   findArticleBySlug,
 } from "@/features/articles";
 import { isAuthenticated } from "@/lib/auth-server";
@@ -19,9 +19,9 @@ export default async function ArticlePage({
   return (
     <>
       <WorkspaceToolbar>
-        <ArticleDetailToolbarView username={username} />
+        <ArticleDetailToolbar username={username} />
       </WorkspaceToolbar>
-      <ArticleDetailView article={article} />
+      <ArticleDetail article={article} />
     </>
   );
 }

@@ -28,12 +28,12 @@ components/
   article-sort-dropdown.tsx        # Sort order dropdown (newest/oldest/alphabetical)
   article-filter-dropdown.tsx      # Filter menu with sub-menus
   scrollable-article-list.tsx      # List wrapper with context consumers
-  article-list-view.tsx            # Pure UI table component (receives all props)
+  article-list.tsx                 # Pure UI table component (receives all props)
   article-list-item.tsx            # Individual article table row
   article-list-loader.tsx          # Infinite scroll loader (IntersectionObserver)
   animated-article-row.tsx         # Row with animation trigger on sort
-  article-detail-view.tsx          # Article detail display
-  article-detail-toolbar-view.tsx  # Toolbar for detail view (pure, props only)
+  article-detail.tsx               # Article detail display
+  article-detail-toolbar.tsx       # Toolbar for detail view (pure, props only)
   delete-articles-dialog.tsx       # Confirmation dialog for deletion
   filter/
     category-filter-content.tsx    # Category filter UI (search, badges, list)
@@ -47,7 +47,7 @@ components/
 ### Component Patterns
 
 - **Context connectors** (`*-connector.tsx` suffix): Read context/hooks, pass values as props to a UI component. No markup of their own. Example: `ArticleListToolbarConnector` reads `useArticleToolbar()` and passes to `ArticleListToolbar`.
-- **Pure presentational**: Receive all data via props. No context or hook calls. No special suffix required (legacy files may have `-view`).
+- **Pure presentational**: Receive all data via props. No context or hook calls. No special suffix required.
 - **Dropdown/Filter Content Components**: Used inside DropdownMenuSubContent slots.
 - **Container Components** (e.g., `ScrollableArticleList`): Wrap presentational components and manage context consumption.
 

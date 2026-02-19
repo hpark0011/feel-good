@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { Icon } from "@feel-good/ui/components/icon";
 
-type ArticleDetailToolbarViewProps = {
+type ArticleDetailToolbarProps = {
   username: string;
 };
 
-export function ArticleDetailToolbarView({ username }: ArticleDetailToolbarViewProps) {
+export function ArticleDetailToolbar({ username }: ArticleDetailToolbarProps) {
   return (
     <div className="flex h-10 items-center px-4.5 bg-background">
       <Link

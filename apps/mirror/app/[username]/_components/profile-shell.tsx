@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import type { Profile } from "@/features/profile";
 import {
   MobileProfileLayout,
-  ProfileInfoView,
+  ProfileInfo,
   ProfileProvider,
 } from "@/features/profile";
 import type { ProfileActionId } from "@/features/profile";
@@ -83,7 +83,7 @@ export function ProfileShell(
               <ToolbarSlotProvider>
                 <WorkspaceNavbar className="fixed top-0 inset-x-0" />
                 <MobileProfileLayout
-                  profile={<ProfileInfoView profile={profile} onAction={handleProfileAction} />}
+                  profile={<ProfileInfo profile={profile} onAction={handleProfileAction} />}
                   content={() => (
                     <div className="flex h-full min-h-0 flex-col">
                       <ToolbarSlotTarget />
@@ -108,7 +108,7 @@ export function ProfileShell(
               <ResizablePanelGroup direction="horizontal" className="h-full">
                 <ResizablePanel defaultSize={50} minSize={25} maxSize={80}>
                   <div className="relative z-20 h-full flex flex-col justify-center items-center px-6">
-                    <ProfileInfoView profile={profile} onAction={handleProfileAction} />
+                    <ProfileInfo profile={profile} onAction={handleProfileAction} />
                   </div>
                 </ResizablePanel>
 

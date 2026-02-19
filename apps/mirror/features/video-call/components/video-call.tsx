@@ -5,14 +5,14 @@ import type { CallState } from "../types";
 import { CallControls } from "./call-controls";
 import { ConnectionStatus } from "./connection-status";
 
-type VideoCallViewProps = {
+type VideoCallProps = {
   callState: CallState;
   onEndCall: () => void;
   onRetry?: () => void;
   onClose?: () => void;
 };
 
-export function VideoCallView({ callState, onEndCall, onRetry, onClose }: VideoCallViewProps) {
+export function VideoCall({ callState, onEndCall, onRetry, onClose }: VideoCallProps) {
   const participantIds = useParticipantIds({ filter: "remote" });
   const localSessionId = useLocalSessionId();
 

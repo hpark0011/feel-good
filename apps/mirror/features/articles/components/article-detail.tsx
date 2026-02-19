@@ -17,11 +17,11 @@ const RichTextViewer = dynamic(
   },
 );
 
-type ArticleDetailViewProps = {
+type ArticleDetailProps = {
   article: Article;
 };
 
-export function ArticleDetailView({ article }: ArticleDetailViewProps) {
+export function ArticleDetail({ article }: ArticleDetailProps) {
   return (
     <div className="py-22 px-4 bg-background min-h-[calc(100vh-40px)]">
       <article className="max-w-xl mx-auto">

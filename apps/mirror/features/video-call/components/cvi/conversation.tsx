@@ -13,7 +13,7 @@ type ConversationProps = {
 /**
  * Headless component that manages the Daily.co room lifecycle.
  * Joins the room on mount and leaves on unmount.
- * Video rendering is handled by VideoCallView.
+ * Video rendering is handled by VideoCall.
  */
 export function Conversation({
   conversationUrl,

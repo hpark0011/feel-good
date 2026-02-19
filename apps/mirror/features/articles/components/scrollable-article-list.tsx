@@ -2,7 +2,7 @@
 
 import { useArticleList } from "../context/article-list-context";
 import { useScrollRoot } from "../context/scroll-root-context";
-import { ArticleListView } from "./article-list-view";
+import { ArticleList } from "./article-list";
 
 function EmptyMessage({ message }: { message: string }) {
   return (
@@ -25,7 +25,7 @@ export function ScrollableArticleList() {
   }
 
   return (
-    <ArticleListView
+    <ArticleList
       articles={ctx.articles}
       hasMore={ctx.hasMore}
       onLoadMore={ctx.onLoadMore}
