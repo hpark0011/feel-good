@@ -1,12 +1,14 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-
 @import "@radix-ui/colors/gray.css";
 @import "@radix-ui/colors/gray-dark.css";
-
 @import "@feel-good/ui/styles.css";
+@import "@feel-good/features/editor/styles/tiptap-content.css";
+
+@plugin "@tailwindcss/typography";
 
 @source "../node_modules/@feel-good/ui";
+@source "../node_modules/@feel-good/features";
 
 @theme inline {
   --color-background: var(--background);

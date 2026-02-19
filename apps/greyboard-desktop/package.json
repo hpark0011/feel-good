@@ -13,6 +13,7 @@
     "clean": "rm -rf dist dist-electron release node_modules .turbo"
   },
   "dependencies": {
+    "@feel-good/features": "workspace:*",
     "@feel-good/icons": "workspace:*",
     "@feel-good/ui": "workspace:*",
     "@feel-good/utils": "workspace:*",
@@ -29,6 +30,7 @@
     "@feel-good/eslint-config": "workspace:*",
     "@feel-good/tsconfig": "workspace:*",
     "@radix-ui/colors": "^3.0.0",
+    "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/postcss": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",

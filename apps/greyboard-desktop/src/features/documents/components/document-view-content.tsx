@@ -1,3 +1,5 @@
+import { MarkdownViewer } from "@feel-good/features/editor/components";
+
 export function DocumentViewContent({
   content,
   isLoading,
@@ -27,9 +29,9 @@ export function DocumentViewContent({
           </button>
         </div>
       ) : (
-        <pre className="whitespace-pre-wrap break-words p-6 text-sm leading-relaxed text-foreground font-mono">
-          {content}
-        </pre>
+        <div className="p-6">
+          <MarkdownViewer content={content ?? ""} />
+        </div>
       )}
     </div>
   )
