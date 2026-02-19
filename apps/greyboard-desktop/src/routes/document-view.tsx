@@ -11,17 +11,16 @@ export function DocumentView() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const decodedName = name ? decodeURIComponent(name) : null
-  const displayName = decodedName?.replace(/\.md$/, '') ?? 'Unknown'
+  const displayName = name?.replace(/\.md$/, '') ?? 'Unknown'
 
   useEffect(() => {
-    if (!decodedName) {
+    if (!name) {
       setError('No file name provided')
       setIsLoading(false)
       return
     }
 
-    const fileName = decodedName
+    const fileName = name
     let cancelled = false
 
     async function loadFile() {
@@ -47,7 +46,7 @@ export function DocumentView() {
     return () => {
       cancelled = true
     }
-  }, [decodedName])
+  }, [name])
 
   return (
     <div className="flex h-full flex-col">
@@ -61,7 +60,7 @@ export function DocumentView() {
         >
           <ArrowBackwardIcon className="size-4" />
         </Button>
-        <h2 className="truncate text-sm font-medium" title={decodedName ?? ''}>
+        <h2 className="truncate text-sm font-medium" title={name ?? ''}>
           {displayName}
         </h2>
       </div>
