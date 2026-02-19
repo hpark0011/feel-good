@@ -1,4 +1,4 @@
-import { DropdownMenuView } from "./_views/dropdown-menu-view";
+import { DropdownMenuView } from "./_components/dropdown-menu-view";
 
 export default function DropdownMenuPage() {
   return <DropdownMenuView />;

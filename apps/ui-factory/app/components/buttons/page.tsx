@@ -1,4 +1,4 @@
-import { ButtonsView } from "./_views/buttons-view";
+import { ButtonsView } from "./_components/buttons-view";
 
 export default function ButtonsPage() {
   return <ButtonsView />;

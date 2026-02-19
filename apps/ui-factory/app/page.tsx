@@ -1,4 +1,4 @@
-import { FactoryView } from "@/app/_views/factory-view";
+import { FactoryView } from "@/app/_components/factory-view";
 
 export default function UIFactoryPage() {
   return (

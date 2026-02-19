@@ -1,4 +1,4 @@
-import { SwitchView } from "./_views/switch-view";
+import { SwitchView } from "./_components/switch-view";
 
 export default function SwitchPage() {
   return <SwitchView />;
