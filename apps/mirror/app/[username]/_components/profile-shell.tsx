@@ -1,13 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
+import { toast } from "sonner";
 import type { Profile } from "@/features/profile";
 import {
   MobileProfileLayout,
   ProfileInfoView,
   ProfileProvider,
 } from "@/features/profile";
+import type { ProfileActionId } from "@/features/profile";
 import {
   ArticleWorkspaceProvider,
   ScrollRootProvider,
@@ -62,6 +64,16 @@ export function ProfileShell(
     [isOwner],
   );
 
+  const handleProfileAction = useCallback((id: ProfileActionId) => {
+    if (id === "video") {
+      setVideoCallOpen(true);
+    } else {
+      toast("Coming soon", {
+        description: `${id.charAt(0).toUpperCase() + id.slice(1)} conversations are not yet available.`,
+      });
+    }
+  }, []);
+
   return (
     <ProfileProvider value={contextValue}>
       <ArticleWorkspaceProvider articles={articles} username={profile.username}>
@@ -71,7 +83,7 @@ export function ProfileShell(
               <ToolbarSlotProvider>
                 <WorkspaceNavbar className="fixed top-0 inset-x-0" />
                 <MobileProfileLayout
-                  profile={<ProfileInfoView profile={profile} onVideoClick={() => setVideoCallOpen(true)} />}
+                  profile={<ProfileInfoView profile={profile} onAction={handleProfileAction} />}
                   content={() => (
                     <div className="flex h-full min-h-0 flex-col">
                       <ToolbarSlotTarget />
@@ -96,7 +108,7 @@ export function ProfileShell(
               <ResizablePanelGroup direction="horizontal" className="h-full">
                 <ResizablePanel defaultSize={50} minSize={25} maxSize={80}>
                   <div className="relative z-20 h-full flex flex-col justify-center items-center px-6">
-                    <ProfileInfoView profile={profile} onVideoClick={() => setVideoCallOpen(true)} />
+                    <ProfileInfoView profile={profile} onAction={handleProfileAction} />
                   </div>
                 </ResizablePanel>
 

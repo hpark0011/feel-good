@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "230"
 tags: [code-review, maintainability, clean-code, mirror, profile]
@@ -29,14 +29,15 @@ Adopt intent-specific naming and centralize shared handler wiring so parent-to-v
 
 ## Acceptance Criteria
 
-- [ ] Callback names are intent-specific and consistent across shell/view/actions layers
-- [ ] Parent wiring avoids duplicate anonymous handlers for the same action
-- [ ] `ProfileInfoView` remains a pass-through presentation boundary
-- [ ] Adding new action callbacks does not require ad hoc naming patterns
-- [ ] Build/lint pass after refactor
+- [x] Callback names are intent-specific and consistent across shell/view/actions layers
+- [x] Parent wiring avoids duplicate anonymous handlers for the same action
+- [x] `ProfileInfoView` remains a pass-through presentation boundary
+- [x] Adding new action callbacks does not require ad hoc naming patterns
+- [x] Build/lint pass after refactor
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-18 | Created from clean-code review of profile action handler flow | Clear naming and centralized wiring are needed before adding more action handlers |
+| 2026-02-19 | Completed: `onAction`/`handleProfileAction` naming throughout; single `useCallback` replaces duplicate inline handlers | Consistent intent-based naming across all 3 layers |

@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "228"
 tags: [code-review, architecture, clean-code, mirror, profile]
@@ -29,14 +29,15 @@ Introduce stable action identifiers in the action config (for example: `text`, `
 
 ## Acceptance Criteria
 
-- [ ] Action config defines explicit IDs for each profile action
-- [ ] Click dispatch logic uses action IDs, not labels
-- [ ] Behavior no longer depends on display text values
-- [ ] Adding a new action does not require brittle string checks
-- [ ] Build/lint pass after refactor
+- [x] Action config defines explicit IDs for each profile action
+- [x] Click dispatch logic uses action IDs, not labels
+- [x] Behavior no longer depends on display text values
+- [x] Adding a new action does not require brittle string checks
+- [x] Build/lint pass after refactor
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-18 | Created from clean-code review of profile action click handling | Dispatch-by-label is fragile and will degrade as action count grows |
+| 2026-02-19 | Completed: Added `ProfileActionId` type and `id` field to config, dispatch uses IDs | Clean foundation for #229 and #230 |

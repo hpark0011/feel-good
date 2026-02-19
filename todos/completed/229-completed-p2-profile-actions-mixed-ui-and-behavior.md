@@ -1,5 +1,5 @@
 ---
-status: pending
+status: completed
 priority: p2
 issue_id: "229"
 tags: [code-review, architecture, clean-code, mirror, profile]
@@ -29,14 +29,15 @@ Refactor `ProfileActions` into a presentational component that emits action inte
 
 ## Acceptance Criteria
 
-- [ ] `ProfileActions` is presentational and does not contain product side effects
-- [ ] Action handlers in `ProfileActions` only emit intent
-- [ ] Parent/container owns side-effect logic (modal opening, fallback messaging)
-- [ ] Component API clearly communicates intent-driven callbacks
-- [ ] Build/lint pass after refactor
+- [x] `ProfileActions` is presentational and does not contain product side effects
+- [x] Action handlers in `ProfileActions` only emit intent
+- [x] Parent/container owns side-effect logic (modal opening, fallback messaging)
+- [x] Component API clearly communicates intent-driven callbacks
+- [x] Build/lint pass after refactor
 
 ## Work Log
 
 | Date | Action | Learnings |
 |------|--------|-----------|
 | 2026-02-18 | Created from clean-code review of profile action click handling | Keeping UI and behavior separate improves extensibility for upcoming actions |
+| 2026-02-19 | Completed: ProfileActions emits `onAction(id)` only; toast + video modal logic moved to ProfileShell | Clean separation — component has zero imports from sonner |
