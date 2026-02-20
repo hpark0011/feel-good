@@ -18,15 +18,11 @@ import {
 import { Icon } from "@/components/ui/icon";
 
 interface TasksHeaderLogoProps {
-  onSignOut: () => void;
   onThemeToggle: () => void;
-  isSigningOut: boolean;
 }
 
 export function TasksHeaderLogo({
-  onSignOut,
   onThemeToggle,
-  isSigningOut,
 }: TasksHeaderLogoProps) {
   return (
     <Breadcrumb>
@@ -49,13 +45,6 @@ export function TasksHeaderLogo({
               sideOffset={6}
               className='min-w-[160px] p-1'
             >
-              <DropdownMenuItem
-                disabled={isSigningOut}
-                onSelect={onSignOut}
-              >
-                <Icon name='HandWaveFillIcon' className='text-icon-light' />
-                Sign out
-              </DropdownMenuItem>
               <DropdownMenuItem onSelect={onThemeToggle}>
                 <Icon
                   name='CircleLeftHalfFilledRightHalfStripedHorizontalIcon'

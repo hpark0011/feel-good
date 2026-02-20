@@ -19,15 +19,9 @@ pnpm start      # Run production server
 pnpm lint       # Run ESLint - MUST pass before commits
 ```
 
-### Supabase Database
+### Data Persistence
 
-```bash
-pnpm supabase:types      # Generate TypeScript types from database schema
-pnpm supabase:migrate    # Create new migration
-pnpm supabase:migrate:up # Apply migrations
-pnpm supabase:reset      # Reset database to initial state
-pnpm supabase:deploy     # Deploy to production (links to project)
-```
+Greyboard web is anonymous and local-only at runtime. Task and project data are persisted in browser `localStorage`.
 
 ## Code Philosophy
 
@@ -47,7 +41,7 @@ When in doubt, ask: "Will this be clear to someone reading it for the first time
 
 - **Next.js 15.4.10** with App Router and Turbopack
 - **React 19** with strict TypeScript
-- **Supabase** for authentication and database
+- **Browser localStorage** for runtime task/project persistence
 - **Tailwind CSS 4** with CSS variables design system
 - **shadcn/ui** components (New York style) with Radix UI
 - **@dnd-kit** for drag-and-drop task management
@@ -60,8 +54,8 @@ When in doubt, ask: "Will this be clear to someone reading it for the first time
 
 ```
 app/
-   (auth)/           # Authentication flow (sign-in, sign-up, callback)
-   (protected)/      # Protected dashboard routes
+   (auth)/           # Legacy auth URLs (redirect to /dashboard/tasks)
+   (protected)/      # Dashboard routes (no auth gating)
       dashboard/
           files/    # Document upload and management
           tasks/    # Task board with Kanban functionality
@@ -74,7 +68,6 @@ components/
    tasks/            # Task board and ticket components
       sub-tasks/     # Sub-task inline editing components
       project-select/# Project selection and CRUD dialogs
-   auth/             # Authentication forms
    header/           # Header components
    layout/           # Layout components
    navigation/       # Navigation components
@@ -82,11 +75,9 @@ components/
 
 config/              # Centralized configuration files
    paths.config.ts   # Route path constants
-   routes.config.ts  # Protected/auth route definitions
    board.config.ts   # Board columns, statuses, defaults
    tasks.config.ts   # Task-related constants
    navs.config.ts    # Navigation menu items
-   auth.config.ts    # Auth configuration
    insight-variants.ts # Insight card variants
 
 hooks/               # Custom React hooks (18+)
@@ -98,7 +89,7 @@ hooks/               # Custom React hooks (18+)
    __tests__/                # Hook tests
 
 lib/
-   services/         # Business logic (auth, file handling)
+   services/         # Business logic
    schema/           # Zod validation schemas
    board-storage.ts  # Board persistence utilities
    insights-utils.ts # Analytics utilities
@@ -119,19 +110,12 @@ styles/              # CSS variable definitions
    icon-colors.css
    shadows.css
 
-supabase/
+supabase/            # Optional SQL artifacts kept for reference only (not runtime)
    migrations/       # Database migrations
    schema/           # Database schema definitions
 
 types/               # TypeScript type definitions
    board.types.ts    # Task/ticket types
-   file.types.ts     # File types
-   database.types.ts # Generated from Supabase
-
-utils/supabase/      # Supabase utilities
-   client/           # Client-side utilities
-   get-current-client-user.ts
-   get-current-server-user.ts
 
 docs/                # Project documentation
 ```
@@ -151,11 +135,9 @@ The application uses different state management approaches based on use case:
   - Shared state across components
 - **React Context** (providers/):
   - Theme provider
-  - Auth context (from Supabase)
-- **Supabase**:
-  - User authentication
-  - Database queries (files, user data)
-  - Note: Tasks use localStorage, not Supabase
+- **No runtime backend auth/database**:
+  - Application access is anonymous
+  - Runtime data is stored locally in browser localStorage
 
 ## Key Features & Implementation
 
@@ -245,11 +227,9 @@ Centralized configuration files in `/config` directory:
 ```typescript
 config/
   paths.config.ts      # Route path constants
-  routes.config.ts     # Protected/auth route definitions
   board.config.ts      # Board columns, statuses, defaults
   tasks.config.ts      # Task-related constants
   navs.config.ts       # Navigation menu items
-  auth.config.ts       # Auth configuration
   insight-variants.ts  # Insight card variants
 ```
 
@@ -338,17 +318,13 @@ const { isRunning, start } = useStopWatchStore();
 ```tsx
 // Use TanStack Query for data fetching
 import { useQuery } from "@tanstack/react-query";
-
-// Server components: Direct Supabase queries
-import { createClient } from "@/utils/supabase/client/supabase-server";
 ```
 
-### Authentication Flow
+### Route Access
 
-- Middleware protects `/dashboard/*` and `/insights` routes
-- Auth handled via Supabase with magic links and OAuth
-- User context available via `getCurrentServerUser()` or `getCurrentClientUser()`
-- Protected routes redirect to `/sign-in` if unauthenticated
+- No runtime auth middleware or session refresh
+- `/`, `/sign-in`, `/sign-up`, and `/auth/callback` redirect to `/dashboard/tasks`
+- Dashboard routes are accessible without authentication
 
 ## Code Quality Standards
 
@@ -561,7 +537,6 @@ const STORAGE_KEYS = {
 ## Security Notes
 
 - All client-exposed env vars use `NEXT_PUBLIC_` prefix
-- Row Level Security (RLS) configured in Supabase
 - Server actions for data mutations
 - Input validation with Zod schemas
 - XSS protection via React's built-in escaping

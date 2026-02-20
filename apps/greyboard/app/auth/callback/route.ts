@@ -1,15 +1,6 @@
 import { redirect } from "next/navigation";
 import type { NextRequest } from "next/server";
-import { PATHS } from "@/config/paths.config";
-import { createAuthCallbackService } from "@/lib/services/auth-callback.service";
-import { getSupabaseServerClient } from "@/utils/supabase/client/supabase-server";
 
-export async function GET(request: NextRequest) {
-  const service = createAuthCallbackService(await getSupabaseServerClient());
-
-  const { nextPath } = await service.exchangeCodeForSession(request, {
-    redirectPath: PATHS.app.dashboard,
-  });
-
-  return redirect(nextPath);
+export async function GET(_request: NextRequest) {
+  return redirect("/dashboard/tasks");
 }
