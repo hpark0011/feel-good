@@ -15,23 +15,26 @@ Create issue ticket markdown files in `workspace/tickets/` following established
 ## Directory Structure
 
 ```
-workspace/
-└── tickets/
-    ├── 001-pending-p1-open-redirect.md
-    ├── 002-pending-p2-missing-auth-guard.md
-    └── completed/
-        └── 003-completed-p3-unused-import.md
+workspace/tickets/
+├── backlog/        # Identified but not yet prioritized for work
+├── to-do/          # Prioritized and ready to be picked up
+├── in-progress/    # Actively being worked on
+├── in-review/      # Implementation done, awaiting review
+├── completed/      # Resolved and verified
+└── canceled/       # Won't fix / no longer relevant
 ```
 
-Create `workspace/tickets/` and `workspace/tickets/completed/` if they don't exist.
+Ticket status is encoded in **two places** that must stay in sync:
+1. The `status` field in YAML frontmatter
+2. The directory the file lives in
 
 ## Workflow
 
 1. **Understand the request.** Parse the user's free-text description. Ask clarifying questions only if the problem statement is genuinely ambiguous.
 2. **Investigate the codebase.** Read relevant files to fill in Findings, location references, and technical context. Do not guess file paths — verify them.
-3. **Determine the next issue ID.** Scan `workspace/tickets/` and `workspace/tickets/completed/` for the highest existing `NNN` prefix and increment by 1. Zero-pad to 3 digits. If the directory is empty or doesn't exist, start at `001`.
+3. **Determine the next issue ID.** Scan all subdirectories of `workspace/tickets/` for the highest existing `NNN` prefix and increment by 1. Zero-pad to 3 digits. If no tickets exist, start at `001`.
 4. **Determine priority.** Use the priority rubric below. If unclear, default to p2.
-5. **Generate the ticket.** Follow the template in [template.md](template.md) exactly. Write the file to `workspace/tickets/{NNN}-pending-{priority}-{slug}.md`.
+5. **Generate the ticket.** Follow the template in [template.md](template.md) exactly. Write the file to `workspace/tickets/backlog/{NNN}-{priority}-{slug}.md` with `status: backlog` in frontmatter.
 6. **Report back.** Show the user the filename and a one-line summary.
 
 ## Priority Rubric
@@ -44,15 +47,26 @@ Create `workspace/tickets/` and `workspace/tickets/completed/` if they don't exi
 
 ## Naming Convention
 
-Filename: `{NNN}-pending-{priority}-{slug}.md`
+Filename: `{NNN}-{priority}-{slug}.md`
 
 - `NNN`: Zero-padded 3-digit issue ID (e.g., `001`)
 - `priority`: `p1`, `p2`, or `p3`
 - `slug`: Kebab-case summary, max 6 words (e.g., `missing-auth-guard-protected-layout`)
 
-## Completion
+The filename stays the same across status transitions — only the directory changes.
 
-When a ticket is resolved, move it to `workspace/tickets/completed/` and rename `pending` → `completed` in both filename and frontmatter status.
+## Status Lifecycle
+
+| Status        | Directory       | Meaning                                |
+|---------------|-----------------|----------------------------------------|
+| `backlog`     | `backlog/`      | Identified, not yet prioritized        |
+| `to-do`       | `to-do/`        | Prioritized, ready to pick up          |
+| `in-progress` | `in-progress/`  | Actively being worked on               |
+| `in-review`   | `in-review/`    | Implementation done, awaiting review   |
+| `completed`   | `completed/`    | Resolved and verified                  |
+| `canceled`    | `canceled/`     | Won't fix or no longer relevant        |
+
+To transition a ticket: move the file to the new directory and update `status` in frontmatter. Both must match.
 
 ## Tags
 

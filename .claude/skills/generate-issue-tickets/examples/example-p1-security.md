@@ -1,7 +1,8 @@
+<!-- File location: workspace/tickets/backlog/001-p1-unauthenticated-admin-api.md -->
 ---
-status: pending
+status: backlog
 priority: p1
-issue_id: "241"
+issue_id: "001"
 tags: [bug, security, auth, mirror]
 dependencies: []
 ---

@@ -1,7 +1,8 @@
+<!-- File location: workspace/tickets/backlog/002-p3-unused-css-import-dashboard.md -->
 ---
-status: pending
+status: backlog
 priority: p3
-issue_id: "242"
+issue_id: "002"
 tags: [code-review, tech-debt, mirror]
 dependencies: []
 ---

@@ -1,5 +1,5 @@
 ---
-status: pending
+status: backlog
 priority: {priority}
 issue_id: "{NNN}"
 tags: [{tags}]
