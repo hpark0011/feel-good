@@ -55,7 +55,7 @@ Every ticket must conform to this contract. All required fields must be present 
 4. **Determine priority.** Use the priority rubric below. If unclear, default to p2.
 5. **Apply scoping enforcement.** Before writing, check the ticket against all scoping rules (see Scoping Enforcement below). If the scope is too broad, decompose into multiple tickets.
 6. **Generate the ticket.** Follow the template in [template.md](template.md) exactly. Write the file to `workspace/tickets/to-do/GB_{NNN}-{priority}-{slug}.md` with `status: to-do` in frontmatter.
-7. **Validate the ticket.** Run `node .claude/skills/generate-issue-tickets/validate.mjs <filepath>` and fix any reported errors. Then read the file back for a final human-readable check.
+7. **Validate the ticket.** Run `node .claude/skills/generate-issue-tickets/scripts/validate.mjs <filepath>` and fix any reported errors. Then read the file back for a final human-readable check.
 8. **Report back.** Show the user the filename and a one-line summary.
 
 ## Priority Rubric
