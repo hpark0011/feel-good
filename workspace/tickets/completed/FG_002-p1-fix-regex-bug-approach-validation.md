@@ -1,5 +1,5 @@
 ---
-id: GB_002
+id: FG_002
 title: "Approach section Effort/Risk validation uses valid JS regex"
 date: 2026-02-20
 type: fix

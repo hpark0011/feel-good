@@ -1,8 +1,8 @@
 ---
-id: GB_{NNN}
+id: FG_{NNN}
 title: "{capability-centric title, no implementation details}"
 date: YYYY-MM-DD
-type: # feature | fix | improvements | chore | docs | refactor | perf
+type: # feature | fix | improvement | chore | docs | refactor | perf
 status: to-do
 priority: # p0 | p1 | p2 | p3
 description: "{non-trivial description of the work}"

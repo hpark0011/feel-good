@@ -1,5 +1,5 @@
 ---
-id: GB_012
+id: FG_012
 title: "Tavus API route rejects unauthenticated requests"
 date: 2026-02-17
 type: fix

@@ -1,9 +1,9 @@
 ---
-id: GB_010
+id: FG_010
 title: "Skill has one example file instead of two"
 date: 2026-02-20
 type: chore
-status: to-do
+status: completed
 priority: p3
 description: "The skill has two example files that demonstrate the same template structure. The p3 cleanup example teaches nothing the p1 security example does not. Removing the redundant example reduces maintenance burden and skill directory size."
 dependencies: []

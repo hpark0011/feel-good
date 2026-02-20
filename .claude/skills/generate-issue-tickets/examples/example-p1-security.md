@@ -1,6 +1,6 @@
-<!-- File location: workspace/tickets/to-do/GB_001-p1-unauthenticated-admin-api.md -->
+<!-- File location: workspace/tickets/to-do/FG_001-p1-unauthenticated-admin-api.md -->
 ---
-id: GB_001
+id: FG_001
 title: "Admin API routes reject unauthenticated requests"
 date: 2026-02-20
 type: fix

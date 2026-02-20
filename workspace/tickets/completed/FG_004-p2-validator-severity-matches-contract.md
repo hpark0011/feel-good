@@ -1,13 +1,13 @@
 ---
-id: GB_004
+id: FG_004
 title: "Validator enforces SKILL.md contract severity levels"
 date: 2026-02-20
 type: fix
-status: to-do
+status: completed
 priority: p2
 description: "The validator treats several contract violations as warnings that the SKILL.md documents as errors. Acceptance criteria count below 2 is described as 'too vague' but validated as a warning. Status is not checked for to-do on creation. The Approach regex silently skips Effort/Risk when it fails to match."
 dependencies:
-  - GB_002
+  - FG_002
 parent_plan_id:
 acceptance_criteria:
   - "Running the validator on a ticket with `status: backlog` reports an error (not just a warning) when the ticket is in the `to-do/` directory"

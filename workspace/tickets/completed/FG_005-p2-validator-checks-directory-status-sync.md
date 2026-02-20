@@ -1,9 +1,9 @@
 ---
-id: GB_005
+id: FG_005
 title: "Validator checks directory matches frontmatter status"
 date: 2026-02-20
 type: fix
-status: to-do
+status: completed
 priority: p2
 description: "SKILL.md documents that ticket status is encoded in two places that must stay in sync: the status field in YAML frontmatter and the directory the file lives in. The validator does not check this invariant, allowing drift between directory and frontmatter status."
 dependencies: []

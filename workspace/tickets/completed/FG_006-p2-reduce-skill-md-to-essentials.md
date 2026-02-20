@@ -1,9 +1,9 @@
 ---
-id: GB_006
+id: FG_006
 title: "SKILL.md contains only essential sections"
 date: 2026-02-20
 type: refactor
-status: to-do
+status: completed
 priority: p2
 description: "SKILL.md is 210 lines with several sections that duplicate information already in the frontmatter contract table or are unnecessary process methodology for an LLM. Scoping Enforcement, Owner Agent, Parent Plan, Status Lifecycle, and Batch Generation sections can be collapsed into existing sections, reducing the file to approximately 130-140 lines."
 dependencies: []

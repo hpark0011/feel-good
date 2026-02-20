@@ -1,5 +1,5 @@
 ---
-id: GB_001
+id: FG_001
 title: "Ticket system coexists with or replaces todos/ system"
 date: 2026-02-20
 type: chore
@@ -30,7 +30,7 @@ PR #154 introduces `workspace/tickets/` with a completely different schema:
 
 | Aspect | `todos/` | `workspace/tickets/` |
 |--------|----------|---------------------|
-| ID format | Bare numeric `001` | `GB_NNN` prefix |
+| ID format | Bare numeric `001` | `FG_NNN` prefix |
 | Status values | `pending`, `completed` | `backlog`, `to-do`, `in-progress`, `in-review`, `completed`, `canceled` |
 | Directory structure | `todos/`, `todos/completed/` | 6 kanban directories |
 | Body sections | Problem Statement, Findings, Solutions | Context, Goal, Scope, Approach |

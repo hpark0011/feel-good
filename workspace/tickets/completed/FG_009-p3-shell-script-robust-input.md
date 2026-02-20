@@ -1,9 +1,9 @@
 ---
-id: GB_009
+id: FG_009
 title: "Shell script uses printf and guards control characters"
 date: 2026-02-20
 type: fix
-status: to-do
+status: completed
 priority: p3
 description: "The run-validate.sh script uses echo to pipe input to jq, which has edge-case behavior when input starts with -n, -e, or -E flags. Should use printf for robustness. Additionally, paths containing newlines or control characters should be rejected early."
 dependencies: []

@@ -1,9 +1,9 @@
 ---
-id: GB_008
+id: FG_008
 title: "Type enum uses consistent singular form"
 date: 2026-02-20
 type: fix
-status: to-do
+status: completed
 priority: p3
 description: "The type enum includes improvements (plural) while all other values are singular: feature, fix, chore, docs, refactor, perf. This inconsistency will cause validation failures when agents write improvement (singular) which is the natural English form."
 dependencies: []

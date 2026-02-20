@@ -1,5 +1,5 @@
 ---
-id: GB_011
+id: FG_011
 title: "Profile owner check grants owner access to all authenticated users"
 date: 2026-02-12
 type: fix

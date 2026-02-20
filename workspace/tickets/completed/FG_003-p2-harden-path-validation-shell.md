@@ -1,5 +1,5 @@
 ---
-id: GB_003
+id: FG_003
 title: "Shell hook validates canonical path prefix not substring"
 date: 2026-02-20
 type: fix

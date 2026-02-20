@@ -10,14 +10,14 @@
  */
 
 import { readFileSync, readdirSync, statSync } from "node:fs";
-import { join, basename, resolve } from "node:path";
+import { join, basename, dirname, resolve } from "node:path";
 
 // ── Constants ────────────────────────────────────────────────────────────────
 
 const VALID_TYPES = [
   "feature",
   "fix",
-  "improvements",
+  "improvement",
   "chore",
   "docs",
   "refactor",
@@ -41,9 +41,9 @@ const REQUIRED_SECTIONS = [
   "Constraints",
   "Resources",
 ];
-const ID_PATTERN = /^GB_\d{3}$/;
+const ID_PATTERN = /^FG_\d{3}$/;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
-const FILENAME_PATTERN = /^GB_\d{3}-p[0-3]-[a-z0-9-]+\.md$/;
+const FILENAME_PATTERN = /^FG_\d{3}-p[0-3]-[a-z0-9-]+\.md$/;
 
 // ── YAML Front Matter Parser ─────────────────────────────────────────────────
 
@@ -96,7 +96,7 @@ function parseFrontmatter(content) {
     fm[currentKey] = listItems;
   }
 
-  // Parse dependencies that are inline arrays like [GB_001, GB_002]
+  // Parse dependencies that are inline arrays like [FG_001, FG_002]
   if (typeof fm.dependencies === "string") {
     const depStr = fm.dependencies.replace(/^\[|\]$/g, "").trim();
     fm.dependencies = depStr ? depStr.split(/,\s*/) : [];
@@ -117,7 +117,7 @@ function validateFrontmatter(fm, errors, warnings) {
   if (!fm.id) {
     errors.push("Missing required field: id");
   } else if (!ID_PATTERN.test(fm.id)) {
-    errors.push(`Invalid id "${fm.id}" — must match GB_NNN (3-digit zero-padded)`);
+    errors.push(`Invalid id "${fm.id}" — must match FG_NNN (3-digit zero-padded)`);
   }
 
   // title
@@ -175,7 +175,7 @@ function validateFrontmatter(fm, errors, warnings) {
   } else if (Array.isArray(fm.dependencies)) {
     for (const dep of fm.dependencies) {
       if (!ID_PATTERN.test(dep)) {
-        errors.push(`Invalid dependency "${dep}" — must match GB_NNN`);
+        errors.push(`Invalid dependency "${dep}" — must match FG_NNN`);
       }
     }
   }
@@ -189,8 +189,8 @@ function validateFrontmatter(fm, errors, warnings) {
     errors.push("Missing or empty required field: acceptance_criteria");
   } else {
     if (fm.acceptance_criteria.length < 2) {
-      warnings.push(
-        `Only ${fm.acceptance_criteria.length} acceptance criterion — recommend at least 2`
+      errors.push(
+        `Only ${fm.acceptance_criteria.length} acceptance criterion — minimum 2 required`
       );
     }
     if (fm.acceptance_criteria.length > 7) {
@@ -236,7 +236,19 @@ function validateFilename(filepath, fm, warnings) {
   const name = basename(filepath);
   if (!FILENAME_PATTERN.test(name)) {
     warnings.push(
-      `Filename "${name}" doesn't match convention GB_NNN-pN-slug.md`
+      `Filename "${name}" doesn't match convention FG_NNN-pN-slug.md`
+    );
+  }
+}
+
+function validateDirectoryStatus(filepath, fm, errors) {
+  if (!fm?.status) return;
+  const parentDir = basename(dirname(filepath));
+  const statusDirs = new Set(VALID_STATUSES);
+  if (!statusDirs.has(parentDir)) return; // file not in a status directory
+  if (parentDir !== fm.status) {
+    errors.push(
+      `Directory "${parentDir}" does not match frontmatter status "${fm.status}"`
     );
   }
 }
@@ -355,6 +367,7 @@ function main() {
     validateFrontmatter(fm, errors, warnings);
     validateBody(content, errors, warnings);
     validateFilename(filepath, fm, warnings);
+    validateDirectoryStatus(filepath, fm, errors);
 
     results.push({ filepath, fm, errors, warnings });
     totalErrors += errors.length;
