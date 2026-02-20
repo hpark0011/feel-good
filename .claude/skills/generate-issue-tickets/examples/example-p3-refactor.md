@@ -57,6 +57,15 @@ Find-and-replace across `packages/ui/src/primitives/`:
 - **Effort:** Small
 - **Risk:** Low
 
+## Implementation Steps
+
+1. Run `grep -rn 'from.*\.\./utils/cn' packages/ui/src/` to identify all local re-export consumers
+2. Replace each local import with `import { cn } from "@feel-good/utils/cn"`
+3. Run `grep -rn 'clsx\|twMerge' packages/ui/src/primitives/` to find inline wrappers
+4. Replace inline `clsx(twMerge(...))` calls with `cn()` and add the canonical import
+5. Check if `packages/ui/src/utils/cn.ts` has any remaining consumers; delete if unused
+6. Run `pnpm build` and `pnpm lint` to verify no regressions
+
 ## Constraints
 
 - Deletion-only for the re-export file — do not add new files

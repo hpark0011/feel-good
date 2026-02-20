@@ -114,6 +114,7 @@ If a behavioral check can't be deterministic, note it under `## Manual Verificat
 - **2-7 acceptance criteria.** Fewer than 2 = too vague. More than 7 = decompose.
 - **Verify file paths.** Every path in Context must be confirmed via Read/Grep.
 - **Approach needs effort/risk.** Always include effort (Small/Medium/Large) and risk (Low/Medium/High).
+- **Implementation Steps are required.** Ordered list of concrete steps with file paths or commands. Each step should be independently verifiable. 3-8 steps — fewer means the ticket is underspecified, more means decompose.
 - **Out of Scope is required.** Explicitly list what is NOT included.
 - **When generating multiple tickets**, determine all IDs upfront. Scan once, assign sequential IDs, write all, validate all, report summary table.
 - **Validate before reporting success.** Read the file back and check every field.

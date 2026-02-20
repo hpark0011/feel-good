@@ -71,6 +71,16 @@ const handleKeyDown = (e: React.KeyboardEvent) => {
 - **Effort:** Small
 - **Risk:** Low
 
+## Implementation Steps
+
+1. Add `role="toolbar"` to the dock container element in `packages/features/dock/blocks/app-dock.tsx`
+2. Add `data-dock-item` attribute and `role="button"` to each dock item element
+3. Create a `useRovingTabIndex` hook or inline state to track `activeIndex` with `useState(0)`
+4. Add `onKeyDown` handler to the container that handles `ArrowLeft`, `ArrowRight`, `Home`, `End` keys
+5. Set `tabIndex={0}` on the active item and `tabIndex={-1}` on all others
+6. Add visible focus ring styles (e.g., `focus-visible:ring-2`) to dock items
+7. Run `pnpm build --filter=@feel-good/mirror` to verify no build errors
+
 ## Constraints
 
 - Must not change existing click behavior or visual appearance (beyond adding focus ring)
