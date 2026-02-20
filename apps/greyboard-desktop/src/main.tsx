@@ -7,8 +7,8 @@ import { initTheme } from './hooks/use-theme'
 import '../styles/globals.css'
 
 function initPlatform() {
-  const isMac = navigator.platform.startsWith('Mac')
-  document.documentElement.dataset.platform = isMac ? 'darwin' : 'win32'
+  const platform = window.greyboardDesktop?.platform ?? 'unknown'
+  document.documentElement.dataset.platform = platform
 }
 
 initTheme()

@@ -51,3 +51,7 @@
 [data-platform="darwin"] .titlebar-padded {
   padding-left: 80px;
 }
+
+[data-platform="win32"] .titlebar-padded {
+  padding-right: 140px;
+}
