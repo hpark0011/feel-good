@@ -6,6 +6,8 @@ description: >
   any work item that needs to be tracked. Invoke with /generate-issue-tickets
   or when the user says "create a ticket", "file an issue",
   "track this", or describes work that should become a ticket.
+argument-hint: "[description of work item or 'break down' a plan]"
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash(ls *), Bash(find *)
 hooks:
   PostToolUse:
     - matcher: "Write|Edit"
