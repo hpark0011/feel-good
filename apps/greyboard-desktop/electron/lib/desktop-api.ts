@@ -5,6 +5,7 @@ export interface DocumentFile {
 }
 
 export interface DesktopAPI {
+  platform: NodeJS.Platform
   app: {
     getVersion: () => Promise<string>
     getPlatform: () => Promise<string>
