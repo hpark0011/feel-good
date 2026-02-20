@@ -2,21 +2,24 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 
+/**
+ * LocalStorage-backed state with same-tab + cross-tab synchronization.
+ *
+ * Contract:
+ * - `defaultValue` is a fallback/reset value, not a reactive source of truth.
+ * - The hook does not overwrite existing state when `defaultValue` changes.
+ * - To apply a new runtime default to existing state, call `setValue(...)`.
+ */
 export function useLocalStorage<T>(
   key: string,
-  initialValue: T
+  defaultValue: T
 ): [T, (value: T | ((val: T) => T)) => void, () => void] {
-  // Initialize state with initialValue (SSR-safe)
-  const [storedValue, setStoredValue] = useState<T>(initialValue);
+  // Initialize state with defaultValue (SSR-safe)
+  const [storedValue, setStoredValue] = useState<T>(defaultValue);
 
-  // Treat initialValue as a default tied to the current key, not to each render.
-  const initialValueRef = useRef(initialValue);
-  const lastKeyRef = useRef(key);
-
-  if (lastKeyRef.current !== key) {
-    lastKeyRef.current = key;
-    initialValueRef.current = initialValue;
-  }
+  // Keep the latest fallback/reset value without making effects depend on it.
+  const defaultValueRef = useRef(defaultValue);
+  defaultValueRef.current = defaultValue;
 
   // Track pending writes from setValue to distinguish user actions from sync updates
   const pendingWriteRef = useRef<{ value: T } | null>(null);
@@ -28,15 +31,15 @@ export function useLocalStorage<T>(
     try {
       const item = window.localStorage.getItem(key);
       if (item === null) {
-        setStoredValue(initialValueRef.current);
+        setStoredValue(defaultValueRef.current);
       } else {
         try {
           const parsed = JSON.parse(item);
           setStoredValue(parsed);
         } catch (parseError) {
-          // JSON.parse validation: if parsing fails, fall back to initialValue
+          // JSON.parse validation: if parsing fails, fall back to defaultValue
           console.warn(`Error parsing localStorage key "${key}":`, parseError);
-          setStoredValue(initialValueRef.current);
+          setStoredValue(defaultValueRef.current);
         }
       }
     } catch (error) {
@@ -51,7 +54,7 @@ export function useLocalStorage<T>(
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === key) {
         if (e.newValue === null) {
-          setStoredValue(initialValueRef.current);
+          setStoredValue(defaultValueRef.current);
         } else {
           try {
             const newValue = JSON.parse(e.newValue);
@@ -135,7 +138,7 @@ export function useLocalStorage<T>(
     if (typeof window === "undefined") return;
 
     try {
-      const resetValue = initialValueRef.current;
+      const resetValue = defaultValueRef.current;
       window.localStorage.removeItem(key);
       setStoredValue(resetValue);
 
