@@ -1,6 +1,6 @@
 ---
 name: new-worktree
-description: Create a new git worktree for parallel development. Supports three input modes — empty (scratch), todo file, or free-text requirement. Invoke with `/workspace:new-worktree`, `/workspace:new-worktree <todo-file.md>`, or `/workspace:new-worktree <requirement>`.
+description: Create a new git worktree for parallel development. Supports three input modes — empty (scratch), ticket file, or free-text requirement. Invoke with `/workspace:new-worktree`, `/workspace:new-worktree <ticket-file.md>`, or `/workspace:new-worktree <requirement>`.
 ---
 
 # New Worktree
@@ -10,7 +10,7 @@ Create a new git worktree for parallel feature development in this monorepo.
 ## Trigger
 
 - `/workspace:new-worktree` — start a scratch worktree, rename after scoping
-- `/workspace:new-worktree <path-to-todo.md>` — derive name from a todo file
+- `/workspace:new-worktree <path-to-ticket.md>` — derive name from a ticket file
 - `/workspace:new-worktree <requirement>` — derive name from a free-text description
 
 ## Input Detection
@@ -20,7 +20,7 @@ Determine the mode from the argument:
 | Condition                | Mode                      |
 | ------------------------ | ------------------------- |
 | No argument provided     | **Empty (scratch)**       |
-| Argument ends with `.md` | **Todo file**             |
+| Argument ends with `.md` | **Ticket file**           |
 | Anything else            | **Free-text requirement** |
 
 ## Name Generation Rules
@@ -53,14 +53,15 @@ All branch names must follow these conventions:
    ```
 9. Report the final name and path.
 
-## Mode 2: Todo File
+## Mode 2: Ticket File
 
 ### Steps
 
-1. **Read the todo file** using the Read tool to extract its title, tags, and description.
-2. **Derive the prefix** from tags or content:
-   - Tags contain `bug` or `fix` → `fix-`
-   - Tags contain `refactor` → `refactor-`
+1. **Read the ticket file** using the Read tool to extract its title, type, and description.
+2. **Derive the prefix** from the `type` field:
+   - Type is `fix` → `fix-`
+   - Type is `refactor` → `refactor-`
+   - Type is `chore` or `docs` → `chore-`
    - Otherwise → `feature-`
 3. **Slugify the title** into a branch name: lowercase, strip special characters, replace spaces with hyphens, truncate to 2-4 key words.
 4. **Present the generated name** to the user and ask for confirmation. If rejected, ask what they'd prefer.
