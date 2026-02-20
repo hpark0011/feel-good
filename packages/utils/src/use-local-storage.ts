@@ -9,6 +9,15 @@ export function useLocalStorage<T>(
   // Initialize state with initialValue (SSR-safe)
   const [storedValue, setStoredValue] = useState<T>(initialValue);
 
+  // Treat initialValue as a default tied to the current key, not to each render.
+  const initialValueRef = useRef(initialValue);
+  const lastKeyRef = useRef(key);
+
+  if (lastKeyRef.current !== key) {
+    lastKeyRef.current = key;
+    initialValueRef.current = initialValue;
+  }
+
   // Track pending writes from setValue to distinguish user actions from sync updates
   const pendingWriteRef = useRef<{ value: T } | null>(null);
 
@@ -18,20 +27,22 @@ export function useLocalStorage<T>(
 
     try {
       const item = window.localStorage.getItem(key);
-      if (item) {
+      if (item === null) {
+        setStoredValue(initialValueRef.current);
+      } else {
         try {
           const parsed = JSON.parse(item);
           setStoredValue(parsed);
         } catch (parseError) {
           // JSON.parse validation: if parsing fails, fall back to initialValue
           console.warn(`Error parsing localStorage key "${key}":`, parseError);
-          setStoredValue(initialValue);
+          setStoredValue(initialValueRef.current);
         }
       }
     } catch (error) {
       console.warn(`Error loading localStorage key "${key}":`, error);
     }
-  }, [key, initialValue]);
+  }, [key]);
 
   // Listen for storage events to sync across tabs
   useEffect(() => {
@@ -40,7 +51,7 @@ export function useLocalStorage<T>(
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === key) {
         if (e.newValue === null) {
-          setStoredValue(initialValue);
+          setStoredValue(initialValueRef.current);
         } else {
           try {
             const newValue = JSON.parse(e.newValue);
@@ -54,7 +65,7 @@ export function useLocalStorage<T>(
 
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
-  }, [key, initialValue]);
+  }, [key]);
 
   // Listen for same-tab localStorage changes via custom event
   useEffect(() => {
@@ -79,6 +90,9 @@ export function useLocalStorage<T>(
       setStoredValue((currentStoredValue) => {
         const valueToStore =
           value instanceof Function ? value(currentStoredValue) : value;
+        if (Object.is(currentStoredValue, valueToStore)) {
+          return currentStoredValue;
+        }
         pendingWriteRef.current = { value: valueToStore };
         return valueToStore;
       });
@@ -121,22 +135,23 @@ export function useLocalStorage<T>(
     if (typeof window === "undefined") return;
 
     try {
+      const resetValue = initialValueRef.current;
       window.localStorage.removeItem(key);
-      setStoredValue(initialValue);
+      setStoredValue(resetValue);
 
       // Dispatch custom event for same-tab synchronization
       // Use queueMicrotask to defer event dispatch until after current render
       queueMicrotask(() => {
         window.dispatchEvent(
           new CustomEvent('local-storage-change', {
-            detail: { key, newValue: initialValue },
+            detail: { key, newValue: resetValue },
           })
         );
       });
     } catch (error) {
       console.warn(`Error clearing localStorage key "${key}":`, error);
     }
-  }, [key, initialValue]);
+  }, [key]);
 
   return [storedValue, setValue, clearValue];
 }
