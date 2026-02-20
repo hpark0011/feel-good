@@ -4,7 +4,7 @@ description: >
   Generate structured issue ticket markdown files with strict frontmatter contract in workspace/tickets/to-do.
   Use when the user describes a bug, feature request, refactoring task, break down a plan, or
   any work item that needs to be tracked. Invoke with /generate-issue-tickets
-  or when the user says "create a ticket", "file an issue", "write a todo",
+  or when the user says "create a ticket", "file an issue",
   "track this", or describes work that should become a ticket.
 hooks:
   PostToolUse:
@@ -208,3 +208,7 @@ When generating multiple tickets from a single request (e.g., "create tickets fo
 3. Write all files
 4. Validate all files against the contract
 5. Report a summary table: `| ID | Priority | Title |`
+
+## Deprecation Note
+
+This ticket system (`workspace/tickets/`, `GB_NNN` IDs) supersedes the legacy `todos/` directory (IDs 001-173). The `todos/` directory is archived read-only history — do NOT create new files there. The `compound-engineering:file-todos` skill references the old system and should not be used for new work items.
