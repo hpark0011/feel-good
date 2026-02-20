@@ -1,7 +1,7 @@
 ---
 name: generate-issue-tickets
 description: >
-  Generate structured issue ticket markdown files in the todos/ directory.
+  Generate structured issue ticket markdown files in workspace/tickets/.
   Use when the user describes a bug, feature request, refactoring task, or
   any work item that needs to be tracked. Invoke with /generate-issue-tickets
   or when the user says "create a ticket", "file an issue", "write a todo",
@@ -10,32 +10,49 @@ description: >
 
 # Generate Issue Tickets
 
-Create issue ticket markdown files in `todos/` following established conventions.
+Create issue ticket markdown files in `workspace/tickets/` following established conventions.
+
+## Directory Structure
+
+```
+workspace/
+└── tickets/
+    ├── 001-pending-p1-open-redirect.md
+    ├── 002-pending-p2-missing-auth-guard.md
+    └── completed/
+        └── 003-completed-p3-unused-import.md
+```
+
+Create `workspace/tickets/` and `workspace/tickets/completed/` if they don't exist.
 
 ## Workflow
 
 1. **Understand the request.** Parse the user's free-text description. Ask clarifying questions only if the problem statement is genuinely ambiguous.
 2. **Investigate the codebase.** Read relevant files to fill in Findings, location references, and technical context. Do not guess file paths — verify them.
-3. **Determine the next issue ID.** Scan `todos/` and `todos/completed/` for the highest existing `NNN` prefix and increment by 1. Zero-pad to 3 digits.
+3. **Determine the next issue ID.** Scan `workspace/tickets/` and `workspace/tickets/completed/` for the highest existing `NNN` prefix and increment by 1. Zero-pad to 3 digits. If the directory is empty or doesn't exist, start at `001`.
 4. **Determine priority.** Use the priority rubric below. If unclear, default to p2.
-5. **Generate the ticket.** Follow the template in [template.md](template.md) exactly. Write the file to `todos/{NNN}-pending-{priority}-{slug}.md`.
+5. **Generate the ticket.** Follow the template in [template.md](template.md) exactly. Write the file to `workspace/tickets/{NNN}-pending-{priority}-{slug}.md`.
 6. **Report back.** Show the user the filename and a one-line summary.
 
 ## Priority Rubric
 
-| Priority | Criteria | Examples |
-|----------|----------|---------|
-| p1 | Security vulnerability, data loss, crash, broken core flow | Open redirect, auth bypass, runtime error |
-| p2 | Functional bug, missing guard, performance issue, significant tech debt | Missing validation, race condition, N+1 query |
-| p3 | Code quality, naming, cleanup, minor inconsistency | Unused import, naming convention violation, missing JSDoc |
+| Priority | Criteria                                                                | Examples                                                  |
+| -------- | ----------------------------------------------------------------------- | --------------------------------------------------------- |
+| p1       | Security vulnerability, data loss, crash, broken core flow              | Open redirect, auth bypass, runtime error                 |
+| p2       | Functional bug, missing guard, performance issue, significant tech debt | Missing validation, race condition, N+1 query             |
+| p3       | Code quality, naming, cleanup, minor inconsistency                      | Unused import, naming convention violation, missing JSDoc |
 
 ## Naming Convention
 
 Filename: `{NNN}-pending-{priority}-{slug}.md`
 
-- `NNN`: Zero-padded 3-digit issue ID (e.g., `241`)
+- `NNN`: Zero-padded 3-digit issue ID (e.g., `001`)
 - `priority`: `p1`, `p2`, or `p3`
 - `slug`: Kebab-case summary, max 6 words (e.g., `missing-auth-guard-protected-layout`)
+
+## Completion
+
+When a ticket is resolved, move it to `workspace/tickets/completed/` and rename `pending` → `completed` in both filename and frontmatter status.
 
 ## Tags
 
@@ -50,22 +67,23 @@ Use consistent tags from this list (extend when needed):
 Every ticket must include a `## Hard Validations` section containing **deterministic, machine-checkable** criteria. These are the self-validation checks an execution agent runs after implementing the fix — no human judgment required.
 
 Each hard validation must specify:
+
 - **What to check** — a concrete command, grep, build, or file-system assertion
 - **Expected result** — the exact output, exit code, or condition that constitutes a pass
 
 ### Valid hard validation types
 
-| Type | Example |
-|------|---------|
-| **Grep** | `grep -r "isAuthenticated" apps/mirror/app/api/admin/` returns matches |
-| **Grep-absence** | `grep -r "import styles" apps/mirror/app/(protected)/dashboard/layout.tsx` returns no matches |
-| **File existence** | `apps/mirror/app/api/admin/users/route.ts` exists / does not exist |
-| **Build** | `pnpm build --filter=@feel-good/mirror` exits 0 |
-| **Lint** | `pnpm lint --filter=@feel-good/mirror` exits 0 |
-| **Type check** | `pnpm tsc --noEmit` exits 0 |
-| **Test** | `pnpm test:e2e --filter=@feel-good/mirror` exits 0 |
-| **Pattern match** | File at `path:line` contains/does not contain a specific pattern |
-| **Count** | `grep -c "TODO" path/to/file.ts` returns 0 |
+| Type               | Example                                                                                       |
+| ------------------ | --------------------------------------------------------------------------------------------- |
+| **Grep**           | `grep -r "isAuthenticated" apps/mirror/app/api/admin/` returns matches                        |
+| **Grep-absence**   | `grep -r "import styles" apps/mirror/app/(protected)/dashboard/layout.tsx` returns no matches |
+| **File existence** | `apps/mirror/app/api/admin/users/route.ts` exists / does not exist                            |
+| **Build**          | `pnpm build --filter=@feel-good/mirror` exits 0                                               |
+| **Lint**           | `pnpm lint --filter=@feel-good/mirror` exits 0                                                |
+| **Type check**     | `pnpm tsc --noEmit` exits 0                                                                   |
+| **Test**           | `pnpm test:e2e --filter=@feel-good/mirror` exits 0                                            |
+| **Pattern match**  | File at `path:line` contains/does not contain a specific pattern                              |
+| **Count**          | `grep -c "TODO" path/to/file.ts` returns 0                                                    |
 
 ### Rules for hard validations
 
