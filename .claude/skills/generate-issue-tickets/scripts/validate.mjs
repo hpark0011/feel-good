@@ -206,7 +206,7 @@ function validateFrontmatter(fm, errors, warnings) {
   }
 }
 
-function validateBody(content, errors) {
+function validateBody(content, errors, warnings) {
   // Strip frontmatter
   const body = content.replace(/^---[\s\S]*?---/, "").trim();
 
@@ -218,7 +218,7 @@ function validateBody(content, errors) {
   }
 
   // Check Approach section contains Effort and Risk
-  const approachMatch = body.match(/^## Approach\s*$([\s\S]*?)(?=^## |\Z)/m);
+  const approachMatch = body.match(/(?:^|\n)## Approach[ \t]*\n([\s\S]*?)(?=\n## |$)/);
   if (approachMatch) {
     const approachContent = approachMatch[1];
     if (!/\*\*Effort:\*\*/.test(approachContent)) {
@@ -227,6 +227,8 @@ function validateBody(content, errors) {
     if (!/\*\*Risk:\*\*/.test(approachContent)) {
       errors.push("Approach section missing **Risk:** annotation");
     }
+  } else {
+    warnings.push("Could not parse Approach section content for Effort/Risk check");
   }
 }
 
@@ -351,7 +353,7 @@ function main() {
     const warnings = [];
 
     validateFrontmatter(fm, errors, warnings);
-    validateBody(content, errors);
+    validateBody(content, errors, warnings);
     validateFilename(filepath, fm, warnings);
 
     results.push({ filepath, fm, errors, warnings });
