@@ -58,6 +58,14 @@ if (!session || session.role !== "admin") {
 - **Effort:** Small
 - **Risk:** Low
 
+## Implementation Steps
+
+1. Open `apps/mirror/app/api/admin/users/route.ts` and locate the GET handler
+2. Add `getSession()` call at the top of the handler before any data access
+3. Add conditional check — if no session or `session.role !== "admin"`, return `NextResponse.json({ error: "Unauthorized" }, { status: 401 })`
+4. Verify the existing `NextResponse.json(users)` call is now inside the authenticated branch
+5. Run `pnpm build --filter=@feel-good/mirror` and `pnpm tsc --noEmit --filter=@feel-good/mirror` to confirm no type or build errors
+
 ## Constraints
 
 - Must use the existing `getSession()` and `isAuthenticated()` helpers — do not introduce new auth utilities

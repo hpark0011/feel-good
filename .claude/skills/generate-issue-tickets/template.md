@@ -42,6 +42,12 @@ owner_agent: "{descriptive agent title}"
 - **Effort:** {Small | Medium | Large}
 - **Risk:** {Low | Medium | High}
 
+## Implementation Steps
+
+1. {Concrete step with file path or command}
+2. {Next step — each step should be independently verifiable}
+3. {Continue until the approach is fully broken down}
+
 ## Constraints
 
 - {Implementation guardrail 1 — e.g., "deletion-only change, no new code"}

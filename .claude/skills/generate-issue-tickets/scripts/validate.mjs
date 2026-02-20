@@ -38,6 +38,7 @@ const REQUIRED_SECTIONS = [
   "Scope",
   "Out of Scope",
   "Approach",
+  "Implementation Steps",
   "Constraints",
   "Resources",
 ];

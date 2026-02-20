@@ -6,6 +6,8 @@ description: >
   any work item that needs to be tracked. Invoke with /generate-issue-tickets
   or when the user says "create a ticket", "file an issue",
   "track this", or describes work that should become a ticket.
+argument-hint: "[description of work item or 'break down' a plan]"
+allowed-tools: Read, Grep, Glob, Write, Edit, Bash(ls *), Bash(find *)
 hooks:
   PostToolUse:
     - matcher: "Write|Edit"
@@ -112,10 +114,7 @@ If a behavioral check can't be deterministic, note it under `## Manual Verificat
 - **2-7 acceptance criteria.** Fewer than 2 = too vague. More than 7 = decompose.
 - **Verify file paths.** Every path in Context must be confirmed via Read/Grep.
 - **Approach needs effort/risk.** Always include effort (Small/Medium/Large) and risk (Low/Medium/High).
+- **Implementation Steps are required.** Ordered list of concrete steps with file paths or commands. Each step should be independently verifiable. 3-8 steps — fewer means the ticket is underspecified, more means decompose.
 - **Out of Scope is required.** Explicitly list what is NOT included.
 - **When generating multiple tickets**, determine all IDs upfront. Scan once, assign sequential IDs, write all, validate all, report summary table.
 - **Validate before reporting success.** Read the file back and check every field.
-
-## Deprecation Note
-
-This ticket system (`workspace/tickets/`, `FG_NNN` IDs) supersedes the legacy `todos/` directory (IDs 001-173). The `todos/` directory is archived read-only history — do NOT create new files there.
