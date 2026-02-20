@@ -1,14 +1,10 @@
 "use client";
 
-import { signOutAction } from "@/app/_actions/auth-actions";
-import { customToast } from "@/components/custom-toast";
 import { HeaderContainer } from "@/components/header/header-ui";
-import { PATHS } from "@/config/paths.config";
 import { InsightsDialog } from "@/features/insights";
 import { useTimerElapsedTime, useStopWatchStore, TimerDisplay } from "@/features/timer";
 import { useTheme } from "next-themes";
-import { useRouter } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import { useTodayFocus } from "../_hooks";
 import { FocusFormDialog } from "./focus-form-dialog";
 import { TasksHeaderActions } from "./tasks-header-actions";
@@ -19,9 +15,7 @@ export function TasksHeader() {
   const [focusDialogOpen, setFocusDialogOpen] = useState(false);
   const [insightsDialogOpen, setInsightsDialogOpen] = useState(false);
   const [todayFocus, setTodayFocus] = useTodayFocus();
-  const router = useRouter();
   const { resolvedTheme, setTheme } = useTheme();
-  const [isSigningOut, startSignOutTransition] = useTransition();
 
   // Timer state selectors
   const activeTicketId = useStopWatchStore((state) => state.activeTicketId);
@@ -37,27 +31,6 @@ export function TasksHeader() {
     hydrate();
   }, [hydrate]);
 
-  const handleSignOut = () => {
-    startSignOutTransition(async () => {
-      const result = await signOutAction(undefined);
-
-      if (result.success) {
-        customToast({
-          type: "success",
-          title: "Signed out",
-          description: "You have been signed out.",
-        });
-        router.push(PATHS.auth.signIn);
-      } else {
-        customToast({
-          type: "error",
-          title: "Sign out failed",
-          description: result.message || "Please try again.",
-        });
-      }
-    });
-  };
-
   const handleThemeToggle = () => {
     const nextTheme = resolvedTheme === "dark" ? "light" : "dark";
     setTheme(nextTheme);
@@ -67,9 +40,7 @@ export function TasksHeader() {
     <HeaderContainer className="grid grid-cols-3 items-center">
       <div className="flex items-center justify-start">
         <TasksHeaderLogo
-          onSignOut={handleSignOut}
           onThemeToggle={handleThemeToggle}
-          isSigningOut={isSigningOut}
         />
       </div>
       <div className="flex items-center justify-center">
