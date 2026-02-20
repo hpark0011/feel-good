@@ -10,6 +10,7 @@ pnpm dev               # Run all apps in dev mode
 pnpm build             # Build all packages
 pnpm lint              # Lint all packages
 pnpm format            # Format all files
+pnpm clean             # Clean all packages
 ```
 
 ### Filtered Commands
@@ -19,6 +20,16 @@ pnpm dev --filter=@feel-good/greyboard    # Run single app
 pnpm build --filter=@feel-good/greyboard  # Build single app
 pnpm lint --filter=@feel-good/greyboard   # Lint single app
 pnpm dev --filter=@feel-good/greyboard-desktop   # Run desktop app
+```
+
+### Desktop Commands
+
+```bash
+pnpm desktop:dev         # Run desktop app dev
+pnpm desktop:build       # Build desktop app
+pnpm desktop:dist        # Package desktop app
+pnpm desktop:lint        # Lint desktop app
+pnpm desktop:check-types # Typecheck desktop app
 ```
 
 ## Monorepo Structure
