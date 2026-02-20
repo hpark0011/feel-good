@@ -3,6 +3,7 @@ import { CHANNELS } from './lib/channels'
 import { type DesktopAPI } from './lib/desktop-api'
 
 contextBridge.exposeInMainWorld('greyboardDesktop', {
+  platform: process.platform,
   app: {
     getVersion: () => ipcRenderer.invoke(CHANNELS.APP_GET_VERSION),
     getPlatform: () => ipcRenderer.invoke(CHANNELS.APP_GET_PLATFORM),

@@ -29,6 +29,8 @@ function setupContentSecurityPolicy() {
 
 function createWindow() {
   const preloadPath = path.join(__dirname, 'preload.cjs')
+  const isMac = process.platform === 'darwin'
+  const isWindows = process.platform === 'win32'
 
   mainWindow = new BrowserWindow({
     width: 1200,
@@ -36,8 +38,8 @@ function createWindow() {
     minWidth: 800,
     minHeight: 600,
     titleBarStyle: 'hidden',
-    trafficLightPosition: { x: 16, y: 14 },
-    titleBarOverlay: { color: '#00000000', height: 48 },
+    ...(isMac && { trafficLightPosition: { x: 16, y: 14 } }),
+    ...(isWindows && { titleBarOverlay: { color: '#00000000', height: 48 } }),
     webPreferences: {
       preload: preloadPath,
       contextIsolation: true,
