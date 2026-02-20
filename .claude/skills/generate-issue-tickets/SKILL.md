@@ -117,7 +117,3 @@ If a behavioral check can't be deterministic, note it under `## Manual Verificat
 - **Out of Scope is required.** Explicitly list what is NOT included.
 - **When generating multiple tickets**, determine all IDs upfront. Scan once, assign sequential IDs, write all, validate all, report summary table.
 - **Validate before reporting success.** Read the file back and check every field.
-
-## Deprecation Note
-
-This ticket system (`workspace/tickets/`, `FG_NNN` IDs) supersedes the legacy `todos/` directory (IDs 001-173). The `todos/` directory is archived read-only history — do NOT create new files there.

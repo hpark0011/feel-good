@@ -40,5 +40,4 @@ Follow this order — don't skip steps:
 ## Task Management
 
 - Drive work through `workspace/tickets/` using the `generate-issue-tickets` skill. Reference tickets with `work on @workspace/tickets/...`.
-- The legacy `todos/` directory is archived history. Do NOT create new files there. All new work items go to `workspace/tickets/to-do/`.
 - Document learnings from debugging sessions early in `workspace/lessons.md` — don't wait for the fix to land before capturing "what we tried and why it failed."

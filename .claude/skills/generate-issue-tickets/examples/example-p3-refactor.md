@@ -12,7 +12,7 @@ parent_plan_id:
 acceptance_criteria:
   - "`grep -rn 'from.*utils/cn' packages/ui/src/ | grep -v '@feel-good/utils/cn'` returns no matches (no local re-exports used)"
   - "`grep -rn 'clsx\\|twMerge' packages/ui/src/primitives/ | grep -v node_modules` returns no matches (no inline wrappers)"
-  - "`grep -c '@feel-good/utils/cn' packages/ui/src/primitives/*.tsx | grep ':0$'` returns no matches (all primitives use canonical import)"
+  - "`grep -rl 'cn(' packages/ui/src/primitives/ --include='*.tsx' | xargs grep -L '@feel-good/utils/cn'` returns no matches (every file that calls cn uses the canonical import)"
   - "`pnpm build` exits 0"
   - "`pnpm lint` exits 0"
 owner_agent: "Codebase Cleanup Agent"
