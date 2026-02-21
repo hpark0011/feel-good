@@ -17,7 +17,7 @@ src/
 ├── hooks/            # 2 hooks (use-media-query, use-mobile)
 ├── providers/        # 1 provider (theme-provider)
 ├── lib/              # 1 utility (utils.ts — re-exports cn)
-└── styles/           # 9 CSS files (token definitions, fonts, component overrides)
+└── styles/           # CSS token files (see docs/conventions/css-token-file-convention.md)
 ```
 
 ## Export System
@@ -80,19 +80,17 @@ Consuming apps must import Radix color CSS **before** `@feel-good/ui/styles.css`
 
 ### Style Files
 
+One CSS file per component that owns exclusive tokens, plus system-level files. See `docs/conventions/css-token-file-convention.md` for the full split rule and three-layer contract.
+
 | File | Purpose |
 | --- | --- |
-| `globals.css` | Entry point. Base/button/text/dialog/border tokens, `@theme inline`, `@layer base` defaults. |
+| `globals.css` | Hub. System tokens (base, border, icon, text) + imports + `@layer base`. |
 | `radix-color-scale.css` | Bridges Radix `--gray-1..12` etc. into Tailwind `@theme inline`. |
 | `fonts.css` | Font families: `--font-sans` (Inter), `--font-serif` (Instrument Serif), `--font-mono` (Geist Mono). |
-| `shadows.css` | Button, dock-icon, and shiny-button shadow tokens (light + dark). |
-| `input.css` | Input tokens: `--input`, `--input-foreground`, `--input-destructive`, `--caret`. |
-| `switch.css` | Switch tokens: default, theme, and panel variants. |
-| `field.css` | Field label token: `--field-label`. |
-| `sidebar.css` | Sidebar tokens + Swiss variant overrides. |
-| `popover.css` | Popover tokens: background, foreground, border, focus. |
+| `shadows.css` | Cross-component shadow tokens (button, dock, shiny-button). |
+| `{component}.css` | Component-specific tokens (button, dialog, input, switch, field, sidebar, popover). |
 
-Read the source CSS files in `src/styles/` for exact token values.
+Read the source CSS files in `src/styles/` for exact token values. `ls src/styles/` for the current file list.
 
 ## Integration Guide
 
