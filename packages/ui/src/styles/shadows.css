@@ -1,3 +1,9 @@
+/*
+* shadows.css
+*
+* Shadow-specific styles and CSS variables
+*/
+
 :root {
   /* Button Primary */
   --shadow-button-primary: 0px 3px 3px -1.5px rgba(0, 0, 0, 0.15),

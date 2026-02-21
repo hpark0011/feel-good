@@ -18,6 +18,8 @@
 @import "./fonts.css";
 @import "./radix-color-scale.css";
 @import "./shadows.css";
+@import "./button.css";
+@import "./dialog.css";
 @import "./sidebar.css";
 @import "./input.css";
 @import "./switch.css";
@@ -31,36 +33,17 @@
   --background: var(--gray-4);
   --foreground: var(--gray-12);
 
-  /* Button */
-  --primary: #2d2d2d;
-  --primary-foreground: var(--gray-3);
-
-  --secondary: var(--gray-1);
-  --secondary-foreground: var(--gray-12);
-
-  --destructive: var(--red-9);
-  --destructive-foreground: var(--red-1);
-
-  --accent: var(--gray-2);
-  --accent-foreground: var(--gray-12);
-
-  --muted: var(--gray-6);
-  --muted-foreground: var(--gray-9);
-
-  --ghost: transparent;
-  --ghost-foreground: var(--gray-11);
-
   /* Text */
   --information: var(--color-blue-500);
-
-  /* Dialog */
-  --dialog: var(--gray-1);
 
   /* Border */
   --border: var(--gray-7);
   --border-subtle: var(--gray-6);
-
   --ring: var(--gray-7);
+  --resizable-handle-hover: var(--border-subtle);
+
+  /* Icon */
+  --icon: var(--gray-8);
 }
 
 .dark {
@@ -68,36 +51,17 @@
   --background: #0a0a0a;
   --foreground: var(--gray-12);
 
-  /* Button */
-  --primary: var(--gray-12);
-  --primary-foreground: var(--gray-1);
-
-  --secondary: var(--gray-3);
-  --secondary-foreground: var(--gray-12);
-
-  --destructive: var(--red-9);
-  --destructive-foreground: var(--red-1);
-
-  --accent: var(--gray-3);
-  --accent-foreground: var(--gray-12);
-
-  --muted: var(--gray-6);
-  --muted-foreground: var(--gray-9);
-
-  --ghost: transparent;
-  --ghost-foreground: var(--gray-12);
-
   /* Text */
   --information: var(--color-blue-400);
-
-  /* Dialog */
-  --dialog: var(--gray-1);
 
   /* Border */
   --border: var(--gray-3);
   --border-subtle: var(--gray-2);
-
   --ring: var(--gray-3);
+  --resizable-handle-hover: var(--border-subtle);
+
+  /* Icon */
+  --icon: var(--gray-8);
 }
 
 @theme inline {
@@ -105,39 +69,17 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  /* Button */
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-
-  --color-ghost: var(--ghost);
-  --color-ghost-foreground: var(--ghost-foreground);
-
   /* Text */
   --color-information: var(--information);
-
-  /* Dialog */
-  --color-dialog: var(--dialog);
 
   /* Border */
   --color-border: var(--border);
   --color-border-subtle: var(--border-subtle);
   --color-ring: var(--ring);
-  --color-resizable-handle-hover: var(--border-subtle);
+  --color-resizable-handle-hover: var(--resizable-handle-hover);
 
   /* Icon */
-  --color-icon: var(--gray-8);
+  --color-icon: var(--icon);
 }
 
 @layer base {

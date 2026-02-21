@@ -14,6 +14,12 @@
   --sidebar-ring: var(--gray-8);
   --sidebar-primary: var(--gray-12);
   --sidebar-primary-foreground: var(--gray-1);
+
+  /* Sidebar Swiss */
+  --swiss-sidebar-button-background: transparent;
+  --swiss-sidebar-button-foreground: var(--gray-10);
+  --swiss-sidebar-button-accent: transparent;
+  --swiss-sidebar-button-accent-foreground: var(--gray-12);
 }
 
 .dark {
@@ -26,6 +32,12 @@
   --sidebar-ring: var(--gray-4);
   --sidebar-primary: var(--gray-12);
   --sidebar-primary-foreground: var(--gray-1);
+
+  /* Sidebar Swiss */
+  --swiss-sidebar-button-background: transparent;
+  --swiss-sidebar-button-foreground: var(--gray-10);
+  --swiss-sidebar-button-accent: transparent;
+  --swiss-sidebar-button-accent-foreground: var(--gray-12);
 }
 
 @theme inline {
@@ -40,8 +52,8 @@
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
 
   /* Sidebar Swiss */
-  --color-swiss-sidebar-button-background: transparent;
-  --color-swiss-sidebar-button-foreground: var(--gray-10);
-  --color-swiss-sidebar-button-accent: transparent;
-  --color-swiss-sidebar-button-accent-foreground: var(--gray-12);
+  --color-swiss-sidebar-button-background: var(--swiss-sidebar-button-background);
+  --color-swiss-sidebar-button-foreground: var(--swiss-sidebar-button-foreground);
+  --color-swiss-sidebar-button-accent: var(--swiss-sidebar-button-accent);
+  --color-swiss-sidebar-button-accent-foreground: var(--swiss-sidebar-button-accent-foreground);
 }
