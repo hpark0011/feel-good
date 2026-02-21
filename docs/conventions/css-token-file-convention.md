@@ -158,9 +158,9 @@ The primary drift risk is tokens defined directly in `@theme inline` (skipping L
 
 ```bash
 awk '
-  /@theme inline/ { in_block=1; next }
-  in_block && /\}/ { in_block=0; next }
-  in_block && /--[a-zA-Z].*:/ && !/var\(/ {
+  /@theme inline/ { b=1; next }
+  b && /\}/ { b=0; next }
+  b && /--[a-zA-Z].*:/ && !/var[(]/ {
     printf "  %s:%d: %s\n", FILENAME, FNR, $0; v++
   }
   END { exit (v > 0) }

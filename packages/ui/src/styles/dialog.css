@@ -1,0 +1,20 @@
+/*
+* dialog.css
+*
+* Dialog-specific styles and CSS variables
+*/
+
+:root {
+  /* Dialog */
+  --dialog: var(--gray-1);
+}
+
+.dark {
+  /* Dialog */
+  --dialog: var(--gray-1);
+}
+
+@theme inline {
+  /* Dialog */
+  --color-dialog: var(--dialog);
+}
