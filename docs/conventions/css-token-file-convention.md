@@ -154,17 +154,20 @@ Every token file must define both `:root` (light) and `.dark` (dark) values, eve
 
 ## Lint Guard: No Direct Values in `@theme inline`
 
-The primary drift risk is tokens defined directly in `@theme inline` (skipping Layer 2). This grep catches violations:
+The primary drift risk is tokens defined directly in `@theme inline` (skipping Layer 2). This awk one-liner catches violations portably (no GNU grep / PCRE required):
 
 ```bash
-# Returns non-zero if any @theme inline block contains a value that isn't var(--...)
-grep -Pzo '(?s)@theme inline\s*\{[^}]*\}' packages/ui/src/styles/*.css \
-  | grep -P '--[\w-]+:\s*(?!var\()' \
-  && echo "FAIL: direct values in @theme inline" && exit 1 \
-  || echo "PASS: all @theme inline values use var()"
+awk '
+  /@theme inline/ { in_block=1; next }
+  in_block && /\}/ { in_block=0; next }
+  in_block && /--[a-zA-Z].*:/ && !/var\(/ {
+    printf "  %s:%d: %s\n", FILENAME, FNR, $0; v++
+  }
+  END { exit (v > 0) }
+' packages/ui/src/styles/*.css
 ```
 
-Run this as part of CI or as a pre-commit check. It catches exactly the violations found in `globals.css:137`, `globals.css:140`, and `sidebar.css:43-46`.
+Run this as part of CI or as a pre-commit check. It catches direct values like `transparent` or hardcoded colors in `@theme inline` blocks (e.g., `sidebar.css:43`, `sidebar.css:45`).
 
 ## Change Log
 

@@ -123,7 +123,5 @@ No component files change. No Tailwind utility class names change. All `@theme i
 3. Grep for all extracted token names to confirm no dangling references in globals.css
 4. Run the `@theme inline` lint guard from `docs/conventions/css-token-file-convention.md` to confirm zero direct values in Layer 3:
    ```bash
-   grep -Pzo '(?s)@theme inline\s*\{[^}]*\}' packages/ui/src/styles/*.css \
-     | grep -P '--[\w-]+:\s*(?!var\()' \
-     && echo "FAIL" && exit 1 || echo "PASS"
+   awk '/@theme inline/{b=1;next} b&&/\}/{b=0;next} b&&/--[a-zA-Z].*:/&&!/var\(/{printf "%s:%d: %s\n",FILENAME,FNR,$0;v++} END{exit(v>0)}' packages/ui/src/styles/*.css
    ```
