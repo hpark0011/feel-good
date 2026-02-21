@@ -131,6 +131,61 @@ export function ButtonVariants() {
       <Divider />
 
       <PageSection>
+        <PageSectionHeader>With Icon</PageSectionHeader>
+        <ButtonGroupWrapper>
+          {BUTTON_VARIANTS.map((variant) => (
+            <Button key={variant} variant={variant}>
+              <PlusIcon />
+              {variantLabels[variant]}
+            </Button>
+          ))}
+        </ButtonGroupWrapper>
+      </PageSection>
+
+      <Divider />
+
+      <PageSection>
+        <PageSectionHeader>With Icon (sm)</PageSectionHeader>
+        <ButtonGroupWrapper>
+          {BUTTON_VARIANTS.map((variant) => (
+            <Button key={variant} variant={variant} size="sm">
+              <PlusIcon />
+              {variantLabels[variant]}
+            </Button>
+          ))}
+        </ButtonGroupWrapper>
+      </PageSection>
+
+      <Divider />
+
+      <PageSection>
+        <PageSectionHeader>With Icon (lg)</PageSectionHeader>
+        <ButtonGroupWrapper>
+          {BUTTON_VARIANTS.map((variant) => (
+            <Button key={variant} variant={variant} size="lg">
+              <PlusIcon />
+              {variantLabels[variant]}
+            </Button>
+          ))}
+        </ButtonGroupWrapper>
+      </PageSection>
+
+      <Divider />
+
+      <PageSection>
+        <PageSectionHeader>State: Disabled</PageSectionHeader>
+        <ButtonGroupWrapper>
+          {BUTTON_VARIANTS.map((variant) => (
+            <Button key={variant} variant={variant} disabled>
+              {variantLabels[variant]}
+            </Button>
+          ))}
+        </ButtonGroupWrapper>
+      </PageSection>
+
+      <Divider />
+
+      <PageSection>
         <PageSectionHeader>Variant: Shiny</PageSectionHeader>
         <ButtonGroupWrapper>
           {BUTTON_VARIANTS.map((variant) => (
