@@ -53,6 +53,9 @@ export const getCurrentProfile = query({
       .withIndex("by_authId", (q) => q.eq("authId", authUser._id))
       .unique();
     if (!appUser) {
+      console.warn(
+        `[auth] Authenticated user has no app profile record. authId=${authUser._id} email=${authUser.email}`
+      );
       return null;
     }
 
@@ -236,6 +239,9 @@ export const ensureProfile = mutation({
       .unique();
 
     if (!existing) {
+      console.info(
+        `[auth] Backfilling app profile for pre-existing auth user. authId=${authUser._id} email=${authUser.email}`
+      );
       await ctx.db.insert("users", {
         authId: authUser._id,
         email: authUser.email,
