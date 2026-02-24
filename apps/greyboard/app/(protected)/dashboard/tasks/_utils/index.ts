@@ -8,7 +8,6 @@ export {
   recordDuration,
   resetTimerForTicket,
   handleTimerOnStatusChange,
-  syncTimerOnTicketUpdate,
 } from "@/features/timer";
 
 // Focus utils stays in route (not part of kanban-board feature)

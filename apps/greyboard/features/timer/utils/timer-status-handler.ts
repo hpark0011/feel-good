@@ -27,10 +27,10 @@ export function handleTimerOnStatusChange(
     if (elapsedTime > 0) {
       recordDuration(ticketId, elapsedTime, setBoard);
     }
-    stopWatchStore.stopTimer();
+    stopWatchStore.stopTimer(ticketId);
   } else if (newStatus === "backlog" || newStatus === "to-do") {
     resetTimerForTicket(ticketId, stopWatchStore, setBoard);
   } else if (oldStatus === "in-progress") {
-    stopWatchStore.stopTimer();
+    stopWatchStore.stopTimer(ticketId);
   }
 }

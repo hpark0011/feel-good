@@ -53,5 +53,4 @@ export {
 export {
   formatDuration,
   handleTimerOnStatusChange,
-  syncTimerOnTicketUpdate,
 } from "@/features/timer";

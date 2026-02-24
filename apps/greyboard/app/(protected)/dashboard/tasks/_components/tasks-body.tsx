@@ -19,7 +19,6 @@ import {
   BoardDragOverlay,
   BoardView,
   updateBoardWithTicket,
-  syncTimerOnTicketUpdate,
 } from "@/features/kanban-board";
 import { ListView } from "@/features/task-list";
 import { useStopWatchStore } from "@/features/timer";
@@ -80,7 +79,7 @@ export function TasksBody() {
         updateBoardWithTicket(board, updatedTicket, "to-do", "in-progress")
       );
 
-      useStopWatchStore.getState().startTimer(ticketId, ticket.title);
+      useStopWatchStore.getState().startTimer(ticketId);
     },
     [findTicket, actions]
   );
@@ -108,13 +107,6 @@ export function TasksBody() {
         // Update board state (handles column movement)
         actions.setBoard((board) =>
           updateBoardWithTicket(board, updatedTicket, oldColumn, data.status)
-        );
-
-        // Sync timer title if changed
-        syncTimerOnTicketUpdate(
-          editingTicket.id,
-          editingTicket.title,
-          data.title
         );
 
         // Handle timer logic if status changed

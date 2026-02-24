@@ -2,7 +2,7 @@
 
 import { HeaderContainer } from "@/components/header/header-ui";
 import { InsightsDialog } from "@/features/insights";
-import { useTimerElapsedTime, useStopWatchStore, TimerDisplay } from "@/features/timer";
+import { useStopWatchStore } from "@/features/timer";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useTodayFocus } from "../_hooks";
@@ -17,14 +17,7 @@ export function TasksHeader() {
   const [todayFocus, setTodayFocus] = useTodayFocus();
   const { resolvedTheme, setTheme } = useTheme();
 
-  // Timer state selectors
-  const activeTicketId = useStopWatchStore((state) => state.activeTicketId);
-  const activeTicketTitle = useStopWatchStore((state) =>
-    state.activeTicketTitle
-  );
-  const timerState = useStopWatchStore((state) => state.state);
   const hydrate = useStopWatchStore((state) => state._hydrate);
-  const activeElapsedSeconds = useTimerElapsedTime(activeTicketId);
 
   // Hydrate timer state from localStorage after mount (prevents hydration errors)
   useEffect(() => {
@@ -44,20 +37,10 @@ export function TasksHeader() {
         />
       </div>
       <div className="flex items-center justify-center">
-        {!activeTicketId || timerState === "stopped"
-          ? (
-            <TasksHeaderFocusDisplay
-              todayFocus={todayFocus}
-              onClick={() => setFocusDialogOpen(true)}
-            />
-          )
-          : (
-            <TimerDisplay
-              activeTicketTitle={activeTicketTitle}
-              timerState={timerState}
-              activeElapsedSeconds={activeElapsedSeconds}
-            />
-          )}
+        <TasksHeaderFocusDisplay
+          todayFocus={todayFocus}
+          onClick={() => setFocusDialogOpen(true)}
+        />
       </div>
       <div className="flex items-center justify-end">
         <TasksHeaderActions

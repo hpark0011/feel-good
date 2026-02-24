@@ -11,7 +11,6 @@ import { StopWatchState, useStopWatchStore } from "@/features/timer";
 
 interface TicketTimerButtonProps {
   ticketId: string;
-  ticketTitle: string;
   timerState: StopWatchState;
   onStartWork?: () => void;
 }
@@ -25,7 +24,6 @@ interface TicketTimerButtonProps {
  */
 export function TicketTimerButton({
   ticketId,
-  ticketTitle,
   timerState,
   onStartWork,
 }: TicketTimerButtonProps) {
@@ -70,11 +68,11 @@ export function TicketTimerButton({
             const { startTimer, pauseTimer } = useStopWatchStore.getState();
 
             if (timerState === StopWatchState.Running) {
-              pauseTimer();
+              pauseTimer(ticketId);
               return;
             }
 
-            startTimer(ticketId, ticketTitle);
+            startTimer(ticketId);
           }}
         >
           <Icon

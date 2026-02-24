@@ -146,7 +146,7 @@ export function useBoardState(): UseBoardStateReturn {
       // Stop timer if this ticket has an active timer
       const stopWatchStore = useStopWatchStore.getState();
       if (stopWatchStore.isTimerActive(ticketId)) {
-        stopWatchStore.stopTimer();
+        stopWatchStore.stopTimer(ticketId);
       }
 
       // Column lookup inside updater ensures we use fresh board state
@@ -211,11 +211,8 @@ export function useBoardState(): UseBoardStateReturn {
   );
 
   const clearBoard = useCallback(() => {
-    // Stop any active timer before clearing board
-    const stopWatchStore = useStopWatchStore.getState();
-    if (stopWatchStore.activeTicketId) {
-      stopWatchStore.stopTimer();
-    }
+    // Stop any active timers before clearing board
+    useStopWatchStore.getState().stopAllTimers();
 
     setBoard(INITIAL_BOARD_STATE);
   }, [setBoard]);
@@ -228,8 +225,7 @@ export function useBoardState(): UseBoardStateReturn {
       const ticketsInColumn = boardRef.current[columnId] || [];
       for (const ticket of ticketsInColumn) {
         if (stopWatchStore.isTimerActive(ticket.id)) {
-          stopWatchStore.stopTimer();
-          break;
+          stopWatchStore.stopTimer(ticket.id);
         }
       }
 

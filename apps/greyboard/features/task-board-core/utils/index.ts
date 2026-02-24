@@ -8,6 +8,5 @@ export {
   recordDuration,
   resetTimerForTicket,
   handleTimerOnStatusChange,
-  syncTimerOnTicketUpdate,
   type BoardUpdater,
 } from "@/features/timer";

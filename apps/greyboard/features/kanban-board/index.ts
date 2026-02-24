@@ -45,7 +45,6 @@ export {
 export {
   formatDuration,
   handleTimerOnStatusChange,
-  syncTimerOnTicketUpdate,
 } from "@/features/timer";
 
 // Alias for backward compatibility
