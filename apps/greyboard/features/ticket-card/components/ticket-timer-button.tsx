@@ -29,9 +29,6 @@ export function TicketTimerButton({
   timerState,
   onStartWork,
 }: TicketTimerButtonProps) {
-  const startTimer = useStopWatchStore((state) => state.startTimer);
-  const pauseTimer = useStopWatchStore((state) => state.pauseTimer);
-
   const tooltipLabel = onStartWork
     ? "Start Working"
     : timerState === StopWatchState.Running
@@ -69,6 +66,8 @@ export function TicketTimerButton({
               onStartWork();
               return;
             }
+
+            const { startTimer, pauseTimer } = useStopWatchStore.getState();
 
             if (timerState === StopWatchState.Running) {
               pauseTimer();

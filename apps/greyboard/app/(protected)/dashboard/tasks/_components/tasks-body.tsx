@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { closestCenter, DndContext } from "@dnd-kit/core";
 import { COLUMNS } from "@/config/board.config";
 import {
@@ -62,10 +62,17 @@ export function TasksBody() {
     });
   }, [imperativeActions]);
 
+  const isProcessingRef = useRef(false);
+
   const handleStartWork = useCallback(
     (ticketId: string) => {
+      if (isProcessingRef.current) return;
+
       const ticket = findTicket(ticketId);
       if (!ticket || ticket.status !== "to-do") return;
+
+      isProcessingRef.current = true;
+      queueMicrotask(() => { isProcessingRef.current = false; });
 
       const updatedTicket = { ...ticket, status: "in-progress" as const };
 
@@ -80,6 +87,10 @@ export function TasksBody() {
 
   const handleFormSubmit = useCallback(
     (data: TicketFormValues) => {
+      if (isProcessingRef.current) return;
+      isProcessingRef.current = true;
+      queueMicrotask(() => { isProcessingRef.current = false; });
+
       // Save the selected project as the last selected
       actions.setLastSelectedProjectId(data.projectId);
 
