@@ -14,6 +14,7 @@ export { ArrowForwardIcon } from "./components/arrow-forward";
 export { ArrowLeftCircleFillIcon } from "./components/arrow-left-circle-fill";
 export { ArrowLeftLineIcon } from "./components/arrow-left-line";
 export { ArrowLeftUpAndRightDownIcon } from "./components/arrow-left-up-and-right-down";
+export { ArrowDownrightAndArrowUpLeftIcon } from "./components/arrow-down-right-and-arrow-up-left";
 export { ArrowTriangleLeftFillIcon } from "./components/arrow-triangle-left-fill";
 export { ArrowTriangleRightFillIcon } from "./components/arrow-triangle-right-fill";
 export { ArrowTurnDownLeftIcon } from "./components/arrow-turn-down-left";

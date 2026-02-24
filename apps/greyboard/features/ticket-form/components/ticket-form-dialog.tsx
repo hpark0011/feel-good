@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@feel-good/ui/primitives/button";
 import {
   Dialog,
   DialogBody,
@@ -174,10 +174,10 @@ export function TicketFormDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         className={cn(
-          "transition-[max-width,height,transform] duration-200",
+          "transition-none",
           isExpanded
-            ? "sm:max-w-4xl h-[calc(100vh-32px)] translate-y-[-50%]"
-            : "sm:max-w-xl translate-y-[-53%]",
+            ? "h-[calc(100vh-32px)] sm:max-w-2xl translate-y-[-50%]"
+            : "translate-y-[-53%]",
         )}
         onOpenAutoFocus={handleAutoFocus}
       >
@@ -209,7 +209,7 @@ export function TicketFormDialog({
                 isExpanded && "overflow-hidden min-h-0",
               )}
             >
-              <div className="flex items-center w-[calc(100%+12px)] ml-[-6px]">
+              <div className="flex items-center w-[calc(100%+12px)] ml-[-6px] pr-1 gap-0.5">
                 <FormField
                   control={form.control}
                   name="title"
@@ -230,22 +230,20 @@ export function TicketFormDialog({
                     </FormItem>
                   )}
                 />
-                <Tooltip>
+                <Tooltip delayDuration={1000}>
                   <TooltipTrigger asChild>
                     <Button
                       type="button"
                       variant="ghost"
-                      size="sm"
+                      size="icon-xs"
                       onClick={toggleExpanded}
-                      className="shrink-0"
+                      className="shrink-0 hover:bg-gray-1"
                     >
                       <Icon
-                        name={
-                          isExpanded
-                            ? "ArrowLeftUpAndRightDownIcon"
-                            : "ArrowUpRightIcon"
-                        }
-                        className="size-4 text-icon-light"
+                        name={isExpanded
+                          ? "ArrowDownrightAndArrowUpLeftIcon"
+                          : "ArrowLeftUpAndRightDownIcon"}
+                        className="size-5 text-icon"
                       />
                     </Button>
                   </TooltipTrigger>
@@ -272,7 +270,8 @@ export function TicketFormDialog({
                           maxHeight={400}
                           fillParent={isExpanded}
                           {...field}
-                          ref={(el) => setDescriptionRef(el, field.ref)}
+                          ref={(el) =>
+                            setDescriptionRef(el, field.ref)}
                           className={cn(
                             "resize-none h-full rounded-md min-h-[160px] flex-1 transition-all border-none px-2 pb-4",
                             isExpanded && "h-full overflow-y-auto",
