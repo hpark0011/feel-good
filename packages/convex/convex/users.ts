@@ -216,3 +216,33 @@ export const generateAvatarUploadUrl = mutation({
     return await ctx.storage.generateUploadUrl();
   },
 });
+
+/**
+ * Ensure an app user record exists for the current auth user.
+ * Backfills users created before the onCreate trigger was added.
+ */
+export const ensureProfile = mutation({
+  args: {},
+  returns: v.null(),
+  handler: async (ctx) => {
+    const authUser = await authComponent.getAuthUser(ctx);
+    if (!authUser) {
+      throw new Error("Not authenticated");
+    }
+
+    const existing = await ctx.db
+      .query("users")
+      .withIndex("by_authId", (q) => q.eq("authId", authUser._id))
+      .unique();
+
+    if (!existing) {
+      await ctx.db.insert("users", {
+        authId: authUser._id,
+        email: authUser.email,
+        onboardingComplete: false,
+      });
+    }
+
+    return null;
+  },
+});

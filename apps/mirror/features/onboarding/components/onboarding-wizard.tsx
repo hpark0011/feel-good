@@ -1,8 +1,8 @@
 "use client";
 
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { api } from "@feel-good/convex/convex/_generated/api";
 import { Spinner } from "@feel-good/ui/primitives/spinner";
 import { ProfileStep } from "./profile-step";
@@ -11,6 +11,20 @@ import { UsernameStep } from "./username-step";
 export function OnboardingWizard() {
   const router = useRouter();
   const profile = useQuery(api.users.getCurrentProfile);
+  const ensureProfile = useMutation(api.users.ensureProfile);
+  const ensuredRef = useRef(false);
+
+  // Backfill: if authenticated but no app user record, create one.
+  // This handles users created before the onCreate trigger existed.
+  useEffect(() => {
+    if (profile === null && !ensuredRef.current) {
+      ensuredRef.current = true;
+      ensureProfile().catch(() => {
+        // Auth not ready yet — reset so we retry on next render cycle
+        ensuredRef.current = false;
+      });
+    }
+  }, [profile, ensureProfile]);
 
   useEffect(() => {
     if (profile && profile.onboardingComplete && profile.username) {
