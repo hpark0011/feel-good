@@ -16,6 +16,7 @@ interface TicketCardHeaderProps {
   onToggleSubTasks: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
+  onStartWork?: () => void;
 }
 
 /**
@@ -30,6 +31,7 @@ export function TicketCardHeader({
   onToggleSubTasks,
   onEdit,
   onDelete,
+  onStartWork,
 }: TicketCardHeaderProps) {
   const hasContentBelow = ticket.description || isSubTaskEditorOpen;
   const isComplete = ticket.status === "complete";
@@ -44,11 +46,12 @@ export function TicketCardHeader({
               isComplete && "block"
             )}
           >
-            {ticket.status === "in-progress" && (
+            {(ticket.status === "in-progress" || ticket.status === "to-do") && (
               <TicketTimerButton
                 ticketId={ticket.id}
                 ticketTitle={ticket.title}
                 timerState={timerState}
+                onStartWork={ticket.status === "to-do" ? onStartWork : undefined}
               />
             )}
             <TicketDurationBadge

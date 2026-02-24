@@ -22,6 +22,7 @@ import {
   syncTimerOnTicketUpdate,
 } from "@/features/kanban-board";
 import { ListView } from "@/features/task-list";
+import { useStopWatchStore } from "@/features/timer";
 
 export function TasksBody() {
   const { isListLayout } = useLayoutMode();
@@ -60,6 +61,22 @@ export function TasksBody() {
       clearBoard: imperativeActions.clearBoard,
     });
   }, [imperativeActions]);
+
+  const handleStartWork = useCallback(
+    (ticketId: string) => {
+      const ticket = findTicket(ticketId);
+      if (!ticket || ticket.status !== "to-do") return;
+
+      const updatedTicket = { ...ticket, status: "in-progress" as const };
+
+      actions.setBoard((board) =>
+        updateBoardWithTicket(board, updatedTicket, "to-do", "in-progress")
+      );
+
+      useStopWatchStore.getState().startTimer(ticketId, ticket.title);
+    },
+    [findTicket, actions]
+  );
 
   const handleFormSubmit = useCallback(
     (data: TicketFormValues) => {
@@ -126,6 +143,7 @@ export function TasksBody() {
             onDeleteTicket={actions.deleteTicket}
             onClearColumn={actions.clearColumn}
             onUpdateSubTasks={actions.updateSubTasks}
+            onStartWork={handleStartWork}
           />
         ) : (
           <BoardView
@@ -136,6 +154,7 @@ export function TasksBody() {
             onDeleteTicket={actions.deleteTicket}
             onClearColumn={actions.clearColumn}
             onUpdateSubTasks={actions.updateSubTasks}
+            onStartWork={handleStartWork}
           />
         )}
         <BoardDragOverlay activeTicket={activeTicket} />

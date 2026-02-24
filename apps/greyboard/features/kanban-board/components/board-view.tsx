@@ -13,6 +13,7 @@ interface BoardViewProps {
   onDeleteTicket: (ticketId: string) => void;
   onClearColumn?: (columnId: ColumnId) => void;
   onUpdateSubTasks: (ticketId: string, subTasks: SubTask[]) => void;
+  onStartWork?: (ticketId: string) => void;
 }
 
 /**
@@ -27,6 +28,7 @@ export function BoardView({
   onDeleteTicket,
   onClearColumn,
   onUpdateSubTasks,
+  onStartWork,
 }: BoardViewProps) {
   return (
     <BoardLayout>
@@ -44,6 +46,7 @@ export function BoardView({
                 : undefined
             }
             onUpdateSubTasks={onUpdateSubTasks}
+            onStartWork={onStartWork}
           />
           <div className='w-[1px] min-w-[1px] bg-border-medium last:hidden' />
         </Fragment>

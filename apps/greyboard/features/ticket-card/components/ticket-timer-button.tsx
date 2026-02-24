@@ -13,18 +13,30 @@ interface TicketTimerButtonProps {
   ticketId: string;
   ticketTitle: string;
   timerState: StopWatchState;
+  onStartWork?: () => void;
 }
 
 /**
- * Play/pause timer button for in-progress tickets
+ * Play/pause timer button for in-progress and to-do tickets.
+ *
+ * When `onStartWork` is provided (to-do tickets), clicking calls it to move
+ * the ticket to in-progress and start the timer in one action.
+ * Otherwise, toggles the timer for in-progress tickets.
  */
 export function TicketTimerButton({
   ticketId,
   ticketTitle,
   timerState,
+  onStartWork,
 }: TicketTimerButtonProps) {
   const startTimer = useStopWatchStore((state) => state.startTimer);
   const pauseTimer = useStopWatchStore((state) => state.pauseTimer);
+
+  const tooltipLabel = onStartWork
+    ? "Start Working"
+    : timerState === StopWatchState.Running
+      ? "Pause Timer"
+      : "Start Timer";
 
   return (
     <Tooltip>
@@ -53,6 +65,11 @@ export function TicketTimerButton({
             timerState === StopWatchState.Running && "pulse-shadow gap-0.5"
           )}
           onClick={() => {
+            if (onStartWork) {
+              onStartWork();
+              return;
+            }
+
             if (timerState === StopWatchState.Running) {
               pauseTimer();
               return;
@@ -76,9 +93,7 @@ export function TicketTimerButton({
           />
         </button>
       </TooltipTrigger>
-      <TooltipContent>
-        {timerState === StopWatchState.Running ? "Pause Timer" : "Start Timer"}
-      </TooltipContent>
+      <TooltipContent>{tooltipLabel}</TooltipContent>
     </Tooltip>
   );
 }
