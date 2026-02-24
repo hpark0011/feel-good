@@ -200,13 +200,13 @@ export function TicketFormDialog({
           <form
             onSubmit={form.handleSubmit(handleSubmitWithCleanup)}
             className={cn(
-              isExpanded && "grid grid-rows-[auto_1fr_auto] h-full",
+              isExpanded && "grid grid-rows-[1fr_auto] h-full",
             )}
           >
             <DialogBody
               className={cn(
                 "mt-3 gap-0",
-                isExpanded && "overflow-hidden min-h-0",
+                isExpanded && "overflow-hidden min-h-0 flex flex-col",
               )}
             >
               <div className="flex items-center w-[calc(100%+12px)] ml-[-6px] pr-1 gap-0.5">
