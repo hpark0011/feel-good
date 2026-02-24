@@ -89,6 +89,8 @@ export function TicketFormDialog({
     mode === "edit" && (defaultValues?.subTasks?.length ?? 0) > 0,
   );
 
+  const [isExpanded, setIsExpanded] = useState(false);
+
   // Track previous count to distinguish between user toggle and user removing items
   const prevCountRef = useRef<number>(defaultValues?.subTasks?.length ?? 0);
   const showSubTasksRef = useRef<boolean>(showSubTasks);
@@ -140,8 +142,11 @@ export function TicketFormDialog({
   const handleOpenChange = useCallback(
     (nextOpen: boolean) => {
       autoSaveOpenChange(nextOpen);
-      if (!nextOpen && mode === "create") {
-        clearSubTasks();
+      if (!nextOpen) {
+        setIsExpanded(false);
+        if (mode === "create") {
+          clearSubTasks();
+        }
       }
     },
     [autoSaveOpenChange, clearSubTasks, mode],
@@ -163,10 +168,19 @@ export function TicketFormDialog({
   });
 
   const toggleSubTasks = () => setShowSubTasks(!showSubTasks);
+  const toggleExpanded = () => setIsExpanded((prev) => !prev);
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-xl" onOpenAutoFocus={handleAutoFocus}>
+      <DialogContent
+        className={cn(
+          "transition-all duration-200",
+          isExpanded
+            ? "sm:max-w-4xl h-[calc(100vh-32px)] translate-y-[-50%]"
+            : "sm:max-w-xl",
+        )}
+        onOpenAutoFocus={handleAutoFocus}
+      >
         <DialogHeader className="sr-only">
           <VisuallyHidden asChild>
             <DialogTitle>
@@ -183,8 +197,16 @@ export function TicketFormDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmitWithCleanup)}>
-            <DialogBody className="mt-3 gap-0">
+          <form
+            onSubmit={form.handleSubmit(handleSubmitWithCleanup)}
+            className={cn(isExpanded && "flex flex-col h-full")}
+          >
+            <DialogBody
+              className={cn(
+                "mt-3 gap-0",
+                isExpanded && "flex flex-col flex-1 overflow-hidden",
+              )}
+            >
               <div className="flex items-center w-[calc(100%+12px)] ml-[-6px]">
                 <FormField
                   control={form.control}
@@ -206,22 +228,51 @@ export function TicketFormDialog({
                     </FormItem>
                   )}
                 />
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={toggleExpanded}
+                      className="shrink-0"
+                    >
+                      <Icon
+                        name={
+                          isExpanded
+                            ? "ArrowLeftUpAndRightDownIcon"
+                            : "ArrowUpRightIcon"
+                        }
+                        className="size-4 text-icon-light"
+                      />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent sideOffset={-4}>
+                    {isExpanded ? "Collapse" : "Expand"}
+                  </TooltipContent>
+                </Tooltip>
               </div>
               <FormField
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className={cn(isExpanded && "flex-1 flex flex-col min-h-0")}>
                     <FormLabel className="sr-only">Description</FormLabel>
                     <FormControl>
-                      <div className="relative w-[calc(100%+12px)] ml-[-6px]">
+                      <div
+                        className={cn(
+                          "relative w-[calc(100%+12px)] ml-[-6px]",
+                          isExpanded && "flex-1 flex flex-col min-h-0",
+                        )}
+                      >
                         <AutoResizingTextarea
                           placeholder="Enter ticket description..."
-                          maxHeight={400}
+                          maxHeight={isExpanded ? 9999 : 400}
                           {...field}
                           ref={(el) => setDescriptionRef(el, field.ref)}
                           className={cn(
-                            "resize-none h-full rounded-md min-h-[160px] flex-1 transition-all  border-none px-2 pb-4",
+                            "resize-none h-full rounded-md min-h-[160px] flex-1 transition-all border-none px-2 pb-4",
+                            isExpanded && "!h-full overflow-y-auto",
                           )}
                         />
                         <GradientFade />

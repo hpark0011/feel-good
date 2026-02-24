@@ -11,7 +11,7 @@ import * as z from "zod";
 
 const ticketSchema = z.object({
   title: z.string().min(1, "Title is required").max(100, "Title is too long"),
-  description: z.string().max(1000, "Description is too long").default(""),
+  description: z.string().max(10000, "Description is too long").default(""),
   status: z.enum(["backlog", "to-do", "in-progress", "complete"]),
   projectId: z.string().optional(),
   subTasks: z
