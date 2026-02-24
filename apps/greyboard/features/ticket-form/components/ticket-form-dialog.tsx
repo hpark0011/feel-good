@@ -74,6 +74,7 @@ export function TicketFormDialog({
 
   const handleSubmitWithCleanup = useCallback(
     (data: TicketFormOutput) => {
+      setIsExpanded(false);
       handleSubmit(data);
       if (mode === "create") {
         clearSubTasks();
@@ -153,6 +154,7 @@ export function TicketFormDialog({
   );
 
   const handleCancel = useCallback(() => {
+    setIsExpanded(false);
     if (mode === "create") {
       clearSubTasks();
     }
