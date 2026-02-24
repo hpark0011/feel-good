@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { closestCenter, DndContext } from "@dnd-kit/core";
 import { COLUMNS } from "@/config/board.config";
 import {
@@ -22,6 +22,7 @@ import {
   syncTimerOnTicketUpdate,
 } from "@/features/kanban-board";
 import { ListView } from "@/features/task-list";
+import { useStopWatchStore } from "@/features/timer";
 
 export function TasksBody() {
   const { isListLayout } = useLayoutMode();
@@ -61,8 +62,35 @@ export function TasksBody() {
     });
   }, [imperativeActions]);
 
+  const isProcessingRef = useRef(false);
+
+  const handleStartWork = useCallback(
+    (ticketId: string) => {
+      if (isProcessingRef.current) return;
+
+      const ticket = findTicket(ticketId);
+      if (!ticket || ticket.status !== "to-do") return;
+
+      isProcessingRef.current = true;
+      queueMicrotask(() => { isProcessingRef.current = false; });
+
+      const updatedTicket = { ...ticket, status: "in-progress" as const };
+
+      actions.setBoard((board) =>
+        updateBoardWithTicket(board, updatedTicket, "to-do", "in-progress")
+      );
+
+      useStopWatchStore.getState().startTimer(ticketId, ticket.title);
+    },
+    [findTicket, actions]
+  );
+
   const handleFormSubmit = useCallback(
     (data: TicketFormValues) => {
+      if (isProcessingRef.current) return;
+      isProcessingRef.current = true;
+      queueMicrotask(() => { isProcessingRef.current = false; });
+
       // Save the selected project as the last selected
       actions.setLastSelectedProjectId(data.projectId);
 
@@ -126,6 +154,7 @@ export function TasksBody() {
             onDeleteTicket={actions.deleteTicket}
             onClearColumn={actions.clearColumn}
             onUpdateSubTasks={actions.updateSubTasks}
+            onStartWork={handleStartWork}
           />
         ) : (
           <BoardView
@@ -136,6 +165,7 @@ export function TasksBody() {
             onDeleteTicket={actions.deleteTicket}
             onClearColumn={actions.clearColumn}
             onUpdateSubTasks={actions.updateSubTasks}
+            onStartWork={handleStartWork}
           />
         )}
         <BoardDragOverlay activeTicket={activeTicket} />

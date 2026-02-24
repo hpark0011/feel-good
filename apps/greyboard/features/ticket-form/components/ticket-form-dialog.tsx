@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@feel-good/ui/primitives/button";
 import {
   Dialog,
   DialogBody,
@@ -74,6 +74,7 @@ export function TicketFormDialog({
 
   const handleSubmitWithCleanup = useCallback(
     (data: TicketFormOutput) => {
+      setIsExpanded(false);
       handleSubmit(data);
       if (mode === "create") {
         clearSubTasks();
@@ -88,6 +89,8 @@ export function TicketFormDialog({
   const [showSubTasks, setShowSubTasks] = useState(
     mode === "edit" && (defaultValues?.subTasks?.length ?? 0) > 0,
   );
+
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Track previous count to distinguish between user toggle and user removing items
   const prevCountRef = useRef<number>(defaultValues?.subTasks?.length ?? 0);
@@ -140,14 +143,18 @@ export function TicketFormDialog({
   const handleOpenChange = useCallback(
     (nextOpen: boolean) => {
       autoSaveOpenChange(nextOpen);
-      if (!nextOpen && mode === "create") {
-        clearSubTasks();
+      if (!nextOpen) {
+        setIsExpanded(false);
+        if (mode === "create") {
+          clearSubTasks();
+        }
       }
     },
     [autoSaveOpenChange, clearSubTasks, mode],
   );
 
   const handleCancel = useCallback(() => {
+    setIsExpanded(false);
     if (mode === "create") {
       clearSubTasks();
     }
@@ -163,10 +170,19 @@ export function TicketFormDialog({
   });
 
   const toggleSubTasks = () => setShowSubTasks(!showSubTasks);
+  const toggleExpanded = () => setIsExpanded((prev) => !prev);
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-xl" onOpenAutoFocus={handleAutoFocus}>
+      <DialogContent
+        className={cn(
+          "transition-none",
+          isExpanded
+            ? "h-[calc(100vh-32px)] sm:max-w-2xl translate-y-[-50%]"
+            : "translate-y-[-53%]",
+        )}
+        onOpenAutoFocus={handleAutoFocus}
+      >
         <DialogHeader className="sr-only">
           <VisuallyHidden asChild>
             <DialogTitle>
@@ -183,9 +199,19 @@ export function TicketFormDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmitWithCleanup)}>
-            <DialogBody className="mt-3 gap-0">
-              <div className="flex items-center w-[calc(100%+12px)] ml-[-6px]">
+          <form
+            onSubmit={form.handleSubmit(handleSubmitWithCleanup)}
+            className={cn(
+              isExpanded && "grid grid-rows-[1fr_auto] h-full",
+            )}
+          >
+            <DialogBody
+              className={cn(
+                "mt-3 gap-0",
+                isExpanded && "overflow-hidden min-h-0 flex flex-col",
+              )}
+            >
+              <div className="flex items-center w-[calc(100%+12px)] ml-[-6px] pr-1 gap-0.5">
                 <FormField
                   control={form.control}
                   name="title"
@@ -206,25 +232,54 @@ export function TicketFormDialog({
                     </FormItem>
                   )}
                 />
+                <Tooltip delayDuration={1000}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon-xs"
+                      onClick={toggleExpanded}
+                      className="shrink-0 hover:bg-gray-1"
+                    >
+                      <Icon
+                        name={isExpanded
+                          ? "ArrowDownrightAndArrowUpLeftIcon"
+                          : "ArrowLeftUpAndRightDownIcon"}
+                        className="size-5 text-icon"
+                      />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent sideOffset={-4}>
+                    {isExpanded ? "Collapse" : "Expand"}
+                  </TooltipContent>
+                </Tooltip>
               </div>
               <FormField
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className={cn(isExpanded && "min-h-0 flex-1")}>
                     <FormLabel className="sr-only">Description</FormLabel>
                     <FormControl>
-                      <div className="relative w-[calc(100%+12px)] ml-[-6px]">
+                      <div
+                        className={cn(
+                          "relative w-[calc(100%+12px)] ml-[-6px]",
+                          isExpanded && "h-full",
+                        )}
+                      >
                         <AutoResizingTextarea
                           placeholder="Enter ticket description..."
                           maxHeight={400}
+                          fillParent={isExpanded}
                           {...field}
-                          ref={(el) => setDescriptionRef(el, field.ref)}
+                          ref={(el) =>
+                            setDescriptionRef(el, field.ref)}
                           className={cn(
-                            "resize-none h-full rounded-md min-h-[160px] flex-1 transition-all  border-none px-2 pb-4",
+                            "resize-none h-full rounded-md min-h-[160px] flex-1 transition-all border-none px-2 pb-4",
+                            isExpanded && "h-full overflow-y-auto",
                           )}
                         />
-                        <GradientFade />
+                        {!isExpanded && <GradientFade />}
                       </div>
                     </FormControl>
                     <FormMessage />

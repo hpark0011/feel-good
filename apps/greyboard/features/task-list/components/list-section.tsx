@@ -20,6 +20,7 @@ interface ListSectionProps {
   onDeleteTicket: (ticketId: string) => void;
   onClearColumn?: () => void;
   onUpdateSubTasks: (ticketId: string, subTasks: SubTask[]) => void;
+  onStartWork?: (ticketId: string) => void;
   isLastSection: boolean;
 }
 
@@ -35,6 +36,7 @@ export function ListSection({
   onDeleteTicket,
   onClearColumn,
   onUpdateSubTasks,
+  onStartWork,
   isLastSection,
 }: ListSectionProps) {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -86,6 +88,7 @@ export function ListSection({
                 onEdit={() => onEditTicket(ticket)}
                 onDelete={() => onDeleteTicket(ticket.id)}
                 onClick={() => onEditTicket(ticket)}
+                onStartWork={onStartWork ? () => onStartWork(ticket.id) : undefined}
                 onSubTasksChange={(subTasks: SubTask[]) =>
                   onUpdateSubTasks(ticket.id, subTasks)}
               />

@@ -20,6 +20,7 @@ interface TicketCardProps {
   onEdit?: () => void;
   onDelete?: () => void;
   onClick?: () => void;
+  onStartWork?: () => void;
   index?: number;
   isInitialLoad?: boolean;
   onSubTasksChange?: (subTasks: SubTask[]) => void;
@@ -37,6 +38,7 @@ export function TicketCard({
   onEdit,
   onDelete,
   onClick,
+  onStartWork,
   index = 0,
   isInitialLoad = false,
   onSubTasksChange,
@@ -113,6 +115,7 @@ export function TicketCard({
           onToggleSubTasks={toggleSubTaskEditor}
           onEdit={onEdit}
           onDelete={onDelete}
+          onStartWork={onStartWork}
         />
         <TicketCardContent
           ticket={ticket}

@@ -12,6 +12,7 @@ interface ListViewProps {
   onDeleteTicket: (ticketId: string) => void;
   onClearColumn?: (columnId: ColumnId) => void;
   onUpdateSubTasks: (ticketId: string, subTasks: SubTask[]) => void;
+  onStartWork?: (ticketId: string) => void;
 }
 
 /**
@@ -26,6 +27,7 @@ export function ListView({
   onDeleteTicket,
   onClearColumn,
   onUpdateSubTasks,
+  onStartWork,
 }: ListViewProps) {
   return (
     <ListLayout>
@@ -43,6 +45,7 @@ export function ListView({
               : undefined
           }
           onUpdateSubTasks={onUpdateSubTasks}
+          onStartWork={onStartWork}
           isLastSection={index === columns.length - 1}
         />
       ))}

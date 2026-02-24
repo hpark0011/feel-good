@@ -21,6 +21,7 @@ interface BoardColumnProps {
   onDeleteTicket: (ticketId: string) => void;
   onClearColumn?: () => void;
   onUpdateSubTasks: (ticketId: string, subTasks: SubTask[]) => void;
+  onStartWork?: (ticketId: string) => void;
 }
 
 /**
@@ -35,6 +36,7 @@ export function BoardColumn({
   onDeleteTicket,
   onClearColumn,
   onUpdateSubTasks,
+  onStartWork,
 }: BoardColumnProps) {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
@@ -79,6 +81,7 @@ export function BoardColumn({
                 onEdit={() => onEditTicket(ticket)}
                 onDelete={() => onDeleteTicket(ticket.id)}
                 onClick={() => onEditTicket(ticket)}
+                onStartWork={onStartWork ? () => onStartWork(ticket.id) : undefined}
                 onSubTasksChange={(subTasks: SubTask[]) =>
                   onUpdateSubTasks(ticket.id, subTasks)
                 }
