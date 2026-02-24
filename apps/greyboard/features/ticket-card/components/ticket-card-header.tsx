@@ -49,7 +49,6 @@ export function TicketCardHeader({
             {(ticket.status === "in-progress" || ticket.status === "to-do") && (
               <TicketTimerButton
                 ticketId={ticket.id}
-                ticketTitle={ticket.title}
                 timerState={timerState}
                 onStartWork={ticket.status === "to-do" ? onStartWork : undefined}
               />
