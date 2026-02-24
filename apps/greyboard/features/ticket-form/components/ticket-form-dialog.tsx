@@ -174,10 +174,10 @@ export function TicketFormDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         className={cn(
-          "transition-all duration-200",
+          "transition-[max-width,height,transform] duration-200",
           isExpanded
             ? "sm:max-w-4xl h-[calc(100vh-32px)] translate-y-[-50%]"
-            : "sm:max-w-xl",
+            : "sm:max-w-xl translate-y-[-53%]",
         )}
         onOpenAutoFocus={handleAutoFocus}
       >
@@ -199,12 +199,14 @@ export function TicketFormDialog({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmitWithCleanup)}
-            className={cn(isExpanded && "flex flex-col h-full")}
+            className={cn(
+              isExpanded && "grid grid-rows-[auto_1fr_auto] h-full",
+            )}
           >
             <DialogBody
               className={cn(
                 "mt-3 gap-0",
-                isExpanded && "flex flex-col flex-1 overflow-hidden",
+                isExpanded && "overflow-hidden min-h-0",
               )}
             >
               <div className="flex items-center w-[calc(100%+12px)] ml-[-6px]">
@@ -256,26 +258,27 @@ export function TicketFormDialog({
                 control={form.control}
                 name="description"
                 render={({ field }) => (
-                  <FormItem className={cn(isExpanded && "flex-1 flex flex-col min-h-0")}>
+                  <FormItem className={cn(isExpanded && "min-h-0 flex-1")}>
                     <FormLabel className="sr-only">Description</FormLabel>
                     <FormControl>
                       <div
                         className={cn(
                           "relative w-[calc(100%+12px)] ml-[-6px]",
-                          isExpanded && "flex-1 flex flex-col min-h-0",
+                          isExpanded && "h-full",
                         )}
                       >
                         <AutoResizingTextarea
                           placeholder="Enter ticket description..."
-                          maxHeight={isExpanded ? 9999 : 400}
+                          maxHeight={400}
+                          fillParent={isExpanded}
                           {...field}
                           ref={(el) => setDescriptionRef(el, field.ref)}
                           className={cn(
                             "resize-none h-full rounded-md min-h-[160px] flex-1 transition-all border-none px-2 pb-4",
-                            isExpanded && "!h-full overflow-y-auto",
+                            isExpanded && "h-full overflow-y-auto",
                           )}
                         />
-                        <GradientFade />
+                        {!isExpanded && <GradientFade />}
                       </div>
                     </FormControl>
                     <FormMessage />

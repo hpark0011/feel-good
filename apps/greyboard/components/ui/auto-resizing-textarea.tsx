@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 export interface AutoResizingTextareaProps
   extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   maxHeight?: number;
+  /** When true, skip auto-resize and let CSS control height (e.g., flex/grid fill). */
+  fillParent?: boolean;
   ref?: React.Ref<HTMLTextAreaElement>;
   placeholder?: string;
 }
@@ -14,6 +16,7 @@ export interface AutoResizingTextareaProps
 function AutoResizingTextarea({
   className,
   maxHeight = 300,
+  fillParent = false,
   onChange,
   ref,
   placeholder = "Type your message...",
@@ -23,6 +26,8 @@ function AutoResizingTextarea({
   const combinedRef = useCombinedRefs(ref, textareaRef);
 
   const adjustHeight = useCallback(() => {
+    if (fillParent) return;
+
     const textarea = textareaRef.current;
     if (!textarea) return;
 
@@ -36,7 +41,15 @@ function AutoResizingTextarea({
     // Enable/disable scrolling based on content height
     textarea.style.overflowY =
       textarea.scrollHeight > maxHeight ? "auto" : "hidden";
-  }, [maxHeight]);
+  }, [maxHeight, fillParent]);
+
+  // Clear inline height when switching to fillParent mode
+  useEffect(() => {
+    if (fillParent && textareaRef.current) {
+      textareaRef.current.style.height = "";
+      textareaRef.current.style.overflowY = "";
+    }
+  }, [fillParent]);
 
   // Adjust height on content change
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
