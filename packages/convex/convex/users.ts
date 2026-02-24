@@ -4,10 +4,29 @@ import { authComponent } from "./auth";
 import type { QueryCtx, MutationCtx } from "./_generated/server";
 import type { Id } from "./_generated/dataModel";
 
+const RESERVED_USERNAMES = new Set([
+  "api",
+  "admin",
+  "dashboard",
+  "settings",
+  "sign-in",
+  "sign-up",
+]);
+
 const profileReturnValidator = v.object({
   _id: v.id("users"),
   authId: v.string(),
   email: v.string(),
+  username: v.optional(v.string()),
+  name: v.optional(v.string()),
+  bio: v.optional(v.string()),
+  avatarUrl: v.union(v.string(), v.null()),
+  onboardingComplete: v.boolean(),
+});
+
+const publicProfileReturnValidator = v.object({
+  _id: v.id("users"),
+  authId: v.string(),
   username: v.optional(v.string()),
   name: v.optional(v.string()),
   bio: v.optional(v.string()),
@@ -76,7 +95,7 @@ export const getCurrentProfile = query({
 
 export const getByUsername = query({
   args: { username: v.string() },
-  returns: v.union(profileReturnValidator, v.null()),
+  returns: v.union(publicProfileReturnValidator, v.null()),
   handler: async (ctx, args) => {
     const appUser = await ctx.db
       .query("users")
@@ -91,7 +110,6 @@ export const getByUsername = query({
     return {
       _id: appUser._id,
       authId: appUser.authId,
-      email: appUser.email,
       username: appUser.username,
       name: appUser.name,
       bio: appUser.bio,
@@ -129,6 +147,10 @@ export const setUsername = mutation({
       throw new Error(
         "Invalid username format. Must be 3-30 characters, lowercase alphanumeric and hyphens, no leading/trailing hyphens.",
       );
+    }
+
+    if (RESERVED_USERNAMES.has(args.username)) {
+      throw new Error("This username is reserved and cannot be used");
     }
 
     const existing = await ctx.db
