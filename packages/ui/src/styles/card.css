@@ -10,6 +10,7 @@
   --card-foreground: var(--gray-12);
   --card-title: var(--gray-12);
   --card-description: var(--gray-11);
+  --card-border: var(--gray-1);
 }
 
 .dark {
@@ -17,6 +18,7 @@
   --card-foreground: var(--gray-12);
   --card-title: var(--gray-12);
   --card-description: var(--gray-11);
+  --card-border: var(--gray-3);
 }
 
 @theme inline {
@@ -24,4 +26,5 @@
   --color-card-foreground: var(--card-foreground);
   --color-card-title: var(--card-title);
   --color-card-description: var(--card-description);
+  --color-card-border: var(--card-border);
 }

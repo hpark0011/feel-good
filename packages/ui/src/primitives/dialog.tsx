@@ -42,7 +42,7 @@ function DialogOverlay({
         // positioning
         "fixed inset-0 z-50",
         // background
-        "bg-black/50",
+        "bg-black/10",
         // state animations
         "data-[state=open]:animate-in data-[state=closed]:animate-out",
         "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
@@ -75,9 +75,9 @@ function DialogContent({
           // layout
           "grid gap-4 p-4",
           // shape
-          "[corner-shape:superellipse(1.1)] rounded-[22px] outline-none",
+          "[corner-shape:superellipse(1.1)] rounded-[22px] outline-none border border-dialog-border",
           // background & shadow
-          "bg-dialog shadow-4xl",
+          "bg-dialog shadow-dialog-shadow",
           // state animations
           "duration-200",
           "data-[state=open]:animate-in data-[state=closed]:animate-out",
@@ -189,7 +189,7 @@ function DialogDescription({
       data-slot="dialog-description"
       className={cn(
         // text
-        "text-dialog-description text-[15px] leading-[1.2]",
+        "text-dialog-description text-[15px] leading-[1.3] font-regular",
         className,
       )}
       {...props}
