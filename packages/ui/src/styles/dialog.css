@@ -6,12 +6,12 @@
 
 :root {
   /* Dialog */
-  --dialog: var(--gray-1);
+  --dialog: var(--card);
 }
 
 .dark {
   /* Dialog */
-  --dialog: var(--gray-1);
+  --dialog: var(--card);
 }
 
 @theme inline {
