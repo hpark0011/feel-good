@@ -40,7 +40,19 @@ export function ProfileInfo({
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
-  const updateProfile = useMutation(api.users.mutations.updateProfile);
+  const updateProfile = useMutation(api.users.mutations.updateProfile)
+    .withOptimisticUpdate((localStore, args) => {
+      const current = localStore.getQuery(api.users.queries.getByUsername, {
+        username: profile.username,
+      });
+      if (current != null) {
+        localStore.setQuery(
+          api.users.queries.getByUsername,
+          { username: profile.username },
+          { ...current, name: args.name ?? current.name, bio: args.bio ?? current.bio },
+        );
+      }
+    });
   const setAvatar = useMutation(api.users.mutations.setAvatar);
   const generateUploadUrl = useMutation(api.users.mutations.generateAvatarUploadUrl);
 
@@ -84,11 +96,11 @@ export function ProfileInfo({
       });
 
       toast.success("Profile updated");
-      onEditComplete();
     } catch {
       toast.error("Failed to update profile");
-      onSubmittingChange?.(false);
     }
+
+    onEditComplete();
   }
 
   const content = (

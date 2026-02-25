@@ -3,7 +3,7 @@ import { MOCK_PROFILE } from "@/features/profile";
 import type { Profile } from "@/features/profile";
 import { MOCK_ARTICLES } from "@/features/articles";
 import { isReservedUsername } from "@/lib/reserved-usernames";
-import { fetchAuthQuery } from "@/lib/auth-server";
+import { fetchAuthQuery, preloadAuthQuery } from "@/lib/auth-server";
 import { api } from "@feel-good/convex/convex/_generated/api";
 import { ProfileShell } from "./_components/profile-shell";
 
@@ -17,7 +17,10 @@ export default async function ProfileLayout({
   const { username } = await params;
   if (isReservedUsername(username)) notFound();
 
-  const convexProfile = await fetchAuthQuery(api.users.queries.getByUsername, { username });
+  const [convexProfile, preloadedProfile] = await Promise.all([
+    fetchAuthQuery(api.users.queries.getByUsername, { username }),
+    preloadAuthQuery(api.users.queries.getByUsername, { username }),
+  ]);
 
   let profileData: Profile;
 
@@ -49,7 +52,7 @@ export default async function ProfileLayout({
     : MOCK_ARTICLES.filter((a) => a.status === "published");
 
   return (
-    <ProfileShell profile={profileData} isOwner={isOwner} articles={articles}>
+    <ProfileShell profile={profileData} preloadedProfile={preloadedProfile} isOwner={isOwner} articles={articles}>
       {children}
     </ProfileShell>
   );

@@ -2,7 +2,10 @@
 
 import { useCallback, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
+import { usePreloadedQuery } from "convex/react";
+import type { Preloaded } from "convex/react";
 import { toast } from "sonner";
+import { api } from "@feel-good/convex/convex/_generated/api";
 import type { Profile } from "@/features/profile";
 import {
   EditActions,
@@ -38,14 +41,28 @@ const VideoCallModal = dynamic(
 
 type ProfileShellProps = {
   profile: Profile;
+  preloadedProfile: Preloaded<typeof api.users.queries.getByUsername>;
   isOwner: boolean;
   articles: Article[];
   children: React.ReactNode;
 };
 
 export function ProfileShell(
-  { profile, isOwner, articles, children }: ProfileShellProps,
+  { profile: initialProfile, preloadedProfile, isOwner, articles, children }: ProfileShellProps,
 ) {
+  // Subscribe to reactive profile data from Convex
+  const reactiveRaw = usePreloadedQuery(preloadedProfile);
+  const profile: Profile = reactiveRaw
+    ? {
+        _id: reactiveRaw._id,
+        authId: reactiveRaw.authId,
+        username: reactiveRaw.username ?? initialProfile.username,
+        name: reactiveRaw.name ?? "",
+        bio: reactiveRaw.bio ?? "",
+        avatarUrl: reactiveRaw.avatarUrl,
+      }
+    : initialProfile;
+
   const isMobile = useIsMobile();
   const [videoCallOpen, setVideoCallOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
