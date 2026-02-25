@@ -1,18 +1,12 @@
-import { mutation } from "../_generated/server";
 import { v } from "convex/values";
-import { authComponent } from "../auth/client";
+import { authMutation } from "../lib/auth";
 import { RESERVED_USERNAMES, getAppUser } from "./helpers";
 
-export const setUsername = mutation({
+export const setUsername = authMutation({
   args: { username: v.string() },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const authUser = await authComponent.getAuthUser(ctx);
-    if (!authUser) {
-      throw new Error("Not authenticated");
-    }
-
-    const appUser = await getAppUser(ctx, authUser._id);
+    const appUser = await getAppUser(ctx, ctx.user._id);
 
     const usernameRegex = /^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$/;
     if (!usernameRegex.test(args.username)) {
@@ -39,19 +33,14 @@ export const setUsername = mutation({
   },
 });
 
-export const updateProfile = mutation({
+export const updateProfile = authMutation({
   args: {
     bio: v.optional(v.string()),
     name: v.optional(v.string()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const authUser = await authComponent.getAuthUser(ctx);
-    if (!authUser) {
-      throw new Error("Not authenticated");
-    }
-
-    const appUser = await getAppUser(ctx, authUser._id);
+    const appUser = await getAppUser(ctx, ctx.user._id);
 
     await ctx.db.patch(appUser._id, {
       ...(args.bio !== undefined ? { bio: args.bio } : {}),
@@ -61,16 +50,11 @@ export const updateProfile = mutation({
   },
 });
 
-export const setAvatar = mutation({
+export const setAvatar = authMutation({
   args: { storageId: v.id("_storage") },
   returns: v.null(),
   handler: async (ctx, args) => {
-    const authUser = await authComponent.getAuthUser(ctx);
-    if (!authUser) {
-      throw new Error("Not authenticated");
-    }
-
-    const appUser = await getAppUser(ctx, authUser._id);
+    const appUser = await getAppUser(ctx, ctx.user._id);
 
     if (appUser.avatarStorageId) {
       await ctx.storage.delete(appUser.avatarStorageId);
@@ -81,16 +65,11 @@ export const setAvatar = mutation({
   },
 });
 
-export const completeOnboarding = mutation({
+export const completeOnboarding = authMutation({
   args: {},
   returns: v.null(),
   handler: async (ctx) => {
-    const authUser = await authComponent.getAuthUser(ctx);
-    if (!authUser) {
-      throw new Error("Not authenticated");
-    }
-
-    const appUser = await getAppUser(ctx, authUser._id);
+    const appUser = await getAppUser(ctx, ctx.user._id);
 
     if (!appUser.username) {
       throw new Error("Username must be set before completing onboarding");
@@ -101,15 +80,10 @@ export const completeOnboarding = mutation({
   },
 });
 
-export const generateAvatarUploadUrl = mutation({
+export const generateAvatarUploadUrl = authMutation({
   args: {},
   returns: v.string(),
   handler: async (ctx) => {
-    const authUser = await authComponent.getAuthUser(ctx);
-    if (!authUser) {
-      throw new Error("Not authenticated");
-    }
-
     return await ctx.storage.generateUploadUrl();
   },
 });
@@ -118,27 +92,22 @@ export const generateAvatarUploadUrl = mutation({
  * Ensure an app user record exists for the current auth user.
  * Backfills users created before the onCreate trigger was added.
  */
-export const ensureProfile = mutation({
+export const ensureProfile = authMutation({
   args: {},
   returns: v.null(),
   handler: async (ctx) => {
-    const authUser = await authComponent.getAuthUser(ctx);
-    if (!authUser) {
-      throw new Error("Not authenticated");
-    }
-
     const existing = await ctx.db
       .query("users")
-      .withIndex("by_authId", (q) => q.eq("authId", authUser._id))
+      .withIndex("by_authId", (q) => q.eq("authId", ctx.user._id))
       .unique();
 
     if (!existing) {
       console.info(
-        `[auth] Backfilling app profile for pre-existing auth user. authId=${authUser._id} email=${authUser.email}`
+        `[auth] Backfilling app profile for pre-existing auth user. authId=${ctx.user._id} email=${ctx.user.email}`
       );
       await ctx.db.insert("users", {
-        authId: authUser._id,
-        email: authUser.email,
+        authId: ctx.user._id,
+        email: ctx.user.email,
         onboardingComplete: false,
       });
     }

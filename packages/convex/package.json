@@ -11,9 +11,15 @@
   },
   "typesVersions": {
     "*": {
-      "convex/_generated/api": ["./convex/_generated/api.d.ts"],
-      "convex/_generated/dataModel": ["./convex/_generated/dataModel.d.ts"],
-      "convex/_generated/server": ["./convex/_generated/server.d.ts"]
+      "convex/_generated/api": [
+        "./convex/_generated/api.d.ts"
+      ],
+      "convex/_generated/dataModel": [
+        "./convex/_generated/dataModel.d.ts"
+      ],
+      "convex/_generated/server": [
+        "./convex/_generated/server.d.ts"
+      ]
     }
   },
   "scripts": {
@@ -26,6 +32,7 @@
     "@convex-dev/resend": "catalog:",
     "better-auth": "catalog:",
     "convex": "^1.31.7",
+    "convex-helpers": "^0.1.113",
     "zod": "catalog:"
   },
   "devDependencies": {
