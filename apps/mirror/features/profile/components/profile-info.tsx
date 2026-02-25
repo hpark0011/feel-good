@@ -112,19 +112,21 @@ export function ProfileInfo({
   return (
     <div className="flex flex-col items-center justify-center pb-[40px]">
       <Form {...form}>
-        {isEditing ? (
-          <form
-            id="edit-profile-form"
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col items-center w-full"
-          >
-            {content}
-          </form>
-        ) : (
-          <div className="flex flex-col items-center w-full">
-            {content}
-          </div>
-        )}
+        {isEditing
+          ? (
+            <form
+              id="edit-profile-form"
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="flex flex-col items-center w-full"
+            >
+              {content}
+            </form>
+          )
+          : (
+            <div className="flex flex-col items-center w-full">
+              {content}
+            </div>
+          )}
       </Form>
     </div>
   );
