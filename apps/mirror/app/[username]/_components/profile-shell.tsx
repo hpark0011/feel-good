@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { toast } from "sonner";
 import type { Profile } from "@/features/profile";
 import {
+  EditProfileForm,
   MobileProfileLayout,
   ProfileInfo,
   ProfileProvider,
@@ -53,6 +54,7 @@ export function ProfileShell(
 ) {
   const isMobile = useIsMobile();
   const [videoCallOpen, setVideoCallOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const [mobileScrollRoot, setMobileScrollRoot] = useState<
     HTMLDivElement | null
@@ -92,11 +94,11 @@ export function ProfileShell(
                 <MobileProfileLayout
                   profile={
                     <div className="relative h-full">
-                      {isOwner && (
+                      {isOwner && !isEditing && (
                         <div className="absolute top-0 right-5 z-10">
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <Button variant="outline" size="default" aria-label="Edit Profile">
+                              <Button variant="outline" size="default" aria-label="Edit Profile" onClick={() => setIsEditing(true)}>
                                 <Icon name="SquareAndPencilIcon" />
                               </Button>
                             </TooltipTrigger>
@@ -104,7 +106,13 @@ export function ProfileShell(
                           </Tooltip>
                         </div>
                       )}
-                      <ProfileInfo profile={profile} onAction={handleProfileAction} />
+                      {isEditing ? (
+                        <div className="flex h-full items-center justify-center px-6">
+                          <EditProfileForm profile={profile} onClose={() => setIsEditing(false)} />
+                        </div>
+                      ) : (
+                        <ProfileInfo profile={profile} onAction={handleProfileAction} />
+                      )}
                     </div>
                   }
                   content={() => (
@@ -131,11 +139,11 @@ export function ProfileShell(
               <ResizablePanelGroup direction="horizontal" className="h-full">
                 <ResizablePanel defaultSize={50} minSize={25} maxSize={80}>
                   <div className="relative z-20 h-full flex flex-col justify-center items-center px-6">
-                    {isOwner && (
+                    {isOwner && !isEditing && (
                       <div className="absolute top-5 right-5">
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Button variant="outline" size="default" aria-label="Edit Profile">
+                            <Button variant="outline" size="default" aria-label="Edit Profile" onClick={() => setIsEditing(true)}>
                               <Icon name="SquareAndPencilIcon" />
                             </Button>
                           </TooltipTrigger>
@@ -143,7 +151,11 @@ export function ProfileShell(
                         </Tooltip>
                       </div>
                     )}
-                    <ProfileInfo profile={profile} onAction={handleProfileAction} />
+                    {isEditing ? (
+                      <EditProfileForm profile={profile} onClose={() => setIsEditing(false)} />
+                    ) : (
+                      <ProfileInfo profile={profile} onAction={handleProfileAction} />
+                    )}
                   </div>
                 </ResizablePanel>
 
