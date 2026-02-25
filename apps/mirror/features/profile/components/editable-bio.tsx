@@ -39,10 +39,9 @@ export function EditableBio({ isEditing, bio }: EditableBioProps) {
                 readOnly={!isEditing}
                 tabIndex={isEditing ? undefined : -1}
                 className={cn(
-                  "text-lg md:text-lg text-center leading-[1.3] bg-transparent shadow-none p-0 min-h-[80px] resize-none w-full",
-                  isEditing
-                    ? "border focus-visible:ring-1"
-                    : "border-transparent focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-transparent",
+                  "text-lg md:text-lg text-center leading-[1.3] bg-transparent shadow-none p-0 min-h-[80px] resize-none w-full border transition-[border-color] duration-300 ease-in-out",
+                  !isEditing &&
+                    "border-transparent focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-transparent",
                 )}
                 data-test="edit-profile-bio-textarea"
                 {...field}

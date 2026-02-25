@@ -9,7 +9,7 @@
   --input: var(--gray-7);
   --input-foreground: var(--gray-12);
   --input-destructive: var(--red-8);
-  --caret: var(--color-blue-500);
+  --caret: var(--color-blue-400);
 }
 
 .dark {

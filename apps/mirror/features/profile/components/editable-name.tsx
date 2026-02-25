@@ -37,10 +37,9 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
                 readOnly={!isEditing}
                 tabIndex={isEditing ? undefined : -1}
                 className={cn(
-                  "text-3xl md:text-3xl font-medium text-center bg-transparent shadow-none h-12 border rounded-xl [corner-shape:superellipse(1.1)] transition-all duration-100 ease-out",
-                  isEditing
-                    ? ""
-                    : "border-transparent focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-transparent",
+                  "text-3xl md:text-3xl font-medium text-center bg-transparent shadow-none h-12 border rounded-xl [corner-shape:superellipse(1.1)] transition-[border-color] duration-300 ease-in-out",
+                  !isEditing &&
+                    "border-transparent focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-transparent",
                 )}
                 data-test="edit-profile-name-input"
                 {...field}
