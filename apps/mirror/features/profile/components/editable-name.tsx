@@ -1,8 +1,8 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
-import { AnimatePresence, motion } from "framer-motion";
 
+import { cn } from "@feel-good/utils/cn";
 import { Input } from "@feel-good/ui/primitives/input";
 import {
   FormControl,
@@ -22,49 +22,34 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
   const isOwner = useIsProfileOwner();
   const { control } = useFormContext();
 
+  if (!isEditing && !name && !isOwner) return null;
+
   return (
     <div className="text-3xl font-medium text-center">
-      <AnimatePresence mode="popLayout">
-        {isEditing ? (
-          <motion.div
-            key="edit"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-          >
-            <FormField
-              control={control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      placeholder="Your name"
-                      className="text-3xl md:text-3xl font-medium text-center border-none bg-transparent shadow-none focus-visible:ring-0 p-0 h-auto"
-                      data-test="edit-profile-name-input"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="view"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-          >
-            {name || (isOwner && (
-              <span className="text-muted-foreground">Your name</span>
-            ))}
-          </motion.div>
+      <FormField
+        control={control}
+        name="name"
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <Input
+                placeholder="Your name"
+                readOnly={!isEditing}
+                tabIndex={isEditing ? undefined : -1}
+                className={cn(
+                  "text-3xl md:text-3xl font-medium text-center bg-transparent shadow-none h-12",
+                  isEditing
+                    ? "border focus-visible:ring-1"
+                    : "border-transparent focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-transparent"
+                )}
+                data-test="edit-profile-name-input"
+                {...field}
+              />
+            </FormControl>
+            {isEditing && <FormMessage />}
+          </FormItem>
         )}
-      </AnimatePresence>
+      />
     </div>
   );
 }
