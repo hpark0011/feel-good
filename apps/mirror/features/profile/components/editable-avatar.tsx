@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { CameraIcon } from "lucide-react";
 
 import {
@@ -10,16 +10,9 @@ import {
   AvatarFallback,
 } from "@feel-good/ui/primitives/avatar";
 
-import type { Profile } from "../lib/mock-profile";
+import type { Profile } from "../types";
 import { ProfileMedia } from "./profile-media";
 import { useIsProfileOwner } from "../context/profile-context";
-
-const fade = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: { duration: 0.2 },
-};
 
 type EditableAvatarProps = {
   isEditing: boolean;
@@ -43,10 +36,15 @@ export function EditableAvatar({
     .toUpperCase();
 
   return (
-    <div className="flex flex-col gap-2 items-center pt-[64px]">
-      <AnimatePresence mode="wait">
+    <div className="flex flex-col items-center pt-[64px]">
+      <motion.div
+        key={isEditing ? "edit" : "view"}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.15 }}
+      >
         {isEditing ? (
-          <motion.div key="edit" {...fade} className="flex flex-col items-center gap-2">
+          <div className="flex flex-col items-center">
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
@@ -72,20 +70,17 @@ export function EditableAvatar({
               onChange={onAvatarChange}
               className="hidden"
             />
-            <p className="text-xs text-muted-foreground">
-              Click to change photo
-            </p>
-          </motion.div>
+          </div>
         ) : (
-          <motion.div key="view" {...fade}>
+          <>
             {profile.media ? (
               <ProfileMedia video={profile.media.video} poster={profile.media.poster} />
             ) : isOwner ? (
               <div className="w-[200px] h-[200px] rounded-t-full [corner-shape:superellipse(1.2)] bg-black" />
             ) : null}
-          </motion.div>
+          </>
         )}
-      </AnimatePresence>
+      </motion.div>
     </div>
   );
 }

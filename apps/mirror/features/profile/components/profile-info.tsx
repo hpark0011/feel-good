@@ -10,7 +10,7 @@ import { api } from "@feel-good/convex/convex/_generated/api";
 
 import { Form } from "@feel-good/ui/primitives/form";
 
-import type { Profile } from "../lib/mock-profile";
+import type { Profile } from "../types";
 import type { ProfileActionId } from "./profile-actions";
 import { ProfileActions } from "./profile-actions";
 import { EditableName } from "./editable-name";

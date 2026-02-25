@@ -29,7 +29,7 @@ export default async function ProfileLayout({
     }
   } else {
     profileData = {
-      userId: convexProfile._id,
+      _id: convexProfile._id,
       authId: convexProfile.authId,
       username: convexProfile.username ?? username,
       name: convexProfile.name ?? "",
