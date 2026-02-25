@@ -73,11 +73,11 @@ function DialogContent({
           // sizing
           "w-full max-w-[calc(100%-2rem)] sm:max-w-lg",
           // layout
-          "grid gap-4 p-6",
+          "grid gap-4 p-4",
           // shape
-          "rounded-lg border outline-none",
+          "rounded-2xl outline-none",
           // background & shadow
-          "bg-background shadow-lg",
+          "bg-card shadow-2xl",
           // state animations
           "duration-200",
           "data-[state=open]:animate-in data-[state=closed]:animate-out",
@@ -106,7 +106,7 @@ function DialogContent({
               "disabled:pointer-events-none",
               // svg
               "[&_svg]:pointer-events-none [&_svg]:shrink-0",
-              "[&_svg:not([class*='size-'])]:size-4"
+              "[&_svg:not([class*='size-'])]:size-4",
             )}
           >
             <XIcon />
@@ -127,7 +127,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
         "flex flex-col gap-2",
         // text
         "text-center sm:text-left",
-        className
+        className,
       )}
       {...props}
     />
@@ -172,8 +172,8 @@ function DialogTitle({
       data-slot="dialog-title"
       className={cn(
         // text
-        "text-lg leading-none font-semibold",
-        className
+        "text-lg leading-none font-medium",
+        className,
       )}
       {...props}
     />
@@ -189,8 +189,8 @@ function DialogDescription({
       data-slot="dialog-description"
       className={cn(
         // text
-        "text-muted-foreground text-sm",
-        className
+        "text-foreground-secondary text-sm",
+        className,
       )}
       {...props}
     />

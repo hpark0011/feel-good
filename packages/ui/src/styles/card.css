@@ -1,0 +1,27 @@
+/*
+* card.css
+*
+* Card-specific styles and CSS variables
+* Used in card, dialog 
+*/
+
+:root {
+  --card: var(--gray-2);
+  --card-foreground: var(--gray-12);
+  --card-title: var(--gray-12);
+  --card-description: var(--gray-11);
+}
+
+.dark {
+  --card: var(--gray-2);
+  --card-foreground: var(--gray-12);
+  --card-title: var(--gray-12);
+  --card-description: var(--gray-11);
+}
+
+@theme inline {
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-card-title: var(--card-title);
+  --color-card-description: var(--card-description);
+}

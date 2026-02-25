@@ -25,7 +25,9 @@
 @import "./switch.css";
 @import "./field.css";
 @import "./popover.css";
+@import "./card.css";
 
+/* custom variant */
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -52,9 +54,6 @@
 
   --muted: var(--gray-6);
   --muted-foreground: var(--gray-9);
-
-  --card: var(--gray-1);
-  --card-foreground: var(--gray-12);
 
   /* Border */
   --border: var(--gray-7);
@@ -91,9 +90,6 @@
   --muted: var(--gray-6);
   --muted-foreground: var(--gray-9);
 
-  --card: var(--gray-2);
-  --card-foreground: var(--gray-12);
-
   /* Border */
   --border: var(--gray-3);
   --border-subtle: var(--gray-2);
@@ -128,9 +124,6 @@
 
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
 
   /* Border */
   --color-border: var(--border);

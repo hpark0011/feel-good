@@ -33,11 +33,17 @@ export function DialogVariants() {
                 A standard dialog with a close button in the top-right corner.
               </DialogDescription>
             </DialogHeader>
-            <DialogFooter>
+            <DialogFooter className="gap-1">
               <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-foreground"
+                >
+                  Cancel
+                </Button>
               </DialogClose>
-              <Button>Confirm</Button>
+              <Button size="sm">Confirm</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
