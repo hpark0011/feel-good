@@ -71,13 +71,13 @@ function DialogContent({
           "fixed top-[50%] left-[50%] z-50",
           "translate-x-[-50%] translate-y-[-50%]",
           // sizing
-          "w-full max-w-[calc(100%-2rem)] sm:max-w-lg",
+          "w-full max-w-[calc(100%-2rem)] sm:max-w-md",
           // layout
           "grid gap-4 p-4",
           // shape
-          "rounded-2xl outline-none",
+          "[corner-shape:superellipse(1.1)] rounded-[22px] outline-none",
           // background & shadow
-          "bg-card shadow-2xl",
+          "bg-dialog shadow-4xl",
           // state animations
           "duration-200",
           "data-[state=open]:animate-in data-[state=closed]:animate-out",
@@ -124,7 +124,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="dialog-header"
       className={cn(
         // layout
-        "flex flex-col gap-2",
+        "flex flex-col gap-3",
         // text
         "text-center sm:text-left",
         className,
@@ -147,7 +147,7 @@ function DialogFooter({
       data-slot="dialog-footer"
       className={cn(
         // layout
-        "flex flex-col-reverse gap-2",
+        "flex flex-col-reverse gap-1",
         "sm:flex-row sm:justify-end",
         className,
       )}
@@ -156,7 +156,7 @@ function DialogFooter({
       {children}
       {showCloseButton && (
         <DialogPrimitive.Close asChild>
-          <Button variant="outline">Close</Button>
+          <Button variant="ghost" size="sm">Close</Button>
         </DialogPrimitive.Close>
       )}
     </div>
@@ -189,7 +189,7 @@ function DialogDescription({
       data-slot="dialog-description"
       className={cn(
         // text
-        "text-foreground-secondary text-sm",
+        "text-dialog-description text-[15px] leading-[1.2]",
         className,
       )}
       {...props}

@@ -38,12 +38,11 @@ export function DialogVariants() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-foreground"
                 >
                   Cancel
                 </Button>
               </DialogClose>
-              <Button size="sm">Confirm</Button>
+              <Button size="sm" variant="primary">Confirm</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -65,11 +64,16 @@ export function DialogVariants() {
                 footer actions to dismiss.
               </DialogDescription>
             </DialogHeader>
-            <DialogFooter>
+            <DialogFooter className="gap-1">
               <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                >
+                  Cancel
+                </Button>
               </DialogClose>
-              <Button>Save Changes</Button>
+              <Button size="sm" variant="primary">Confirm</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -92,7 +96,7 @@ export function DialogVariants() {
               </DialogDescription>
             </DialogHeader>
             <DialogFooter showCloseButton>
-              <Button>Submit</Button>
+              <Button size="sm" variant="primary">Submit</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
