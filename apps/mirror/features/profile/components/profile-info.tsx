@@ -40,9 +40,9 @@ export function ProfileInfo({
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
-  const updateProfile = useMutation(api.users.updateProfile);
-  const setAvatar = useMutation(api.users.setAvatar);
-  const generateUploadUrl = useMutation(api.users.generateAvatarUploadUrl);
+  const updateProfile = useMutation(api.users.mutations.updateProfile);
+  const setAvatar = useMutation(api.users.mutations.setAvatar);
+  const generateUploadUrl = useMutation(api.users.mutations.generateAvatarUploadUrl);
 
   const form = useForm({
     resolver: zodResolver(editProfileSchema),

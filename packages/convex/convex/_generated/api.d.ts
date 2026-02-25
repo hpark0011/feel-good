@@ -8,12 +8,15 @@
  * @module
  */
 
-import type * as auth from "../auth.js";
-import type * as authTriggers from "../authTriggers.js";
-import type * as email from "../email.js";
+import type * as auth_client from "../auth/client.js";
+import type * as auth_queries from "../auth/queries.js";
+import type * as auth_triggers from "../auth/triggers.js";
+import type * as email_actions from "../email/actions.js";
 import type * as env from "../env.js";
 import type * as http from "../http.js";
-import type * as users from "../users.js";
+import type * as users_helpers from "../users/helpers.js";
+import type * as users_mutations from "../users/mutations.js";
+import type * as users_queries from "../users/queries.js";
 
 import type {
   ApiFromModules,
@@ -22,12 +25,15 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  auth: typeof auth;
-  authTriggers: typeof authTriggers;
-  email: typeof email;
+  "auth/client": typeof auth_client;
+  "auth/queries": typeof auth_queries;
+  "auth/triggers": typeof auth_triggers;
+  "email/actions": typeof email_actions;
   env: typeof env;
   http: typeof http;
-  users: typeof users;
+  "users/helpers": typeof users_helpers;
+  "users/mutations": typeof users_mutations;
+  "users/queries": typeof users_queries;
 }>;
 
 /**

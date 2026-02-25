@@ -3,16 +3,15 @@ import { convex } from "@convex-dev/better-auth/plugins";
 import { betterAuth } from "better-auth";
 import { emailOTP, magicLink } from "better-auth/plugins";
 import type { GenericActionCtx } from "convex/server";
-import { internal, components } from "./_generated/api";
-import { type DataModel } from "./_generated/dataModel";
-import { query } from "./_generated/server";
-import authConfig from "./auth.config";
-import { env } from "./env";
+import { internal, components } from "../_generated/api";
+import { type DataModel } from "../_generated/dataModel";
+import authConfig from "../auth.config";
+import { env } from "../env";
 
 // The component client has methods needed for integrating Convex with Better Auth,
 // as well as helper methods for general use.
 // Explicit type annotation breaks circular inference between authComponent and
-// the triggersApi exports in authTriggers.ts (TS2502).
+// the triggersApi exports in auth/triggers.ts (TS2502).
 export const authComponent: ReturnType<typeof createClient<DataModel>> = createClient<DataModel>(components.betterAuth, {
   triggers: {
     user: {
@@ -49,10 +48,9 @@ export const authComponent: ReturnType<typeof createClient<DataModel>> = createC
     },
   },
   authFunctions: {
-    onCreate: internal.authTriggers.onCreate,
-    onUpdate: internal.authTriggers.onUpdate,
-    onDelete: internal.authTriggers.onDelete,
-    // Trigger functions are in authTriggers.ts to break circular type inference
+    onCreate: internal.auth.triggers.onCreate,
+    onUpdate: internal.auth.triggers.onUpdate,
+    onDelete: internal.auth.triggers.onDelete,
   },
 });
 
@@ -68,7 +66,7 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
     emailVerification: {
       sendVerificationEmail: async ({ user, url }) => {
         // Fire-and-forget: don't block auth response waiting for email
-        void actionCtx.runAction(internal.email.sendVerificationEmail, {
+        void actionCtx.runAction(internal.email.actions.sendVerificationEmail, {
           to: user.email,
           link: url,
         });
@@ -111,7 +109,7 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
       magicLink({
         sendMagicLink: async ({ email, url }) => {
           // Fire-and-forget: don't block auth response waiting for email
-          void actionCtx.runAction(internal.email.sendMagicLink, {
+          void actionCtx.runAction(internal.email.actions.sendMagicLink, {
             to: email,
             link: url,
           });
@@ -124,7 +122,7 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
         allowedAttempts: 5,
         sendVerificationOTP: async ({ email, otp, type }) => {
           // Fire-and-forget: don't block auth response waiting for email
-          void actionCtx.runAction(internal.email.sendOTP, {
+          void actionCtx.runAction(internal.email.actions.sendOTP, {
             to: email,
             otp,
             type,
@@ -134,12 +132,5 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
     ],
   });
 };
-
-export const getCurrentUser = query({
-  args: {},
-  handler: async (ctx) => {
-    return (await authComponent.safeGetAuthUser(ctx)) ?? null;
-  },
-});
 
 export type Auth = ReturnType<typeof createAuth>;

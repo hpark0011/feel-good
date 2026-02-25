@@ -17,7 +17,7 @@ export default async function ProfileLayout({
   const { username } = await params;
   if (isReservedUsername(username)) notFound();
 
-  const convexProfile = await fetchAuthQuery(api.users.getByUsername, { username });
+  const convexProfile = await fetchAuthQuery(api.users.queries.getByUsername, { username });
 
   let profileData: Profile;
 
@@ -38,7 +38,7 @@ export default async function ProfileLayout({
     };
   }
 
-  const currentAuthUser = await fetchAuthQuery(api.auth.getCurrentUser, {});
+  const currentAuthUser = await fetchAuthQuery(api.auth.queries.getCurrentUser, {});
   const isOwner =
     !!currentAuthUser &&
     !!profileData.authId &&

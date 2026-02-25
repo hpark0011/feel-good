@@ -3,12 +3,12 @@ import type { api } from "@feel-good/convex/convex/_generated/api";
 
 /** Raw API response from getByUsername (public view) */
 type PublicProfileResponse = NonNullable<
-  FunctionReturnType<typeof api.users.getByUsername>
+  FunctionReturnType<typeof api.users.queries.getByUsername>
 >;
 
 /** Raw API response from getCurrentProfile (authenticated, includes email) */
 export type UserProfile = NonNullable<
-  FunctionReturnType<typeof api.users.getCurrentProfile>
+  FunctionReturnType<typeof api.users.queries.getCurrentProfile>
 >;
 
 /** What profile components receive. Optionals coalesced by the layout. */

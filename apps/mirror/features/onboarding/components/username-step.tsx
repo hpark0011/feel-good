@@ -42,7 +42,7 @@ type UsernameStepProps = {
 };
 
 export function UsernameStep({ onComplete }: UsernameStepProps) {
-  const setUsername = useMutation(api.users.setUsername);
+  const setUsername = useMutation(api.users.mutations.setUsername);
 
   const form = useForm<UsernameFormValues>({
     resolver: zodResolver(usernameSchema),

@@ -10,8 +10,8 @@ import { UsernameStep } from "./username-step";
 
 export function OnboardingWizard() {
   const router = useRouter();
-  const profile = useQuery(api.users.getCurrentProfile);
-  const ensureProfile = useMutation(api.users.ensureProfile);
+  const profile = useQuery(api.users.queries.getCurrentProfile);
+  const ensureProfile = useMutation(api.users.mutations.ensureProfile);
   const ensuredRef = useRef(false);
 
   // Backfill: if authenticated but no app user record, create one.
