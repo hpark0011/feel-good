@@ -92,16 +92,27 @@ export function ProfileShell(
   }, []);
 
   const editButton = isOwner && (
-    <div className={isMobile ? "absolute top-0 right-5 z-10" : "absolute top-6 right-5"}>
-      {isEditing ? (
-        <EditActions
-          isEditing={isEditing}
-          isSubmitting={isSubmitting}
-          onCancel={handleCancel}
-        />
-      ) : (
-        <EditProfileButton onClick={() => { setIsEditing(true); setEditSessionKey(k => k + 1); }} />
-      )}
+    <div
+      className={isMobile
+        ? "absolute top-0 right-5 z-10"
+        : "absolute top-6 right-5"}
+    >
+      {isEditing
+        ? (
+          <EditActions
+            isEditing={isEditing}
+            isSubmitting={isSubmitting}
+            onCancel={handleCancel}
+          />
+        )
+        : (
+          <EditProfileButton
+            onClick={() => {
+              setIsEditing(true);
+              setEditSessionKey((k) => k + 1);
+            }}
+          />
+        )}
     </div>
   );
 
@@ -152,6 +163,7 @@ export function ProfileShell(
           )
           : (
             <main className="h-screen">
+              {/* Profile interaction view */}
               <ResizablePanelGroup direction="horizontal" className="h-full">
                 <ResizablePanel defaultSize={50} minSize={25} maxSize={80}>
                   <div className="relative z-20 h-full flex flex-col justify-center items-center px-6">
@@ -162,6 +174,7 @@ export function ProfileShell(
 
                 <ResizableHandle className="bg-border-subtle data-[resize-handle-state=hover]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] data-[resize-handle-state=drag]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] z-20 relative" />
 
+                {/* Content view */}
                 <ResizablePanel defaultSize={50} minSize={25} maxSize={80}>
                   <ToolbarSlotProvider>
                     <div className="relative h-full min-w-0 flex flex-col">

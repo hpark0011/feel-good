@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 import { Input } from "@feel-good/ui/primitives/input";
 import {
@@ -12,13 +12,6 @@ import {
 } from "@feel-good/ui/primitives/form";
 
 import { useIsProfileOwner } from "../context/profile-context";
-
-const fade = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: { duration: 0.2 },
-};
 
 type EditableNameProps = {
   isEditing: boolean;
@@ -31,35 +24,38 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
 
   return (
     <div className="text-3xl font-medium text-center">
-      <AnimatePresence mode="wait">
+      <motion.div
+        key={isEditing ? "edit" : "view"}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.15 }}
+      >
         {isEditing ? (
-          <motion.div key="edit" {...fade}>
-            <FormField
-              control={control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      placeholder="Your name"
-                      className="text-3xl font-medium text-center border-none bg-transparent shadow-none focus-visible:ring-0 p-0 h-auto"
-                      data-test="edit-profile-name-input"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </motion.div>
+          <FormField
+            control={control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    placeholder="Your name"
+                    className="text-3xl md:text-3xl font-medium text-center border-none bg-transparent shadow-none focus-visible:ring-0 p-0 h-auto"
+                    data-test="edit-profile-name-input"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         ) : (
-          <motion.div key="view" {...fade}>
+          <>
             {name || (isOwner && (
               <span className="text-muted-foreground">Your name</span>
             ))}
-          </motion.div>
+          </>
         )}
-      </AnimatePresence>
+      </motion.div>
     </div>
   );
 }
