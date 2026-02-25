@@ -179,8 +179,8 @@ export function TicketFormDialog({
         className={cn(
           "transition-none",
           isExpanded
-            ? "h-[calc(100vh-32px)] sm:max-w-2xl translate-y-[-50%]"
-            : "translate-y-[-53%]",
+            ? "h-[calc(100vh-32px)] sm:max-w-2xl  translate-y-[-50%]"
+            : "translate-y-[-53%] sm:max-w-lg",
         )}
         onOpenAutoFocus={handleAutoFocus}
       >
@@ -208,11 +208,11 @@ export function TicketFormDialog({
           >
             <DialogBody
               className={cn(
-                "gap-0 mt-[-2px]",
+                "gap-0",
                 isExpanded && "min-h-0 flex flex-col",
               )}
             >
-              <div className="flex items-center w-[calc(100%+12px)] ml-[-6px] pr-0 gap-0.5">
+              <div className="flex items-center gap-1">
                 <FormField
                   control={form.control}
                   name="title"
@@ -226,7 +226,7 @@ export function TicketFormDialog({
                           onKeyDown={handleTitleKeyDown}
                           variant="underline"
                           className={cn(
-                            "md:text-text-primary h-auto px-2 rounded-[8px] hover:bg-gray-1 placeholder:text-text-muted transition-all md:text-[18px] border-none w-full leading-[1.4] focus-visible:bg-gray-1",
+                            "md:text-text-primary h-auto px-2 rounded-md hover:bg-gray-1 placeholder:text-text-muted transition-all md:text-[18px] border-none w-full leading-[1.4] focus-visible:bg-gray-1",
                           )}
                         />
                       </FormControl>
@@ -265,7 +265,7 @@ export function TicketFormDialog({
                     <FormControl>
                       <div
                         className={cn(
-                          "relative w-[calc(100%+12px)] ml-[-6px]",
+                          "relative",
                           isExpanded && "h-full",
                         )}
                       >
@@ -277,7 +277,7 @@ export function TicketFormDialog({
                           ref={(el) =>
                             setDescriptionRef(el, field.ref)}
                           className={cn(
-                            "resize-none h-full rounded-md min-h-[160px] flex-1 transition-all border-none px-2 pb-4",
+                            "resize-none h-full rounded-md min-h-[160px] flex-1 border-none px-2 pb-4",
                             isExpanded && "h-full overflow-y-auto",
                           )}
                         />
@@ -310,8 +310,8 @@ export function TicketFormDialog({
               )}
             </DialogBody>
 
-            <DialogFooter className="gap-1 w-full flex justify-between items-center">
-              <div className="flex flex-1">
+            <DialogFooter>
+              <div className="flex flex-1 items-center">
                 <FormField
                   control={form.control}
                   name="status"
@@ -352,6 +352,8 @@ export function TicketFormDialog({
                       type="button"
                       variant="ghost"
                       onClick={toggleSubTasks}
+                      size="icon-sm"
+                      className="hover:bg-gray-1"
                     >
                       <Icon
                         name="CheckListIcon"

@@ -73,7 +73,7 @@ function DialogContent({
           // sizing
           "w-full max-w-[calc(100%-2rem)] sm:max-w-md",
           // layout
-          "grid gap-4 p-4",
+          "flex flex-col p-4",
           // shape
           "[corner-shape:superellipse(1.1)] rounded-[22px] outline-none border border-dialog-border",
           // background & shadow
@@ -140,7 +140,11 @@ function DialogBody({
   ...props
 }: React.ComponentProps<"div">) {
   return (
-    <div data-slot="dialog-body" className={cn("px-0.5", className)} {...props}>
+    <div
+      data-slot="dialog-body"
+      className={cn(className)}
+      {...props}
+    >
       {children}
     </div>
   );
@@ -159,7 +163,7 @@ function DialogFooter({
       data-slot="dialog-footer"
       className={cn(
         // layout
-        "flex flex-col-reverse gap-1",
+        "flex flex-col-reverse gap-1 mt-4",
         "sm:flex-row sm:justify-end",
         className,
       )}
