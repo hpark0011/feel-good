@@ -78,7 +78,9 @@ export function ProfileShell(
       setVideoCallOpen(true);
     } else {
       toast("Coming soon", {
-        description: `${id.charAt(0).toUpperCase() + id.slice(1)} conversations are not yet available.`,
+        description: `${
+          id.charAt(0).toUpperCase() + id.slice(1)
+        } conversations are not yet available.`,
       });
     }
   }, []);
@@ -98,7 +100,12 @@ export function ProfileShell(
                         <div className="absolute top-0 right-5 z-10">
                           <Tooltip>
                             <TooltipTrigger asChild>
-                              <Button variant="outline" size="default" aria-label="Edit Profile" onClick={() => setIsEditing(true)}>
+                              <Button
+                                variant="outline"
+                                size="default"
+                                aria-label="Edit Profile"
+                                onClick={() => setIsEditing(true)}
+                              >
                                 <Icon name="SquareAndPencilIcon" />
                               </Button>
                             </TooltipTrigger>
@@ -106,13 +113,21 @@ export function ProfileShell(
                           </Tooltip>
                         </div>
                       )}
-                      {isEditing ? (
-                        <div className="flex h-full items-center justify-center px-6">
-                          <EditProfileForm profile={profile} onClose={() => setIsEditing(false)} />
-                        </div>
-                      ) : (
-                        <ProfileInfo profile={profile} onAction={handleProfileAction} />
-                      )}
+                      {isEditing
+                        ? (
+                          <div className="flex h-full items-center justify-center px-6">
+                            <EditProfileForm
+                              profile={profile}
+                              onClose={() => setIsEditing(false)}
+                            />
+                          </div>
+                        )
+                        : (
+                          <ProfileInfo
+                            profile={profile}
+                            onAction={handleProfileAction}
+                          />
+                        )}
                     </div>
                   }
                   content={() => (
@@ -143,19 +158,36 @@ export function ProfileShell(
                       <div className="absolute top-5 right-5">
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Button variant="outline" size="default" aria-label="Edit Profile" onClick={() => setIsEditing(true)}>
-                              <Icon name="SquareAndPencilIcon" />
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              aria-label="Edit Profile"
+                              onClick={() => setIsEditing(true)}
+                              className="rounded-full [corner-shape:superellipse(1.0)] hover:[&_svg]:text-secondary-foreground [&_svg]:text-secondary-foreground"
+                            >
+                              <Icon
+                                name="PencilIcon"
+                                className="text-icon"
+                              />
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent>Edit Profile</TooltipContent>
                         </Tooltip>
                       </div>
                     )}
-                    {isEditing ? (
-                      <EditProfileForm profile={profile} onClose={() => setIsEditing(false)} />
-                    ) : (
-                      <ProfileInfo profile={profile} onAction={handleProfileAction} />
-                    )}
+                    {isEditing
+                      ? (
+                        <EditProfileForm
+                          profile={profile}
+                          onClose={() => setIsEditing(false)}
+                        />
+                      )
+                      : (
+                        <ProfileInfo
+                          profile={profile}
+                          onAction={handleProfileAction}
+                        />
+                      )}
                   </div>
                 </ResizablePanel>
 
