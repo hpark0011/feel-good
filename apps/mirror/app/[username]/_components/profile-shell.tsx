@@ -5,7 +5,8 @@ import dynamic from "next/dynamic";
 import { toast } from "sonner";
 import type { Profile } from "@/features/profile";
 import {
-  EditProfileForm,
+  EditActions,
+  EditProfileButton,
   MobileProfileLayout,
   ProfileInfo,
   ProfileProvider,
@@ -18,13 +19,6 @@ import {
 import type { Article } from "@/features/articles";
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
 
-import { Button } from "@feel-good/ui/primitives/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@feel-good/ui/primitives/tooltip";
-import { Icon } from "@feel-good/ui/components/icon";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -55,6 +49,8 @@ export function ProfileShell(
   const isMobile = useIsMobile();
   const [videoCallOpen, setVideoCallOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editSessionKey, setEditSessionKey] = useState(0);
 
   const [mobileScrollRoot, setMobileScrollRoot] = useState<
     HTMLDivElement | null
@@ -85,6 +81,41 @@ export function ProfileShell(
     }
   }, []);
 
+  const handleEditComplete = useCallback(() => {
+    setIsEditing(false);
+    setIsSubmitting(false);
+  }, []);
+
+  const handleCancel = useCallback(() => {
+    setIsEditing(false);
+    setIsSubmitting(false);
+  }, []);
+
+  const editButton = isOwner && (
+    <div className={isMobile ? "absolute top-0 right-5 z-10" : "absolute top-6 right-5"}>
+      {isEditing ? (
+        <EditActions
+          isEditing={isEditing}
+          isSubmitting={isSubmitting}
+          onCancel={handleCancel}
+        />
+      ) : (
+        <EditProfileButton onClick={() => { setIsEditing(true); setEditSessionKey(k => k + 1); }} />
+      )}
+    </div>
+  );
+
+  const profilePanel = (
+    <ProfileInfo
+      key={editSessionKey}
+      profile={profile}
+      isEditing={isEditing}
+      onEditComplete={handleEditComplete}
+      onSubmittingChange={setIsSubmitting}
+      onAction={handleProfileAction}
+    />
+  );
+
   return (
     <ProfileProvider value={contextValue}>
       <ArticleWorkspaceProvider articles={articles} username={profile.username}>
@@ -96,38 +127,8 @@ export function ProfileShell(
                 <MobileProfileLayout
                   profile={
                     <div className="relative h-full">
-                      {isOwner && !isEditing && (
-                        <div className="absolute top-0 right-5 z-10">
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="outline"
-                                size="default"
-                                aria-label="Edit Profile"
-                                onClick={() => setIsEditing(true)}
-                              >
-                                <Icon name="SquareAndPencilIcon" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Edit Profile</TooltipContent>
-                          </Tooltip>
-                        </div>
-                      )}
-                      {isEditing
-                        ? (
-                          <div className="flex h-full items-center justify-center px-6">
-                            <EditProfileForm
-                              profile={profile}
-                              onClose={() => setIsEditing(false)}
-                            />
-                          </div>
-                        )
-                        : (
-                          <ProfileInfo
-                            profile={profile}
-                            onAction={handleProfileAction}
-                          />
-                        )}
+                      {editButton}
+                      {profilePanel}
                     </div>
                   }
                   content={() => (
@@ -154,40 +155,8 @@ export function ProfileShell(
               <ResizablePanelGroup direction="horizontal" className="h-full">
                 <ResizablePanel defaultSize={50} minSize={25} maxSize={80}>
                   <div className="relative z-20 h-full flex flex-col justify-center items-center px-6">
-                    {isOwner && !isEditing && (
-                      <div className="absolute top-6 right-5">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              aria-label="Edit Profile"
-                              onClick={() => setIsEditing(true)}
-                              className="rounded-full [corner-shape:superellipse(1.0)] hover:[&_svg]:text-secondary-foreground [&_svg]:text-secondary-foreground [&_svg]:size-5.5"
-                            >
-                              <Icon
-                                name="PencilIcon"
-                                className="text-icon"
-                              />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>Edit Profile</TooltipContent>
-                        </Tooltip>
-                      </div>
-                    )}
-                    {isEditing
-                      ? (
-                        <EditProfileForm
-                          profile={profile}
-                          onClose={() => setIsEditing(false)}
-                        />
-                      )
-                      : (
-                        <ProfileInfo
-                          profile={profile}
-                          onAction={handleProfileAction}
-                        />
-                      )}
+                    {editButton}
+                    {profilePanel}
                   </div>
                 </ResizablePanel>
 
