@@ -26,7 +26,7 @@ export function EditableBio({ isEditing, bio }: EditableBioProps) {
   if (!isEditing && !bio && !isOwner) return null;
 
   return (
-    <div className="text-lg text-center max-w-md mx-auto leading-[1.3]">
+    <div className="text-lg text-center max-w-md mx-auto leading-[1.3] w-full">
       <FormField
         control={control}
         name="bio"
@@ -39,10 +39,10 @@ export function EditableBio({ isEditing, bio }: EditableBioProps) {
                 readOnly={!isEditing}
                 tabIndex={isEditing ? undefined : -1}
                 className={cn(
-                  "text-lg text-center leading-[1.3] bg-transparent shadow-none p-0 min-h-[80px] resize-none",
+                  "text-lg md:text-lg text-center leading-[1.3] bg-transparent shadow-none p-0 min-h-[80px] resize-none w-full",
                   isEditing
                     ? "border focus-visible:ring-1"
-                    : "border-transparent focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-transparent"
+                    : "border-transparent focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-transparent",
                 )}
                 data-test="edit-profile-bio-textarea"
                 {...field}

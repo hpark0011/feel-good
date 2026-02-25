@@ -103,7 +103,7 @@ export function ProfileInfo({
       <div className="mt-[20px]">
         <ProfileActions onAction={onAction} />
       </div>
-      <div className="mt-[64px]">
+      <div className="mt-[64px] w-full">
         <EditableBio isEditing={isEditing} bio={profile.bio} />
       </div>
     </>
@@ -112,21 +112,13 @@ export function ProfileInfo({
   return (
     <div className="flex flex-col items-center justify-center pb-[40px]">
       <Form {...form}>
-        {isEditing
-          ? (
-            <form
-              id="edit-profile-form"
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-col items-center w-full"
-            >
-              {content}
-            </form>
-          )
-          : (
-            <div className="flex flex-col items-center w-full">
-              {content}
-            </div>
-          )}
+        <form
+          id="edit-profile-form"
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col items-center w-full"
+        >
+          {content}
+        </form>
       </Form>
     </div>
   );
