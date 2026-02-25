@@ -155,7 +155,7 @@ export function ProfileShell(
                 <ResizablePanel defaultSize={50} minSize={25} maxSize={80}>
                   <div className="relative z-20 h-full flex flex-col justify-center items-center px-6">
                     {isOwner && !isEditing && (
-                      <div className="absolute top-5 right-5">
+                      <div className="absolute top-6 right-5">
                         <Tooltip>
                           <TooltipTrigger asChild>
                             <Button
@@ -163,7 +163,7 @@ export function ProfileShell(
                               size="icon"
                               aria-label="Edit Profile"
                               onClick={() => setIsEditing(true)}
-                              className="rounded-full [corner-shape:superellipse(1.0)] hover:[&_svg]:text-secondary-foreground [&_svg]:text-secondary-foreground"
+                              className="rounded-full [corner-shape:superellipse(1.0)] hover:[&_svg]:text-secondary-foreground [&_svg]:text-secondary-foreground [&_svg]:size-5.5"
                             >
                               <Icon
                                 name="PencilIcon"
