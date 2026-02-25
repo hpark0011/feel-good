@@ -166,7 +166,7 @@ export function ProfileShell(
               {/* Profile interaction view */}
               <ResizablePanelGroup direction="horizontal" className="h-full">
                 <ResizablePanel defaultSize={50} minSize={25} maxSize={80}>
-                  <div className="relative z-20 h-full flex flex-col justify-center items-center px-6">
+                  <div className="relative z-20 h-full flex flex-col justify-start items-center px-6 pt-[140px]">
                     {editButton}
                     {profilePanel}
                   </div>
