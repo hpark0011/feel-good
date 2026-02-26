@@ -48,19 +48,20 @@ type ProfileShellProps = {
 };
 
 export function ProfileShell(
-  { profile: initialProfile, preloadedProfile, isOwner, articles, children }: ProfileShellProps,
+  { profile: initialProfile, preloadedProfile, isOwner, articles, children }:
+    ProfileShellProps,
 ) {
   // Subscribe to reactive profile data from Convex
   const reactiveRaw = usePreloadedQuery(preloadedProfile);
   const profile: Profile = reactiveRaw
     ? {
-        _id: reactiveRaw._id,
-        authId: reactiveRaw.authId,
-        username: reactiveRaw.username ?? initialProfile.username,
-        name: reactiveRaw.name ?? "",
-        bio: reactiveRaw.bio ?? "",
-        avatarUrl: reactiveRaw.avatarUrl,
-      }
+      _id: reactiveRaw._id,
+      authId: reactiveRaw.authId,
+      username: reactiveRaw.username ?? initialProfile.username,
+      name: reactiveRaw.name ?? "",
+      bio: reactiveRaw.bio ?? "",
+      avatarUrl: reactiveRaw.avatarUrl,
+    }
     : initialProfile;
 
   const isMobile = useIsMobile();
@@ -183,7 +184,7 @@ export function ProfileShell(
               {/* Profile interaction view */}
               <ResizablePanelGroup direction="horizontal" className="h-full">
                 <ResizablePanel defaultSize={50} minSize={25} maxSize={80}>
-                  <div className="relative z-20 h-full flex flex-col justify-start items-center px-6 pt-[140px]">
+                  <div className="relative z-20 h-full flex flex-col justify-start items-center px-6 pt-[120px]">
                     {editButton}
                     {profilePanel}
                   </div>

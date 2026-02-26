@@ -33,15 +33,15 @@ export function EditableBio({ isEditing, bio }: EditableBioProps) {
   if (!isEditing && !bio && !isOwner) return null;
 
   return (
-    <div className="text-lg text-center max-w-md mx-auto leading-[1.3] w-full">
+    <div className="text-lg text-center max-w-md mx-auto leading-[1.3] w-full flex">
       <FormField
         control={control}
         name="bio"
         render={({ field }) => (
-          <FormItem>
+          <FormItem className="w-full">
             <FormControl>
               <motion.div
-                className="rounded-[14px] [corner-shape:superellipse(1.1)]"
+                className="rounded-xl [corner-shape:superellipse(1.1)] w-full"
                 initial={{ boxShadow: VIEW_SHADOW }}
                 animate={{
                   boxShadow: isEditing ? EDIT_SHADOW : VIEW_SHADOW,
@@ -54,7 +54,7 @@ export function EditableBio({ isEditing, bio }: EditableBioProps) {
                   readOnly={!isEditing}
                   tabIndex={isEditing ? undefined : -1}
                   className={cn(
-                    "text-lg md:text-lg text-center leading-[1.3] bg-transparent min-h-[80px] resize-none border-transparent ring-0 shadow-transparent",
+                    "text-lg md:text-lg text-center leading-[1.3] bg-transparent min-h-[80px] resize-none border-transparent ring-0 shadow-transparent rounded-xl hover:bg-gray-1 focus-visible:bg-gray-1/80 focus-visible:border-none w-full",
                     !isEditing &&
                       "border-transparent focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-transparent",
                   )}

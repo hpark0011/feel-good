@@ -40,7 +40,7 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
           <FormItem>
             <FormControl>
               <motion.div
-                className="rounded-[14px] [corner-shape:superellipse(1.1)]"
+                className="rounded-xl [corner-shape:superellipse(1.1)]"
                 initial={{ boxShadow: VIEW_SHADOW }}
                 animate={{
                   boxShadow: isEditing ? EDIT_SHADOW : VIEW_SHADOW,
@@ -52,7 +52,7 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
                   readOnly={!isEditing}
                   tabIndex={isEditing ? undefined : -1}
                   className={cn(
-                    "text-3xl md:text-3xl font-medium text-center h-13 border-transparent bg-transparent rounded-[14px] focus-visible:ring-0 focus-visible:border-none focus-visible:border-transparent focus-visible:bg-gray-1/40 p-1",
+                    "text-3xl md:text-3xl font-medium text-center h-13 bg-transparent rounded-xl focus-visible:border-none focus-visible:bg-gray-1/80 p-1",
                     !isEditing &&
                       "border-transparent focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-transparent",
                   )}

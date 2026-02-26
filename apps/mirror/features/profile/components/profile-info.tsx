@@ -49,12 +49,18 @@ export function ProfileInfo({
         localStore.setQuery(
           api.users.queries.getByUsername,
           { username: profile.username },
-          { ...current, name: args.name ?? current.name, bio: args.bio ?? current.bio },
+          {
+            ...current,
+            name: args.name ?? current.name,
+            bio: args.bio ?? current.bio,
+          },
         );
       }
     });
   const setAvatar = useMutation(api.users.mutations.setAvatar);
-  const generateUploadUrl = useMutation(api.users.mutations.generateAvatarUploadUrl);
+  const generateUploadUrl = useMutation(
+    api.users.mutations.generateAvatarUploadUrl,
+  );
 
   const form = useForm({
     resolver: zodResolver(editProfileSchema),
@@ -115,14 +121,14 @@ export function ProfileInfo({
       <div className="mt-[20px]">
         <ProfileActions onAction={onAction} />
       </div>
-      <div className="mt-[64px] w-full">
+      <div className="mt-[56px] w-full">
         <EditableBio isEditing={isEditing} bio={profile.bio} />
       </div>
     </>
   );
 
   return (
-    <div className="flex flex-col items-center justify-center pb-[40px]">
+    <div className="flex flex-col items-center justify-center pb-[40px] w-full">
       <Form {...form}>
         <form
           id="edit-profile-form"
