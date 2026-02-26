@@ -4,12 +4,6 @@ import { useEffect, useRef } from "react";
 import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
 import { Icon } from "@feel-good/ui/components/icon";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@feel-good/ui/primitives/avatar";
-
 import type { Profile } from "../types";
 import { ProfileMedia } from "./profile-media";
 import { useIsProfileOwner } from "../context/profile-context";
@@ -92,23 +86,19 @@ export function EditableAvatar({
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="group relative size-[200px] rounded-t-full [corner-shape:superellipse(1.2)] overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    className="group relative size-[200px] overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     data-test="edit-profile-avatar-button"
                   >
-                    <Avatar className="size-[200px] rounded-t-full [corner-shape:superellipse(1.2)]">
-                      {displayAvatar
-                        ? (
-                          <AvatarImage
-                            src={displayAvatar}
-                            alt="Profile photo"
-                            className="object-cover"
-                          />
-                        )
-                        : null}
-                      <AvatarFallback className="text-4xl rounded-t-full [corner-shape:superellipse(1.2)]">
-                        {initial}
-                      </AvatarFallback>
-                    </Avatar>
+                    <div className="flex size-full items-center justify-center bg-muted text-muted-foreground text-4xl">
+                      {initial}
+                    </div>
+                    {displayAvatar ? (
+                      <img
+                        src={displayAvatar}
+                        alt="Profile photo"
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+                    ) : null}
                     <div className="absolute inset-0 flex items-center justify-center bg-gray-12 opacity-0 transition-opacity group-hover:opacity-100">
                       <Icon
                         name="PersonFillIcon"
@@ -151,20 +141,16 @@ export function EditableAvatar({
                   className="group relative size-[200px] rounded-t-full [corner-shape:superellipse(1.2)] overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-muted"
                   data-test="edit-profile-avatar-button"
                 >
-                  <Avatar className="size-[200px] rounded-t-full [corner-shape:superellipse(1.2)]">
-                    {displayAvatar
-                      ? (
-                        <AvatarImage
-                          src={displayAvatar}
-                          alt="Profile photo"
-                          className="object-cover"
-                        />
-                      )
-                      : null}
-                    <AvatarFallback className="text-4xl rounded-t-full [corner-shape:superellipse(1.2)]">
-                      {initial}
-                    </AvatarFallback>
-                  </Avatar>
+                  <div className="flex size-full items-center justify-center bg-muted text-muted-foreground text-4xl">
+                    {initial}
+                  </div>
+                  {displayAvatar ? (
+                    <img
+                      src={displayAvatar}
+                      alt="Profile photo"
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  ) : null}
                   <div className="absolute inset-0 flex items-center justify-center bg-gray-12 opacity-0 transition-opacity group-hover:opacity-100">
                     <Icon
                       name="PersonFillIcon"

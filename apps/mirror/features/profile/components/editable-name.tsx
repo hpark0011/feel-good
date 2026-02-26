@@ -16,10 +16,10 @@ import {
 
 import { useIsProfileOwner } from "../context/profile-context";
 import {
-  EDIT_SHADOW_LIGHT,
   EDIT_SHADOW_DARK,
-  VIEW_SHADOW_LIGHT,
+  EDIT_SHADOW_LIGHT,
   VIEW_SHADOW_DARK,
+  VIEW_SHADOW_LIGHT,
 } from "../lib/edit-shadows";
 
 type EditableNameProps = {
@@ -38,7 +38,7 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
   if (!isEditing && !name && !isOwner) return null;
 
   return (
-    <div className="text-3xl font-medium text-center">
+    <div className="text-3xl font-medium text-center w-full max-w-md">
       <FormField
         control={control}
         name="name"
@@ -58,7 +58,7 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
             </FormLabel>
             <FormControl>
               <motion.div
-                className="rounded-lg [corner-shape:superellipse(1.1)]"
+                className="rounded-xl [corner-shape:superellipse(1.1)]"
                 initial={{
                   boxShadow: viewShadow,
                   backgroundColor: "rgba(255,255,255,0)",
@@ -78,7 +78,7 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
                   readOnly={!isEditing}
                   tabIndex={isEditing ? undefined : -1}
                   className={cn(
-                    "text-3xl md:text-3xl font-medium text-center h-13 bg-transparent rounded-lg focus-visible:border-transparent focus-visible:bg-gray-1 p-1 border-transparent [text-shadow:0px_1px_2px_rgba(0,0,0,0.2)] focus-visible:ring-0 placeholder:text-gray-11 dark:bg-transparent",
+                    "text-3xl md:text-3xl font-medium text-center h-13 bg-transparent rounded-xl focus-visible:border-transparent focus-visible:bg-gray-1 p-1 border-transparent [text-shadow:0px_1px_2px_rgba(0,0,0,0.2)] focus-visible:ring-0 placeholder:text-gray-11 dark:bg-transparent",
                     !isEditing &&
                       "border-transparent focus-visible:ring-0 pointer-events-none  hover:bg-transparent hover:border-transparent [text-shadow:0px_0px_0px_rgba(0,0,0,0.2)]",
                   )}

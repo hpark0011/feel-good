@@ -118,7 +118,7 @@ export function ProfileInfo({
         avatarPreview={avatarPreview}
         onAvatarChange={handleAvatarChange}
       />
-      <div className="mt-[16px]">
+      <div className="w-full flex flex-col items-center justify-center">
         <ProfileActions isEditing={isEditing} onAction={onAction} />
       </div>
       <div className="mt-[16px] w-full">
@@ -133,7 +133,7 @@ export function ProfileInfo({
         <form
           id="edit-profile-form"
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col items-center w-full"
+          className="flex flex-col items-center w-full max-w-md"
         >
           {content}
         </form>
