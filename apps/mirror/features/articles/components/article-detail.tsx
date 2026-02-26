@@ -23,12 +23,14 @@ type ArticleDetailProps = {
 
 export function ArticleDetail({ article }: ArticleDetailProps) {
   return (
-    <div className="py-22 px-4 bg-background min-h-[calc(100vh-40px)]">
+    <div className="py-8 px-4 bg-background min-h-[calc(100vh-40px)]">
       <article className="max-w-xl mx-auto">
         <div className="mb-[56px]">
           <div className="flex flex-col items-start gap-0.5">
             <span className="text-[15px] text-muted-foreground leading-[1.2]">
-              {article.status === "draft" ? "Draft" : formatLongDate(article.published_at)}
+              {article.status === "draft"
+                ? "Draft"
+                : formatLongDate(article.published_at)}
             </span>
 
             <span className="text-[15px] font-medium text-muted-foreground leading-[1.2]">
