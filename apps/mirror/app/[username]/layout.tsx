@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { MOCK_PROFILE } from "@/features/profile";
 import type { Profile } from "@/features/profile";
-import { MOCK_ARTICLES } from "@/features/articles";
 import { isReservedUsername } from "@/lib/reserved-usernames";
 import { fetchAuthQuery, preloadAuthQuery } from "@/lib/auth-server";
 import { api } from "@feel-good/convex/convex/_generated/api";
@@ -17,10 +16,12 @@ export default async function ProfileLayout({
   const { username } = await params;
   if (isReservedUsername(username)) notFound();
 
-  const [convexProfile, preloadedProfile] = await Promise.all([
-    fetchAuthQuery(api.users.queries.getByUsername, { username }),
-    preloadAuthQuery(api.users.queries.getByUsername, { username }),
-  ]);
+  const [convexProfile, preloadedProfile, preloadedArticles] =
+    await Promise.all([
+      fetchAuthQuery(api.users.queries.getByUsername, { username }),
+      preloadAuthQuery(api.users.queries.getByUsername, { username }),
+      preloadAuthQuery(api.articles.queries.getByUsername, { username }),
+    ]);
 
   let profileData: Profile;
 
@@ -41,18 +42,22 @@ export default async function ProfileLayout({
     };
   }
 
-  const currentAuthUser = await fetchAuthQuery(api.auth.queries.getCurrentUser, {});
+  const currentAuthUser = await fetchAuthQuery(
+    api.auth.queries.getCurrentUser,
+    {},
+  );
   const isOwner =
     !!currentAuthUser &&
     !!profileData.authId &&
     currentAuthUser._id === profileData.authId;
 
-  const articles = isOwner
-    ? MOCK_ARTICLES
-    : MOCK_ARTICLES.filter((a) => a.status === "published");
-
   return (
-    <ProfileShell profile={profileData} preloadedProfile={preloadedProfile} isOwner={isOwner} articles={articles}>
+    <ProfileShell
+      profile={profileData}
+      preloadedProfile={preloadedProfile}
+      preloadedArticles={preloadedArticles}
+      isOwner={isOwner}
+    >
       {children}
     </ProfileShell>
   );

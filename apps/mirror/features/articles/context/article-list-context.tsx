@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import type { Article } from "../lib/mock-articles";
+import type { Article } from "../types";
 
 export type ArticleListContextValue = {
   articles: Article[];

@@ -10,10 +10,10 @@ const longDateFormatter = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
 });
 
-export function formatShortDate(dateString: string): string {
-  return shortDateFormatter.format(new Date(dateString));
+export function formatShortDate(date: string | number): string {
+  return shortDateFormatter.format(new Date(date));
 }
 
-export function formatLongDate(dateString: string): string {
-  return longDateFormatter.format(new Date(dateString));
+export function formatLongDate(date: string | number): string {
+  return longDateFormatter.format(new Date(date));
 }

@@ -8,6 +8,9 @@
  * @module
  */
 
+import type * as articles_helpers from "../articles/helpers.js";
+import type * as articles_mutations from "../articles/mutations.js";
+import type * as articles_queries from "../articles/queries.js";
 import type * as auth_client from "../auth/client.js";
 import type * as auth_queries from "../auth/queries.js";
 import type * as auth_triggers from "../auth/triggers.js";
@@ -26,6 +29,9 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  "articles/helpers": typeof articles_helpers;
+  "articles/mutations": typeof articles_mutations;
+  "articles/queries": typeof articles_queries;
   "auth/client": typeof auth_client;
   "auth/queries": typeof auth_queries;
   "auth/triggers": typeof auth_triggers;

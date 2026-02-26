@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@feel-good/ui/primitives/table";
 import { Checkbox } from "@feel-good/ui/primitives/checkbox";
-import type { Article } from "../lib/mock-articles";
+import type { Article } from "../types";
 import { ArticleListItem } from "../components/article-list-item";
 import { ArticleListLoader } from "../components/article-list-loader";
 

@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { getPlainText } from "@feel-good/features/editor/lib";
-import type { Article } from "../lib/mock-articles";
+import type { Article } from "../types";
 
 export type UseArticleSearchReturn = {
   filteredArticles: Article[];
