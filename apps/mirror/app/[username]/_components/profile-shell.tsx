@@ -113,7 +113,7 @@ export function ProfileShell(
     <div
       className={isMobile
         ? "absolute top-0 right-5 z-10"
-        : "absolute top-6 right-5"}
+        : "absolute top-4 right-4"}
     >
       {isEditing
         ? (
@@ -198,10 +198,11 @@ export function ProfileShell(
                     <div className="relative h-full min-w-0 flex flex-col">
                       <WorkspaceNavbar />
                       <ToolbarSlotTarget />
-                      <div className="flex-1 min-h-0 *:h-full">
+                      <div className="flex-1 min-h-0 *:h-full relative">
+                        <div className="w-full absolute top-0 bg-linear-to-b from-background to-transparent max-h-[24px] z-10" />
                         <div
                           ref={setDesktopScrollRoot}
-                          className="overflow-y-auto h-full px-4 pb-[64px]"
+                          className="overflow-y-auto h-full px-4 pb-[64px] pt-8"
                         >
                           {children}
                         </div>
