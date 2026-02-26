@@ -102,11 +102,11 @@ export function ProfileInfo({
       });
 
       toast.success("Profile updated");
+      onEditComplete();
     } catch {
       toast.error("Failed to update profile");
+      onSubmittingChange?.(false);
     }
-
-    onEditComplete();
   }
 
   const content = (
