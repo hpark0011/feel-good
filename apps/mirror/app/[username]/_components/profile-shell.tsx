@@ -5,9 +5,17 @@ import dynamic from "next/dynamic";
 import { usePreloadedQuery } from "convex/react";
 import type { Preloaded } from "convex/react";
 import { toast } from "sonner";
+import {
+  Toast,
+  ToastClose,
+  ToastDescription,
+  ToastHeader,
+  ToastTitle,
+} from "@feel-good/ui/components/toast";
 import type { api } from "@feel-good/convex/convex/_generated/api";
 import type { Profile } from "@/features/profile";
 import {
+  ChatInput,
   EditActions,
   EditProfileButton,
   MobileProfileLayout,
@@ -19,7 +27,7 @@ import {
   ArticleWorkspaceProvider,
   ScrollRootProvider,
 } from "@/features/articles";
-import type { Article } from "@/features/articles";
+import type { Article } from "@/features/articles/types";
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
 
 import {
@@ -42,17 +50,21 @@ const VideoCallModal = dynamic(
 type ProfileShellProps = {
   profile: Profile;
   preloadedProfile: Preloaded<typeof api.users.queries.getByUsername>;
+  preloadedArticles: Preloaded<typeof api.articles.queries.getByUsername>;
   isOwner: boolean;
-  articles: Article[];
   children: React.ReactNode;
 };
 
 export function ProfileShell(
-  { profile: initialProfile, preloadedProfile, isOwner, articles, children }:
+  { profile: initialProfile, preloadedProfile, preloadedArticles, isOwner, children }:
     ProfileShellProps,
 ) {
   // Subscribe to reactive profile data from Convex
   const reactiveRaw = usePreloadedQuery(preloadedProfile);
+
+  // Subscribe to reactive article data from Convex
+  const reactiveArticles = usePreloadedQuery(preloadedArticles);
+  const articles: Article[] = (reactiveArticles ?? []) as Article[];
   const profile: Profile = reactiveRaw
     ? {
       _id: reactiveRaw._id,
@@ -66,6 +78,7 @@ export function ProfileShell(
 
   const isMobile = useIsMobile();
   const [videoCallOpen, setVideoCallOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editSessionKey, setEditSessionKey] = useState(0);
@@ -90,14 +103,24 @@ export function ProfileShell(
   const handleProfileAction = useCallback((id: ProfileActionId) => {
     if (id === "video") {
       setVideoCallOpen(true);
+    } else if (id === "text") {
+      setChatOpen(true);
     } else {
-      toast("Coming soon", {
-        description: `${
-          id.charAt(0).toUpperCase() + id.slice(1)
-        } conversations are not yet available.`,
-      });
+      toast.custom((t) => (
+        <Toast id={t}>
+          <ToastHeader>
+            <ToastTitle>Coming soon</ToastTitle>
+            <ToastDescription>
+              {`${id.charAt(0).toUpperCase() + id.slice(1)} conversations are not yet available.`}
+            </ToastDescription>
+          </ToastHeader>
+          <ToastClose />
+        </Toast>
+      ));
     }
   }, []);
+
+  const handleChatClose = useCallback(() => setChatOpen(false), []);
 
   const handleEditComplete = useCallback(() => {
     setIsEditing(false);
@@ -140,6 +163,7 @@ export function ProfileShell(
       key={editSessionKey}
       profile={profile}
       isEditing={isEditing}
+      chatOpen={chatOpen}
       onEditComplete={handleEditComplete}
       onSubmittingChange={setIsSubmitting}
       onAction={handleProfileAction}
@@ -156,9 +180,10 @@ export function ProfileShell(
                 <WorkspaceNavbar className="fixed top-0 inset-x-0" />
                 <MobileProfileLayout
                   profile={
-                    <div className="relative h-full">
+                    <div className="relative h-full flex flex-col">
                       {editButton}
                       {profilePanel}
+                      <ChatInput isOpen={chatOpen} profileName={profile.name} onClose={handleChatClose} />
                     </div>
                   }
                   content={() => (
@@ -188,6 +213,7 @@ export function ProfileShell(
                   <div className="relative z-20 h-full flex flex-col justify-start items-center px-6 pt-[88px]">
                     {editButton}
                     {profilePanel}
+                    <ChatInput isOpen={chatOpen} profileName={profile.name} onClose={handleChatClose} />
                   </div>
                 </ResizablePanel>
 

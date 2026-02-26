@@ -6,7 +6,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "convex/react";
 import { z } from "zod";
 import { toast } from "sonner";
+import { CircleCheckIcon, OctagonXIcon } from "lucide-react";
 import { api } from "@feel-good/convex/convex/_generated/api";
+import {
+  Toast,
+  ToastClose,
+  ToastHeader,
+  ToastIcon,
+  ToastTitle,
+} from "@feel-good/ui/components/toast";
 
 import { Form } from "@feel-good/ui/primitives/form";
 
@@ -25,6 +33,7 @@ const editProfileSchema = z.object({
 type ProfileInfoProps = {
   profile: Profile;
   isEditing: boolean;
+  chatOpen?: boolean;
   onEditComplete: () => void;
   onSubmittingChange?: (submitting: boolean) => void;
   onAction?: (id: ProfileActionId) => void;
@@ -33,6 +42,7 @@ type ProfileInfoProps = {
 export function ProfileInfo({
   profile,
   isEditing,
+  chatOpen,
   onEditComplete,
   onSubmittingChange,
   onAction,
@@ -101,10 +111,30 @@ export function ProfileInfo({
         bio: data.bio,
       });
 
-      toast.success("Profile updated");
+      toast.custom((t) => (
+        <Toast id={t}>
+          <ToastIcon className="text-green-9">
+            <CircleCheckIcon />
+          </ToastIcon>
+          <ToastHeader>
+            <ToastTitle>Profile updated</ToastTitle>
+          </ToastHeader>
+          <ToastClose />
+        </Toast>
+      ));
       onEditComplete();
     } catch {
-      toast.error("Failed to update profile");
+      toast.custom((t) => (
+        <Toast id={t}>
+          <ToastIcon className="text-red-9">
+            <OctagonXIcon />
+          </ToastIcon>
+          <ToastHeader>
+            <ToastTitle>Failed to update profile</ToastTitle>
+          </ToastHeader>
+          <ToastClose />
+        </Toast>
+      ));
       onSubmittingChange?.(false);
     }
   }
@@ -122,7 +152,7 @@ export function ProfileInfo({
         <EditableProfileActions isEditing={isEditing} onAction={onAction} />
       </div>
       <div className="mt-[16px] w-full">
-        <EditableBio isEditing={isEditing} bio={profile.bio} />
+        <EditableBio isEditing={isEditing} bio={profile.bio} chatOpen={chatOpen} />
       </div>
     </>
   );

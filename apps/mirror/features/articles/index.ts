@@ -1,7 +1,6 @@
 export { ScrollableArticleList } from "./components/scrollable-article-list";
 export { ArticleWorkspaceProvider } from "./context/article-workspace-context";
-export { MOCK_ARTICLES, findArticleBySlug } from "./lib/mock-articles";
-export type { Article } from "./lib/mock-articles";
+export type { Article } from "./types";
 export { ArticleDetail } from "./components/article-detail";
 export {
   ScrollRootProvider,

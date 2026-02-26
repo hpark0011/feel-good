@@ -1,4 +1,4 @@
-import type { Article } from "../lib/mock-articles";
+import type { Article } from "../types";
 import type { DatePreset } from "./date-preset";
 import { getDateRange } from "./date-preset";
 
@@ -54,7 +54,7 @@ export function filterArticles(
 
     // Published date filter (AND logic with others)
     if (publishedDateRange !== null) {
-      const publishedTimestamp = new Date(article.published_at).getTime();
+      const publishedTimestamp = article.publishedAt ?? 0;
 
       if (
         publishedTimestamp < publishedDateRange.start ||
@@ -66,7 +66,7 @@ export function filterArticles(
 
     // Created date filter (only applies if isOwner and filter is active)
     if (createdDateRange !== null) {
-      const createdTimestamp = new Date(article.created_at).getTime();
+      const createdTimestamp = article.createdAt;
 
       if (
         createdTimestamp < createdDateRange.start ||

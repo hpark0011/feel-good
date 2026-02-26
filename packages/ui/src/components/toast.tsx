@@ -1,8 +1,14 @@
 "use client";
 
-import { XIcon } from "lucide-react";
+import {
+  CheckedCircleFillIcon,
+  ExclamationmarkTriangleFillIcon,
+  InfoCircleFillIcon,
+  XmarkIcon,
+} from "@feel-good/icons";
 import * as React from "react";
 import { toast as sonnerToast } from "sonner";
+import { Button } from "../primitives/button";
 
 import { cn } from "../lib/utils";
 
@@ -31,7 +37,7 @@ function Toast({
       <div
         data-slot="toast"
         className={cn(
-          "bg-toast text-toast-foreground border-toast-border flex w-full items-center gap-4 rounded-lg border p-4 shadow-lg",
+          "bg-toast text-toast-foreground border-toast-border flex w-full items-center gap-4 rounded-2xl border p-4 shadow-toast-shadow",
           className,
         )}
         {...props}
@@ -93,20 +99,18 @@ function ToastAction({
   const { id } = useToastContext();
 
   return (
-    <button
+    <Button
       data-slot="toast-action"
-      className={cn(
-        "bg-secondary text-secondary-foreground hover:bg-secondary/80 shrink-0 cursor-pointer rounded-md px-3 py-1 text-sm font-semibold",
-        className,
-      )}
+      className={className}
       onClick={(e) => {
         onClick?.(e);
         sonnerToast.dismiss(id);
       }}
+      size="sm"
       {...props}
     >
       {children}
-    </button>
+    </Button>
   );
 }
 
@@ -122,28 +126,71 @@ function ToastIcon({ className, ...props }: React.ComponentProps<"div">) {
 
 function ToastClose({
   className,
-  onClick,
   ...props
 }: Omit<React.ComponentProps<"button">, "children">) {
   const { id } = useToastContext();
 
   return (
-    <button
+    <Button
       data-slot="toast-close"
-      className={cn(
-        "shrink-0 cursor-pointer rounded-md opacity-70 transition-opacity hover:opacity-100",
-        className,
-      )}
-      onClick={(e) => {
-        onClick?.(e);
-        sonnerToast.dismiss(id);
-      }}
+      variant="ghost"
+      size="icon-sm"
+      onClick={() => sonnerToast.dismiss(id)}
       {...props}
     >
-      <XIcon className="size-4" />
+      <XmarkIcon className="size-4" />
       <span className="sr-only">Close</span>
-    </button>
+    </Button>
   );
+}
+
+const toastIconMap = {
+  success: {
+    icon: CheckedCircleFillIcon,
+    className: "text-toast-icon-success",
+  },
+  error: {
+    icon: ExclamationmarkTriangleFillIcon,
+    className: "text-toast-icon-error",
+  },
+  warning: {
+    icon: ExclamationmarkTriangleFillIcon,
+    className: "text-toast-icon-warning",
+  },
+  info: { icon: InfoCircleFillIcon, className: "text-toast-icon-info" },
+} as const;
+
+type ToastType = keyof typeof toastIconMap;
+
+interface ShowToastOptions {
+  type: ToastType;
+  title: string;
+  description?: string;
+  button?: {
+    label: string;
+    onClick: () => void;
+  };
+}
+
+function showToast({ type, title, description, button }: ShowToastOptions) {
+  const { icon: IconComponent, className } = toastIconMap[type];
+
+  return sonnerToast.custom((id) => (
+    <Toast id={id}>
+      <ToastIcon className={className}>
+        <IconComponent />
+      </ToastIcon>
+      <ToastHeader>
+        <ToastTitle>{title}</ToastTitle>
+        {description && <ToastDescription>{description}</ToastDescription>}
+      </ToastHeader>
+      {button ? (
+        <ToastAction onClick={button.onClick}>{button.label}</ToastAction>
+      ) : (
+        <ToastClose />
+      )}
+    </Toast>
+  ));
 }
 
 export {
@@ -154,4 +201,6 @@ export {
   ToastHeader,
   ToastIcon,
   ToastTitle,
+  showToast,
+  type ToastType,
 };

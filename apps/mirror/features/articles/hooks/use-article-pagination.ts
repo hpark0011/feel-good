@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
-import type { Article } from "../lib/mock-articles";
+import type { Article } from "../types";
 import type { SortOrder } from "./use-article-sort";
 
 const PAGE_SIZE = 30;
@@ -24,9 +24,7 @@ export function useArticlePagination(
   const sorted = useMemo(() => {
     if (preserveOrder) return allArticles;
     return [...allArticles].sort((a, b) => {
-      const diff =
-        new Date(b.published_at).getTime() -
-        new Date(a.published_at).getTime();
+      const diff = (b.publishedAt ?? 0) - (a.publishedAt ?? 0);
       return sortOrder === "newest" ? diff : -diff;
     });
   }, [allArticles, sortOrder, preserveOrder]);

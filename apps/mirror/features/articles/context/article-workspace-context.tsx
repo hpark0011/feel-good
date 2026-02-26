@@ -8,8 +8,10 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useMutation } from "convex/react";
+import { api } from "@feel-good/convex/convex/_generated/api";
 import type { SortOrder } from "../hooks/use-article-sort";
-import type { Article } from "../lib/mock-articles";
+import type { Article } from "../types";
 import { useArticlePagination } from "../hooks/use-article-pagination";
 import { useArticleSearch } from "../hooks/use-article-search";
 import { useArticleSelection } from "../hooks/use-article-selection";
@@ -27,12 +29,12 @@ type ArticleWorkspaceProviderProps = {
 };
 
 export function ArticleWorkspaceProvider({
-  articles: initialArticles,
+  articles,
   username,
   children,
 }: ArticleWorkspaceProviderProps) {
-  const [articles, setArticles] = useState(initialArticles);
   const isOwner = useIsProfileOwner();
+  const removeArticles = useMutation(api.articles.mutations.remove);
   const search = useArticleSearch(articles);
   const { sortOrder, setSortOrder } = useArticleSort();
   const filter = useArticleFilter();
@@ -106,14 +108,16 @@ export function ArticleWorkspaceProvider({
   const handleDelete = useCallback(() => {
     const currentSelection = selectedSlugsRef.current;
     const visibleSlugs = new Set(allSlugs);
-    setArticles((prev) =>
-      prev.filter(
-        (a) =>
-          !(currentSelection.has(a.slug) && visibleSlugs.has(a.slug)),
-      ),
-    );
+    const idsToDelete = articles
+      .filter(
+        (a) => currentSelection.has(a.slug) && visibleSlugs.has(a.slug),
+      )
+      .map((a) => a._id);
+    if (idsToDelete.length > 0) {
+      void removeArticles({ ids: idsToDelete });
+    }
     clearSelection();
-  }, [clearSelection, allSlugs]);
+  }, [clearSelection, allSlugs, articles, removeArticles]);
 
   // Empty state derivations
   const hasNoArticles = articles.length === 0;
