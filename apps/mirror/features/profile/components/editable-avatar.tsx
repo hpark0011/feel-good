@@ -92,13 +92,7 @@ export function EditableAvatar({
                     <div className="flex size-full items-center justify-center bg-muted text-muted-foreground text-4xl">
                       {initial}
                     </div>
-                    {displayAvatar ? (
-                      <img
-                        src={displayAvatar}
-                        alt="Profile photo"
-                        className="absolute inset-0 w-full h-full object-cover"
-                      />
-                    ) : null}
+                    {displayAvatar ? <ProfileMedia image={displayAvatar} /> : null}
                     <div className="absolute inset-0 flex items-center justify-center bg-gray-12 opacity-0 transition-opacity group-hover:opacity-100">
                       <Icon
                         name="PersonFillIcon"
@@ -144,13 +138,7 @@ export function EditableAvatar({
                   <div className="flex size-full items-center justify-center bg-muted text-muted-foreground text-4xl">
                     {initial}
                   </div>
-                  {displayAvatar ? (
-                    <img
-                      src={displayAvatar}
-                      alt="Profile photo"
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                  ) : null}
+                  {displayAvatar ? <ProfileMedia image={displayAvatar} /> : null}
                   <div className="absolute inset-0 flex items-center justify-center bg-gray-12 opacity-0 transition-opacity group-hover:opacity-100">
                     <Icon
                       name="PersonFillIcon"
@@ -178,10 +166,12 @@ export function EditableAvatar({
             >
               {profile.media
                 ? (
-                  <ProfileMedia
-                    video={profile.media.video}
-                    poster={profile.media.poster}
-                  />
+                  <div className="relative w-[200px] h-[200px] overflow-hidden rounded-t-full [corner-shape:superellipse(1.2)]">
+                    <ProfileMedia
+                      video={profile.media.video}
+                      poster={profile.media.poster}
+                    />
+                  </div>
                 )
                 : null}
             </motion.div>

@@ -4,7 +4,7 @@ export { EditActions } from "./components/edit-actions";
 export { MobileProfileLayout } from "./components/mobile-profile-layout";
 export { MOCK_PROFILE } from "./lib/mock-profile";
 export type { Profile, UserProfile } from "./types";
-export type { ProfileActionId } from "./components/profile-actions";
+export type { ProfileActionId } from "./components/editable-profile-actions";
 export {
   ProfileProvider,
   useIsProfileOwner,

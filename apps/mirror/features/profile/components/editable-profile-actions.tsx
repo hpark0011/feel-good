@@ -44,7 +44,7 @@ type ProfileActionsProps = {
   onEdit?: () => void;
 };
 
-export function ProfileActions({
+export function EditableProfileActions({
   isEditing,
   onAction,
   onEdit,
@@ -62,20 +62,20 @@ export function ProfileActions({
         </motion.div>
       </label>
       <div
-        className={`group/actions flex gap-2.5 items-center p-6 py-4 max-w-md w-full justify-center rounded-xl relative ${
-          isEditing ? "border" : "border border-transparent"
+        className={`group/actions flex gap-2.5 items-center p-6 pb-1.5 pt-2 max-w-md w-full justify-center rounded-xl relative ${
+          isEditing ? "border hover:bg-gray-1/30" : "border border-transparent"
         }`}
       >
         {isEditing && (
           <Button
             type="button"
-            variant="outline"
+            variant="secondary"
             size="icon"
             aria-label="Edit actions"
             onClick={onEdit}
-            className="absolute top-2 right-2 rounded-full [corner-shape:superellipse(1.0)] opacity-0 group-hover/actions:opacity-100 transition-opacity [&_svg]:size-5.5"
+            className="absolute top-1.5 right-1.5 rounded-full [corner-shape:superellipse(1.0)] opacity-0 group-hover/actions:opacity-100 transition-opacity [&_svg]:size-5.5"
           >
-            <Icon name="PencilIcon" className="text-icon" />
+            <Icon name="PencilIcon" />
           </Button>
         )}
         {PROFILE_ACTIONS.map(({ id, label, icon, iconClassName }) => (

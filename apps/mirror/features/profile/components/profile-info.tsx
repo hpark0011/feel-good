@@ -11,8 +11,8 @@ import { api } from "@feel-good/convex/convex/_generated/api";
 import { Form } from "@feel-good/ui/primitives/form";
 
 import type { Profile } from "../types";
-import type { ProfileActionId } from "./profile-actions";
-import { ProfileActions } from "./profile-actions";
+import type { ProfileActionId } from "./editable-profile-actions";
+import { EditableProfileActions } from "./editable-profile-actions";
 import { EditableName } from "./editable-name";
 import { EditableAvatar } from "./editable-avatar";
 import { EditableBio } from "./editable-bio";
@@ -119,7 +119,7 @@ export function ProfileInfo({
         onAvatarChange={handleAvatarChange}
       />
       <div className="w-full flex flex-col items-center justify-center">
-        <ProfileActions isEditing={isEditing} onAction={onAction} />
+        <EditableProfileActions isEditing={isEditing} onAction={onAction} />
       </div>
       <div className="mt-[16px] w-full">
         <EditableBio isEditing={isEditing} bio={profile.bio} />
