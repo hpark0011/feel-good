@@ -38,24 +38,19 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
         control={control}
         name="name"
         render={({ field }) => (
-          <FormItem>
-            <motion.div
-              className={cn(
-                "px-1.5",
-              )}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: isEditing ? "100%" : "0%" }}
-              transition={{ type: "spring", stiffness: 300, damping: 40 }}
-            >
-              <FormLabel
+          <FormItem className="gap-1.5">
+            <FormLabel>
+              <motion.div
                 className={cn(
-                  "text-muted-foreground",
+                  "px-1.5 text-muted-foreground",
                 )}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: isEditing ? "100%" : "0%" }}
+                transition={{ type: "spring", stiffness: 300, damping: 40 }}
               >
                 Name
-              </FormLabel>
-            </motion.div>
-
+              </motion.div>
+            </FormLabel>
             <FormControl>
               <motion.div
                 className="rounded-xl [corner-shape:superellipse(1.1)]"
@@ -70,9 +65,9 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
                   readOnly={!isEditing}
                   tabIndex={isEditing ? undefined : -1}
                   className={cn(
-                    "text-3xl md:text-3xl font-medium text-center h-13 bg-transparent rounded-xl focus-visible:border-none focus-visible:bg-gray-1/80 p-1 border-none [text-shadow:0px_1px_2px_rgba(0,0,0,0.3)] focus-visible:ring-0",
+                    "text-3xl md:text-3xl font-medium text-center h-13 bg-transparent rounded-xl focus-visible:border-transparent focus-visible:bg-gray-1/80 p-1 border-transparent [text-shadow:0px_1px_2px_rgba(0,0,0,0.3)] focus-visible:ring-0",
                     !isEditing &&
-                      "border-none focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-none [text-shadow:0px_0px_0px_rgba(0,0,0,0.2)]",
+                      "border-transparent focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-transparent [text-shadow:0px_0px_0px_rgba(0,0,0,0.2)]",
                   )}
                   data-test="edit-profile-name-input"
                   {...field}
