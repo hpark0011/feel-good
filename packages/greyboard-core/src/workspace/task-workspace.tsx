@@ -58,6 +58,7 @@ import type { WorkspaceStorageAdapter } from "../persistence/storage-adapter";
 import type { BoardState, ColumnId, SubTask, Ticket, TimeEntry } from "../types/board.types";
 
 const COLUMN_ORDER: ColumnId[] = ["backlog", "to-do", "in-progress", "complete"];
+const MAX_IMPORT_SNAPSHOT_BYTES = 5 * 1024 * 1024;
 
 interface TaskWorkspaceProps {
   storage: WorkspaceStorageAdapter;
@@ -110,6 +111,25 @@ function asDate(value: unknown, fallback: Date): Date {
     }
   }
   return fallback;
+}
+
+function asOptionalDate(value: unknown): Date | null {
+  if (value === null || value === undefined) {
+    return null;
+  }
+
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value;
+  }
+
+  if (typeof value === "string") {
+    const parsed = new Date(value);
+    if (!Number.isNaN(parsed.getTime())) {
+      return parsed;
+    }
+  }
+
+  return null;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -184,6 +204,7 @@ function normalizeTicket(rawTicket: unknown, fallbackStatus: ColumnId): Ticket |
     rawTicket.status === "complete"
       ? rawTicket.status
       : fallbackStatus;
+  const completedAt = asOptionalDate(rawTicket.completedAt);
 
   return {
     id: typeof rawTicket.id === "string" ? rawTicket.id : generateId("ticket"),
@@ -196,10 +217,7 @@ function normalizeTicket(rawTicket: unknown, fallbackStatus: ColumnId): Ticket |
     timeEntries: normalizeTimeEntries(rawTicket.timeEntries),
     createdAt: asDate(rawTicket.createdAt, now),
     updatedAt: asDate(rawTicket.updatedAt, now),
-    completedAt:
-      rawTicket.completedAt === null
-        ? null
-        : asDate(rawTicket.completedAt, status === "complete" ? now : now),
+    completedAt: status === "complete" ? (completedAt ?? now) : completedAt,
   };
 }
 
@@ -241,8 +259,31 @@ function serializeBoard(board: BoardState): SnapshotBoardState {
   return serialized;
 }
 
-function createSnapshot(board: BoardState, source: SnapshotSource): GreyboardSnapshotV2 {
-  return createSnapshotFromBoard(serializeBoard(board), { source });
+function createSnapshotWithBoard(
+  baseSnapshot: GreyboardSnapshotV2 | null,
+  board: BoardState,
+  source: SnapshotSource
+): GreyboardSnapshotV2 {
+  const nextBoard = serializeBoard(board);
+  const now = new Date().toISOString();
+  const fallbackSnapshot = createSnapshotFromBoard(nextBoard, {
+    source,
+    exportedAt: now,
+  });
+
+  if (!baseSnapshot) {
+    return fallbackSnapshot;
+  }
+
+  return {
+    ...baseSnapshot,
+    board: nextBoard,
+    metadata: {
+      ...baseSnapshot.metadata,
+      exportedAt: now,
+      source,
+    },
+  };
 }
 
 function findColumn(ticketId: string, board: BoardState): ColumnId | null {
@@ -503,6 +544,10 @@ export function TaskWorkspace({ storage, source }: TaskWorkspaceProps) {
 
   const importInputRef = useRef<HTMLInputElement>(null);
   const boardRef = useRef(board);
+  const snapshotRef = useRef<GreyboardSnapshotV2 | null>(null);
+  const dragSourceColumnRef = useRef<ColumnId | null>(null);
+  const dragCrossedColumnsRef = useRef(false);
+  const dragLastCrossOverIdRef = useRef<string | null>(null);
   boardRef.current = board;
 
   const sensors = useSensors(
@@ -532,7 +577,22 @@ export function TaskWorkspace({ storage, source }: TaskWorkspaceProps) {
   const persistBoard = useCallback(async (nextBoard: BoardState) => {
     setIsSaving(true);
     try {
-      await storage.saveSnapshot(createSnapshot(nextBoard, source));
+      let baseSnapshot = snapshotRef.current;
+      try {
+        const latestSnapshot = await storage.loadSnapshot();
+        snapshotRef.current = latestSnapshot;
+        baseSnapshot = latestSnapshot;
+      } catch {
+        // Best effort: keep in-memory snapshot if storage refresh fails.
+      }
+
+      const nextSnapshot = createSnapshotWithBoard(
+        baseSnapshot,
+        nextBoard,
+        source
+      );
+      const persistedSnapshot = await storage.saveSnapshot(nextSnapshot);
+      snapshotRef.current = persistedSnapshot;
       setError(null);
     } catch (persistError) {
       setError(
@@ -553,6 +613,7 @@ export function TaskWorkspace({ storage, source }: TaskWorkspaceProps) {
       try {
         const snapshot = await storage.loadSnapshot();
         if (!isCancelled) {
+          snapshotRef.current = snapshot;
           setBoard(normalizeBoard(snapshot));
           setError(null);
         }
@@ -782,9 +843,18 @@ export function TaskWorkspace({ storage, source }: TaskWorkspaceProps) {
       return;
     }
 
+    if (file.size > MAX_IMPORT_SNAPSHOT_BYTES) {
+      setError("Snapshot file is too large. Maximum supported size is 5MB.");
+      if (importInputRef.current) {
+        importInputRef.current.value = "";
+      }
+      return;
+    }
+
     try {
       const content = await readFileAsText(file);
       const imported = await storage.importSnapshot(content);
+      snapshotRef.current = imported;
       const nextBoard = normalizeBoard(imported);
       setBoard(nextBoard);
       boardRef.current = nextBoard;
@@ -810,7 +880,11 @@ export function TaskWorkspace({ storage, source }: TaskWorkspaceProps) {
   }, [storage]);
 
   const handleDragStart = useCallback((event: DragStartEvent) => {
-    setActiveTicketId(event.active.id as string);
+    const activeId = event.active.id as string;
+    setActiveTicketId(activeId);
+    dragSourceColumnRef.current = findColumn(activeId, boardRef.current);
+    dragCrossedColumnsRef.current = false;
+    dragLastCrossOverIdRef.current = null;
   }, []);
 
   const handleDragOver = useCallback((event: DragOverEvent) => {
@@ -836,7 +910,7 @@ export function TaskWorkspace({ storage, source }: TaskWorkspaceProps) {
       return;
     }
 
-    if (activeColumn === overColumn && activeId === overId) {
+    if (activeColumn === overColumn) {
       return;
     }
 
@@ -847,6 +921,8 @@ export function TaskWorkspace({ storage, source }: TaskWorkspaceProps) {
       COLUMN_ORDER.includes(overId as ColumnId) ? undefined : overId
     );
 
+    dragCrossedColumnsRef.current = true;
+    dragLastCrossOverIdRef.current = overId;
     setBoard(nextBoard);
     boardRef.current = nextBoard;
   }, []);
@@ -856,6 +932,9 @@ export function TaskWorkspace({ storage, source }: TaskWorkspaceProps) {
     setActiveTicketId(null);
 
     if (!over) {
+      dragSourceColumnRef.current = null;
+      dragCrossedColumnsRef.current = false;
+      dragLastCrossOverIdRef.current = null;
       return;
     }
 
@@ -869,10 +948,22 @@ export function TaskWorkspace({ storage, source }: TaskWorkspaceProps) {
       : findColumn(overId, currentBoard);
 
     if (!activeColumn || !overColumn) {
+      dragSourceColumnRef.current = null;
+      dragCrossedColumnsRef.current = false;
+      dragLastCrossOverIdRef.current = null;
       return;
     }
 
-    if (activeColumn === overColumn && !COLUMN_ORDER.includes(overId as ColumnId)) {
+    const skipSameColumnReorder =
+      dragCrossedColumnsRef.current &&
+      dragLastCrossOverIdRef.current === overId;
+
+    if (
+      dragSourceColumnRef.current === overColumn &&
+      activeColumn === overColumn &&
+      !skipSameColumnReorder &&
+      !COLUMN_ORDER.includes(overId as ColumnId)
+    ) {
       const items = [...(currentBoard[activeColumn] ?? [])];
       const activeIndex = items.findIndex((ticket) => ticket.id === activeId);
       const overIndex = items.findIndex((ticket) => ticket.id === overId);
@@ -887,6 +978,9 @@ export function TaskWorkspace({ storage, source }: TaskWorkspaceProps) {
       }
     }
 
+    dragSourceColumnRef.current = null;
+    dragCrossedColumnsRef.current = false;
+    dragLastCrossOverIdRef.current = null;
     await persistBoard(boardRef.current);
   }, [persistBoard]);
 
