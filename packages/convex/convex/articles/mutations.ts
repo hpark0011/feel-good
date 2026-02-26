@@ -1,7 +1,24 @@
 import { v } from "convex/values";
+import type { Doc } from "../_generated/dataModel";
 import { authMutation } from "../lib/auth";
 import { getAppUser } from "../users/helpers";
 import { generateSlug } from "./helpers";
+
+const MAX_TITLE_LENGTH = 500;
+const MAX_SLUG_LENGTH = 200;
+const MAX_CATEGORY_LENGTH = 100;
+
+function validateStringLength(
+  value: string,
+  field: string,
+  maxLength: number,
+): void {
+  if (value.length > maxLength) {
+    throw new Error(
+      `${field} exceeds maximum length of ${maxLength} (got ${value.length})`,
+    );
+  }
+}
 
 export const create = authMutation({
   args: {
@@ -15,7 +32,16 @@ export const create = authMutation({
   returns: v.id("articles"),
   handler: async (ctx, args) => {
     const appUser = await getAppUser(ctx, ctx.user._id);
+
+    validateStringLength(args.title, "Title", MAX_TITLE_LENGTH);
+    validateStringLength(args.category, "Category", MAX_CATEGORY_LENGTH);
+
     const slug = args.slug || generateSlug(args.title);
+    validateStringLength(slug, "Slug", MAX_SLUG_LENGTH);
+
+    if (!slug) {
+      throw new Error("Slug cannot be empty");
+    }
 
     const existing = await ctx.db
       .query("articles")
@@ -42,6 +68,10 @@ export const create = authMutation({
   },
 });
 
+type ArticlePatch = Partial<
+  Omit<Doc<"articles">, "_id" | "_creationTime" | "userId" | "createdAt">
+>;
+
 export const update = authMutation({
   args: {
     id: v.id("articles"),
@@ -63,6 +93,16 @@ export const update = authMutation({
       throw new Error("Not authorized to update this article");
     }
 
+    if (args.title !== undefined) {
+      validateStringLength(args.title, "Title", MAX_TITLE_LENGTH);
+    }
+    if (args.slug !== undefined) {
+      validateStringLength(args.slug, "Slug", MAX_SLUG_LENGTH);
+    }
+    if (args.category !== undefined) {
+      validateStringLength(args.category, "Category", MAX_CATEGORY_LENGTH);
+    }
+
     if (args.slug && args.slug !== article.slug) {
       const existing = await ctx.db
         .query("articles")
@@ -75,7 +115,16 @@ export const update = authMutation({
       }
     }
 
-    const patch: Record<string, unknown> = {};
+    // Clean up old cover image if being replaced
+    if (
+      args.coverImageStorageId !== undefined &&
+      args.coverImageStorageId !== article.coverImageStorageId &&
+      article.coverImageStorageId
+    ) {
+      await ctx.storage.delete(article.coverImageStorageId);
+    }
+
+    const patch: ArticlePatch = {};
     if (args.title !== undefined) patch.title = args.title;
     if (args.slug !== undefined) patch.slug = args.slug;
     if (args.category !== undefined) patch.category = args.category;
@@ -101,16 +150,17 @@ export const remove = authMutation({
   handler: async (ctx, args) => {
     const appUser = await getAppUser(ctx, ctx.user._id);
 
-    for (const id of args.ids) {
-      const article = await ctx.db.get(id);
-      if (!article) continue;
-      if (article.userId !== appUser._id) {
-        throw new Error("Not authorized to delete this article");
-      }
+    // Fetch all articles first and filter to owned ones only
+    const articles = await Promise.all(args.ids.map((id) => ctx.db.get(id)));
+    const owned = articles.filter(
+      (a): a is Doc<"articles"> => a !== null && a.userId === appUser._id,
+    );
+
+    for (const article of owned) {
       if (article.coverImageStorageId) {
         await ctx.storage.delete(article.coverImageStorageId);
       }
-      await ctx.db.delete(id);
+      await ctx.db.delete(article._id);
     }
 
     return null;

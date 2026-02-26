@@ -27,8 +27,12 @@ export async function resolveCoverImageUrl(
 }
 
 export function generateSlug(title: string): string {
-  return title
+  const slug = title
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+  if (!slug) {
+    throw new Error("Cannot generate slug from the given title");
+  }
+  return slug;
 }
