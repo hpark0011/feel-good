@@ -45,9 +45,15 @@ export function EditActions(
             disabled={isSubmitting}
             data-test="edit-profile-submit-button"
           >
-            {isSubmitting ? <Loader2Icon className="size-4 animate-spin" /> : (
-              "Save"
-            )}
+            {isSubmitting
+              ? (
+                <>
+                  <Loader2Icon className="size-3.5 animate-spin" /> Saving
+                </>
+              )
+              : (
+                "Save"
+              )}
           </Button>
         </motion.div>
       )}
