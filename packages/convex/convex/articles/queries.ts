@@ -23,31 +23,27 @@ export const getByUsername = query({
       .withIndex("by_userId", (q) => q.eq("userId", user._id))
       .collect();
 
-    const result = [];
-    for (const article of articles) {
-      if (!isOwner && article.status === "draft") {
-        continue;
-      }
-      const coverImageUrl = await resolveCoverImageUrl(
-        ctx,
-        article.coverImageStorageId,
-      );
-      result.push({
-        _id: article._id,
-        _creationTime: article._creationTime,
-        userId: article.userId,
-        slug: article.slug,
-        title: article.title,
-        coverImageUrl,
-        createdAt: article.createdAt,
-        publishedAt: article.publishedAt,
-        status: article.status,
-        category: article.category,
-        body: article.body,
-      });
-    }
+    const visible = articles.filter(
+      (a) => isOwner || a.status !== "draft",
+    );
 
-    return result;
+    const coverImageUrls = await Promise.all(
+      visible.map((a) => resolveCoverImageUrl(ctx, a.coverImageStorageId)),
+    );
+
+    return visible.map((article, i) => ({
+      _id: article._id,
+      _creationTime: article._creationTime,
+      userId: article.userId,
+      slug: article.slug,
+      title: article.title,
+      coverImageUrl: coverImageUrls[i]!,
+      createdAt: article.createdAt,
+      publishedAt: article.publishedAt,
+      status: article.status,
+      category: article.category,
+      body: article.body,
+    }));
   },
 });
 
