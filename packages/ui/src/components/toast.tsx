@@ -122,6 +122,7 @@ function ToastIcon({ className, ...props }: React.ComponentProps<"div">) {
 
 function ToastClose({
   className,
+  onClick,
   ...props
 }: Omit<React.ComponentProps<"button">, "children">) {
   const { id } = useToastContext();
@@ -133,7 +134,10 @@ function ToastClose({
         "shrink-0 cursor-pointer rounded-md opacity-70 transition-opacity hover:opacity-100",
         className,
       )}
-      onClick={() => sonnerToast.dismiss(id)}
+      onClick={(e) => {
+        onClick?.(e);
+        sonnerToast.dismiss(id);
+      }}
       {...props}
     >
       <XIcon className="size-4" />
