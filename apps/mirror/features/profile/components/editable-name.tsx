@@ -42,7 +42,7 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
             <FormLabel>
               <motion.div
                 className={cn(
-                  "px-1.5 text-muted-foreground",
+                  "px-1 text-muted-foreground",
                 )}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: isEditing ? "100%" : "0%" }}
@@ -53,7 +53,7 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
             </FormLabel>
             <FormControl>
               <motion.div
-                className="rounded-xl [corner-shape:superellipse(1.1)]"
+                className="rounded-md [corner-shape:superellipse(1.1)]"
                 initial={{ boxShadow: VIEW_SHADOW }}
                 animate={{
                   boxShadow: isEditing ? EDIT_SHADOW : VIEW_SHADOW,
@@ -65,7 +65,7 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
                   readOnly={!isEditing}
                   tabIndex={isEditing ? undefined : -1}
                   className={cn(
-                    "text-3xl md:text-3xl font-medium text-center h-13 bg-transparent rounded-xl focus-visible:border-transparent focus-visible:bg-gray-1/80 p-1 border-transparent [text-shadow:0px_1px_2px_rgba(0,0,0,0.3)] focus-visible:ring-0",
+                    "text-3xl md:text-3xl font-medium text-center h-13 bg-transparent rounded-md focus-visible:border-transparent focus-visible:bg-gray-1/80 p-1 border-transparent [text-shadow:0px_1px_2px_rgba(0,0,0,0.2)] focus-visible:ring-0 placeholder:text-gray-11 dark:bg-transparent",
                     !isEditing &&
                       "border-transparent focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-transparent [text-shadow:0px_0px_0px_rgba(0,0,0,0.2)]",
                   )}

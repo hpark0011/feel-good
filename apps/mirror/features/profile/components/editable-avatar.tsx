@@ -51,7 +51,7 @@ export function EditableAvatar({
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="group relative size-[200px] rounded-t-full [corner-shape:superellipse(1.2)] overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  className="group relative size-[200px] rounded-t-full [corner-shape:superellipse(1.2)] overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-muted"
                   data-test="edit-profile-avatar-button"
                 >
                   <Avatar className="size-[200px] rounded-t-full [corner-shape:superellipse(1.2)]">

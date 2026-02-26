@@ -121,7 +121,7 @@ export function ProfileInfo({
       <div className="mt-[20px]">
         <ProfileActions onAction={onAction} />
       </div>
-      <div className="mt-[32px] w-full">
+      <div className="mt-[24px] w-full">
         <EditableBio isEditing={isEditing} bio={profile.bio} />
       </div>
     </>
