@@ -9,6 +9,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@feel-good/ui/primitives/form";
 
@@ -38,6 +39,23 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
         name="name"
         render={({ field }) => (
           <FormItem>
+            <motion.div
+              className={cn(
+                "px-1.5",
+              )}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: isEditing ? "100%" : "0%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 40 }}
+            >
+              <FormLabel
+                className={cn(
+                  "text-muted-foreground",
+                )}
+              >
+                Name
+              </FormLabel>
+            </motion.div>
+
             <FormControl>
               <motion.div
                 className="rounded-xl [corner-shape:superellipse(1.1)]"
@@ -52,9 +70,9 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
                   readOnly={!isEditing}
                   tabIndex={isEditing ? undefined : -1}
                   className={cn(
-                    "text-3xl md:text-3xl font-medium text-center h-13 bg-transparent rounded-xl focus-visible:border-none focus-visible:bg-gray-1/80 p-1",
+                    "text-3xl md:text-3xl font-medium text-center h-13 bg-transparent rounded-xl focus-visible:border-none focus-visible:bg-gray-1/80 p-1 border-none [text-shadow:0px_1px_2px_rgba(0,0,0,0.3)] focus-visible:ring-0",
                     !isEditing &&
-                      "border-transparent focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-transparent",
+                      "border-none focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-none [text-shadow:0px_0px_0px_rgba(0,0,0,0.2)]",
                   )}
                   data-test="edit-profile-name-input"
                   {...field}
