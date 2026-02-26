@@ -151,7 +151,8 @@ export const remove = authMutation({
     const appUser = await getAppUser(ctx, ctx.user._id);
 
     // Fetch all articles first and filter to owned ones only
-    const articles = await Promise.all(args.ids.map((id) => ctx.db.get(id)));
+    const uniqueIds = [...new Set(args.ids)];
+    const articles = await Promise.all(uniqueIds.map((id) => ctx.db.get(id)));
     const owned = articles.filter(
       (a): a is Doc<"articles"> => a !== null && a.userId === appUser._id,
     );
