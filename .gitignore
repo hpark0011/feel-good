@@ -36,5 +36,8 @@ playwright-report
 test-results.worktrees
 .playwright-cli
 
+# Convex local backend
+.convex
+
 # Worktrees
 .worktrees

@@ -28,7 +28,7 @@ export const setUsername = authMutation({
       throw new Error("Username is already taken");
     }
 
-    await ctx.db.patch(appUser._id, { username: args.username });
+    await ctx.db.patch("users", appUser._id, { username: args.username });
     return null;
   },
 });
@@ -42,7 +42,7 @@ export const updateProfile = authMutation({
   handler: async (ctx, args) => {
     const appUser = await getAppUser(ctx, ctx.user._id);
 
-    await ctx.db.patch(appUser._id, {
+    await ctx.db.patch("users", appUser._id, {
       ...(args.bio !== undefined ? { bio: args.bio } : {}),
       ...(args.name !== undefined ? { name: args.name } : {}),
     });
@@ -60,7 +60,7 @@ export const setAvatar = authMutation({
       await ctx.storage.delete(appUser.avatarStorageId);
     }
 
-    await ctx.db.patch(appUser._id, { avatarStorageId: args.storageId });
+    await ctx.db.patch("users", appUser._id, { avatarStorageId: args.storageId });
     return null;
   },
 });
@@ -75,7 +75,7 @@ export const completeOnboarding = authMutation({
       throw new Error("Username must be set before completing onboarding");
     }
 
-    await ctx.db.patch(appUser._id, { onboardingComplete: true });
+    await ctx.db.patch("users", appUser._id, { onboardingComplete: true });
     return null;
   },
 });

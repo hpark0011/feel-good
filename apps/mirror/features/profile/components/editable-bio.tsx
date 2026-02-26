@@ -54,7 +54,7 @@ export function EditableBio({ isEditing, bio }: EditableBioProps) {
                   readOnly={!isEditing}
                   tabIndex={isEditing ? undefined : -1}
                   className={cn(
-                    "text-lg md:text-lg text-center leading-[1.3] bg-transparent p-0 min-h-[80px] resize-none w-full border",
+                    "text-lg md:text-lg text-center leading-[1.3] bg-transparent min-h-[80px] resize-none border-transparent ring-0 shadow-transparent",
                     !isEditing &&
                       "border-transparent focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-transparent",
                   )}

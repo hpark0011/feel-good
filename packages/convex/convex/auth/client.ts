@@ -29,7 +29,7 @@ export const authComponent: ReturnType<typeof createClient<DataModel>> = createC
             .withIndex("by_authId", (q) => q.eq("authId", newDoc._id))
             .unique();
           if (appUser) {
-            await ctx.db.patch(appUser._id, { email: newDoc.email });
+            await ctx.db.patch("users", appUser._id, { email: newDoc.email });
           }
         }
       },
@@ -42,7 +42,7 @@ export const authComponent: ReturnType<typeof createClient<DataModel>> = createC
           if (appUser.avatarStorageId) {
             await ctx.storage.delete(appUser.avatarStorageId);
           }
-          await ctx.db.delete(appUser._id);
+          await ctx.db.delete("users", appUser._id);
         }
       },
     },
