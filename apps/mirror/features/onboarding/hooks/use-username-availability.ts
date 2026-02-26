@@ -29,7 +29,7 @@ export function useUsernameAvailability(
   }, [username]);
 
   const isTaken = useQuery(
-    api.users.isUsernameTaken,
+    api.users.queries.isUsernameTaken,
     debouncedUsername ? { username: debouncedUsername } : "skip"
   );
 

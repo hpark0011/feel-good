@@ -2,10 +2,14 @@
 
 import { useCallback, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
+import { usePreloadedQuery } from "convex/react";
+import type { Preloaded } from "convex/react";
 import { toast } from "sonner";
+import type { api } from "@feel-good/convex/convex/_generated/api";
 import type { Profile } from "@/features/profile";
 import {
-  EditProfileForm,
+  EditActions,
+  EditProfileButton,
   MobileProfileLayout,
   ProfileInfo,
   ProfileProvider,
@@ -18,13 +22,6 @@ import {
 import type { Article } from "@/features/articles";
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
 
-import { Button } from "@feel-good/ui/primitives/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@feel-good/ui/primitives/tooltip";
-import { Icon } from "@feel-good/ui/components/icon";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -44,17 +41,34 @@ const VideoCallModal = dynamic(
 
 type ProfileShellProps = {
   profile: Profile;
+  preloadedProfile: Preloaded<typeof api.users.queries.getByUsername>;
   isOwner: boolean;
   articles: Article[];
   children: React.ReactNode;
 };
 
 export function ProfileShell(
-  { profile, isOwner, articles, children }: ProfileShellProps,
+  { profile: initialProfile, preloadedProfile, isOwner, articles, children }:
+    ProfileShellProps,
 ) {
+  // Subscribe to reactive profile data from Convex
+  const reactiveRaw = usePreloadedQuery(preloadedProfile);
+  const profile: Profile = reactiveRaw
+    ? {
+      _id: reactiveRaw._id,
+      authId: reactiveRaw.authId,
+      username: reactiveRaw.username ?? initialProfile.username,
+      name: reactiveRaw.name ?? "",
+      bio: reactiveRaw.bio ?? "",
+      avatarUrl: reactiveRaw.avatarUrl,
+    }
+    : initialProfile;
+
   const isMobile = useIsMobile();
   const [videoCallOpen, setVideoCallOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editSessionKey, setEditSessionKey] = useState(0);
 
   const [mobileScrollRoot, setMobileScrollRoot] = useState<
     HTMLDivElement | null
@@ -78,10 +92,59 @@ export function ProfileShell(
       setVideoCallOpen(true);
     } else {
       toast("Coming soon", {
-        description: `${id.charAt(0).toUpperCase() + id.slice(1)} conversations are not yet available.`,
+        description: `${
+          id.charAt(0).toUpperCase() + id.slice(1)
+        } conversations are not yet available.`,
       });
     }
   }, []);
+
+  const handleEditComplete = useCallback(() => {
+    setIsEditing(false);
+    setIsSubmitting(false);
+  }, []);
+
+  const handleCancel = useCallback(() => {
+    setIsEditing(false);
+    setIsSubmitting(false);
+    setEditSessionKey((k) => k + 1);
+  }, []);
+
+  const editButton = isOwner && (
+    <div
+      className={isMobile
+        ? "absolute top-0 right-5 z-10"
+        : "absolute top-4 right-4"}
+    >
+      {isEditing
+        ? (
+          <EditActions
+            isEditing={isEditing}
+            isSubmitting={isSubmitting}
+            onCancel={handleCancel}
+          />
+        )
+        : (
+          <EditProfileButton
+            onClick={() => {
+              setIsEditing(true);
+              setEditSessionKey((k) => k + 1);
+            }}
+          />
+        )}
+    </div>
+  );
+
+  const profilePanel = (
+    <ProfileInfo
+      key={editSessionKey}
+      profile={profile}
+      isEditing={isEditing}
+      onEditComplete={handleEditComplete}
+      onSubmittingChange={setIsSubmitting}
+      onAction={handleProfileAction}
+    />
+  );
 
   return (
     <ProfileProvider value={contextValue}>
@@ -94,25 +157,8 @@ export function ProfileShell(
                 <MobileProfileLayout
                   profile={
                     <div className="relative h-full">
-                      {isOwner && !isEditing && (
-                        <div className="absolute top-0 right-5 z-10">
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button variant="outline" size="default" aria-label="Edit Profile" onClick={() => setIsEditing(true)}>
-                                <Icon name="SquareAndPencilIcon" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Edit Profile</TooltipContent>
-                          </Tooltip>
-                        </div>
-                      )}
-                      {isEditing ? (
-                        <div className="flex h-full items-center justify-center px-6">
-                          <EditProfileForm profile={profile} onClose={() => setIsEditing(false)} />
-                        </div>
-                      ) : (
-                        <ProfileInfo profile={profile} onAction={handleProfileAction} />
-                      )}
+                      {editButton}
+                      {profilePanel}
                     </div>
                   }
                   content={() => (
@@ -136,40 +182,28 @@ export function ProfileShell(
           )
           : (
             <main className="h-screen">
+              {/* Profile interaction view */}
               <ResizablePanelGroup direction="horizontal" className="h-full">
                 <ResizablePanel defaultSize={50} minSize={25} maxSize={80}>
-                  <div className="relative z-20 h-full flex flex-col justify-center items-center px-6">
-                    {isOwner && !isEditing && (
-                      <div className="absolute top-5 right-5">
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button variant="outline" size="default" aria-label="Edit Profile" onClick={() => setIsEditing(true)}>
-                              <Icon name="SquareAndPencilIcon" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>Edit Profile</TooltipContent>
-                        </Tooltip>
-                      </div>
-                    )}
-                    {isEditing ? (
-                      <EditProfileForm profile={profile} onClose={() => setIsEditing(false)} />
-                    ) : (
-                      <ProfileInfo profile={profile} onAction={handleProfileAction} />
-                    )}
+                  <div className="relative z-20 h-full flex flex-col justify-start items-center px-6 pt-[88px]">
+                    {editButton}
+                    {profilePanel}
                   </div>
                 </ResizablePanel>
 
-                <ResizableHandle className="bg-border-subtle data-[resize-handle-state=hover]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] data-[resize-handle-state=drag]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] z-20 relative" />
+                <ResizableHandle className="bg-border-subtle data-[resize-handle-state=hover]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] data-[resize-handle-state=drag]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] z-30 relative" />
 
+                {/* Content view */}
                 <ResizablePanel defaultSize={50} minSize={25} maxSize={80}>
                   <ToolbarSlotProvider>
                     <div className="relative h-full min-w-0 flex flex-col">
                       <WorkspaceNavbar />
                       <ToolbarSlotTarget />
-                      <div className="flex-1 min-h-0 *:h-full">
+                      <div className="flex-1 min-h-0 *:h-full relative">
+                        <div className="w-full absolute top-0 bg-linear-to-b from-background to-transparent max-h-[24px] z-10" />
                         <div
                           ref={setDesktopScrollRoot}
-                          className="overflow-y-auto h-full px-4 pb-[64px]"
+                          className="overflow-y-auto h-full px-4 pb-[64px] pt-8"
                         >
                           {children}
                         </div>

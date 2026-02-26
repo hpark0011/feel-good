@@ -67,7 +67,7 @@
 
 .dark {
   /* Base */
-  --background: #0a0a0a;
+  --background: var(--gray-1);
   --foreground: var(--gray-12);
 
   /* Text */

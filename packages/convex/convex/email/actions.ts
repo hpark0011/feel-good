@@ -1,8 +1,8 @@
 "use node";
 
 import { Resend } from "@convex-dev/resend";
-import { components } from "./_generated/api";
-import { internalAction } from "./_generated/server";
+import { components } from "../_generated/api";
+import { internalAction } from "../_generated/server";
 import { v } from "convex/values";
 
 const resend = new Resend(components.resend);
@@ -151,4 +151,3 @@ export const sendOTP = internalAction({
     return null;
   },
 });
-

@@ -12,7 +12,7 @@ export default async function DashboardLayout({
     redirect("/sign-in");
   }
 
-  const profile = await fetchAuthQuery(api.users.getCurrentProfile, {});
+  const profile = await fetchAuthQuery(api.users.queries.getCurrentProfile, {});
   if (profile?.username) {
     redirect(`/@${profile.username}`);
   }

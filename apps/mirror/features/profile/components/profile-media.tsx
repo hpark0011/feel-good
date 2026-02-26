@@ -1,14 +1,13 @@
-type ProfileMediaProps = {
-  video: string;
-  poster: string;
-};
+type ProfileMediaProps =
+  | { video: string; poster: string; image?: never }
+  | { image: string; video?: never; poster?: never };
 
-export function ProfileMedia({ video, poster }: ProfileMediaProps) {
-  return (
-    <div className="relative w-[200px] h-[200px] overflow-hidden rounded-t-full [corner-shape:superellipse(1.2)]">
+export function ProfileMedia(props: ProfileMediaProps) {
+  if (props.video) {
+    return (
       <video
-        src={video}
-        poster={poster}
+        src={props.video}
+        poster={props.poster}
         preload="metadata"
         autoPlay
         loop
@@ -16,6 +15,15 @@ export function ProfileMedia({ video, poster }: ProfileMediaProps) {
         playsInline
         className="absolute inset-0 w-full h-full object-cover object-center"
       />
-    </div>
+    );
+  }
+
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={props.image}
+      alt="Profile photo"
+      className="absolute inset-0 w-full h-full object-cover"
+    />
   );
 }

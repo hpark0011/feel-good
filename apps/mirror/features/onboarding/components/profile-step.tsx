@@ -21,10 +21,10 @@ export function ProfileStep({ username, onComplete }: ProfileStepProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const updateProfile = useMutation(api.users.updateProfile);
-  const setAvatar = useMutation(api.users.setAvatar);
-  const completeOnboarding = useMutation(api.users.completeOnboarding);
-  const generateUploadUrl = useMutation(api.users.generateAvatarUploadUrl);
+  const updateProfile = useMutation(api.users.mutations.updateProfile);
+  const setAvatar = useMutation(api.users.mutations.setAvatar);
+  const completeOnboarding = useMutation(api.users.mutations.completeOnboarding);
+  const generateUploadUrl = useMutation(api.users.mutations.generateAvatarUploadUrl);
 
   function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];

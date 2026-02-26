@@ -19,9 +19,9 @@ const inputVariants = cva(
     "outline-none transition-[color,box-shadow]",
     "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
     // Focus States
-    "focus-visible:border-ring focus-visible:ring-ring focus-visible:ring-[3px]",
+    "focus-visible:border-ring focus-visible:ring-ring focus-visible:ring-[2px]",
     // Invalid States
-    "aria-invalid:border-input-destructive aria-invalid:ring-input-destructive aria-invalid:ring-[3px] dark:aria-invalid:ring-input-destructive dark:aria-invalid:border-input-destructive",
+    "aria-invalid:border-input-destructive aria-invalid:ring-input-destructive aria-invalid:ring-[2px] dark:aria-invalid:ring-input-destructive dark:aria-invalid:border-input-destructive",
     // Caret
     "caret-caret",
   ),
@@ -31,7 +31,7 @@ const inputVariants = cva(
         default: cn(
           "border border-input",
           "rounded-lg",
-          "focus-visible:border-ring focus-visible:ring-ring focus-visible:ring-[3px]",
+          "focus-visible:border-ring focus-visible:ring-ring focus-visible:ring-[2px]",
         ),
         underline: cn(
           "border-b border-input",

@@ -37,9 +37,7 @@ export function MobileProfileLayout({
     null,
   );
 
-  const resolvedContent = typeof content === "function"
-    ? content()
-    : content;
+  const resolvedContent = typeof content === "function" ? content() : content;
   const isExpanded = activeSnapPoint === EXPANDED_SNAP_POINT;
 
   return (
