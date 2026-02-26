@@ -26,6 +26,7 @@
 @import "./field.css";
 @import "./popover.css";
 @import "./card.css";
+@import "./toast.css";
 
 /* custom variant */
 @custom-variant dark (&:is(.dark *));
