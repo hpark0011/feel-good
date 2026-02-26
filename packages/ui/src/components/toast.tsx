@@ -1,6 +1,11 @@
 "use client";
 
-import { XIcon } from "lucide-react";
+import {
+  CheckedCircleFillIcon,
+  ExclamationmarkTriangleFillIcon,
+  InfoCircleFillIcon,
+  XmarkIcon,
+} from "@feel-good/icons";
 import * as React from "react";
 import { toast as sonnerToast } from "sonner";
 import { Button } from "../primitives/button";
@@ -133,10 +138,59 @@ function ToastClose({
       onClick={() => sonnerToast.dismiss(id)}
       {...props}
     >
-      <XIcon className="size-4" />
+      <XmarkIcon className="size-4" />
       <span className="sr-only">Close</span>
     </Button>
   );
+}
+
+const toastIconMap = {
+  success: {
+    icon: CheckedCircleFillIcon,
+    className: "text-toast-icon-success",
+  },
+  error: {
+    icon: ExclamationmarkTriangleFillIcon,
+    className: "text-toast-icon-error",
+  },
+  warning: {
+    icon: ExclamationmarkTriangleFillIcon,
+    className: "text-toast-icon-warning",
+  },
+  info: { icon: InfoCircleFillIcon, className: "text-toast-icon-info" },
+} as const;
+
+type ToastType = keyof typeof toastIconMap;
+
+interface ShowToastOptions {
+  type: ToastType;
+  title: string;
+  description?: string;
+  button?: {
+    label: string;
+    onClick: () => void;
+  };
+}
+
+function showToast({ type, title, description, button }: ShowToastOptions) {
+  const { icon: IconComponent, className } = toastIconMap[type];
+
+  return sonnerToast.custom((id) => (
+    <Toast id={id}>
+      <ToastIcon className={className}>
+        <IconComponent />
+      </ToastIcon>
+      <ToastHeader>
+        <ToastTitle>{title}</ToastTitle>
+        {description && <ToastDescription>{description}</ToastDescription>}
+      </ToastHeader>
+      {button ? (
+        <ToastAction onClick={button.onClick}>{button.label}</ToastAction>
+      ) : (
+        <ToastClose />
+      )}
+    </Toast>
+  ));
 }
 
 export {
@@ -147,4 +201,6 @@ export {
   ToastHeader,
   ToastIcon,
   ToastTitle,
+  showToast,
+  type ToastType,
 };
