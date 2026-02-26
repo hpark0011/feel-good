@@ -2,7 +2,7 @@
 
 import {
   createSnapshotFromBoard,
-  import type GreyboardSnapshotV2,
+  type GreyboardSnapshotV2,
   deserializeSnapshot,
   serializeSnapshot,
   type SnapshotBoardState,

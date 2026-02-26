@@ -1,3 +1,5 @@
+import * as Icons from "@feel-good/icons";
+
 export interface SubTask {
   id: string;
   text: string;
@@ -43,7 +45,7 @@ export type ProjectColor =
 export interface Column {
   id: ColumnId;
   title: string;
-  icon: string;
+  icon: keyof typeof Icons;
   iconColor: string;
   iconSize: string;
 }
