@@ -2,6 +2,7 @@
 
 import { useFormContext } from "react-hook-form";
 import { motion } from "framer-motion";
+import { useTheme } from "next-themes";
 
 import { cn } from "@feel-good/utils/cn";
 import { Input } from "@feel-good/ui/primitives/input";
@@ -15,11 +16,15 @@ import {
 
 import { useIsProfileOwner } from "../context/profile-context";
 
-const EDIT_SHADOW =
+const EDIT_SHADOW_LIGHT =
   "0px 120px 80px 0px rgba(0,0,0,0.09), 0px 40px 27px 0px rgba(0,0,0,0.06), 0px 20px 12px 0px rgba(0,0,0,0.06), 0px 12px 8px 0px rgba(0,0,0,0.06), 0px 24px 6px -16px rgba(255,255,255,1), inset 0px 0.5px 0px 0.5px rgba(255,255,255,0.1), inset 0px -4px 20px 2px rgba(255,255,255,0.6)";
+const EDIT_SHADOW_DARK =
+  "0px 120px 80px 0px rgba(0,0,0,0.3), 0px 40px 27px 0px rgba(0,0,0,0.2), 0px 20px 12px 0px rgba(0,0,0,0.18), 0px 12px 8px 0px rgba(0,0,0,0.15), 0px 24px 6px -16px rgba(255,255,255,0.05), inset 0px 0.5px 0px 0.5px rgba(255,255,255,0.04), inset 0px -4px 20px 2px rgba(255,255,255,0.03)";
 
-const VIEW_SHADOW =
+const VIEW_SHADOW_LIGHT =
   "0px 0px 0px 0px rgba(0,0,0,0.03), 0px 0px 0px 0px rgba(0,0,0,0.03), 0px 0px 0px 0px rgba(0,0,0,0.06), 0px 0px 0px 0px rgba(0,0,0,0.03), 0px 0px 0px 0px rgba(255,255,255,1), inset 0px 0px 0px 0px rgba(255,255,255,0.5), inset 0px 0px 0px 0px rgba(255,255,255,0.1)";
+const VIEW_SHADOW_DARK =
+  "0px 0px 0px 0px rgba(0,0,0,0.03), 0px 0px 0px 0px rgba(0,0,0,0.03), 0px 0px 0px 0px rgba(0,0,0,0.06), 0px 0px 0px 0px rgba(0,0,0,0.03), 0px 0px 0px 0px rgba(255,255,255,0.05), inset 0px 0px 0px 0px rgba(255,255,255,0.05), inset 0px 0px 0px 0px rgba(255,255,255,0.03)";
 
 type EditableNameProps = {
   isEditing: boolean;
@@ -29,6 +34,10 @@ type EditableNameProps = {
 export function EditableName({ isEditing, name }: EditableNameProps) {
   const isOwner = useIsProfileOwner();
   const { control } = useFormContext();
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+  const editShadow = isDark ? EDIT_SHADOW_DARK : EDIT_SHADOW_LIGHT;
+  const viewShadow = isDark ? VIEW_SHADOW_DARK : VIEW_SHADOW_LIGHT;
 
   if (!isEditing && !name && !isOwner) return null;
 
@@ -53,10 +62,18 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
             </FormLabel>
             <FormControl>
               <motion.div
-                className="rounded-md [corner-shape:superellipse(1.1)]"
-                initial={{ boxShadow: VIEW_SHADOW }}
+                className="rounded-lg [corner-shape:superellipse(1.1)]"
+                initial={{
+                  boxShadow: viewShadow,
+                  backgroundColor: "rgba(255,255,255,0)",
+                }}
                 animate={{
-                  boxShadow: isEditing ? EDIT_SHADOW : VIEW_SHADOW,
+                  boxShadow: isEditing ? editShadow : viewShadow,
+                  backgroundColor: isEditing
+                    ? isDark
+                      ? "rgba(255,255,255,0.06)"
+                      : "rgba(255,255,255,0.6)"
+                    : "rgba(255,255,255,0)",
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 40 }}
               >
@@ -65,9 +82,9 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
                   readOnly={!isEditing}
                   tabIndex={isEditing ? undefined : -1}
                   className={cn(
-                    "text-3xl md:text-3xl font-medium text-center h-13 bg-transparent rounded-md focus-visible:border-transparent focus-visible:bg-gray-1/80 p-1 border-transparent [text-shadow:0px_1px_2px_rgba(0,0,0,0.2)] focus-visible:ring-0 placeholder:text-gray-11 dark:bg-transparent",
+                    "text-3xl md:text-3xl font-medium text-center h-13 bg-transparent rounded-lg focus-visible:border-transparent focus-visible:bg-gray-1 p-1 border-transparent [text-shadow:0px_1px_2px_rgba(0,0,0,0.2)] focus-visible:ring-0 placeholder:text-gray-11 dark:bg-transparent",
                     !isEditing &&
-                      "border-transparent focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-transparent [text-shadow:0px_0px_0px_rgba(0,0,0,0.2)]",
+                      "border-transparent focus-visible:ring-0 pointer-events-none  hover:bg-transparent hover:border-transparent [text-shadow:0px_0px_0px_rgba(0,0,0,0.2)]",
                   )}
                   data-test="edit-profile-name-input"
                   {...field}

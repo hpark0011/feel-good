@@ -2,6 +2,7 @@
 
 import { useFormContext } from "react-hook-form";
 import { motion } from "framer-motion";
+import { useTheme } from "next-themes";
 
 import { cn } from "@feel-good/utils/cn";
 import { Textarea } from "@feel-good/ui/primitives/textarea";
@@ -15,11 +16,15 @@ import {
 
 import { useIsProfileOwner } from "../context/profile-context";
 
-const EDIT_SHADOW =
+const EDIT_SHADOW_LIGHT =
   "0px 120px 80px 0px rgba(0,0,0,0.09), 0px 40px 27px 0px rgba(0,0,0,0.06), 0px 20px 12px 0px rgba(0,0,0,0.06), 0px 12px 8px 0px rgba(0,0,0,0.06), 0px 24px 6px -16px rgba(255,255,255,1), inset 0px 0.5px 0px 0.5px rgba(255,255,255,0.1), inset 0px -4px 20px 2px rgba(255,255,255,0.6)";
+const EDIT_SHADOW_DARK =
+  "0px 120px 80px 0px rgba(0,0,0,0.3), 0px 40px 27px 0px rgba(0,0,0,0.2), 0px 20px 12px 0px rgba(0,0,0,0.18), 0px 12px 8px 0px rgba(0,0,0,0.15), 0px 24px 6px -16px rgba(255,255,255,0.05), inset 0px 0.5px 0px 0.5px rgba(255,255,255,0.04), inset 0px -4px 20px 2px rgba(255,255,255,0.03)";
 
-const VIEW_SHADOW =
+const VIEW_SHADOW_LIGHT =
   "0px 0px 0px 0px rgba(0,0,0,0.03), 0px 0px 0px 0px rgba(0,0,0,0.03), 0px 0px 0px 0px rgba(0,0,0,0.06), 0px 0px 0px 0px rgba(0,0,0,0.03), 0px 0px 0px 0px rgba(255,255,255,1), inset 0px 0px 0px 0px rgba(255,255,255,0.5), inset 0px 0px 0px 0px rgba(255,255,255,0.1)";
+const VIEW_SHADOW_DARK =
+  "0px 0px 0px 0px rgba(0,0,0,0.03), 0px 0px 0px 0px rgba(0,0,0,0.03), 0px 0px 0px 0px rgba(0,0,0,0.06), 0px 0px 0px 0px rgba(0,0,0,0.03), 0px 0px 0px 0px rgba(255,255,255,0.05), inset 0px 0px 0px 0px rgba(255,255,255,0.05), inset 0px 0px 0px 0px rgba(255,255,255,0.03)";
 
 type EditableBioProps = {
   isEditing: boolean;
@@ -30,6 +35,10 @@ export function EditableBio({ isEditing, bio }: EditableBioProps) {
   const isOwner = useIsProfileOwner();
   const { control, watch } = useFormContext();
   const bioValue = watch("bio");
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+  const editShadow = isDark ? EDIT_SHADOW_DARK : EDIT_SHADOW_LIGHT;
+  const viewShadow = isDark ? VIEW_SHADOW_DARK : VIEW_SHADOW_LIGHT;
 
   if (!isEditing && !bio && !isOwner) return null;
 
@@ -42,7 +51,7 @@ export function EditableBio({ isEditing, bio }: EditableBioProps) {
           <FormItem className="w-full">
             <FormLabel>
               <motion.div
-                initial={{ opacity: 0 }}
+                initial={{ opacity: 0, backgroundColor: "rgba(255,255,255,0)" }}
                 animate={{ opacity: isEditing ? "100%" : "0%" }}
                 transition={{ type: "spring", stiffness: 300, damping: 40 }}
                 className="text-muted-foreground px-1"
@@ -52,10 +61,15 @@ export function EditableBio({ isEditing, bio }: EditableBioProps) {
             </FormLabel>
             <FormControl>
               <motion.div
-                className="rounded-lg [corner-shape:superellipse(1.1)] w-full"
-                initial={{ boxShadow: VIEW_SHADOW }}
+                className="rounded-xl [corner-shape:superellipse(1.1)] w-full"
+                initial={{ boxShadow: viewShadow }}
                 animate={{
-                  boxShadow: isEditing ? EDIT_SHADOW : VIEW_SHADOW,
+                  boxShadow: isEditing ? editShadow : viewShadow,
+                  backgroundColor: isEditing
+                    ? isDark
+                      ? "rgba(255,255,255,0.06)"
+                      : "rgba(255,255,255,0.6)"
+                    : "rgba(255,255,255,0)",
                 }}
                 transition={{ type: "spring", stiffness: 300, damping: 40 }}
               >
@@ -65,7 +79,7 @@ export function EditableBio({ isEditing, bio }: EditableBioProps) {
                   readOnly={!isEditing}
                   tabIndex={isEditing ? undefined : -1}
                   className={cn(
-                    "text-lg md:text-lg text-center leading-[1.3] bg-transparent dark:bg-transparent min-h-[66px] resize-none border-transparent ring-0 shadow-transparent rounded-lg hover:bg-gray-1 focus-visible:bg-gray-1/80 focus-visible:border-transparent w-full [text-shadow:0px_1px_1px_rgba(0,0,0,0.1)] focus-visible:ring-0 placeholder:text-gray-11",
+                    "text-lg md:text-lg text-center leading-[1.3] bg-transparent dark:bg-transparent min-h-[96px] resize-none border-transparent ring-0 shadow-transparent rounded-xl hover:bg-gray-1 focus-visible:bg-gray-1 focus-visible:border-transparent w-full [text-shadow:0px_1px_1px_rgba(0,0,0,0.1)] focus-visible:ring-0 placeholder:text-gray-11 py-3",
                     !isEditing &&
                       "border-transparent focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-transparent [text-shadow:0px_0px_0px_rgba(0,0,0,0.2)]",
                   )}

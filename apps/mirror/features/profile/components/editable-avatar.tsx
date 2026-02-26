@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { CameraIcon } from "lucide-react";
+import { Icon } from "@feel-good/ui/components/icon";
 
 import {
   Avatar,
@@ -68,8 +68,11 @@ export function EditableAvatar({
                       {initial}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
-                    <CameraIcon className="size-8 text-white" />
+                  <div className="absolute inset-0 flex items-center justify-center bg-gray-12 opacity-0 transition-opacity group-hover:opacity-100">
+                    <Icon
+                      name="PersonFillIcon"
+                      className="size-14 text-gray-1"
+                    />
                   </div>
                 </button>
                 <input
