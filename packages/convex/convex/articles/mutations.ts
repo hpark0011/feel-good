@@ -101,7 +101,8 @@ export const remove = authMutation({
   handler: async (ctx, args) => {
     const appUser = await getAppUser(ctx, ctx.user._id);
 
-    for (const id of args.ids) {
+    const uniqueIds = [...new Set(args.ids)];
+    for (const id of uniqueIds) {
       const article = await ctx.db.get(id);
       if (!article) continue;
       if (article.userId !== appUser._id) {
