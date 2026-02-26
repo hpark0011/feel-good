@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { usePreloadedQuery } from "convex/react";
 import type { Preloaded } from "convex/react";
 import { toast } from "sonner";
-import { api } from "@feel-good/convex/convex/_generated/api";
+import type { api } from "@feel-good/convex/convex/_generated/api";
 import type { Profile } from "@/features/profile";
 import {
   EditActions,
