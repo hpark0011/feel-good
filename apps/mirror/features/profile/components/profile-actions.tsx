@@ -11,9 +11,24 @@ type ProfileAction = {
 };
 
 const PROFILE_ACTIONS: ProfileAction[] = [
-  { id: "text", label: "Text", icon: "BubbleLeftFillIcon", iconClassName: "size-5.5" },
-  { id: "video", label: "Video", icon: "VideoFillIcon", iconClassName: "size-5.5" },
-  { id: "voice", label: "Voice", icon: "WaveformIcon", iconClassName: "size-6" },
+  {
+    id: "text",
+    label: "Text",
+    icon: "BubbleLeftFillIcon",
+    iconClassName: "size-5.5",
+  },
+  {
+    id: "video",
+    label: "Video",
+    icon: "VideoFillIcon",
+    iconClassName: "size-5.5",
+  },
+  {
+    id: "voice",
+    label: "Voice",
+    icon: "WaveformIcon",
+    iconClassName: "size-6",
+  },
 ];
 
 const shinyButtonClass =
@@ -22,18 +37,20 @@ const shinyButtonShadowClass =
   "rounded-[20px] [corner-shape:superellipse(1.3)]";
 
 type ProfileActionsProps = {
+  isEditing?: boolean;
   onAction?: (id: ProfileActionId) => void;
 };
 
-export function ProfileActions({ onAction }: ProfileActionsProps) {
+export function ProfileActions({ isEditing, onAction }: ProfileActionsProps) {
   return (
-    <div className="flex gap-2.5 items-center">
+    <div className={`flex gap-2.5 items-center p-4 px-8 rounded-2xl ${isEditing ? "border" : "border border-transparent"}`}>
       {PROFILE_ACTIONS.map(({ id, label, icon, iconClassName }) => (
         <div key={id} className="flex flex-col gap-2">
           <ShinyButton
             className={shinyButtonClass}
             shadowClassName={shinyButtonShadowClass}
-            onClick={() => onAction?.(id)}
+            onClick={() =>
+              onAction?.(id)}
           >
             <Icon name={icon} className={iconClassName} />
           </ShinyButton>

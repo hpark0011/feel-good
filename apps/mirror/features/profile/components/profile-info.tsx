@@ -118,10 +118,10 @@ export function ProfileInfo({
         avatarPreview={avatarPreview}
         onAvatarChange={handleAvatarChange}
       />
-      <div className="mt-[20px]">
-        <ProfileActions onAction={onAction} />
+      <div className="mt-[16px]">
+        <ProfileActions isEditing={isEditing} onAction={onAction} />
       </div>
-      <div className="mt-[24px] w-full">
+      <div className="mt-[16px] w-full">
         <EditableBio isEditing={isEditing} bio={profile.bio} />
       </div>
     </>
