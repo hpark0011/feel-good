@@ -1,6 +1,7 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
+import { motion } from "framer-motion";
 
 import { cn } from "@feel-good/utils/cn";
 import { Textarea } from "@feel-good/ui/primitives/textarea";
@@ -12,6 +13,12 @@ import {
 } from "@feel-good/ui/primitives/form";
 
 import { useIsProfileOwner } from "../context/profile-context";
+
+const EDIT_SHADOW =
+  "0px 120px 80px 0px rgba(0,0,0,0.09), 0px 40px 27px 0px rgba(0,0,0,0.06), 0px 20px 12px 0px rgba(0,0,0,0.06), 0px 12px 8px 0px rgba(0,0,0,0.06), 0px 24px 6px -16px rgba(255,255,255,1), inset 0px 0.5px 0px 0.5px rgba(255,255,255,0.1), inset 0px -4px 20px 2px rgba(255,255,255,0.6)";
+
+const VIEW_SHADOW =
+  "0px 0px 0px 0px rgba(0,0,0,0.03), 0px 0px 0px 0px rgba(0,0,0,0.03), 0px 0px 0px 0px rgba(0,0,0,0.06), 0px 0px 0px 0px rgba(0,0,0,0.03), 0px 0px 0px 0px rgba(255,255,255,1), inset 0px 0px 0px 0px rgba(255,255,255,0.5), inset 0px 0px 0px 0px rgba(255,255,255,0.1)";
 
 type EditableBioProps = {
   isEditing: boolean;
@@ -33,19 +40,28 @@ export function EditableBio({ isEditing, bio }: EditableBioProps) {
         render={({ field }) => (
           <FormItem>
             <FormControl>
-              <Textarea
-                placeholder="Tell your story..."
-                maxLength={300}
-                readOnly={!isEditing}
-                tabIndex={isEditing ? undefined : -1}
-                className={cn(
-                  "text-lg md:text-lg text-center leading-[1.3] bg-transparent shadow-none p-0 min-h-[80px] resize-none w-full border transition-[border-color] duration-300 ease-in-out",
-                  !isEditing &&
-                    "border-transparent focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-transparent",
-                )}
-                data-test="edit-profile-bio-textarea"
-                {...field}
-              />
+              <motion.div
+                className="rounded-[14px] [corner-shape:superellipse(1.1)]"
+                initial={{ boxShadow: VIEW_SHADOW }}
+                animate={{
+                  boxShadow: isEditing ? EDIT_SHADOW : VIEW_SHADOW,
+                }}
+                transition={{ type: "spring", stiffness: 300, damping: 40 }}
+              >
+                <Textarea
+                  placeholder="Tell your story..."
+                  maxLength={300}
+                  readOnly={!isEditing}
+                  tabIndex={isEditing ? undefined : -1}
+                  className={cn(
+                    "text-lg md:text-lg text-center leading-[1.3] bg-transparent p-0 min-h-[80px] resize-none w-full border",
+                    !isEditing &&
+                      "border-transparent focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-transparent",
+                  )}
+                  data-test="edit-profile-bio-textarea"
+                  {...field}
+                />
+              </motion.div>
             </FormControl>
             {isEditing && (
               <div className="flex items-center justify-between">

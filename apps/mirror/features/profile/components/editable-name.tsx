@@ -15,10 +15,10 @@ import {
 import { useIsProfileOwner } from "../context/profile-context";
 
 const EDIT_SHADOW =
-  "0px 120px 80px 0px rgba(0,0,0,0.09), 0px 40px 27px 0px rgba(0,0,0,0.06), 0px 20px 12px 0px rgba(0,0,0,0.06), 0px 12px 8px 0px rgba(0,0,0,0.06), 0px 24px 6px -16px rgba(255,255,255,1), inset 0px 0.5px 0px 0.5px rgba(255,255,255,0.1), inset 0px -4px 20px 2px rgba(255,255,255,0.9)";
+  "0px 120px 80px 0px rgba(0,0,0,0.09), 0px 40px 27px 0px rgba(0,0,0,0.06), 0px 20px 12px 0px rgba(0,0,0,0.06), 0px 12px 8px 0px rgba(0,0,0,0.06), 0px 24px 6px -16px rgba(255,255,255,1), inset 0px 0.5px 0px 0.5px rgba(255,255,255,0.1), inset 0px -4px 20px 2px rgba(255,255,255,0.6)";
 
 const VIEW_SHADOW =
-  "0px 0px 0px 0px rgba(0,0,0,0.09), 0px 0px 0px 0px rgba(0,0,0,0.06), 0px 0px 0px 0px rgba(0,0,0,0.06), 0px 0px 0px 0px rgba(0,0,0,0.06), 0px 0px 0px 0px rgba(255,255,255,1), inset 0px 0px 0px 0px rgba(255,255,255,0.5), inset 0px 0px 0px 0px rgba(255,255,255,0.1)";
+  "0px 0px 0px 0px rgba(0,0,0,0.03), 0px 0px 0px 0px rgba(0,0,0,0.03), 0px 0px 0px 0px rgba(0,0,0,0.06), 0px 0px 0px 0px rgba(0,0,0,0.03), 0px 0px 0px 0px rgba(255,255,255,1), inset 0px 0px 0px 0px rgba(255,255,255,0.5), inset 0px 0px 0px 0px rgba(255,255,255,0.1)";
 
 type EditableNameProps = {
   isEditing: boolean;
@@ -40,19 +40,19 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
           <FormItem>
             <FormControl>
               <motion.div
-                className="rounded-2xl [corner-shape:superellipse(1.1)]"
+                className="rounded-[14px] [corner-shape:superellipse(1.1)]"
                 initial={{ boxShadow: VIEW_SHADOW }}
                 animate={{
                   boxShadow: isEditing ? EDIT_SHADOW : VIEW_SHADOW,
                 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
+                transition={{ type: "spring", stiffness: 300, damping: 40 }}
               >
                 <Input
                   placeholder="Your name"
                   readOnly={!isEditing}
                   tabIndex={isEditing ? undefined : -1}
                   className={cn(
-                    "text-3xl md:text-3xl font-medium text-center h-13 border-transparent bg-transparent rounded-2xl focus-visible:ring-0 focus-visible:border-none focus-visible:border-transparent focus-visible:bg-gray-1/50",
+                    "text-3xl md:text-3xl font-medium text-center h-13 border-transparent bg-transparent rounded-[14px] focus-visible:ring-0 focus-visible:border-none focus-visible:border-transparent focus-visible:bg-gray-1/40 p-1",
                     !isEditing &&
                       "border-transparent focus-visible:ring-0 pointer-events-none hover:bg-transparent hover:border-transparent",
                   )}
