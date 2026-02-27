@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "convex/react";
@@ -80,6 +80,14 @@ export function ProfileInfo({
     },
     mode: "onChange",
   });
+
+  useEffect(() => {
+    if (!isEditing) {
+      form.reset({ name: profile.name ?? "", bio: profile.bio ?? "" });
+      setAvatarPreview(null);
+      setAvatarFile(null);
+    }
+  }, [isEditing, form, profile.name, profile.bio]);
 
   function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];

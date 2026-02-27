@@ -81,7 +81,6 @@ export function ProfileShell(
   const [chatOpen, setChatOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [editSessionKey, setEditSessionKey] = useState(0);
 
   const [mobileScrollRoot, setMobileScrollRoot] = useState<
     HTMLDivElement | null
@@ -130,7 +129,6 @@ export function ProfileShell(
   const handleCancel = useCallback(() => {
     setIsEditing(false);
     setIsSubmitting(false);
-    setEditSessionKey((k) => k + 1);
   }, []);
 
   const editButton = isOwner && (
@@ -149,10 +147,7 @@ export function ProfileShell(
         )
         : (
           <EditProfileButton
-            onClick={() => {
-              setIsEditing(true);
-              setEditSessionKey((k) => k + 1);
-            }}
+            onClick={() => setIsEditing(true)}
           />
         )}
     </div>
@@ -160,7 +155,6 @@ export function ProfileShell(
 
   const profilePanel = (
     <ProfileInfo
-      key={editSessionKey}
       profile={profile}
       isEditing={isEditing}
       chatOpen={chatOpen}
