@@ -4,9 +4,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useRef, useState } from "react";
 
 import { Icon } from "@feel-good/ui/components/icon";
-import { Button } from "@feel-good/ui/primitives/button";
-import { Textarea } from "@feel-good/ui/primitives/textarea";
-import { cn } from "@feel-good/utils/cn";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupTextarea,
+} from "@feel-good/ui/primitives/input-group";
 
 type ChatInputProps = {
   isOpen: boolean;
@@ -63,32 +66,29 @@ export function ChatInput({ isOpen, profileName }: ChatInputProps) {
           transition={springTransition}
           className="mt-auto w-full max-w-md px-2 pb-6"
         >
-          <div
-            className={cn(
-              "flex items-end gap-2 rounded-2xl [corner-shape:superellipse(1.2)]",
-              "border bg-gray-2 p-2 shadow-lg",
-            )}
-          >
-            <Textarea
+          <InputGroup className="rounded-2xl shadow-toast-shadow border-border-subtle">
+            <InputGroupTextarea
               ref={textareaRef}
               value={message}
               onChange={handleInput}
               onKeyDown={handleKeyDown}
               placeholder={`Message ${profileName}...`}
-              className="min-h-[40px] max-h-[120px] resize-none border-transparent bg-transparent shadow-none focus-visible:ring-0 focus-visible:border-transparent py-2 text-sm"
+              className="min-h-[40px] max-h-[120px] py-2 text-sm"
               rows={1}
             />
 
-            <Button
-              type="button"
-              size="icon"
-              className="size-8 shrink-0 rounded-full"
-              disabled={!message.trim()}
-              onClick={handleSend}
-            >
-              <Icon name="ArrowUpIcon" size="sm" />
-            </Button>
-          </div>
+            <InputGroupAddon align="block-end" className="justify-end">
+              <InputGroupButton
+                type="button"
+                size="icon-sm"
+                className="size-8 shrink-0 rounded-full"
+                disabled={!message.trim()}
+                onClick={handleSend}
+              >
+                <Icon name="ArrowUpIcon" size="sm" />
+              </InputGroupButton>
+            </InputGroupAddon>
+          </InputGroup>
         </motion.div>
       )}
     </AnimatePresence>
