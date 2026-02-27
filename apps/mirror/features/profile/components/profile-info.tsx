@@ -32,7 +32,6 @@ const editProfileSchema = z.object({
 type ProfileInfoProps = {
   profile: Profile;
   isEditing: boolean;
-  chatOpen?: boolean;
   onEditComplete: () => void;
   onSubmittingChange?: (submitting: boolean) => void;
   onOpenChat?: () => void;
@@ -42,7 +41,6 @@ type ProfileInfoProps = {
 export function ProfileInfo({
   profile,
   isEditing,
-  chatOpen,
   onEditComplete,
   onSubmittingChange,
   onOpenChat,
@@ -168,7 +166,7 @@ export function ProfileInfo({
         <EditableProfileActions isEditing={isEditing} onOpenChat={onOpenChat} onOpenVideoCall={onOpenVideoCall} />
       </div>
       <div className="mt-[16px] w-full">
-        <EditableBio isEditing={isEditing} bio={profile.bio} chatOpen={chatOpen} />
+        <EditableBio isEditing={isEditing} bio={profile.bio} />
       </div>
     </>
   );

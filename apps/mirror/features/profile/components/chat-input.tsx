@@ -60,10 +60,7 @@ export function ChatInput({ isOpen, profileName }: ChatInputProps) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 20, opacity: 0 }}
           transition={springTransition}
-          className={cn(
-            "mt-auto w-full max-w-md",
-            "pb-6",
-          )}
+          className="w-full max-w-md"
         >
           <InputGroup
             className={cn(
@@ -102,6 +99,7 @@ export function ChatInput({ isOpen, profileName }: ChatInputProps) {
               <InputGroupButton
                 type="button"
                 size="icon-sm"
+                variant="primary"
                 className={cn(
                   "size-8 shrink-0",
                   "rounded-full [corner-shape:superellipse(1.0)]",
@@ -109,7 +107,7 @@ export function ChatInput({ isOpen, profileName }: ChatInputProps) {
                 disabled={!message.trim()}
                 onClick={handleSend}
               >
-                <Icon name="ArrowUpIcon" size="sm" />
+                <Icon name="ArrowUpIcon" className="size-6" />
               </InputGroupButton>
             </InputGroupAddon>
           </InputGroup>
