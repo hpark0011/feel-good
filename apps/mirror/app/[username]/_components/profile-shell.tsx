@@ -130,7 +130,6 @@ export function ProfileShell(
   const handleCancel = useCallback(() => {
     setIsEditing(false);
     setIsSubmitting(false);
-    setEditSessionKey((k) => k + 1);
   }, []);
 
   const editButton = isOwner && (
