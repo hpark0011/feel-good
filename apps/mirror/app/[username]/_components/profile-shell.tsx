@@ -2,7 +2,6 @@
 
 import { useCallback, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
-import { usePreloadedQuery } from "convex/react";
 import type { Preloaded } from "convex/react";
 import type { api } from "@feel-good/convex/convex/_generated/api";
 import type { Profile } from "@/features/profile";
@@ -14,11 +13,11 @@ import {
   ProfileInfo,
   ProfileProvider,
 } from "@/features/profile";
+import { useProfileData } from "@/features/profile/hooks/use-profile-data";
 import {
   ArticleWorkspaceProvider,
   ScrollRootProvider,
 } from "@/features/articles";
-import type { Article } from "@/features/articles/types";
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
 
 import {
@@ -55,19 +54,11 @@ export function ProfileShell(
     children,
   }: ProfileShellProps,
 ) {
-  const reactiveProfile = usePreloadedQuery(preloadedProfile);
-  const reactiveArticles = usePreloadedQuery(preloadedArticles);
-  const articles: Article[] = (reactiveArticles ?? []) as Article[];
-  const profile: Profile = reactiveProfile
-    ? {
-      _id: reactiveProfile._id,
-      authId: reactiveProfile.authId,
-      username: reactiveProfile.username ?? initialProfile.username,
-      name: reactiveProfile.name ?? "",
-      bio: reactiveProfile.bio ?? "",
-      avatarUrl: reactiveProfile.avatarUrl,
-    }
-    : initialProfile;
+  const { profile, articles } = useProfileData({
+    initialProfile,
+    preloadedProfile,
+    preloadedArticles,
+  });
 
   const isMobile = useIsMobile();
   const [videoCallOpen, setVideoCallOpen] = useState(false);
@@ -92,12 +83,7 @@ export function ProfileShell(
     [isOwner],
   );
 
-  const handleEditComplete = useCallback(() => {
-    setIsEditing(false);
-    setIsSubmitting(false);
-  }, []);
-
-  const handleCancel = useCallback(() => {
+  const handleEditClose = useCallback(() => {
     setIsEditing(false);
     setIsSubmitting(false);
   }, []);
@@ -113,7 +99,7 @@ export function ProfileShell(
           <EditActions
             isEditing={isEditing}
             isSubmitting={isSubmitting}
-            onCancel={handleCancel}
+            onCancel={handleEditClose}
           />
         )
         : (
@@ -129,7 +115,7 @@ export function ProfileShell(
       profile={profile}
       isEditing={isEditing}
       chatOpen={chatOpen}
-      onEditComplete={handleEditComplete}
+      onEditComplete={handleEditClose}
       onSubmittingChange={setIsSubmitting}
       onOpenChat={() => setChatOpen(true)}
       onOpenVideoCall={() => setVideoCallOpen(true)}
