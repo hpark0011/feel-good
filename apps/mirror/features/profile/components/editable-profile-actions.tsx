@@ -30,8 +30,18 @@ export function EditableProfileActions({
   onEdit,
 }: ProfileActionsProps) {
   const actions: ProfileAction[] = [
-    { label: "Text", icon: "BubbleLeftFillIcon", iconClassName: "size-5.5", handler: onOpenChat },
-    { label: "Video", icon: "VideoFillIcon", iconClassName: "size-5.5", handler: onOpenVideoCall },
+    {
+      label: "Text",
+      icon: "BubbleLeftFillIcon",
+      iconClassName: "size-5.5",
+      handler: onOpenChat,
+    },
+    {
+      label: "Video",
+      icon: "VideoFillIcon",
+      iconClassName: "size-5.5",
+      handler: onOpenVideoCall,
+    },
     { label: "Voice", icon: "WaveformIcon", iconClassName: "size-6" },
   ];
 
@@ -65,7 +75,13 @@ export function EditableProfileActions({
           </Button>
         )}
         {actions.map(({ label, icon, iconClassName, handler }) => (
-          <div key={label} className={cn("flex flex-col gap-2", !handler && "opacity-40 pointer-events-none")}>
+          <div
+            key={label}
+            className={cn(
+              "flex flex-col gap-2",
+              !handler && "opacity-40 pointer-events-none",
+            )}
+          >
             <ShinyButton
               className={shinyButtonClass}
               shadowClassName={shinyButtonShadowClass}

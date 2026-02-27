@@ -5,6 +5,7 @@ import { useCallback, useState } from "react";
 
 import { useAutoResizeTextarea } from "@/hooks/use-auto-resize-textarea";
 import { Icon } from "@feel-good/ui/components/icon";
+import { cn } from "@feel-good/utils/cn";
 import {
   InputGroup,
   InputGroupAddon,
@@ -59,24 +60,52 @@ export function ChatInput({ isOpen, profileName }: ChatInputProps) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 20, opacity: 0 }}
           transition={springTransition}
-          className="mt-auto w-full max-w-md px-2 pb-6"
+          className={cn(
+            "mt-auto w-full max-w-md",
+            "pb-6",
+          )}
         >
-          <InputGroup className="rounded-2xl shadow-toast-shadow border-border-subtle">
+          <InputGroup
+            className={cn(
+              "rounded-2xl [corner-shape:superellispe(1.2)]",
+              "shadow-toast-shadow",
+              "border-gray-1 bg-gray-2",
+              "p-0",
+              "has-[[data-slot=input-group-control]:focus-visible]:border-gray-1",
+              "has-[[data-slot=input-group-control]:focus-visible]:ring-0",
+              "has-[[data-slot=input-group-control]:focus-visible]:ring-transparent",
+            )}
+          >
             <InputGroupTextarea
               ref={textareaRef}
               value={message}
               onChange={handleInput}
               onKeyDown={handleKeyDown}
               placeholder={`Message ${profileName}...`}
-              className="min-h-[40px] max-h-[120px] py-2 text-sm"
+              className={cn(
+                "min-h-[40px] max-h-[120px]",
+                "py-2 px-3",
+                "text-[20px] md:text-[16px]",
+                "leading-[1.3]",
+              )}
               rows={1}
             />
 
-            <InputGroupAddon align="block-end" className="justify-end">
+            <InputGroupAddon
+              align="block-end"
+              className={cn(
+                "justify-end",
+                "[&>kbd]:rounded-full",
+                "px-2.5 pb-2.5",
+              )}
+            >
               <InputGroupButton
                 type="button"
                 size="icon-sm"
-                className="size-8 shrink-0 rounded-full"
+                className={cn(
+                  "size-8 shrink-0",
+                  "rounded-full [corner-shape:superellipse(1.0)]",
+                )}
                 disabled={!message.trim()}
                 onClick={handleSend}
               >

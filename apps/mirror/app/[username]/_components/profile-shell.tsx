@@ -114,10 +114,9 @@ export function ProfileShell(
     <ProfileInfo
       profile={profile}
       isEditing={isEditing}
-      chatOpen={chatOpen}
       onEditComplete={handleEditClose}
       onSubmittingChange={setIsSubmitting}
-      onOpenChat={() => setChatOpen(true)}
+      onOpenChat={() => setChatOpen((prev) => !prev)}
       onOpenVideoCall={() => setVideoCallOpen(true)}
     />
   );
@@ -135,10 +134,9 @@ export function ProfileShell(
                     <div className="relative h-full flex flex-col">
                       {editButton}
                       {profilePanel}
-                      <ChatInput
-                        isOpen={chatOpen}
-                        profileName={profile.name}
-                      />
+                      <div className="absolute inset-x-0 bottom-0 flex justify-center px-2 pb-6 pointer-events-none [&>*]:pointer-events-auto">
+                        <ChatInput isOpen={chatOpen} profileName={profile.name} />
+                      </div>
                     </div>
                   }
                   content={() => (
@@ -168,7 +166,9 @@ export function ProfileShell(
                   <div className="relative z-20 h-full flex flex-col justify-start items-center px-6 pt-[88px]">
                     {editButton}
                     {profilePanel}
-                    <ChatInput isOpen={chatOpen} profileName={profile.name} />
+                    <div className="absolute inset-x-0 bottom-0 flex justify-center px-6 pb-6 pointer-events-none [&>*]:pointer-events-auto">
+                      <ChatInput isOpen={chatOpen} profileName={profile.name} />
+                    </div>
                   </div>
                 </ResizablePanel>
 

@@ -8,7 +8,9 @@ import { Button } from "./button";
 import { Input } from "./input";
 import { Textarea } from "./textarea";
 
-function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
+function InputGroup(
+  { className, onClick, ...props }: React.ComponentProps<"div">,
+) {
   return (
     <div
       data-slot="input-group"
@@ -27,6 +29,18 @@ function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
         "has-[[data-slot][aria-invalid=true]]:ring-destructive/20 has-[[data-slot][aria-invalid=true]]:border-destructive dark:has-[[data-slot][aria-invalid=true]]:ring-destructive/40",
         className,
       )}
+      onClick={(e) => {
+        if (
+          !(e.target as HTMLElement).closest(
+            "button, a, [data-slot=input-group-control]",
+          )
+        ) {
+          e.currentTarget
+            .querySelector<HTMLElement>("[data-slot=input-group-control]")
+            ?.focus();
+        }
+        onClick?.(e);
+      }}
       {...props}
     />
   );
@@ -68,7 +82,9 @@ function InputGroupAddon({
         if ((e.target as HTMLElement).closest("button")) {
           return;
         }
-        e.currentTarget.parentElement?.querySelector("input")?.focus();
+        e.currentTarget.parentElement
+          ?.querySelector<HTMLElement>("[data-slot=input-group-control]")
+          ?.focus();
       }}
       {...props}
     />
@@ -85,7 +101,7 @@ const inputGroupButtonVariants = cva(
         sm: "h-8 px-2.5 gap-1.5 rounded-md has-[>svg]:px-2.5",
         "icon-xs":
           "size-6 rounded-[calc(var(--radius)-5px)] p-0 has-[>svg]:p-0",
-        "icon-sm": "size-8 p-0 has-[>svg]:p-0",
+        "icon-sm": "size-8 p-0 has-[>svg]:p-0 rounded-full",
       },
     },
     defaultVariants: {
@@ -150,7 +166,7 @@ function InputGroupTextarea({
     <Textarea
       data-slot="input-group-control"
       className={cn(
-        "flex-1 resize-none rounded-none border-0 bg-transparent py-3 shadow-none focus-visible:ring-0 dark:bg-transparent",
+        "flex-1 resize-none rounded-none border-0 bg-transparent py-3 shadow-none focus-visible:ring-0 dark:bg-transparent leading-none",
         className,
       )}
       {...props}
