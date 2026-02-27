@@ -16,13 +16,17 @@ import {
 
 import { useIsProfileOwner } from "../context/profile-context";
 import {
-  EDIT_SHADOW_LIGHT,
   EDIT_SHADOW_DARK,
-  VIEW_SHADOW_LIGHT,
+  EDIT_SHADOW_LIGHT,
   VIEW_SHADOW_DARK,
+  VIEW_SHADOW_LIGHT,
 } from "../lib/edit-shadows";
 
-const springTransition = { type: "spring", stiffness: 300, damping: 40 } as const;
+const springTransition = {
+  type: "spring",
+  stiffness: 300,
+  damping: 40,
+} as const;
 
 type EditableBioProps = {
   isEditing: boolean;
@@ -51,7 +55,6 @@ export function EditableBio({ isEditing, bio, chatOpen }: EditableBioProps) {
           animate={{ opacity: 1, height: "auto" }}
           exit={{ opacity: 0, height: 0 }}
           transition={springTransition}
-          className="overflow-hidden"
         >
           <div className="text-lg text-center max-w-md mx-auto leading-[1.3] w-full flex">
             <FormField
@@ -61,7 +64,10 @@ export function EditableBio({ isEditing, bio, chatOpen }: EditableBioProps) {
                 <FormItem className="w-full">
                   <FormLabel>
                     <motion.div
-                      initial={{ opacity: 0, backgroundColor: "rgba(255,255,255,0)" }}
+                      initial={{
+                        opacity: 0,
+                        backgroundColor: "rgba(255,255,255,0)",
+                      }}
                       animate={{ opacity: isEditing ? "100%" : "0%" }}
                       transition={springTransition}
                       className="text-muted-foreground px-1"
