@@ -8,6 +8,10 @@
 @import "@radix-ui/colors/red-dark.css";
 @import "@radix-ui/colors/green.css";
 @import "@radix-ui/colors/green-dark.css";
+@import "@radix-ui/colors/blue.css";
+@import "@radix-ui/colors/blue-dark.css";
+@import "@radix-ui/colors/yellow.css";
+@import "@radix-ui/colors/yellow-dark.css";
 @import "@radix-ui/colors/grass.css";
 
 /* import shared styles from @feel-good/ui */
@@ -51,6 +55,7 @@
   --color-text-secondary-inverse: var(--color-text-secondary-inverse);
   --color-text-tertiary-inverse: var(--color-text-tertiary-inverse);
 
+  --color-text-info: var(--color-text-info);
   --color-text-success: var(--color-text-success);
   --color-text-warning: var(--color-text-warning);
   --color-text-error: var(--color-text-error);
