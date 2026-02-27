@@ -1,8 +1,9 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 
+import { useAutoResizeTextarea } from "@/hooks/use-auto-resize-textarea";
 import { Icon } from "@feel-good/ui/components/icon";
 import {
   InputGroup,
@@ -24,16 +25,13 @@ const springTransition = {
 
 export function ChatInput({ isOpen, profileName }: ChatInputProps) {
   const [message, setMessage] = useState("");
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { ref: textareaRef, resize, reset } = useAutoResizeTextarea();
 
   const handleSend = useCallback(() => {
     if (!message.trim()) return;
     setMessage("");
-    // Reset textarea height
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-    }
-  }, [message]);
+    reset();
+  }, [message, reset]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -48,12 +46,9 @@ export function ChatInput({ isOpen, profileName }: ChatInputProps) {
   const handleInput = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       setMessage(e.target.value);
-      // Auto-expand textarea
-      const el = e.target;
-      el.style.height = "auto";
-      el.style.height = `${Math.min(el.scrollHeight, 120)}px`;
+      resize();
     },
-    [],
+    [resize],
   );
 
   return (
