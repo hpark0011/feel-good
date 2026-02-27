@@ -1,22 +1,25 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useCallback, useRef, useState } from "react";
 
-import { cn } from "@feel-good/utils/cn";
-import { Textarea } from "@feel-good/ui/primitives/textarea";
-import { Button } from "@feel-good/ui/primitives/button";
 import { Icon } from "@feel-good/ui/components/icon";
+import { Button } from "@feel-good/ui/primitives/button";
+import { Textarea } from "@feel-good/ui/primitives/textarea";
+import { cn } from "@feel-good/utils/cn";
 
 type ChatInputProps = {
   isOpen: boolean;
   profileName: string;
-  onClose: () => void;
 };
 
-const springTransition = { type: "spring", stiffness: 300, damping: 40 } as const;
+const springTransition = {
+  type: "spring",
+  stiffness: 300,
+  damping: 40,
+} as const;
 
-export function ChatInput({ isOpen, profileName, onClose }: ChatInputProps) {
+export function ChatInput({ isOpen, profileName }: ChatInputProps) {
   const [message, setMessage] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -66,16 +69,6 @@ export function ChatInput({ isOpen, profileName, onClose }: ChatInputProps) {
               "border bg-gray-2 p-2 shadow-lg",
             )}
           >
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="size-8 shrink-0 rounded-full"
-              onClick={onClose}
-            >
-              <Icon name="XmarkIcon" size="sm" />
-            </Button>
-
             <Textarea
               ref={textareaRef}
               value={message}

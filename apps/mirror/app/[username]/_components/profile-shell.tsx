@@ -4,14 +4,6 @@ import { useCallback, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { usePreloadedQuery } from "convex/react";
 import type { Preloaded } from "convex/react";
-import { toast } from "sonner";
-import {
-  Toast,
-  ToastClose,
-  ToastDescription,
-  ToastHeader,
-  ToastTitle,
-} from "@feel-good/ui/components/toast";
 import type { api } from "@feel-good/convex/convex/_generated/api";
 import type { Profile } from "@/features/profile";
 import {
@@ -22,7 +14,6 @@ import {
   ProfileInfo,
   ProfileProvider,
 } from "@/features/profile";
-import type { ProfileActionId } from "@/features/profile";
 import {
   ArticleWorkspaceProvider,
   ScrollRootProvider,
@@ -56,23 +47,25 @@ type ProfileShellProps = {
 };
 
 export function ProfileShell(
-  { profile: initialProfile, preloadedProfile, preloadedArticles, isOwner, children }:
-    ProfileShellProps,
+  {
+    profile: initialProfile,
+    preloadedProfile,
+    preloadedArticles,
+    isOwner,
+    children,
+  }: ProfileShellProps,
 ) {
-  // Subscribe to reactive profile data from Convex
-  const reactiveRaw = usePreloadedQuery(preloadedProfile);
-
-  // Subscribe to reactive article data from Convex
+  const reactiveProfile = usePreloadedQuery(preloadedProfile);
   const reactiveArticles = usePreloadedQuery(preloadedArticles);
   const articles: Article[] = (reactiveArticles ?? []) as Article[];
-  const profile: Profile = reactiveRaw
+  const profile: Profile = reactiveProfile
     ? {
-      _id: reactiveRaw._id,
-      authId: reactiveRaw.authId,
-      username: reactiveRaw.username ?? initialProfile.username,
-      name: reactiveRaw.name ?? "",
-      bio: reactiveRaw.bio ?? "",
-      avatarUrl: reactiveRaw.avatarUrl,
+      _id: reactiveProfile._id,
+      authId: reactiveProfile.authId,
+      username: reactiveProfile.username ?? initialProfile.username,
+      name: reactiveProfile.name ?? "",
+      bio: reactiveProfile.bio ?? "",
+      avatarUrl: reactiveProfile.avatarUrl,
     }
     : initialProfile;
 
@@ -98,28 +91,6 @@ export function ProfileShell(
     () => ({ isOwner }),
     [isOwner],
   );
-
-  const handleProfileAction = useCallback((id: ProfileActionId) => {
-    if (id === "video") {
-      setVideoCallOpen(true);
-    } else if (id === "text") {
-      setChatOpen(true);
-    } else {
-      toast.custom((t) => (
-        <Toast id={t}>
-          <ToastHeader>
-            <ToastTitle>Coming soon</ToastTitle>
-            <ToastDescription>
-              {`${id.charAt(0).toUpperCase() + id.slice(1)} conversations are not yet available.`}
-            </ToastDescription>
-          </ToastHeader>
-          <ToastClose />
-        </Toast>
-      ));
-    }
-  }, []);
-
-  const handleChatClose = useCallback(() => setChatOpen(false), []);
 
   const handleEditComplete = useCallback(() => {
     setIsEditing(false);
@@ -160,7 +131,8 @@ export function ProfileShell(
       chatOpen={chatOpen}
       onEditComplete={handleEditComplete}
       onSubmittingChange={setIsSubmitting}
-      onAction={handleProfileAction}
+      onOpenChat={() => setChatOpen(true)}
+      onOpenVideoCall={() => setVideoCallOpen(true)}
     />
   );
 
@@ -177,7 +149,10 @@ export function ProfileShell(
                     <div className="relative h-full flex flex-col">
                       {editButton}
                       {profilePanel}
-                      <ChatInput isOpen={chatOpen} profileName={profile.name} onClose={handleChatClose} />
+                      <ChatInput
+                        isOpen={chatOpen}
+                        profileName={profile.name}
+                      />
                     </div>
                   }
                   content={() => (
@@ -207,7 +182,7 @@ export function ProfileShell(
                   <div className="relative z-20 h-full flex flex-col justify-start items-center px-6 pt-[88px]">
                     {editButton}
                     {profilePanel}
-                    <ChatInput isOpen={chatOpen} profileName={profile.name} onClose={handleChatClose} />
+                    <ChatInput isOpen={chatOpen} profileName={profile.name} />
                   </div>
                 </ResizablePanel>
 
