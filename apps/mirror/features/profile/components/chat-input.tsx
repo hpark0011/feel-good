@@ -20,8 +20,8 @@ type ChatInputProps = {
 
 const springTransition = {
   type: "spring",
-  stiffness: 300,
-  damping: 40,
+  stiffness: 250,
+  damping: 20,
 } as const;
 
 export function ChatInput({ isOpen, profileName }: ChatInputProps) {
@@ -60,8 +60,9 @@ export function ChatInput({ isOpen, profileName }: ChatInputProps) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 20, opacity: 0 }}
           transition={springTransition}
-          className="w-full max-w-md"
+          className="w-full max-w-md relative"
         >
+          <div className="w-full h-[40px] absolute left-0 -top-6 bg-linear-to-t from-background to-transparent" />
           <InputGroup
             className={cn(
               "rounded-2xl [corner-shape:superellispe(1.2)]",
