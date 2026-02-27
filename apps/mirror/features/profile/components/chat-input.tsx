@@ -65,8 +65,8 @@ export function ChatInput({ isOpen, profileName }: ChatInputProps) {
           <InputGroup
             className={cn(
               "rounded-2xl [corner-shape:superellispe(1.2)]",
-              "shadow-toast-shadow",
-              "border-gray-1 bg-gray-2",
+              "shadow-dialog-shadow dark:shadow-2xl",
+              "border-gray-1 bg-gray-2 dark:border-gray-3 dark:bg-gray-2",
               "p-0",
               "has-[[data-slot=input-group-control]:focus-visible]:border-gray-1",
               "has-[[data-slot=input-group-control]:focus-visible]:ring-0",
