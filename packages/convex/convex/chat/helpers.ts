@@ -22,6 +22,9 @@ export const loadStreamingContext = internalQuery({
     if (!conversation) {
       throw new Error("Conversation not found");
     }
+    if (conversation.profileOwnerId !== profileOwnerId) {
+      throw new Error("Conversation/profile owner mismatch");
+    }
 
     const profileOwner = await ctx.db.get(profileOwnerId);
     if (!profileOwner) {

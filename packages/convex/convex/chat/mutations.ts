@@ -113,9 +113,10 @@ export const sendMessage = mutation({
     });
 
     // 9. Set streaming lock
+    const lockStartedAt = Date.now();
     await ctx.db.patch(conversationId, {
       streamingInProgress: true,
-      streamingStartedAt: Date.now(),
+      streamingStartedAt: lockStartedAt,
     });
 
     // 10. Schedule action
@@ -126,6 +127,7 @@ export const sendMessage = mutation({
         conversationId,
         profileOwnerId: args.profileOwnerId,
         promptMessageId: messageId,
+        lockStartedAt,
       },
     );
 
@@ -136,13 +138,20 @@ export const sendMessage = mutation({
 export const clearStreamingLock = internalMutation({
   args: {
     conversationId: v.id("conversations"),
+    expectedStartedAt: v.number(),
   },
   returns: v.null(),
-  handler: async (ctx, { conversationId }) => {
-    await ctx.db.patch(conversationId, {
-      streamingInProgress: false,
-      streamingStartedAt: undefined,
-    });
+  handler: async (ctx, { conversationId, expectedStartedAt }) => {
+    const conversation = await ctx.db.get(conversationId);
+    if (
+      conversation &&
+      conversation.streamingStartedAt === expectedStartedAt
+    ) {
+      await ctx.db.patch(conversationId, {
+        streamingInProgress: false,
+        streamingStartedAt: undefined,
+      });
+    }
     return null;
   },
 });

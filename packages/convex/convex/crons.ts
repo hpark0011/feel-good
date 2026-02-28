@@ -11,18 +11,18 @@ export const clearStaleStreamingLocks = internalMutation({
   handler: async (ctx) => {
     const cutoff = Date.now() - STALE_THRESHOLD_MS;
 
-    const conversations = await ctx.db.query("conversations").collect();
-    for (const conversation of conversations) {
-      if (
-        conversation.streamingInProgress &&
-        conversation.streamingStartedAt &&
-        conversation.streamingStartedAt < cutoff
-      ) {
-        await ctx.db.patch(conversation._id, {
-          streamingInProgress: false,
-          streamingStartedAt: undefined,
-        });
-      }
+    const staleConversations = await ctx.db
+      .query("conversations")
+      .withIndex(
+        "by_streamingInProgress_and_streamingStartedAt",
+        (q) => q.eq("streamingInProgress", true).lt("streamingStartedAt", cutoff),
+      )
+      .collect();
+    for (const conversation of staleConversations) {
+      await ctx.db.patch(conversation._id, {
+        streamingInProgress: false,
+        streamingStartedAt: undefined,
+      });
     }
 
     return null;
