@@ -65,9 +65,7 @@ export function ChatInput({ isOpen, profileName }: ChatInputProps) {
           <div className="w-full h-[40px] absolute left-0 -top-6 bg-linear-to-t from-background to-transparent" />
           <InputGroup
             className={cn(
-              "rounded-2xl [corner-shape:superellispe(1.2)]",
               "shadow-dialog-shadow dark:shadow-2xl",
-              "border-gray-1 bg-gray-2 dark:border-gray-3 dark:bg-gray-2",
               "p-0",
               "has-[[data-slot=input-group-control]:focus-visible]:border-gray-1",
               "has-[[data-slot=input-group-control]:focus-visible]:ring-0",
@@ -82,7 +80,7 @@ export function ChatInput({ isOpen, profileName }: ChatInputProps) {
               placeholder={`Message ${profileName}...`}
               className={cn(
                 "min-h-[40px] max-h-[120px]",
-                "py-2 px-3",
+                "py-2.5 px-3.5",
                 "text-[20px] md:text-[16px]",
                 "leading-[1.3]",
               )}
