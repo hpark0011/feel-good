@@ -3,7 +3,7 @@ id: FG_036
 title: "Initialize Backend Schema and Dependencies for AI Chat"
 date: 2026-02-28
 type: chore
-status: to-do
+status: completed
 priority: p2
 description: "Install Convex AI components, add the chat conversations schema, and update the users schema with chat fields."
 dependencies: []
