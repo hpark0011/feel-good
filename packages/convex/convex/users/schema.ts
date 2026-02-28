@@ -9,6 +9,8 @@ export const userFields = {
   bio: v.optional(v.string()),
   avatarStorageId: v.optional(v.id("_storage")),
   onboardingComplete: v.boolean(),
+  personaPrompt: v.optional(v.string()),
+  chatAuthRequired: v.optional(v.boolean()),
 };
 
 export const usersTable = defineTable(userFields)
