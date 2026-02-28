@@ -726,6 +726,18 @@ importers:
 
   packages/convex:
     dependencies:
+      '@ai-sdk/anthropic':
+        specifier: ^2
+        version: 2.0.67(zod@4.3.5)
+      '@ai-sdk/google':
+        specifier: ^2
+        version: 2.0.56(zod@4.3.5)
+      '@ai-sdk/openai':
+        specifier: ^2
+        version: 2.0.95(zod@4.3.5)
+      '@ai-sdk/provider-utils':
+        specifier: ^3.0.7
+        version: 3.0.21(zod@4.3.5)
       '@convex-dev/agent':
         specifier: ^0.3.2
         version: 0.3.2(@ai-sdk/provider-utils@3.0.21(zod@4.3.5))(ai@5.0.141(zod@4.3.5))(convex-helpers@0.1.113(@standard-schema/spec@1.1.0)(convex@1.32.0(react@19.2.3))(hono@4.11.5)(react@19.2.3)(typescript@5.9.3)(zod@4.3.5))(convex@1.32.0(react@19.2.3))(react@19.2.3)
@@ -738,6 +750,9 @@ importers:
       '@convex-dev/resend':
         specifier: 'catalog:'
         version: 0.2.3(convex-helpers@0.1.113(@standard-schema/spec@1.1.0)(convex@1.32.0(react@19.2.3))(hono@4.11.5)(react@19.2.3)(typescript@5.9.3)(zod@4.3.5))(convex@1.32.0(react@19.2.3))(react@19.2.3)
+      ai:
+        specifier: ^5.0.29
+        version: 5.0.141(zod@4.3.5)
       better-auth:
         specifier: 'catalog:'
         version: 1.4.9(next@16.1.4(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(@playwright/test@1.58.1)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -1109,8 +1124,26 @@ packages:
   7zip-bin@5.2.0:
     resolution: {integrity: sha512-ukTPVhqG4jNzMro2qA9HSCSSVJN3aN7tlb+hfqYCt3ER0yWroeA2VR38MNrOHLQ/cVj+DaIMad0kFCtWWowh/A==}
 
+  '@ai-sdk/anthropic@2.0.67':
+    resolution: {integrity: sha512-hGtsfU1Dh1r9oBfctZy9+Wb8nSPiD8hBYIVYLGbFSPRrfliyBysJFaenHOGYR0Rd2R8O9ow2dxi05Qk5awerBw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.25.76 || ^4.1.8
+
   '@ai-sdk/gateway@2.0.47':
     resolution: {integrity: sha512-QzpiMq7dVXsIv/thXJEyDeP8+irqF3LSJX+ZbVKOqbX8WdrcHSig2nhHQLK6cwe9s+0tyNKYQQ89h2X62OVdsg==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.25.76 || ^4.1.8
+
+  '@ai-sdk/google@2.0.56':
+    resolution: {integrity: sha512-YPCpnrVF6gGrBemZTaKRTDccnByt8i9HVWwiC2gTzgxj0IkTpy9anw/gh3eFe8LaaNNdYzY1Op5Z8uadIqOYFA==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      zod: ^3.25.76 || ^4.1.8
+
+  '@ai-sdk/openai@2.0.95':
+    resolution: {integrity: sha512-2CABPaa1UNh7dPyZUIB/Dc4AbvJioFnmryRx45sx7ezBSOdR0zxG6gbrSd/fZ0GVbptSZeLmF9omu10d/GxmJA==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -8202,11 +8235,29 @@ snapshots:
 
   7zip-bin@5.2.0: {}
 
+  '@ai-sdk/anthropic@2.0.67(zod@4.3.5)':
+    dependencies:
+      '@ai-sdk/provider': 2.0.1
+      '@ai-sdk/provider-utils': 3.0.21(zod@4.3.5)
+      zod: 4.3.5
+
   '@ai-sdk/gateway@2.0.47(zod@4.3.5)':
     dependencies:
       '@ai-sdk/provider': 2.0.1
       '@ai-sdk/provider-utils': 3.0.21(zod@4.3.5)
       '@vercel/oidc': 3.1.0
+      zod: 4.3.5
+
+  '@ai-sdk/google@2.0.56(zod@4.3.5)':
+    dependencies:
+      '@ai-sdk/provider': 2.0.1
+      '@ai-sdk/provider-utils': 3.0.21(zod@4.3.5)
+      zod: 4.3.5
+
+  '@ai-sdk/openai@2.0.95(zod@4.3.5)':
+    dependencies:
+      '@ai-sdk/provider': 2.0.1
+      '@ai-sdk/provider-utils': 3.0.21(zod@4.3.5)
       zod: 4.3.5
 
   '@ai-sdk/provider-utils@3.0.21(zod@4.3.5)':
