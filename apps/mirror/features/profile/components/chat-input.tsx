@@ -70,7 +70,7 @@ export function ChatInput({ isOpen, profileName }: ChatInputProps) {
           <div className="w-full h-[40px] absolute left-0 -top-6 bg-linear-to-t from-background to-transparent" />
           <InputGroup
             className={cn(
-              "shadow-chat-input-shadow hover:bg-white dark:hover:bg-gray-3",
+              "shadow-chat-input-shadow hover:bg-chat-input-bg-hover",
               "p-0",
               "has-[[data-slot=input-group-control]:focus-visible]:border-gray-1",
               "dark:has-[[data-slot=input-group-control]:focus-visible]:border-gray-3",

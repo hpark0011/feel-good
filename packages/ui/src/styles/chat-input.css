@@ -12,6 +12,8 @@
     0px 23.67px 16.15px 0px rgba(0, 0, 0, 0.03),
     0px 12.56px 5.85px 0px rgba(0, 0, 0, 0.0223),
     0px 5.23px 3.57px 0px rgba(0, 0, 0, 0.0125);
+
+  --chat-input-bg-hover: #ffffff;
 }
 
 .dark {
@@ -22,9 +24,12 @@
     0px 23.67px 16.15px 0px rgba(0, 0, 0, 0.06),
     0px 12.56px 5.85px 0px rgba(0, 0, 0, 0.04),
     0px 5.23px 3.57px 0px rgba(0, 0, 0, 0.025);
+
+  --chat-input-bg-hover: var(--gray-3);
 }
 
 @theme inline {
   /* Chat Input Default */
   --shadow-chat-input-shadow: var(--chat-input-shadow);
+  --color-chat-input-bg-hover: var(--chat-input-bg-hover);
 }
