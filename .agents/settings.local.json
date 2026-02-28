@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node:*)",
+      "Bash(tail:*)",
+      "Bash(git cherry-pick:*)",
+      "WebFetch(domain:docs.convex.dev)",
+      "WebFetch(domain:stack.convex.dev)",
+      "Bash(pnpm:*)"
+    ]
+  }
+}
