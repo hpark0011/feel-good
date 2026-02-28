@@ -1,0 +1,14 @@
+{
+  "extends": "../../tooling/typescript/base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "paths": {
+      "@/*": ["./*"],
+      "@feel-good/utils/greyboard-snapshot": ["../../packages/utils/src/greyboard-snapshot.ts"]
+    }
+  },
+  "include": ["electron/**/*.ts"],
+  "exclude": ["node_modules"]
+}

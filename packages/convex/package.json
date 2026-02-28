@@ -26,10 +26,13 @@
   "scripts": {
     "dev": "convex dev",
     "deploy": "convex deploy",
-    "generate": "convex codegen"
+    "generate": "convex codegen",
+    "check-types": "tsc --noEmit -p convex/tsconfig.json"
   },
   "dependencies": {
+    "@convex-dev/agent": "^0.3.2",
     "@convex-dev/better-auth": "catalog:",
+    "@convex-dev/rate-limiter": "^0.3.2",
     "@convex-dev/resend": "catalog:",
     "better-auth": "catalog:",
     "convex": "^1.32.0",
