@@ -70,11 +70,14 @@ export function ChatInput({ isOpen, profileName }: ChatInputProps) {
           <div className="w-full h-[40px] absolute left-0 -top-6 bg-linear-to-t from-background to-transparent" />
           <InputGroup
             className={cn(
-              "shadow-dialog-shadow dark:shadow-2xl",
+              "shadow-dialog-shadow dark:shadow-2xl hover:bg-white dark:hover:bg-gray-3",
               "p-0",
               "has-[[data-slot=input-group-control]:focus-visible]:border-gray-1",
-              "has-[[data-slot=input-group-control]:focus-visible]:ring-0",
+              "dark:has-[[data-slot=input-group-control]:focus-visible]:border-gray-3",
+              "has-[[data-slot=input-group-control]:focus-visible]:ring-1",
               "has-[[data-slot=input-group-control]:focus-visible]:ring-transparent",
+              "has-[[data-slot=input-group-control]:focus-visible]:bg-white",
+              "has-[[data-slot=input-group-control]:focus-visible]:bg-gray-2",
             )}
           >
             <InputGroupTextarea
@@ -97,7 +100,7 @@ export function ChatInput({ isOpen, profileName }: ChatInputProps) {
               className={cn(
                 "justify-end",
                 "[&>kbd]:rounded-full",
-                "px-2.5 pb-2.5 pt-0.5",
+                "px-2.5 pb-2.5",
               )}
             >
               <InputGroupButton
