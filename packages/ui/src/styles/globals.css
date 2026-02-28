@@ -31,8 +31,7 @@
 @import "./chat-input.css";
 
 /* custom variant */
-@custom-variant dark
-  (&:is(.dark *));
+@custom-variant dark (&:is(.dark *));
 
 :root {
   /* Base */
