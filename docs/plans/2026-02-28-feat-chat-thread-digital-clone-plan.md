@@ -83,7 +83,7 @@ erDiagram
         Id conversationId FK
         string role "user | assistant"
         string content
-        string status "complete | streaming | error"
+        string status "complete | streaming | error | superseded"
     }
     users ||--o{ conversations : "profileOwnerId"
     users ||--o{ conversations : "viewerId"
@@ -153,6 +153,7 @@ export const messageFields = {
     v.literal("complete"),
     v.literal("streaming"),
     v.literal("error"),
+    v.literal("superseded"), // retry lifecycle: marks errored messages replaced by a fresh retry
   ),
 };
 
@@ -170,11 +171,15 @@ export const messagesTable = defineTable(messageFields)
 
 **Tasks:**
 - [ ] Create `packages/convex/convex/chat/agent.ts` — define the Agent with provider-agnostic LLM config
-- [ ] Create `packages/convex/convex/chat/mutations.ts` — `sendMessage` (auth mutation, creates conversation if needed, inserts user message, schedules LLM action, enforces rate limit), `createConversation`
+- [ ] Create `packages/convex/convex/chat/mutations.ts` — `sendMessage` (regular mutation with optional auth via `safeGetAuthUser`, creates conversation if needed, inserts user message, schedules LLM action, enforces rate limit), `createConversation`
 - [ ] Create `packages/convex/convex/chat/actions.ts` — `streamResponse` (internal action, uses Agent.streamText with saveStreamDeltas)
-- [ ] Create `packages/convex/convex/chat/queries.ts` — `getMessages` (paginated, with stream args), `getConversations` (by viewerId + profileOwnerId)
+- [ ] Create `packages/convex/convex/chat/queries.ts` — `getMessages` (paginated, with stream args; access control: requesting user must be viewer or profile owner), `getConversations` (by viewerId + profileOwnerId; viewer sees only own conversations, owner sees all on their profile)
 - [ ] Create `packages/convex/convex/chat/helpers.ts` — persona prompt builder (articles + bio + custom prompt)
 - [ ] Set up rate limiter in `packages/convex/convex/chat/rateLimits.ts`
+- [ ] Add input validation in `sendMessage` (empty/oversized content rejection — empty after trim or >4000 chars)
+- [ ] Add concurrency guard in `sendMessage` (reject if any message has `status: "streaming"` in conversation)
+- [ ] Add context windowing in `loadPersonaContext` (`MAX_CONTEXT_MESSAGES = 20`, exclude `error`/`superseded` messages)
+- [ ] Add safety prefix to system prompt in `helpers.ts` (non-negotiable clone identity boundaries, prepended before `personaPrompt`)
 - [ ] Add stale-stream cleanup cron in `packages/convex/convex/crons.ts`
 - [ ] Verify with `pnpm exec convex dev` (functions deploy successfully)
 
@@ -192,12 +197,14 @@ export const messagesTable = defineTable(messageFields)
 
 ```typescript
 // packages/convex/convex/chat/mutations.ts
-import { authMutation } from "../lib/auth";
+import { mutation } from "../_generated/server";
 import { v } from "convex/values";
+import { ConvexError } from "convex/values";
 import { internal } from "../_generated/api";
 import { rateLimiter } from "./rateLimits";
+import { authComponent } from "../lib/auth";
 
-export const sendMessage = authMutation({
+export const sendMessage = mutation({
   args: {
     profileOwnerId: v.id("users"),
     conversationId: v.optional(v.id("conversations")),
@@ -208,34 +215,58 @@ export const sendMessage = authMutation({
     messageId: v.id("messages"),
   }),
   handler: async (ctx, args) => {
-    const appUser = await getAppUser(ctx, ctx.user._id);
+    // --- Input validation ---
+    const trimmed = args.content.trim();
+    if (trimmed.length === 0) throw new ConvexError("Message cannot be empty");
+    if (args.content.length > 4000) throw new ConvexError("Message too long");
 
-    // Rate limit check
+    // --- Optional auth (supports anonymous chat) ---
+    const authUser = await authComponent.safeGetAuthUser(ctx);
+    const profileOwner = await ctx.db.get(args.profileOwnerId);
+    if (!profileOwner) throw new ConvexError("Profile not found");
+    if (profileOwner.chatAuthRequired && !authUser) {
+      throw new ConvexError("Sign in required");
+    }
+
+    // --- Rate limit (keyed by userId or conversationId for anonymous) ---
+    const rateLimitKey = authUser?._id ?? args.conversationId ?? "anonymous";
     await rateLimiter.limit(ctx, "sendMessage", {
-      key: appUser._id,
+      key: rateLimitKey,
       throws: true,
     });
 
-    // Create conversation if first message
+    // --- Concurrency guard ---
+    if (args.conversationId) {
+      const streaming = await ctx.db
+        .query("messages")
+        .withIndex("by_conversationId", (q) =>
+          q.eq("conversationId", args.conversationId!),
+        )
+        .filter((q) => q.eq(q.field("status"), "streaming"))
+        .first();
+      if (streaming) throw new ConvexError("A response is already in progress");
+    }
+
+    // --- Create conversation if first message ---
     let conversationId = args.conversationId;
     if (!conversationId) {
       conversationId = await ctx.db.insert("conversations", {
         profileOwnerId: args.profileOwnerId,
-        viewerId: appUser._id,
+        viewerId: authUser?._id, // undefined for anonymous
         status: "active" as const,
-        title: args.content.slice(0, 100),
+        title: trimmed.slice(0, 100),
       });
     }
 
-    // Insert user message
+    // --- Insert user message ---
     const messageId = await ctx.db.insert("messages", {
       conversationId,
       role: "user" as const,
-      content: args.content,
+      content: trimmed,
       status: "complete" as const,
     });
 
-    // Schedule LLM response
+    // --- Schedule LLM response ---
     await ctx.scheduler.runAfter(0, internal.chat.actions.streamResponse, {
       conversationId,
       profileOwnerId: args.profileOwnerId,
@@ -319,6 +350,7 @@ export const streamResponse = internalAction({
 - [ ] Create `apps/mirror/features/chat/components/chat-thread.tsx` — main container composing header + message list + input
 - [ ] Create `apps/mirror/features/chat/components/conversation-list.tsx` — sidebar/sheet listing past conversations
 - [ ] Create `apps/mirror/features/chat/index.ts` — barrel exports
+- [ ] Add privacy disclosure in `ChatInput`: show "Conversations may be visible to [profile owner name]" below the chat input
 - [ ] Verify with `pnpm build --filter=@feel-good/mirror`
 
 **Files:** All under `apps/mirror/features/chat/` (new directory)
@@ -393,8 +425,8 @@ const handleBackToProfile = () => {
 **Tasks:**
 - [ ] Implement auth gate in profile ChatInput: if `chatAuthRequired && !isAuthenticated`, show sign-in prompt on send attempt
 - [ ] Add rate limit error handling in ChatInput: catch `ConvexError` from rate limiter, show inline "Rate limit reached" message with retry timer
-- [ ] Add error state UI for failed streaming messages (error indicator + retry button below partial content)
-- [ ] Add retry handler: creates new assistant message, re-schedules LLM action
+- [ ] Add error state UI for failed streaming messages (error indicator + retry button below partial content; superseded messages hidden)
+- [ ] Add retry handler: mark errored assistant message `status: "superseded"`, create fresh assistant message, re-schedule `streamResponse` action. `loadPersonaContext` excludes `error` and `superseded` messages from LLM context
 - [ ] Disable send button while any message in conversation has `status: "streaming"`
 - [ ] Add stale-stream cleanup cron (messages in `"streaming"` for >2 minutes → mark `"error"`)
 - [ ] Add empty state for ChatThread (no messages yet — show welcome prompt)
@@ -424,8 +456,11 @@ const handleBackToProfile = () => {
 ```
 User sends message (UI)
   → Profile ChatInput.onSend(message)
-  → Convex authMutation: chat.mutations.sendMessage
-    → rateLimiter.limit() — enforces rate limit
+  → Convex mutation: chat.mutations.sendMessage
+    → safeGetAuthUser() — resolve viewer (optional for anonymous)
+    → input validation — reject empty or oversized content
+    → rateLimiter.limit() — enforces rate limit (keyed by userId or conversationId)
+    → concurrency guard — reject if any message is streaming
     → ctx.db.insert("conversations") — if first message
     → ctx.db.insert("messages") — user message (status: "complete")
     → ctx.scheduler.runAfter(0, internal.chat.actions.streamResponse)
@@ -441,7 +476,9 @@ User sends message (UI)
 - **Rate limit error**: `ConvexError` from `@convex-dev/rate-limiter` → caught by `useMutation` error handler → displayed inline in chat UI
 - **LLM API error**: Caught in action handler → message status patched to `"error"` → client sees error state on message bubble
 - **Action crash (unhandled)**: Message stays `"streaming"` → cron job detects after 2 minutes → patches to `"error"`
-- **Auth error**: `authMutation` throws "Not authenticated" → caught in `onSend` → redirect to `/sign-in?next=/@username`
+- **Auth error**: `sendMessage` checks `chatAuthRequired` — if profile owner requires auth and no user is signed in, throws `ConvexError("Sign in required")` → caught in `onSend` → redirect to `/sign-in?next=/@username`. Anonymous users are allowed when `chatAuthRequired` is false.
+- **Input validation error**: `ConvexError("Message cannot be empty")` or `ConvexError("Message too long")` → caught in `onSend` → displayed inline
+- **Concurrency error**: `ConvexError("A response is already in progress")` → caught in `onSend` → send button remains disabled
 - **Network disconnect**: Convex client auto-reconnects; `useUIMessages` re-syncs from persisted state
 
 ### State Lifecycle Risks
@@ -505,6 +542,9 @@ User sends message (UI)
 | Streaming latency on slow LLM providers | Medium | Medium | Show typing indicator immediately; batch delta writes at 100ms |
 | Rate limiter too aggressive for normal use | Low | Low | Token bucket with burst capacity; configurable per-profile later |
 | Mobile keyboard layout issues | Medium | Medium | Use `env(safe-area-inset-bottom)` and `scrollIntoView` for input |
+| Prompt injection / clone reputation damage | Medium | High | Safety prefix prepended to all system prompts with non-negotiable identity boundaries; input moderation deferred to future consideration |
+| Context window overflow on long conversations | High | High | Sliding window of last 20 messages (`MAX_CONTEXT_MESSAGES`); `error`/`superseded` messages excluded from context |
+| Anonymous abuse without auth gate | Medium | Medium | Rate limiting keyed by `conversationId` for anonymous users; profile owners can enable `chatAuthRequired` to gate all chat |
 
 ## Resolved Design Questions
 
@@ -523,6 +563,11 @@ User sends message (UI)
 | Default system prompt | Hardcoded fallback when personaPrompt is null | "You are a digital clone of [name]. Answer based on their writing." |
 | Stale stream cleanup | Cron runs every 5 minutes; messages streaming >2 minutes → "error" | Conservative threshold |
 | Drawer snap point on mobile back | Resets to PEEK_SNAP_POINT (default) | Acceptable; user can re-expand |
+| Conversation transcript privacy | Profile owner can read all conversations on their profile; viewer can only read their own conversations; others get no access | `getMessages` checks requesting user is viewer or owner |
+| Retry behavior on LLM error | Errored assistant message marked `"superseded"` (hidden in UI); fresh assistant message created + new `streamResponse` scheduled | `loadPersonaContext` excludes `error` and `superseded` from LLM context |
+| Anonymous rate limiting | Keyed by `conversationId` (anonymous users can only spam within one conversation) | Authenticated users keyed by `userId` |
+| Input validation limits | Max 4000 characters; empty (after trim) rejected | `ConvexError` thrown server-side |
+| Context window strategy | Sliding window of last 20 messages (`MAX_CONTEXT_MESSAGES` constant in `helpers.ts`) | `error`/`superseded` messages excluded before windowing |
 
 ## Future Considerations
 
@@ -532,6 +577,7 @@ User sends message (UI)
 - **Multi-provider switching** — UI for owner to choose their clone's LLM provider
 - **Anonymous session tokens** — server-issued tokens for anonymous visitor conversation persistence
 - **Voice chat** — extend to voice input/output using existing Tavus CVI infrastructure
+- **Input moderation** — OpenAI Moderation API or equivalent pre-screening before LLM call to filter harmful/abusive input
 
 ## Sources & References
 
