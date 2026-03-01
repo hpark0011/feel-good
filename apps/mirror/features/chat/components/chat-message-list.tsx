@@ -22,15 +22,16 @@ export function ChatMessageList({
 }: ChatMessageListProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const prevMessageCountRef = useRef(0);
+  const prevLastKeyRef = useRef<string | undefined>(undefined);
 
-  // Auto-scroll to bottom when new messages arrive
+  // Auto-scroll only on tail appends (new messages), not history prepends
+  const lastKey = messages.at(-1)?.key;
   useEffect(() => {
-    if (messages.length > prevMessageCountRef.current) {
+    if (lastKey && lastKey !== prevLastKeyRef.current) {
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }
-    prevMessageCountRef.current = messages.length;
-  }, [messages.length]);
+    prevLastKeyRef.current = lastKey;
+  }, [lastKey]);
 
   // Load more on scroll to top
   useEffect(() => {
