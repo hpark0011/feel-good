@@ -3,7 +3,8 @@
 import { useLayoutEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
-const isArticleDetailRoute = (path: string) => /^\/@[^/]+\/.+/.test(path);
+const isArticleDetailRoute = (path: string) =>
+  /^\/@[^/]+\/.+/.test(path) && !/^\/@[^/]+\/chat/.test(path);
 
 type ScrollContainers = {
   mobile: HTMLElement | null;

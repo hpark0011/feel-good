@@ -3,14 +3,14 @@ id: FG_041
 title: "Chat routes resolve to correct pages via URL rewrites"
 date: 2026-03-01
 type: feature
-status: to-do
+status: completed
 priority: p2
 description: "Add Next.js route infrastructure for chat deep-link URLs so that /@username/chat and /@username/chat/[conversationId] resolve to dedicated chat route pages. Includes URL rewrites in next.config.ts, reserving 'chat' as a username, and creating the two new page files."
 dependencies: []
 parent_plan_id: docs/plans/2026-03-01-feat-chat-deep-link-urls-plan.md
 acceptance_criteria:
   - "grep -q 'chat' apps/mirror/next.config.ts shows rewrite rules for /@:username/chat and /@:username/chat/:conversationId BEFORE the generic /@:username/:slug rewrite"
-  - "grep -q '\"chat\"' apps/mirror/lib/reserved-usernames.ts confirms 'chat' is in the RESERVED_USERNAMES set"
+  - 'grep -q ''"chat"'' apps/mirror/lib/reserved-usernames.ts confirms ''chat'' is in the RESERVED_USERNAMES set'
   - "test -f apps/mirror/app/[username]/chat/page.tsx && test -f apps/mirror/app/[username]/chat/[conversationId]/page.tsx"
   - "grep -q 'noindex' apps/mirror/app/[username]/chat/page.tsx confirms chat pages are noindexed"
   - "Both chat page files render ScrollableArticleList and ArticleListToolbarConnector (same content as the profile page)"

@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import { usePathname, useParams, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMutation, type Preloaded } from "convex/react";
 import { api } from "@feel-good/convex/convex/_generated/api";
@@ -66,13 +67,35 @@ export function ProfileShell(
 
   const { isAuthenticated } = useSession();
 
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useParams<{ username: string; conversationId?: string }>();
+
   const isMobile = useIsMobile();
   const [videoCallOpen, setVideoCallOpen] = useState(false);
   const [chatInputVisible, setChatInputVisible] = useState(false);
-  const [activeView, setActiveView] = useState<"profile" | "chat">("profile");
+
+  const isChatRoute = /^\/@[^/]+\/chat/.test(pathname);
+
+  const [activeView, setActiveView] = useState<"profile" | "chat">(
+    isChatRoute ? "chat" : "profile",
+  );
   const [conversationId, setConversationId] = useState<
     Id<"conversations"> | null
-  >(null);
+  >((params.conversationId as Id<"conversations">) ?? null);
+
+  useEffect(() => {
+    const chatMatch = /^\/@[^/]+\/chat/.test(pathname);
+    if (chatMatch) {
+      setActiveView("chat");
+      setConversationId(
+        (params.conversationId as Id<"conversations">) ?? null,
+      );
+    } else {
+      setActiveView("profile");
+      setConversationId(null);
+    }
+  }, [pathname, params.conversationId]);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -90,16 +113,30 @@ export function ProfileShell(
         });
         setConversationId(result.conversationId);
         setActiveView("chat");
+        router.push(`/@${profile.username}/chat/${result.conversationId}`);
       } finally {
         isSendingFirstRef.current = false;
       }
     },
-    [sendMessageMutation, profile._id],
+    [sendMessageMutation, profile._id, router, profile.username],
   );
 
   const handleBack = useCallback(() => {
     setActiveView("profile");
-  }, []);
+    router.push(`/@${profile.username}`);
+  }, [router, profile.username]);
+
+  const handleConversationIdChange = useCallback(
+    (id: Id<"conversations"> | null) => {
+      setConversationId(id);
+      if (id) {
+        router.replace(`/@${profile.username}/chat/${id}`);
+      } else {
+        router.replace(`/@${profile.username}/chat`);
+      }
+    },
+    [router, profile.username],
+  );
 
   const [mobileScrollRoot, setMobileScrollRoot] = useState<
     HTMLDivElement | null
@@ -169,7 +206,7 @@ export function ProfileShell(
                     profileName={profile.name}
                     avatarUrl={profile.avatarUrl ?? null}
                     conversationId={conversationId}
-                    onConversationIdChange={setConversationId}
+                    onConversationIdChange={handleConversationIdChange}
                   >
                     <ChatThread onBack={handleBack} />
                   </ChatProvider>
@@ -225,7 +262,7 @@ export function ProfileShell(
                     profileName={profile.name}
                     avatarUrl={profile.avatarUrl ?? null}
                     conversationId={conversationId}
-                    onConversationIdChange={setConversationId}
+                    onConversationIdChange={handleConversationIdChange}
                   >
                     <AnimatePresence mode="wait" initial={false}>
                       {activeView === "profile"
