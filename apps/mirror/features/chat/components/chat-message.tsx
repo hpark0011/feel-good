@@ -1,101 +1,157 @@
-"use client";
-
-import { useSmoothText } from "@convex-dev/agent/react";
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 import {
   Avatar,
-  AvatarImage,
   AvatarFallback,
+  AvatarImage,
 } from "@feel-good/ui/primitives/avatar";
 import { cn } from "@feel-good/utils/cn";
 
-type ChatMessageProps = {
-  role: "user" | "assistant";
-  text: string;
-  isStreaming: boolean;
-  avatarUrl?: string | null;
-  profileName?: string;
-  isFailed?: boolean;
-  onRetry?: () => void;
-};
+const chatMessageVariants = cva("flex gap-2.5 max-w-[85%]", {
+  variants: {
+    variant: {
+      sent: "ml-auto flex-row-reverse",
+      received: "mr-auto",
+    },
+  },
+  defaultVariants: {
+    variant: "received",
+  },
+});
 
-export function ChatMessage({
-  role,
-  text,
-  isStreaming,
-  avatarUrl,
-  profileName,
-  isFailed,
-  onRetry,
-}: ChatMessageProps) {
-  const isUser = role === "user";
-
-  // Smooth text animation for streaming assistant messages
-  const [smoothText] = useSmoothText(text, {
-    startStreaming: isStreaming,
-  });
-
-  const displayText = isStreaming ? smoothText : text;
-
-  const initials = profileName
-    ? profileName
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .slice(0, 2)
-        .toUpperCase()
-    : "AI";
-
+function ChatMessage({
+  className,
+  variant,
+  ...props
+}: React.ComponentProps<"div"> & VariantProps<typeof chatMessageVariants>) {
   return (
     <div
-      className={cn(
-        "flex gap-2.5 max-w-[85%]",
-        isUser ? "ml-auto flex-row-reverse" : "mr-auto",
-      )}
+      data-slot="chat-message"
+      data-variant={variant}
+      className={cn(chatMessageVariants({ variant }), className)}
+      {...props}
+    />
+  );
+}
+
+function ChatMessageAvatar({
+  className,
+  src,
+  alt,
+  fallback,
+}: React.ComponentProps<typeof Avatar> & {
+  src?: string | null;
+  alt?: string;
+  fallback: string;
+}) {
+  return (
+    <Avatar
+      data-slot="chat-message-avatar"
+      className={cn("size-7 shrink-0 mt-1", className)}
     >
-      {!isUser && (
-        <Avatar className="size-7 shrink-0 mt-1">
-          {avatarUrl && <AvatarImage src={avatarUrl} alt={profileName ?? ""} />}
-          <AvatarFallback className="text-[10px]">{initials}</AvatarFallback>
-        </Avatar>
-      )}
+      {src && <AvatarImage src={src} alt={alt ?? ""} />}
+      <AvatarFallback className="text-[10px]">{fallback}</AvatarFallback>
+    </Avatar>
+  );
+}
 
-      <div className="flex flex-col gap-1">
-        <div
-          className={cn(
-            "rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed",
-            "whitespace-pre-wrap break-words",
-            isUser
-              ? "bg-primary text-primary-foreground"
-              : "bg-muted text-foreground",
-          )}
+function ChatMessageContent({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="chat-message-content"
+      className={cn("flex flex-col gap-1", className)}
+      {...props}
+    />
+  );
+}
+
+const chatMessageBubbleVariants = cva(
+  "rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap wrap-break-word",
+  {
+    variants: {
+      variant: {
+        sent: "bg-primary text-primary-foreground",
+        received: "bg-muted text-foreground",
+      },
+    },
+    defaultVariants: {
+      variant: "received",
+    },
+  },
+);
+
+function ChatMessageBubble({
+  className,
+  variant,
+  ...props
+}:
+  & React.ComponentProps<"div">
+  & VariantProps<typeof chatMessageBubbleVariants>) {
+  return (
+    <div
+      data-slot="chat-message-bubble"
+      className={cn(chatMessageBubbleVariants({ variant }), className)}
+      {...props}
+    />
+  );
+}
+
+function ChatMessageLoading({
+  className,
+  ...props
+}: React.ComponentProps<"span">) {
+  return (
+    <span
+      data-slot="chat-message-loading"
+      className={cn("inline-flex gap-1", className)}
+      {...props}
+    >
+      <span className="size-1.5 rounded-full bg-current animate-pulse" />
+      <span className="size-1.5 rounded-full bg-current animate-pulse [animation-delay:150ms]" />
+      <span className="size-1.5 rounded-full bg-current animate-pulse [animation-delay:300ms]" />
+    </span>
+  );
+}
+
+function ChatMessageError({
+  className,
+  onRetry,
+  ...props
+}: Omit<React.ComponentProps<"div">, "children"> & {
+  onRetry?: () => void;
+}) {
+  return (
+    <div
+      data-slot="chat-message-error"
+      className={cn("flex items-center gap-1.5 px-1", className)}
+      {...props}
+    >
+      <span className="text-xs text-destructive">
+        Failed to generate response
+      </span>
+      {onRetry && (
+        <button
+          type="button"
+          onClick={onRetry}
+          className="text-xs text-destructive underline underline-offset-2 hover:text-destructive/80"
         >
-          {displayText}
-          {isStreaming && !displayText && (
-            <span className="inline-flex gap-1">
-              <span className="size-1.5 rounded-full bg-current animate-pulse" />
-              <span className="size-1.5 rounded-full bg-current animate-pulse [animation-delay:150ms]" />
-              <span className="size-1.5 rounded-full bg-current animate-pulse [animation-delay:300ms]" />
-            </span>
-          )}
-        </div>
-
-        {isFailed && (
-          <div className="flex items-center gap-1.5 px-1">
-            <span className="text-xs text-destructive">
-              Failed to generate response
-            </span>
-            {onRetry && (
-              <button
-                type="button"
-                onClick={onRetry}
-                className="text-xs text-destructive underline underline-offset-2 hover:text-destructive/80"
-              >
-                Retry
-              </button>
-            )}
-          </div>
-        )}
-      </div>
+          Retry
+        </button>
+      )}
     </div>
   );
 }
+
+export {
+  ChatMessage,
+  ChatMessageAvatar,
+  ChatMessageBubble,
+  chatMessageBubbleVariants,
+  ChatMessageContent,
+  ChatMessageError,
+  ChatMessageLoading,
+  chatMessageVariants,
+};

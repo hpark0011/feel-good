@@ -2,7 +2,15 @@
 
 import { useEffect, useRef } from "react";
 import type { UIMessage } from "@convex-dev/agent/react";
-import { ChatMessage } from "./chat-message";
+import { useSmoothText } from "@convex-dev/agent/react";
+import {
+  ChatMessage,
+  ChatMessageAvatar,
+  ChatMessageBubble,
+  ChatMessageContent,
+  ChatMessageError,
+  ChatMessageLoading,
+} from "./chat-message";
 
 type ChatMessageListProps = {
   messages: UIMessage[];
@@ -12,6 +20,59 @@ type ChatMessageListProps = {
   loadMore: (numItems: number) => void;
   onRetry?: () => void;
 };
+
+function getInitials(name?: string) {
+  return name
+    ? name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : "AI";
+}
+
+function ChatMessageItem({
+  message,
+  avatarUrl,
+  profileName,
+  onRetry,
+}: {
+  message: UIMessage & { role: "user" | "assistant" };
+  avatarUrl: string | null;
+  profileName: string;
+  onRetry?: () => void;
+}) {
+  const isUser = message.role === "user";
+  const isStreaming = message.status === "streaming";
+  const isFailed = message.status === "failed";
+
+  const [smoothText] = useSmoothText(message.text, {
+    startStreaming: isStreaming,
+  });
+  const displayText = isStreaming ? smoothText : message.text;
+
+  const variant = isUser ? "sent" : "received";
+
+  return (
+    <ChatMessage variant={variant}>
+      {!isUser && (
+        <ChatMessageAvatar
+          src={avatarUrl}
+          alt={profileName}
+          fallback={getInitials(profileName)}
+        />
+      )}
+      <ChatMessageContent>
+        <ChatMessageBubble variant={variant}>
+          {displayText}
+          {isStreaming && !displayText && <ChatMessageLoading />}
+        </ChatMessageBubble>
+        {isFailed && <ChatMessageError onRetry={onRetry} />}
+      </ChatMessageContent>
+    </ChatMessage>
+  );
+}
 
 export function ChatMessageList({
   messages,
@@ -98,16 +159,11 @@ export function ChatMessageList({
               m.role === "user" || m.role === "assistant",
           )
           .map((message) => (
-            <ChatMessage
+            <ChatMessageItem
               key={message.key}
-              role={message.role}
-              text={message.text}
-              isStreaming={message.status === "streaming"}
-              avatarUrl={message.role === "assistant" ? avatarUrl : undefined}
-              profileName={
-                message.role === "assistant" ? profileName : undefined
-              }
-              isFailed={message.status === "failed"}
+              message={message}
+              avatarUrl={message.role === "assistant" ? avatarUrl : null}
+              profileName={profileName}
               onRetry={message.status === "failed" ? onRetry : undefined}
             />
           ))}
