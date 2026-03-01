@@ -33,6 +33,7 @@ export function ChatThread({ onBack }: ChatThreadProps) {
     sendMessage,
     retryMessage,
     isStreaming,
+    conversationNotFound,
     status,
     loadMore,
     sendError,
@@ -42,6 +43,24 @@ export function ChatThread({ onBack }: ChatThreadProps) {
     conversationId,
     onConversationCreated: handleConversationCreated,
   });
+
+  if (conversationNotFound) {
+    return (
+      <div className="flex flex-col h-full">
+        <ChatHeader
+          profileName={profileName}
+          avatarUrl={avatarUrl}
+          onBack={onBack}
+          onNewConversation={startNewConversation}
+        />
+        <div className="flex-1 flex items-center justify-center">
+          <p className="text-muted-foreground">
+            This conversation is not available.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full">
