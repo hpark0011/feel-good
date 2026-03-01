@@ -135,6 +135,74 @@ export const sendMessage = mutation({
   },
 });
 
+export const retryMessage = mutation({
+  args: {
+    conversationId: v.id("conversations"),
+  },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    // 1. Auth + ownership check
+    const authUser = await authComponent.safeGetAuthUser(ctx);
+    let appUser = null;
+    if (authUser) {
+      appUser = await ctx.db
+        .query("users")
+        .withIndex("by_authId", (q) => q.eq("authId", authUser._id))
+        .unique();
+    }
+
+    const conversation = await ctx.db.get(args.conversationId);
+    if (!conversation) {
+      throw new Error("Conversation not found");
+    }
+
+    // Viewer must match
+    if (appUser) {
+      if (conversation.viewerId !== appUser._id) {
+        throw new Error("Not authorized to retry in this conversation");
+      }
+    } else {
+      if (conversation.viewerId !== undefined) {
+        throw new Error("Not authorized to retry in this conversation");
+      }
+    }
+
+    // 2. Rate limit
+    await chatRateLimiter.limit(ctx, "retryMessage", {
+      key: appUser ? appUser._id : args.conversationId,
+      throws: true,
+    });
+
+    // 3. Guard: reject if streaming already in progress
+    if (conversation.streamingInProgress) {
+      throw new Error(
+        "A response is already being generated. Please wait for it to complete.",
+      );
+    }
+
+    // 4. Set streaming lock
+    const lockStartedAt = Date.now();
+    await ctx.db.patch(args.conversationId, {
+      streamingInProgress: true,
+      streamingStartedAt: lockStartedAt,
+    });
+
+    // 5. Schedule streamResponse with empty promptMessageId (retry signal)
+    await ctx.scheduler.runAfter(
+      0,
+      internal.chat.actions.streamResponse,
+      {
+        conversationId: args.conversationId,
+        profileOwnerId: conversation.profileOwnerId,
+        promptMessageId: "",
+        lockStartedAt,
+      },
+    );
+
+    return null;
+  },
+});
+
 export const clearStreamingLock = internalMutation({
   args: {
     conversationId: v.id("conversations"),

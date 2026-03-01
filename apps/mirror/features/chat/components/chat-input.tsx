@@ -16,12 +16,16 @@ type ChatInputProps = {
   profileName: string;
   isStreaming: boolean;
   onSend: (message: string) => void;
+  sendError?: string | null;
+  onClearError?: () => void;
 };
 
 export function ChatInput({
   profileName,
   isStreaming,
   onSend,
+  sendError,
+  onClearError,
 }: ChatInputProps) {
   const [message, setMessage] = useState("");
   const { ref: textareaRef, resize, reset } = useAutoResizeTextarea();
@@ -29,10 +33,11 @@ export function ChatInput({
   const handleSend = useCallback(() => {
     const trimmed = message.trim();
     if (!trimmed || isStreaming) return;
+    onClearError?.();
     onSend(trimmed);
     setMessage("");
     reset();
-  }, [message, isStreaming, onSend, reset]);
+  }, [message, isStreaming, onSend, onClearError, reset]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -47,9 +52,10 @@ export function ChatInput({
   const handleInput = useCallback(
     (e: React.ChangeEvent<HTMLTextAreaElement>) => {
       setMessage(e.target.value);
+      onClearError?.();
       resize();
     },
-    [resize],
+    [resize, onClearError],
   );
 
   return (
@@ -105,6 +111,12 @@ export function ChatInput({
           </InputGroupButton>
         </InputGroupAddon>
       </InputGroup>
+
+      {sendError && (
+        <p className="text-xs text-destructive text-center mt-1.5 px-2">
+          {sendError}
+        </p>
+      )}
 
       <p className="text-[11px] text-muted-foreground text-center mt-2 px-2">
         Conversations may be visible to {profileName}

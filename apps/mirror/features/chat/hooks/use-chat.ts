@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { useUIMessages, type UIMessage } from "@convex-dev/agent/react";
 import { api } from "@feel-good/convex/convex/_generated/api";
@@ -27,6 +27,8 @@ export function useChat({
   onConversationCreated,
 }: UseChatOptions) {
   const sendMessageMutation = useMutation(api.chat.mutations.sendMessage);
+  const retryMessageMutation = useMutation(api.chat.mutations.retryMessage);
+  const [sendError, setSendError] = useState<string | null>(null);
 
   const conversation = useQuery(
     api.chat.queries.getConversation,
@@ -52,6 +54,7 @@ export function useChat({
     async (content: string) => {
       if (isSendingRef.current) return;
       isSendingRef.current = true;
+      setSendError(null);
 
       try {
         const result = await sendMessageMutation({
@@ -64,6 +67,20 @@ export function useChat({
         if (!conversationId && result.conversationId) {
           onConversationCreated?.(result.conversationId);
         }
+      } catch (err) {
+        const msg =
+          err instanceof Error ? err.message : "Failed to send message";
+        if (/rate limit/i.test(msg)) {
+          setSendError(
+            "You're sending messages too quickly. Please wait a moment.",
+          );
+        } else if (/authentication required/i.test(msg)) {
+          setSendError("You need to sign in to chat.");
+        } else if (/already being generated/i.test(msg)) {
+          setSendError("Please wait for the current response to complete.");
+        } else {
+          setSendError(msg);
+        }
       } finally {
         isSendingRef.current = false;
       }
@@ -71,12 +88,32 @@ export function useChat({
     [sendMessageMutation, profileOwnerId, conversationId, onConversationCreated],
   );
 
+  const retryMessage = useCallback(async () => {
+    if (!conversationId) return;
+    setSendError(null);
+
+    try {
+      await retryMessageMutation({ conversationId });
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : "Failed to retry";
+      setSendError(msg);
+    }
+  }, [retryMessageMutation, conversationId]);
+
+  const clearSendError = useCallback(() => {
+    setSendError(null);
+  }, []);
+
   return {
     messages,
     sendMessage,
+    retryMessage,
     isStreaming,
     conversation,
     status,
     loadMore,
+    sendError,
+    clearSendError,
   };
 }

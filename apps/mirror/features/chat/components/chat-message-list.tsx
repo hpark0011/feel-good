@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import type { UIMessage } from "@convex-dev/agent/react";
 import { ChatMessage } from "./chat-message";
-import { cn } from "@feel-good/utils/cn";
 
 type ChatMessageListProps = {
   messages: UIMessage[];
@@ -11,6 +10,7 @@ type ChatMessageListProps = {
   profileName: string;
   status: "LoadingFirstPage" | "CanLoadMore" | "LoadingMore" | "Exhausted";
   loadMore: (numItems: number) => void;
+  onRetry?: () => void;
 };
 
 export function ChatMessageList({
@@ -19,6 +19,7 @@ export function ChatMessageList({
   profileName,
   status,
   loadMore,
+  onRetry,
 }: ChatMessageListProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -63,9 +64,14 @@ export function ChatMessageList({
   if (messages.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center px-6">
-        <p className={cn("text-sm text-muted-foreground text-center")}>
-          Send a message to start a conversation with {profileName}
-        </p>
+        <div className="text-center">
+          <p className="text-sm text-muted-foreground">
+            Hi! I&apos;m {profileName}&apos;s digital clone.
+          </p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Ask me anything about their work and ideas.
+          </p>
+        </div>
       </div>
     );
   }
@@ -101,6 +107,8 @@ export function ChatMessageList({
               profileName={
                 message.role === "assistant" ? profileName : undefined
               }
+              isFailed={message.status === "failed"}
+              onRetry={message.status === "failed" ? onRetry : undefined}
             />
           ))}
       </div>

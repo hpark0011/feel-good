@@ -30,6 +30,7 @@ export const publicProfileReturnValidator = v.object({
   bio: v.optional(v.string()),
   avatarUrl: v.union(v.string(), v.null()),
   onboardingComplete: v.boolean(),
+  chatAuthRequired: v.optional(v.boolean()),
 });
 
 export async function getAppUser(

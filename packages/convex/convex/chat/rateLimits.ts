@@ -12,4 +12,9 @@ export const chatRateLimiter = new RateLimiter(components.rateLimiter, {
     rate: 3,
     period: MINUTE,
   },
+  retryMessage: {
+    kind: "fixed window",
+    rate: 5,
+    period: MINUTE,
+  },
 });

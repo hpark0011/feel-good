@@ -14,7 +14,11 @@ export function useProfileData({
   initialProfile,
   preloadedProfile,
   preloadedArticles,
-}: UseProfileDataArgs): { profile: Profile; articles: Article[] } {
+}: UseProfileDataArgs): {
+  profile: Profile;
+  articles: Article[];
+  chatAuthRequired: boolean;
+} {
   const reactiveProfile = usePreloadedQuery(preloadedProfile);
   const reactiveArticles = usePreloadedQuery(preloadedArticles);
 
@@ -30,5 +34,7 @@ export function useProfileData({
     }
     : initialProfile;
 
-  return { profile, articles };
+  const chatAuthRequired = reactiveProfile?.chatAuthRequired ?? false;
+
+  return { profile, articles, chatAuthRequired };
 }

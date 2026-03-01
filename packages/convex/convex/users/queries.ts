@@ -64,6 +64,7 @@ export const getByUsername = query({
       bio: appUser.bio,
       avatarUrl,
       onboardingComplete: appUser.onboardingComplete,
+      chatAuthRequired: appUser.chatAuthRequired,
     };
   },
 });
