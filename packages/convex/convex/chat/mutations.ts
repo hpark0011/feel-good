@@ -167,21 +167,27 @@ export const retryMessage = mutation({
       }
     }
 
-    // 2. Guard: reject if streaming already in progress
+    // 2. Rate limit
+    await chatRateLimiter.limit(ctx, "retryMessage", {
+      key: appUser ? appUser._id : args.conversationId,
+      throws: true,
+    });
+
+    // 3. Guard: reject if streaming already in progress
     if (conversation.streamingInProgress) {
       throw new Error(
         "A response is already being generated. Please wait for it to complete.",
       );
     }
 
-    // 3. Set streaming lock
+    // 4. Set streaming lock
     const lockStartedAt = Date.now();
     await ctx.db.patch(args.conversationId, {
       streamingInProgress: true,
       streamingStartedAt: lockStartedAt,
     });
 
-    // 4. Schedule streamResponse with empty promptMessageId (retry signal)
+    // 5. Schedule streamResponse with empty promptMessageId (retry signal)
     await ctx.scheduler.runAfter(
       0,
       internal.chat.actions.streamResponse,
