@@ -3,7 +3,7 @@ id: FG_039
 title: "Integrate Chat Thread with Profile Shell Layout"
 date: 2026-02-28
 type: feature
-status: to-do
+status: completed
 priority: p2
 description: "Integrate the `ChatThread` over the `profile-shell.tsx` with animated framer-motion transitions and conditional active view state."
 dependencies:
@@ -39,7 +39,7 @@ Create smooth transitions between `ProfileInfo` contents and `ChatThread` render
 
 ## Approach
 
-Animate switching states via Context wrappers using standard React state combined with `framer-motion`'s `AnimatePresence`. 
+Animate switching states via Context wrappers using standard React state combined with `framer-motion`'s `AnimatePresence`.
 
 - **Effort:** Small
 - **Risk:** Medium

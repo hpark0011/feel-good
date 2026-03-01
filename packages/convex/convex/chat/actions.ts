@@ -9,7 +9,7 @@ export const streamResponse = internalAction({
   args: {
     conversationId: v.id("conversations"),
     profileOwnerId: v.id("users"),
-    promptMessageId: v.string(),
+    promptMessageId: v.optional(v.string()),
     lockStartedAt: v.number(),
   },
   returns: v.null(),
@@ -22,8 +22,13 @@ export const streamResponse = internalAction({
 
       const { thread } = await cloneAgent.continueThread(ctx, { threadId });
 
+      // Empty or undefined promptMessageId = retry: respond to latest user message
+      const streamArgs = promptMessageId
+        ? { promptMessageId, system: systemPrompt }
+        : { system: systemPrompt };
+
       await thread.streamText(
-        { promptMessageId, system: systemPrompt },
+        streamArgs,
         { saveStreamDeltas: { throttleMs: 100 } },
       );
     } finally {

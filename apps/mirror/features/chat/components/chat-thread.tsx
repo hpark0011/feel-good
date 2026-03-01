@@ -28,7 +28,16 @@ export function ChatThread({ onBack }: ChatThreadProps) {
     [setConversationId],
   );
 
-  const { messages, sendMessage, isStreaming, status, loadMore } = useChat({
+  const {
+    messages,
+    sendMessage,
+    retryMessage,
+    isStreaming,
+    status,
+    loadMore,
+    sendError,
+    clearSendError,
+  } = useChat({
     profileOwnerId,
     conversationId,
     onConversationCreated: handleConversationCreated,
@@ -49,12 +58,15 @@ export function ChatThread({ onBack }: ChatThreadProps) {
         profileName={profileName}
         status={status}
         loadMore={loadMore}
+        onRetry={retryMessage}
       />
 
       <ChatInput
         profileName={profileName}
         isStreaming={isStreaming}
         onSend={sendMessage}
+        sendError={sendError}
+        onClearError={clearSendError}
       />
     </div>
   );

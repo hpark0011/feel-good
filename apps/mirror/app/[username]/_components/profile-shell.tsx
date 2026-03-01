@@ -22,6 +22,7 @@ import {
   ScrollRootProvider,
 } from "@/features/articles";
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
+import { useSession } from "@/lib/auth-client";
 
 import {
   ResizableHandle,
@@ -57,11 +58,13 @@ export function ProfileShell(
     children,
   }: ProfileShellProps,
 ) {
-  const { profile, articles } = useProfileData({
+  const { profile, articles, chatAuthRequired } = useProfileData({
     initialProfile,
     preloadedProfile,
     preloadedArticles,
   });
+
+  const { isAuthenticated } = useSession();
 
   const isMobile = useIsMobile();
   const [videoCallOpen, setVideoCallOpen] = useState(false);
@@ -185,6 +188,8 @@ export function ProfileShell(
                             <ChatInput
                               isOpen={chatInputVisible}
                               profileName={profile.name}
+                              chatAuthRequired={chatAuthRequired}
+                              isAuthenticated={isAuthenticated}
                               onSend={handleFirstMessage}
                             />
                           </div>
