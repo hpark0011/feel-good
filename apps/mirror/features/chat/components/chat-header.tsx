@@ -2,13 +2,8 @@
 
 import { Button } from "@feel-good/ui/primitives/button";
 import { Icon } from "@feel-good/ui/components/icon";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@feel-good/ui/primitives/avatar";
 import { cn } from "@feel-good/utils/cn";
-import { getProfileInitials } from "@/features/profile/lib/get-profile-initials";
+import { MirrorAvatar } from "@/components/mirror-avatar";
 
 type ChatHeaderProps = {
   profileName: string;
@@ -23,8 +18,6 @@ export function ChatHeader({
   onBack,
   onNewConversation,
 }: ChatHeaderProps) {
-  const initials = getProfileInitials(profileName);
-
   return (
     <div
       className={cn(
@@ -42,10 +35,11 @@ export function ChatHeader({
       </Button>
 
       <div className="flex flex-col items-center gap-2">
-        <Avatar className="size-8 shrink-0">
-          {avatarUrl && <AvatarImage src={avatarUrl} alt={profileName} />}
-          <AvatarFallback className="text-xs">{initials}</AvatarFallback>
-        </Avatar>
+        <MirrorAvatar
+          className="shrink-0"
+          avatarUrl={avatarUrl}
+          profileName={profileName}
+        />
 
         <span className="text-sm font-medium truncate">
           {profileName}

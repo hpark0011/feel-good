@@ -2,9 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import { usePathname, useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { useMutation, type Preloaded } from "convex/react";
+import { type Preloaded, useMutation } from "convex/react";
 import { api } from "@feel-good/convex/convex/_generated/api";
 import type { Id } from "@feel-good/convex/convex/_generated/dataModel";
 import type { Profile } from "@/features/profile";
@@ -75,7 +75,7 @@ export function ProfileShell(
   const [videoCallOpen, setVideoCallOpen] = useState(false);
   const [chatInputVisible, setChatInputVisible] = useState(false);
 
-  const isChatRoute = /^\/@[^/]+\/chat/.test(pathname);
+  const isChatRoute = /^\/@[^/]+\/chat(?:\/|$)/.test(pathname);
 
   const [activeView, setActiveView] = useState<"profile" | "chat">(
     isChatRoute ? "chat" : "profile",
@@ -85,7 +85,7 @@ export function ProfileShell(
   >((params.conversationId as Id<"conversations">) ?? null);
 
   useEffect(() => {
-    const chatMatch = /^\/@[^/]+\/chat/.test(pathname);
+    const chatMatch = /^\/@[^/]+\/chat(?:\/|$)/.test(pathname);
     if (chatMatch) {
       setActiveView("chat");
       setConversationId(
@@ -221,7 +221,7 @@ export function ProfileShell(
                         <div className="relative h-full flex flex-col">
                           {editButton}
                           {profilePanel}
-                          <div className="absolute inset-x-0 bottom-0 flex justify-center px-2 pb-6 pointer-events-none [&>*]:pointer-events-auto">
+                          <div className="absolute inset-x-0 bottom-0 flex justify-center px-2 pb-6 pointer-events-none *:pointer-events-auto">
                             <ChatInput
                               isOpen={chatInputVisible}
                               profileName={profile.name}
@@ -277,7 +277,7 @@ export function ProfileShell(
                           >
                             {editButton}
                             {profilePanel}
-                            <div className="absolute inset-x-0 bottom-0 flex justify-center px-6 pb-6 pointer-events-none [&>*]:pointer-events-auto">
+                            <div className="absolute inset-x-0 bottom-0 flex justify-center px-6 pb-6 pointer-events-none *:pointer-events-auto">
                               <ChatInput
                                 isOpen={chatInputVisible}
                                 profileName={profile.name}

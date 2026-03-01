@@ -13,7 +13,7 @@ export function MirrorAvatar({
   profileName,
   ...props
 }: React.ComponentProps<"div"> & {
-  avatarUrl: string;
+  avatarUrl: string | null;
   className?: string;
   profileName: string;
 }) {
@@ -22,14 +22,16 @@ export function MirrorAvatar({
   return (
     <div
       className={cn(
-        "relative w-[200px] h-[200px] rounded-t-full [corner-shape:superellipse(1.2)] bg-black overflow-hidden",
+        "relative size-10 rounded-t-full [corner-shape:superellipse(1.15)] bg-black overflow-hidden",
         className,
       )}
       {...props}
     >
       <Avatar className="size-full" {...props}>
         {avatarUrl && <AvatarImage src={avatarUrl} alt={profileName} />}
-        <AvatarFallback className="text-xs">{initials}</AvatarFallback>
+        <AvatarFallback className="text-sm bg-transparent">
+          {initials}
+        </AvatarFallback>
       </Avatar>
     </div>
   );
