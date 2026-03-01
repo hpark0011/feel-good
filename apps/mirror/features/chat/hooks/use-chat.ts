@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { useUIMessages, type UIMessage } from "@convex-dev/agent/react";
 import { api } from "@feel-good/convex/convex/_generated/api";
@@ -46,17 +46,26 @@ export function useChat({
   const messages = (results ?? []) as UIMessage[];
   const isStreaming = conversation?.streamingInProgress ?? false;
 
+  const isSendingRef = useRef(false);
+
   const sendMessage = useCallback(
     async (content: string) => {
-      const result = await sendMessageMutation({
-        profileOwnerId,
-        conversationId: conversationId ?? undefined,
-        content,
-      });
+      if (isSendingRef.current) return;
+      isSendingRef.current = true;
 
-      // First message creates a new conversation — notify parent
-      if (!conversationId && result.conversationId) {
-        onConversationCreated?.(result.conversationId);
+      try {
+        const result = await sendMessageMutation({
+          profileOwnerId,
+          conversationId: conversationId ?? undefined,
+          content,
+        });
+
+        // First message creates a new conversation — notify parent
+        if (!conversationId && result.conversationId) {
+          onConversationCreated?.(result.conversationId);
+        }
+      } finally {
+        isSendingRef.current = false;
       }
     },
     [sendMessageMutation, profileOwnerId, conversationId, onConversationCreated],
