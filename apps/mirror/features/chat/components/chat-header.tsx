@@ -21,8 +21,7 @@ export function ChatHeader({
   return (
     <div
       className={cn(
-        "grid grid-cols-[auto_1fr_auto] items-start px-4 py-3 h-12",
-        "border-b border-border-subtle",
+        "grid grid-cols-[auto_1fr_auto] items-start px-4 pt-3 pb-2 h-fit",
       )}
     >
       <Button
@@ -34,14 +33,14 @@ export function ChatHeader({
         <Icon name="ArrowLeftLineIcon" className="size-5" />
       </Button>
 
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center">
         <MirrorAvatar
           className="shrink-0"
           avatarUrl={avatarUrl}
           profileName={profileName}
         />
 
-        <span className="text-sm font-medium truncate">
+        <span className="text-sm font-medium truncate px-1.5 py-1">
           {profileName}
         </span>
       </div>
