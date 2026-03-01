@@ -1,16 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import type { UIMessage } from "@convex-dev/agent/react";
-import { useSmoothText } from "@convex-dev/agent/react";
-import {
-  ChatMessage,
-  ChatMessageAvatar,
-  ChatMessageBubble,
-  ChatMessageContent,
-  ChatMessageError,
-  ChatMessageLoading,
-} from "./chat-message";
+import { useEffect, useRef } from "react";
+import { ChatMessageItem } from "./chat-message-item";
 
 type ChatMessageListProps = {
   messages: UIMessage[];
@@ -20,59 +12,6 @@ type ChatMessageListProps = {
   loadMore: (numItems: number) => void;
   onRetry?: () => void;
 };
-
-function getInitials(name?: string) {
-  return name
-    ? name
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .slice(0, 2)
-        .toUpperCase()
-    : "AI";
-}
-
-function ChatMessageItem({
-  message,
-  avatarUrl,
-  profileName,
-  onRetry,
-}: {
-  message: UIMessage & { role: "user" | "assistant" };
-  avatarUrl: string | null;
-  profileName: string;
-  onRetry?: () => void;
-}) {
-  const isUser = message.role === "user";
-  const isStreaming = message.status === "streaming";
-  const isFailed = message.status === "failed";
-
-  const [smoothText] = useSmoothText(message.text, {
-    startStreaming: isStreaming,
-  });
-  const displayText = isStreaming ? smoothText : message.text;
-
-  const variant = isUser ? "sent" : "received";
-
-  return (
-    <ChatMessage variant={variant}>
-      {!isUser && (
-        <ChatMessageAvatar
-          src={avatarUrl}
-          alt={profileName}
-          fallback={getInitials(profileName)}
-        />
-      )}
-      <ChatMessageContent>
-        <ChatMessageBubble variant={variant}>
-          {displayText}
-          {isStreaming && !displayText && <ChatMessageLoading />}
-        </ChatMessageBubble>
-        {isFailed && <ChatMessageError onRetry={onRetry} />}
-      </ChatMessageContent>
-    </ChatMessage>
-  );
-}
 
 export function ChatMessageList({
   messages,
@@ -144,10 +83,10 @@ export function ChatMessageList({
     >
       {status === "LoadingMore" && (
         <div className="flex justify-center py-2">
-          <div className="flex gap-1.5">
-            <span className="size-1.5 rounded-full bg-muted-foreground/40 animate-pulse" />
-            <span className="size-1.5 rounded-full bg-muted-foreground/40 animate-pulse [animation-delay:150ms]" />
-            <span className="size-1.5 rounded-full bg-muted-foreground/40 animate-pulse [animation-delay:300ms]" />
+          <div className="flex gap-1">
+            <span className="size-1 rounded-full bg-muted-foreground/40 animate-pulse" />
+            <span className="size-1 rounded-full bg-muted-foreground/40 animate-pulse [animation-delay:150ms]" />
+            <span className="size-1 rounded-full bg-muted-foreground/40 animate-pulse [animation-delay:300ms]" />
           </div>
         </div>
       )}
