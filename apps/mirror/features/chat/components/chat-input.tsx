@@ -59,7 +59,7 @@ export function ChatInput({
   );
 
   return (
-    <div className="px-4 pb-4 pt-2 max-w-lg mx-auto w-full">
+    <div className="px-4 pb-4 pt-2 mx-auto w-full max-w-lg">
       <InputGroup
         className={cn(
           "shadow-chat-input-shadow hover:bg-chat-input-bg-hover",

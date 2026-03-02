@@ -21,7 +21,6 @@ export function ChatHeader({
   return (
     <div
       className={cn(
-        "absolute top-0 left-0 right-0 z-10 bg-linear-to-b from-background to-transparent",
         "grid grid-cols-[auto_1fr_auto] items-start px-4 pt-2 pb-2 h-fit",
       )}
     >

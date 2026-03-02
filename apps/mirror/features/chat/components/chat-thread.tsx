@@ -6,6 +6,7 @@ import { useChat } from "../hooks/use-chat";
 import { ChatHeader } from "./chat-header";
 import { ChatMessageList } from "./chat-message-list";
 import { ChatInput } from "./chat-input";
+import { cn } from "@feel-good/utils/cn";
 
 type ChatThreadProps = {
   onBack: () => void;
@@ -64,12 +65,14 @@ export function ChatThread({ onBack }: ChatThreadProps) {
 
   return (
     <div className="flex flex-col h-full relative">
-      <ChatHeader
-        profileName={profileName}
-        avatarUrl={avatarUrl}
-        onBack={onBack}
-        onNewConversation={startNewConversation}
-      />
+      <div className="absolute top-0 left-0 right-0 z-10 bg-linear-to-b from-background to-transparent">
+        <ChatHeader
+          profileName={profileName}
+          avatarUrl={avatarUrl}
+          onBack={onBack}
+          onNewConversation={startNewConversation}
+        />
+      </div>
 
       <ChatMessageList
         messages={messages}
@@ -80,13 +83,19 @@ export function ChatThread({ onBack }: ChatThreadProps) {
         onRetry={retryMessage}
       />
 
-      <ChatInput
-        profileName={profileName}
-        isStreaming={isStreaming}
-        onSend={sendMessage}
-        sendError={sendError}
-        onClearError={clearSendError}
-      />
+      <div
+        className={cn(
+          "absolute bottom-0 w-full mx-auto bg-linear-to-t from-background via-30% via-background to-transparent",
+        )}
+      >
+        <ChatInput
+          profileName={profileName}
+          isStreaming={isStreaming}
+          onSend={sendMessage}
+          sendError={sendError}
+          onClearError={clearSendError}
+        />
+      </div>
     </div>
   );
 }
