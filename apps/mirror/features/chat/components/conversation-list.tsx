@@ -31,8 +31,8 @@ function ConversationListItem({
       type="button"
       className={cn(
         "flex gap-4 px-4 py-0 text-left justify-between items-baseline",
-        "transition-colors hover:bg-muted/50 cursor-pointer",
-        isActive && "bg-muted/80",
+        "transition-colors hover:bg-muted cursor-pointer group-hover/list:text-muted-foreground hover:text-secondary-foreground",
+        isActive && "bg-muted",
         className,
       )}
       {...props}
@@ -90,7 +90,7 @@ function ConversationList({
   }
 
   return (
-    <div data-slot="conversation-list" className="flex flex-col">
+    <div data-slot="conversation-list" className="flex flex-col group/list">
       {conversations.map((conversation) => (
         <ConversationListItem
           key={conversation._id}

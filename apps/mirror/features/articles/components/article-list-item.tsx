@@ -32,7 +32,7 @@ export const ArticleListItem = memo(function ArticleListItem({
     <AnimatedArticleRow
       shouldAnimate={shouldAnimate}
       index={index}
-      className="relative border-b-0 group-hover/list:text-muted-foreground hover:text-secondary-foreground hover:bg-transparent min-h-[44px]"
+      className="relative border-b-0 group-hover/list:text-muted-foreground hover:text-secondary-foreground min-h-[44px] hover:bg-muted"
       data-state={isSelected ? "selected" : undefined}
     >
       {isOwner && (

@@ -4,12 +4,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { type Preloaded, useMutation } from "convex/react";
-import { api } from "@feel-good/convex/convex/_generated/api";
+import { type Preloaded } from "convex/react";
+import { type api } from "@feel-good/convex/convex/_generated/api";
 import type { Id } from "@feel-good/convex/convex/_generated/dataModel";
 import type { Profile } from "@/features/profile";
 import {
-  ChatInput,
   EditActions,
   EditProfileButton,
   MobileProfileLayout,
@@ -28,8 +27,6 @@ import {
   ScrollRootProvider,
 } from "@/features/articles";
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
-import { useSession } from "@/lib/auth-client";
-
 import {
   ResizableHandle,
   ResizablePanel,
@@ -64,13 +61,11 @@ export function ProfileShell(
     children,
   }: ProfileShellProps,
 ) {
-  const { profile, articles, chatAuthRequired } = useProfileData({
+  const { profile, articles } = useProfileData({
     initialProfile,
     preloadedProfile,
     preloadedArticles,
   });
-
-  const { isAuthenticated } = useSession();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -78,62 +73,24 @@ export function ProfileShell(
 
   const isMobile = useIsMobile();
   const [videoCallOpen, setVideoCallOpen] = useState(false);
-  const [chatInputVisible, setChatInputVisible] = useState(false);
-
   const { conversations, isLoading: conversationsLoading } = useConversations({
     profileOwnerId: profile._id,
   });
   const newConversationIntentRef = useRef(false);
 
-  const isChatRoute = /^\/@[^/]+\/chat(?:\/|$)/.test(pathname);
-
-  const [activeView, setActiveView] = useState<"profile" | "chat">(
-    isChatRoute ? "chat" : "profile",
+  const activeView = useMemo<"profile" | "chat">(
+    () => (/^\/@[^/]+\/chat(?:\/|$)/.test(pathname) ? "chat" : "profile"),
+    [pathname],
   );
-  const [conversationId, setConversationId] = useState<
-    Id<"conversations"> | null
-  >((params.conversationId as Id<"conversations">) ?? null);
-
-  useEffect(() => {
-    const chatMatch = /^\/@[^/]+\/chat(?:\/|$)/.test(pathname);
-    if (chatMatch) {
-      setActiveView("chat");
-      setConversationId(
-        (params.conversationId as Id<"conversations">) ?? null,
-      );
-    } else {
-      setActiveView("profile");
-      setConversationId(null);
-    }
-  }, [pathname, params.conversationId]);
+  const conversationId = useMemo<Id<"conversations"> | null>(
+    () => (params.conversationId as Id<"conversations">) ?? null,
+    [params.conversationId],
+  );
 
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const sendMessageMutation = useMutation(api.chat.mutations.sendMessage);
-  const isSendingFirstRef = useRef(false);
-
-  const handleFirstMessage = useCallback(
-    async (message: string) => {
-      if (isSendingFirstRef.current) return;
-      isSendingFirstRef.current = true;
-      try {
-        const result = await sendMessageMutation({
-          profileOwnerId: profile._id,
-          content: message,
-        });
-        setConversationId(result.conversationId);
-        setActiveView("chat");
-        router.push(`/@${profile.username}/chat/${result.conversationId}`);
-      } finally {
-        isSendingFirstRef.current = false;
-      }
-    },
-    [sendMessageMutation, profile._id, router, profile.username],
-  );
-
   const handleBack = useCallback(() => {
-    setActiveView("profile");
     router.push(`/@${profile.username}`);
   }, [router, profile.username]);
 
@@ -144,7 +101,6 @@ export function ProfileShell(
       } else {
         newConversationIntentRef.current = true;
       }
-      setConversationId(id);
       if (id) {
         router.replace(`/@${profile.username}/chat/${id}`);
       } else {
@@ -221,7 +177,7 @@ export function ProfileShell(
       isEditing={isEditing}
       onEditComplete={handleEditClose}
       onSubmittingChange={setIsSubmitting}
-      onOpenChat={() => setChatInputVisible((prev) => !prev)}
+      onOpenChat={() => router.push(`/@${profile.username}/chat`)}
       onOpenVideoCall={() => setVideoCallOpen(true)}
     />
   );
@@ -254,15 +210,6 @@ export function ProfileShell(
                         <div className="relative h-full flex flex-col">
                           {editButton}
                           {profilePanel}
-                          <div className="absolute inset-x-0 bottom-0 flex justify-center px-2 pb-6 pointer-events-none *:pointer-events-auto">
-                            <ChatInput
-                              isOpen={chatInputVisible}
-                              profileName={profile.name}
-                              chatAuthRequired={chatAuthRequired}
-                              isAuthenticated={isAuthenticated}
-                              onSend={handleFirstMessage}
-                            />
-                          </div>
                         </div>
                       }
                       content={() => (
@@ -310,13 +257,6 @@ export function ProfileShell(
                           >
                             {editButton}
                             {profilePanel}
-                            <div className="absolute inset-x-0 bottom-0 flex justify-center px-6 pb-6 pointer-events-none *:pointer-events-auto">
-                              <ChatInput
-                                isOpen={chatInputVisible}
-                                profileName={profile.name}
-                                onSend={handleFirstMessage}
-                              />
-                            </div>
                           </motion.div>
                         )
                         : (
