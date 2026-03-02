@@ -358,7 +358,7 @@ export function ProfileShell(
                             <div className="w-full absolute top-0 bg-linear-to-b from-background to-transparent max-h-[24px] z-10" />
                             <div
                               ref={setDesktopScrollRoot}
-                              className="overflow-y-auto h-full px-4 pb-[64px] pt-8"
+                              className="overflow-y-auto h-full pb-[64px] pt-8"
                             >
                               {children}
                             </div>

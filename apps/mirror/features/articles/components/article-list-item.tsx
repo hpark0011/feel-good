@@ -35,7 +35,7 @@ export const ArticleListItem = memo(function ArticleListItem({
       data-state={isSelected ? "selected" : undefined}
     >
       {isOwner && (
-        <TableCell className="relative z-10 w-12 py-0 pl-1.5 [&:has([role=checkbox])]:pr-2 rounded-l-md">
+        <TableCell className="relative z-10 w-12 py-0 [&:has([role=checkbox])]:pr-2 pl-4">
           <Checkbox
             checked={isSelected}
             onCheckedChange={() => onToggle?.(article.slug)}
@@ -51,7 +51,7 @@ export const ArticleListItem = memo(function ArticleListItem({
       <TableCell className="hidden md:table-cell py-0 font-medium">
         {article.category}
       </TableCell>
-      <TableCell className="text-right py-0 font-medium rounded-r-md">
+      <TableCell className="text-right py-0 font-medium pr-4">
         {article.status === "draft"
           ? <span className="text-muted-foreground">Draft</span>
           : article.publishedAt
