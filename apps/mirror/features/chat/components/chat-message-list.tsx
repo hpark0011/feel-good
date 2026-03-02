@@ -52,10 +52,10 @@ export function ChatMessageList({
   if (status === "LoadingFirstPage") {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <div className="flex gap-1.5">
-          <span className="size-2 rounded-full bg-muted-foreground/40 animate-pulse" />
-          <span className="size-2 rounded-full bg-muted-foreground/40 animate-pulse [animation-delay:150ms]" />
-          <span className="size-2 rounded-full bg-muted-foreground/40 animate-pulse [animation-delay:300ms]" />
+        <div className="flex gap-1">
+          <span className="size-1 rounded-full bg-muted-foreground/40 animate-pulse" />
+          <span className="size-1 rounded-full bg-muted-foreground/40 animate-pulse [animation-delay:150ms]" />
+          <span className="size-1 rounded-full bg-muted-foreground/40 animate-pulse [animation-delay:300ms]" />
         </div>
       </div>
     );

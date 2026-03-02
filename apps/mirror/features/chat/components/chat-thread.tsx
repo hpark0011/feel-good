@@ -63,7 +63,7 @@ export function ChatThread({ onBack }: ChatThreadProps) {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full relative">
       <ChatHeader
         profileName={profileName}
         avatarUrl={avatarUrl}

@@ -59,7 +59,7 @@ export function ChatInput({
   );
 
   return (
-    <div className="px-4 pb-4 pt-2">
+    <div className="px-4 pb-4 pt-2 max-w-lg mx-auto w-full">
       <InputGroup
         className={cn(
           "shadow-chat-input-shadow hover:bg-chat-input-bg-hover",
@@ -118,7 +118,7 @@ export function ChatInput({
         </p>
       )}
 
-      <p className="text-[11px] text-muted-foreground text-center mt-2 px-2">
+      <p className="text-[13px] text-muted-foreground text-center mt-2 px-2">
         Conversations may be visible to {profileName}
       </p>
     </div>

@@ -69,12 +69,14 @@ function ChatMessageContent({
 }
 
 const chatMessageBubbleVariants = cva(
-  "rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap wrap-break-word",
+  "rounded-[20px] px-3.5 py-2.5 leading-relaxed whitespace-pre-wrap wrap-break-word [corner-shape:superellipse(1.15)]",
   {
     variants: {
       variant: {
-        sent: "bg-primary text-primary-foreground",
-        received: "bg-muted text-foreground",
+        sent:
+          "bg-blue-11 text-primary-foreground py-[7px] px-3 text-[14px] leading-[1.3]",
+        received:
+          "bg-background text-foreground text-lg leading-[1.3] border border-subtle",
       },
     },
     defaultVariants: {
@@ -109,9 +111,9 @@ function ChatMessageLoading({
       className={cn("inline-flex gap-1", className)}
       {...props}
     >
-      <span className="size-1.5 rounded-full bg-current animate-pulse" />
-      <span className="size-1.5 rounded-full bg-current animate-pulse [animation-delay:150ms]" />
-      <span className="size-1.5 rounded-full bg-current animate-pulse [animation-delay:300ms]" />
+      <span className="size-1 rounded-full bg-current animate-pulse" />
+      <span className="size-1 rounded-full bg-current animate-pulse [animation-delay:150ms]" />
+      <span className="size-1 rounded-full bg-current animate-pulse [animation-delay:300ms]" />
     </span>
   );
 }
