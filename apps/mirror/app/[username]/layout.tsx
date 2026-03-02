@@ -39,6 +39,9 @@ export default async function ProfileLayout({
       name: convexProfile.name ?? "",
       bio: convexProfile.bio ?? "",
       avatarUrl: convexProfile.avatarUrl,
+      ...(convexProfile.username === "rick-rubin" && {
+        media: { video: "/portrait-video.mp4", poster: "/rr.webp" },
+      }),
     };
   }
 
