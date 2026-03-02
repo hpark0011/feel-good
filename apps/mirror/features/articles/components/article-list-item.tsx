@@ -5,6 +5,7 @@ import { Checkbox } from "@feel-good/ui/primitives/checkbox";
 import type { Article } from "../types";
 import { formatShortDate } from "../utils/format-date";
 import { AnimatedArticleRow } from "./animated-article-row";
+import { cn } from "@feel-good/utils/cn";
 
 type ArticleListItemProps = {
   article: Article;
@@ -43,7 +44,12 @@ export const ArticleListItem = memo(function ArticleListItem({
           />
         </TableCell>
       )}
-      <TableCell className="font-medium truncate max-w-0 py-0 text-lg">
+      <TableCell
+        className={cn(
+          "font-medium truncate max-w-0 py-0 text-lg pl-4",
+          isOwner && "pl-0",
+        )}
+      >
         <Link href={href} className="after:absolute after:inset-0">
           {article.title}
         </Link>

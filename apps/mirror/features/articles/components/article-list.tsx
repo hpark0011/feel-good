@@ -11,6 +11,7 @@ import { Checkbox } from "@feel-good/ui/primitives/checkbox";
 import type { Article } from "../types";
 import { ArticleListItem } from "../components/article-list-item";
 import { ArticleListLoader } from "../components/article-list-loader";
+import { cn } from "@feel-good/utils/cn";
 
 type ArticleListProps = {
   articles: Article[];
@@ -55,7 +56,12 @@ export function ArticleList({
                 />
               </TableHead>
             )}
-            <TableHead className="w-4/5 md:w-3/5 text-muted-foreground h-8">
+            <TableHead
+              className={cn(
+                "w-4/5 md:w-3/5 text-muted-foreground h-8 pl-4",
+                isOwner && "pl-0",
+              )}
+            >
               Title
             </TableHead>
             <TableHead className="hidden md:table-cell w-1/5 text-muted-foreground h-8">
