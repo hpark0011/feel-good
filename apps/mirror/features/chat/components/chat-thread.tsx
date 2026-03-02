@@ -65,7 +65,7 @@ export function ChatThread({ onBack }: ChatThreadProps) {
 
   return (
     <div className="flex flex-col h-full relative">
-      <div className="absolute top-0 left-0 right-0 z-10 bg-linear-to-b from-background to-transparent">
+      <div className="absolute top-0 left-0 right-0 z-10 bg-linear-to-b from-transparent to-transparent h-12">
         <ChatHeader
           profileName={profileName}
           avatarUrl={avatarUrl}
