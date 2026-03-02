@@ -40,11 +40,9 @@ export function ChatHeader({
           profileName={profileName}
         />
 
-        {
-          /* <span className="text-sm font-medium truncate px-1.5 py-1">
+        <span className="text-sm font-medium truncate px-2.5 py-0.5 bg-background border border-border-subtle rounded-2xl shadow-xl">
           {profileName}
-        </span> */
-        }
+        </span>
       </div>
 
       {onNewConversation
