@@ -6,9 +6,7 @@ import { cn } from "@feel-good/utils/cn";
 import type { Conversation } from "../types";
 import { formatRelativeTime } from "../utils/format-relative-time";
 
-/**
- * Primitive components for conversation list.
- */
+/* Internal building-block components — not exported. */
 
 function ConversationListEmpty() {
   return (
@@ -71,9 +69,7 @@ function ConversationListItemTimestamp({
   );
 }
 
-/**
- * Exported composed components.
- */
+/* Composed exports — consumed by profile-shell. */
 
 type ConversationListProps = {
   conversations: Conversation[];
