@@ -9,7 +9,7 @@ import {
   ChatMessageContent,
   ChatMessageError,
   ChatMessageLoading,
-} from "./chat-message";
+} from "@feel-good/ui/components/chat-message";
 import { getProfileInitials } from "@/features/profile/lib/get-profile-initials";
 
 export function ChatMessageItem({

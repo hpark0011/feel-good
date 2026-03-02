@@ -1,8 +1,3 @@
-import {
-  ArticleListToolbarConnector,
-  ScrollableArticleList,
-} from "@/features/articles";
-import { WorkspaceToolbar } from "@/components/workspace-toolbar-slot";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,12 +5,5 @@ export const metadata: Metadata = {
 };
 
 export default function ChatPage() {
-  return (
-    <>
-      <WorkspaceToolbar>
-        <ArticleListToolbarConnector />
-      </WorkspaceToolbar>
-      <ScrollableArticleList />
-    </>
-  );
+  return null;
 }

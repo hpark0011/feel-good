@@ -16,7 +16,12 @@ import {
   ProfileInfo,
   ProfileProvider,
 } from "@/features/profile";
-import { ChatProvider, ChatThread } from "@/features/chat";
+import {
+  ChatProvider,
+  ChatThread,
+  ConversationList,
+  useConversations,
+} from "@/features/chat";
 import { useProfileData } from "@/features/profile/hooks/use-profile-data";
 import {
   ArticleWorkspaceProvider,
@@ -75,6 +80,11 @@ export function ProfileShell(
   const [videoCallOpen, setVideoCallOpen] = useState(false);
   const [chatInputVisible, setChatInputVisible] = useState(false);
 
+  const { conversations, isLoading: conversationsLoading } = useConversations({
+    profileOwnerId: profile._id,
+  });
+  const newConversationIntentRef = useRef(false);
+
   const isChatRoute = /^\/@[^/]+\/chat(?:\/|$)/.test(pathname);
 
   const [activeView, setActiveView] = useState<"profile" | "chat">(
@@ -96,6 +106,7 @@ export function ProfileShell(
       setConversationId(null);
     }
   }, [pathname, params.conversationId]);
+
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -128,6 +139,11 @@ export function ProfileShell(
 
   const handleConversationIdChange = useCallback(
     (id: Id<"conversations"> | null) => {
+      if (id) {
+        newConversationIntentRef.current = false;
+      } else {
+        newConversationIntentRef.current = true;
+      }
       setConversationId(id);
       if (id) {
         router.replace(`/@${profile.username}/chat/${id}`);
@@ -137,6 +153,23 @@ export function ProfileShell(
     },
     [router, profile.username],
   );
+
+  // Auto-select the latest conversation when on /chat with no conversationId
+  useEffect(() => {
+    if (activeView !== "chat") return;
+    if (conversationId) return;
+    if (conversationsLoading) return;
+    if (newConversationIntentRef.current) return;
+    if (conversations.length > 0) {
+      handleConversationIdChange(conversations[0]._id);
+    }
+  }, [
+    activeView,
+    conversationId,
+    conversationsLoading,
+    conversations,
+    handleConversationIdChange,
+  ]);
 
   const [mobileScrollRoot, setMobileScrollRoot] = useState<
     HTMLDivElement | null
@@ -310,15 +343,27 @@ export function ProfileShell(
                     <div className="relative h-full min-w-0 flex flex-col">
                       <WorkspaceNavbar />
                       <ToolbarSlotTarget />
-                      <div className="flex-1 min-h-0 *:h-full relative">
-                        <div className="w-full absolute top-0 bg-linear-to-b from-background to-transparent max-h-[24px] z-10" />
-                        <div
-                          ref={setDesktopScrollRoot}
-                          className="overflow-y-auto h-full px-4 pb-[64px] pt-8"
-                        >
-                          {children}
-                        </div>
-                      </div>
+                      {activeView === "chat"
+                        ? (
+                          <div className="flex-1 min-h-0 overflow-y-auto">
+                            <ConversationList
+                              conversations={conversations}
+                              activeConversationId={conversationId}
+                              onSelect={handleConversationIdChange}
+                            />
+                          </div>
+                        )
+                        : (
+                          <div className="flex-1 min-h-0 *:h-full relative">
+                            <div className="w-full absolute top-0 bg-linear-to-b from-background to-transparent max-h-[24px] z-10" />
+                            <div
+                              ref={setDesktopScrollRoot}
+                              className="overflow-y-auto h-full px-4 pb-[64px] pt-8"
+                            >
+                              {children}
+                            </div>
+                          </div>
+                        )}
                     </div>
                   </ToolbarSlotProvider>
                 </ResizablePanel>
