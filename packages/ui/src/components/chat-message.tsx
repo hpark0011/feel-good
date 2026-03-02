@@ -10,8 +10,8 @@ import { cn } from "@feel-good/utils/cn";
 const chatMessageVariants = cva("flex gap-2.5 max-w-[85%]", {
   variants: {
     variant: {
-      sent: "ml-auto flex-row-reverse",
-      received: "mr-auto",
+      sent: "ml-auto flex-row-reverse w-[80%] max-w-md",
+      received: "mr-auto w-[80%] max-w-4xl",
     },
   },
   defaultVariants: {

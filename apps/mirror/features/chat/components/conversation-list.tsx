@@ -30,7 +30,7 @@ function ConversationListItem({
       data-active={isActive || undefined}
       type="button"
       className={cn(
-        "flex flex-col gap-0.5 px-4 py-3 text-left",
+        "flex gap-0.5 px-4 py-0.5 text-left justify-between items-baseline",
         "transition-colors hover:bg-muted/50",
         isActive && "bg-muted",
         className,
@@ -61,7 +61,7 @@ function ConversationListItemTimestamp({
   return (
     <span
       data-slot="conversation-list-item-timestamp"
-      className={cn("text-xs text-muted-foreground", className)}
+      className={cn("text-sm text-muted-foreground", className)}
       {...props}
     >
       {formatRelativeTime(timestamp)}
