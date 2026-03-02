@@ -33,7 +33,7 @@ export function ChatHeader({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              variant="outline"
+              variant="secondary"
               size="icon"
               onClick={onBack}
               className="shrink-0 rounded-full"
@@ -61,7 +61,7 @@ export function ChatHeader({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              variant="outline"
+              variant="secondary"
               size="icon"
               onClick={onNewConversation}
               className="shrink-0 rounded-full"
