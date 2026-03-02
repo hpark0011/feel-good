@@ -46,7 +46,7 @@ export function ChatThread({ onBack }: ChatThreadProps) {
 
   if (conversationNotFound) {
     return (
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full relative">
         <ChatHeader
           profileName={profileName}
           avatarUrl={avatarUrl}

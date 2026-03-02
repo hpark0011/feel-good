@@ -21,7 +21,8 @@ export function ChatHeader({
   return (
     <div
       className={cn(
-        "grid grid-cols-[auto_1fr_auto] items-start px-4 pt-3 pb-2 h-fit",
+        "absolute top-0 left-0 right-0 z-10 bg-linear-to-b from-background to-transparent",
+        "grid grid-cols-[auto_1fr_auto] items-start px-4 pt-2 pb-2 h-fit",
       )}
     >
       <Button
@@ -40,9 +41,11 @@ export function ChatHeader({
           profileName={profileName}
         />
 
-        <span className="text-sm font-medium truncate px-1.5 py-1">
+        {
+          /* <span className="text-sm font-medium truncate px-1.5 py-1">
           {profileName}
-        </span>
+        </span> */
+        }
       </div>
 
       {onNewConversation

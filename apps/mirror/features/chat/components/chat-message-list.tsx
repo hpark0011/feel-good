@@ -79,7 +79,7 @@ export function ChatMessageList({
   return (
     <div
       ref={scrollContainerRef}
-      className="flex-1 overflow-y-auto overscroll-y-contain px-4 py-4"
+      className="flex-1 overflow-y-auto overscroll-y-contain px-4 pt-14 pb-4"
     >
       {status === "LoadingMore" && (
         <div className="flex justify-center py-2">
