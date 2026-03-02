@@ -3,7 +3,7 @@ import Link from "next/link";
 import { TableCell } from "@feel-good/ui/primitives/table";
 import { Checkbox } from "@feel-good/ui/primitives/checkbox";
 import type { Article } from "../types";
-import { formatShortDate } from "../lib/format-date";
+import { formatShortDate } from "../utils/format-date";
 import { AnimatedArticleRow } from "./animated-article-row";
 
 type ArticleListItemProps = {
@@ -54,11 +54,13 @@ export const ArticleListItem = memo(function ArticleListItem({
       <TableCell className="text-right py-0 font-medium rounded-r-md">
         {article.status === "draft"
           ? <span className="text-muted-foreground">Draft</span>
-          : article.publishedAt ? (
+          : article.publishedAt
+          ? (
             <time dateTime={new Date(article.publishedAt).toISOString()}>
               {formatShortDate(article.publishedAt)}
             </time>
-          ) : null}
+          )
+          : null}
       </TableCell>
     </AnimatedArticleRow>
   );

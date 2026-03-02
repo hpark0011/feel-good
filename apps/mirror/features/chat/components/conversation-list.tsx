@@ -3,26 +3,13 @@
 import type { Conversation } from "../types";
 import type { Id } from "@feel-good/convex/convex/_generated/dataModel";
 import { cn } from "@feel-good/utils/cn";
+import { formatRelativeTime } from "../utils/format-relative-time";
 
 type ConversationListProps = {
   conversations: Conversation[];
   activeConversationId: Id<"conversations"> | null;
   onSelect: (conversationId: Id<"conversations">) => void;
 };
-
-function formatRelativeTime(timestamp: number): string {
-  const now = Date.now();
-  const diff = now - timestamp;
-  const minutes = Math.floor(diff / 60_000);
-  const hours = Math.floor(diff / 3_600_000);
-  const days = Math.floor(diff / 86_400_000);
-
-  if (minutes < 1) return "Just now";
-  if (minutes < 60) return `${minutes}m ago`;
-  if (hours < 24) return `${hours}h ago`;
-  if (days < 7) return `${days}d ago`;
-  return new Date(timestamp).toLocaleDateString();
-}
 
 export function ConversationList({
   conversations,
