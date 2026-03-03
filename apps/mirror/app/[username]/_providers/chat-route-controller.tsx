@@ -16,12 +16,14 @@ import { useParams, useRouter, useSelectedLayoutSegment } from "next/navigation"
 // incorrect segments due to a (slot) prefix in the segment tree.
 import type { Id } from "@feel-good/convex/convex/_generated/dataModel";
 import { useConversations, type Conversation } from "@/features/chat";
+import { parseConversationId } from "@/features/chat/lib/parse-conversation-id";
 import { useProfileRouteData } from "./profile-route-data-context";
 
 type ChatRouteControllerValue = {
   conversations: Conversation[];
   conversationsLoading: boolean;
   conversationId: Id<"conversations"> | null;
+  conversationInvalid: boolean;
   handleConversationIdChange: (id: Id<"conversations"> | null) => void;
   handleBack: () => void;
 };
@@ -58,13 +60,12 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
 
   const newConversationIntentRef = useRef(false);
 
-  const conversationId = useMemo<Id<"conversations"> | null>(() => {
-    const raw = params.conversationId;
-    if (!raw || typeof raw !== "string") return null;
-    // Convex IDs are 31-32 char Crockford base32 strings
-    if (!/^[0-9a-hjkmnp-tv-z]{31,32}$/.test(raw)) return null;
-    return raw as Id<"conversations">;
-  }, [params.conversationId]);
+  const parsed = useMemo(
+    () => parseConversationId(params.conversationId),
+    [params.conversationId],
+  );
+  const conversationId = parsed.status === "valid" ? parsed.id : null;
+  const conversationInvalid = parsed.status === "invalid";
 
   const handleBack = useCallback(() => {
     router.push(`/@${profile.username}`);
@@ -82,10 +83,12 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
     [router, profile.username],
   );
 
-  // Auto-select latest conversation when on /chat with no conversationId
+  // Auto-select latest conversation when on /chat with no conversationId.
+  // Skip when the param is invalid — show "not available" instead.
   useEffect(() => {
     if (!isChatRoute) return;
     if (conversationId) return;
+    if (conversationInvalid) return;
     if (conversationsLoading) return;
     if (newConversationIntentRef.current) return;
     if (conversations.length > 0) {
@@ -94,6 +97,7 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
   }, [
     isChatRoute,
     conversationId,
+    conversationInvalid,
     conversationsLoading,
     conversations,
     handleConversationIdChange,
@@ -104,6 +108,7 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
       conversations,
       conversationsLoading,
       conversationId,
+      conversationInvalid,
       handleConversationIdChange,
       handleBack,
     }),
@@ -111,6 +116,7 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
       conversations,
       conversationsLoading,
       conversationId,
+      conversationInvalid,
       handleConversationIdChange,
       handleBack,
     ],

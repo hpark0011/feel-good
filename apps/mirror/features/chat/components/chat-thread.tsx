@@ -18,6 +18,7 @@ export function ChatThread({ onBack }: ChatThreadProps) {
     profileName,
     avatarUrl,
     conversationId,
+    conversationInvalid,
     setConversationId,
     startNewConversation,
   } = useChatContext();
@@ -45,7 +46,7 @@ export function ChatThread({ onBack }: ChatThreadProps) {
     onConversationCreated: handleConversationCreated,
   });
 
-  if (conversationNotFound) {
+  if (conversationInvalid || conversationNotFound) {
     return (
       <div className="flex flex-col h-full relative">
         <ChatHeader

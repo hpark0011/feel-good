@@ -6,8 +6,12 @@ import { useChatRouteController } from "../_providers/chat-route-controller";
 
 export function ChatPanel() {
   const { profile } = useProfileRouteData();
-  const { conversationId, handleConversationIdChange, handleBack } =
-    useChatRouteController();
+  const {
+    conversationId,
+    conversationInvalid,
+    handleConversationIdChange,
+    handleBack,
+  } = useChatRouteController();
 
   return (
     <ChatProvider
@@ -15,6 +19,7 @@ export function ChatPanel() {
       profileName={profile.name}
       avatarUrl={profile.avatarUrl ?? null}
       conversationId={conversationId}
+      conversationInvalid={conversationInvalid}
       onConversationIdChange={handleConversationIdChange}
     >
       <ChatThread onBack={handleBack} />
