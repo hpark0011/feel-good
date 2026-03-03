@@ -61,6 +61,8 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
   const conversationId = useMemo<Id<"conversations"> | null>(() => {
     const raw = params.conversationId;
     if (!raw || typeof raw !== "string") return null;
+    // Convex IDs are 31-32 char Crockford base32 strings
+    if (!/^[0-9a-hjkmnp-tv-z]{31,32}$/.test(raw)) return null;
     return raw as Id<"conversations">;
   }, [params.conversationId]);
 

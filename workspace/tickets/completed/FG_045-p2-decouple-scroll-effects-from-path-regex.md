@@ -3,7 +3,7 @@ id: FG_045
 title: "Profile scroll effects derive mode from explicit route input"
 date: 2026-03-03
 type: refactor
-status: to-do
+status: completed
 priority: p2
 description: "Profile navigation scroll effects still infer article/detail transitions from pathname regex, coupling behavior to rewritten URL shape instead of explicit route mode from layout-level routing state."
 dependencies: []
