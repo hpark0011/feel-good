@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
+import type { RouteMode } from "@/hooks/use-profile-navigation-effects";
 import { InteractionPaneAnimator } from "./interaction-pane-animator";
 import { DesktopWorkspace } from "./desktop-workspace";
 import { MobileWorkspace } from "./mobile-workspace";
@@ -16,11 +17,12 @@ type WorkspaceShellProps = {
 export function WorkspaceShell({ interaction, children }: WorkspaceShellProps) {
   const isMobile = useIsMobile();
   const segment = useSelectedLayoutSegment();
-  const isChatView = segment === "chat";
+  const routeMode: RouteMode =
+    segment === "chat" ? "chat" : segment ? "detail" : "list";
 
   if (isMobile) {
     return (
-      <MobileWorkspace isChatView={isChatView} interaction={interaction}>
+      <MobileWorkspace routeMode={routeMode} interaction={interaction}>
         {children}
       </MobileWorkspace>
     );
@@ -32,7 +34,11 @@ export function WorkspaceShell({ interaction, children }: WorkspaceShellProps) {
         <InteractionPaneAnimator>{interaction}</InteractionPaneAnimator>
       }
     >
-      {isChatView ? children : <ContentPanel>{children}</ContentPanel>}
+      {routeMode === "chat" ? (
+        children
+      ) : (
+        <ContentPanel routeMode={routeMode}>{children}</ContentPanel>
+      )}
     </DesktopWorkspace>
   );
 }

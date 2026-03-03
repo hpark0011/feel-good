@@ -1,28 +1,22 @@
 "use client";
 
 import { useLayoutEffect, useRef } from "react";
-import { usePathname } from "next/navigation";
 
-/**
- * Detects article detail routes: `/@username/slug` where slug is not "chat".
- * Used to save/restore scroll position during article list ↔ detail navigation.
- */
-const isArticleDetailRoute = (path: string) =>
-  /^\/@[^/]+\/(?!chat(?:\/|$)).+/.test(path);
+export type RouteMode = "list" | "detail" | "chat";
 
 export function useProfileNavigationEffects(
   scrollContainer: HTMLElement | null,
+  routeMode: RouteMode,
 ) {
-  const pathname = usePathname();
-  const prevPathname = useRef(pathname);
+  const prevRouteMode = useRef(routeMode);
   const savedScrollTop = useRef(0);
 
   useLayoutEffect(() => {
-    if (pathname === prevPathname.current) return;
+    if (routeMode === prevRouteMode.current) return;
 
-    const wasDetail = isArticleDetailRoute(prevPathname.current);
-    const isDetail = isArticleDetailRoute(pathname);
-    prevPathname.current = pathname;
+    const wasDetail = prevRouteMode.current === "detail";
+    const isDetail = routeMode === "detail";
+    prevRouteMode.current = routeMode;
 
     if (!scrollContainer) return;
 
@@ -34,5 +28,5 @@ export function useProfileNavigationEffects(
       // Back: restore saved scroll position
       scrollContainer.scrollTo(0, savedScrollTop.current);
     }
-  }, [pathname, scrollContainer]);
+  }, [routeMode, scrollContainer]);
 }

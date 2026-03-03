@@ -7,16 +7,20 @@ import {
   ToolbarSlotProvider,
   ToolbarSlotTarget,
 } from "@/components/workspace-toolbar-slot";
-import { useProfileNavigationEffects } from "@/hooks/use-profile-navigation-effects";
+import {
+  useProfileNavigationEffects,
+  type RouteMode,
+} from "@/hooks/use-profile-navigation-effects";
 
 type ContentPanelProps = {
+  routeMode: RouteMode;
   children: ReactNode;
 };
 
-export function ContentPanel({ children }: ContentPanelProps) {
+export function ContentPanel({ routeMode, children }: ContentPanelProps) {
   const [scrollRoot, setScrollRoot] = useState<HTMLDivElement | null>(null);
 
-  useProfileNavigationEffects(scrollRoot);
+  useProfileNavigationEffects(scrollRoot, routeMode);
 
   return (
     <ToolbarSlotProvider>

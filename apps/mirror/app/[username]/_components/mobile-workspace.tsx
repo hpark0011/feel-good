@@ -8,23 +8,26 @@ import {
   ToolbarSlotProvider,
   ToolbarSlotTarget,
 } from "@/components/workspace-toolbar-slot";
-import { useProfileNavigationEffects } from "@/hooks/use-profile-navigation-effects";
+import {
+  useProfileNavigationEffects,
+  type RouteMode,
+} from "@/hooks/use-profile-navigation-effects";
 
 type MobileWorkspaceProps = {
-  isChatView: boolean;
+  routeMode: RouteMode;
   interaction: ReactNode;
   children: ReactNode;
 };
 
 export function MobileWorkspace({
-  isChatView,
+  routeMode,
   interaction,
   children,
 }: MobileWorkspaceProps) {
   const [scrollRoot, setScrollRoot] = useState<HTMLDivElement | null>(null);
-  useProfileNavigationEffects(scrollRoot);
+  useProfileNavigationEffects(scrollRoot, routeMode);
 
-  if (isChatView) {
+  if (routeMode === "chat") {
     return <main className="h-screen">{interaction}</main>;
   }
 
