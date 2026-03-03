@@ -3,24 +3,19 @@
 import { useLayoutEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 
+/**
+ * Detects article detail routes: `/@username/slug` where slug is not "chat".
+ * Used to save/restore scroll position during article list ↔ detail navigation.
+ */
 const isArticleDetailRoute = (path: string) =>
-  /^\/@[^/]+\/.+/.test(path) && !/^\/@[^/]+\/chat(?:\/|$)/.test(path);
+  /^\/@[^/]+\/(?!chat(?:\/|$)).+/.test(path);
 
-type ScrollContainers = {
-  mobile: HTMLElement | null;
-  desktop: HTMLElement | null;
-};
-
-export function useProfileNavigationEffects(containers: ScrollContainers) {
+export function useProfileNavigationEffects(
+  scrollContainer: HTMLElement | null,
+) {
   const pathname = usePathname();
   const prevPathname = useRef(pathname);
   const savedScrollTop = useRef(0);
-  const activeContainer = useRef<HTMLElement | null>(null);
-
-  useLayoutEffect(() => {
-    // Pick whichever container is currently mounted (mobile or desktop).
-    activeContainer.current = containers.mobile ?? containers.desktop;
-  }, [containers.mobile, containers.desktop]);
 
   useLayoutEffect(() => {
     if (pathname === prevPathname.current) return;
@@ -29,7 +24,6 @@ export function useProfileNavigationEffects(containers: ScrollContainers) {
     const isDetail = isArticleDetailRoute(pathname);
     prevPathname.current = pathname;
 
-    const scrollContainer = activeContainer.current;
     if (!scrollContainer) return;
 
     if (isDetail && !wasDetail) {
@@ -40,5 +34,5 @@ export function useProfileNavigationEffects(containers: ScrollContainers) {
       // Back: restore saved scroll position
       scrollContainer.scrollTo(0, savedScrollTop.current);
     }
-  }, [pathname]);
+  }, [pathname, scrollContainer]);
 }
