@@ -5,6 +5,7 @@ import type { Id } from "@feel-good/convex/convex/_generated/dataModel";
 import { cn } from "@feel-good/utils/cn";
 import type { Conversation } from "../types";
 import { formatRelativeTime } from "../utils/format-relative-time";
+import { MirrorTunnel } from "./mirror-tunnel";
 
 /* Internal building-block components — not exported. */
 
@@ -12,9 +13,14 @@ function ConversationListEmpty() {
   return (
     <div
       data-slot="conversation-list-empty"
-      className="flex items-center justify-center py-8 px-4"
+      className="flex items-center justify-center pb-20 px-4 h-full relative"
     >
-      <p className="text-sm text-muted-foreground">No conversations yet</p>
+      <p className="text-2xl text-white text-center font-[560] drop-shadow-[0px_1px_1px_rgba(0,0,0,0.15)] z-10">
+        No conversations yet.
+      </p>
+      <div className="absolute flex flex-col items-center justify-center">
+        <MirrorTunnel className="size-24" />
+      </div>
     </div>
   );
 }
