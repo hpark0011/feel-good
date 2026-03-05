@@ -10,19 +10,19 @@ export function ChatPanel() {
     conversationId,
     conversationInvalid,
     handleConversationIdChange,
-    handleBack,
   } = useChatRouteController();
 
   return (
     <ChatProvider
       profileOwnerId={profile._id}
       profileName={profile.name}
+      username={profile.username}
       avatarUrl={profile.avatarUrl ?? null}
       conversationId={conversationId}
       conversationInvalid={conversationInvalid}
       onConversationIdChange={handleConversationIdChange}
     >
-      <ChatThread onBack={handleBack} />
+      <ChatThread />
     </ChatProvider>
   );
 }

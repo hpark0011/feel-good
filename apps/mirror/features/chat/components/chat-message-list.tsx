@@ -4,6 +4,8 @@ import type { UIMessage } from "@convex-dev/agent/react";
 import { cn } from "@feel-good/utils/cn";
 import * as React from "react";
 import { ChatMessageItem } from "./chat-message-item";
+import { WireframeSphere } from "./wireframe-sphere";
+import { ArcSphere } from "./arc-sphere";
 
 /* Internal building-block components — not exported. */
 
@@ -41,6 +43,18 @@ function ChatMessageLoadingState({
   );
 }
 
+/** 3D page-turning mirror animation. */
+// function MirrorPageTurn() {
+//   return (
+//     <div className="perspective-midrange">
+//       <div
+//         className="size-10 rounded-t-[40px] [corner-shape:superellipse(1.1)] [box-shadow:inset_0_0_0_1.5px_currentColor] text-primary bg-black"
+//         style={{ animation: "mirror-page-turn 5s linear infinite" }}
+//       />
+//     </div>
+//   );
+// }
+
 /** Greeting shown when no messages exist yet. */
 function ChatMessageEmptyState({
   className,
@@ -50,16 +64,24 @@ function ChatMessageEmptyState({
   return (
     <div
       data-slot="chat-message-empty-state"
-      className={cn("flex-1 flex items-center justify-center px-6", className)}
+      className={cn(
+        "flex-1 flex flex-col items-center justify-center px-6 gap-5",
+        className,
+      )}
       {...props}
     >
-      <div className="text-center">
-        <p className="text-sm text-muted-foreground">
-          Hi! I&apos;m {profileName}&apos;s digital clone.
-        </p>
-        <p className="text-sm text-muted-foreground mt-1">
-          Ask me anything about their work and ideas.
-        </p>
+      <ArcSphere />
+      <WireframeSphere />
+      {/* <MirrorPageTurn /> */}
+      <div className="flex flex-col">
+        <div className="text-center leading-[1.2] text-xl pb-20">
+          <p>
+            Hi! I&apos;m {profileName}&apos;s digital clone.
+          </p>
+          <p>
+            Ask me anything about work and ideas.
+          </p>
+        </div>
       </div>
     </div>
   );

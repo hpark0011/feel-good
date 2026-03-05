@@ -1,0 +1,4 @@
+@keyframes wireframe-sphere-rotate {
+  from { transform: rotateX(-15deg) rotateY(0deg); }
+  to { transform: rotateX(-15deg) rotateY(360deg); }
+}

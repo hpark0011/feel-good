@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { Button } from "@feel-good/ui/primitives/button";
 import {
   Tooltip,
@@ -13,7 +14,7 @@ import { MirrorAvatar } from "@/components/mirror-avatar";
 
 /* Internal building-block components — not exported. */
 
-/** Tooltip-wrapped icon button used for back / new-chat actions. */
+/** Tooltip-wrapped icon button used for new-chat action. */
 function ChatHeaderAction({
   tooltip,
   icon,
@@ -42,6 +43,39 @@ function ChatHeaderAction({
   );
 }
 
+/** Tooltip-wrapped icon link used for the back arrow. */
+function ChatHeaderBackLink({
+  tooltip,
+  icon,
+  href,
+  className,
+}: {
+  tooltip: string;
+  icon: IconName;
+  href: string;
+  className?: string;
+}) {
+  return (
+    <div data-slot="chat-header-action" className="mt-2">
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="secondary"
+            size="icon"
+            className={cn("shrink-0 rounded-full", className)}
+            asChild
+          >
+            <Link href={href}>
+              <Icon name={icon} className="size-5" />
+            </Link>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>{tooltip}</TooltipContent>
+      </Tooltip>
+    </div>
+  );
+}
+
 /** Name badge displayed below the avatar. */
 function ChatHeaderProfileName({
   className,
@@ -59,18 +93,21 @@ function ChatHeaderProfileName({
   );
 }
 
-/** Center column with avatar and name badge. */
+/** Center column with avatar and name badge — links to the profile page. */
 function ChatHeaderProfile({
+  href,
   avatarUrl,
   profileName,
   className,
   ...props
 }: {
+  href: string;
   avatarUrl: string | null;
   profileName: string;
-} & Omit<React.ComponentProps<"div">, "children">) {
+} & Omit<React.ComponentProps<typeof Link>, "children">) {
   return (
-    <div
+    <Link
+      href={href}
       data-slot="chat-header-profile"
       className={cn("flex flex-col items-center relative", className)}
       {...props}
@@ -81,7 +118,7 @@ function ChatHeaderProfile({
         profileName={profileName}
       />
       <ChatHeaderProfileName>{profileName}</ChatHeaderProfileName>
-    </div>
+    </Link>
   );
 }
 
@@ -90,14 +127,14 @@ function ChatHeaderProfile({
 type ChatHeaderProps = {
   profileName: string;
   avatarUrl: string | null;
-  onBack: () => void;
+  profileHref: string;
   onNewConversation?: () => void;
 };
 
 function ChatHeader({
   profileName,
   avatarUrl,
-  onBack,
+  profileHref,
   onNewConversation,
 }: ChatHeaderProps) {
   return (
@@ -105,13 +142,13 @@ function ChatHeader({
       data-slot="chat-header"
       className="grid grid-cols-[auto_1fr_auto] items-start px-4 pt-2"
     >
-      <ChatHeaderAction
+      <ChatHeaderBackLink
         tooltip="Profile"
         icon="ArrowBackwardIcon"
-        onClick={onBack}
+        href={profileHref}
       />
 
-      <ChatHeaderProfile avatarUrl={avatarUrl} profileName={profileName} />
+      <ChatHeaderProfile href={profileHref} avatarUrl={avatarUrl} profileName={profileName} />
 
       <ChatHeaderAction
         tooltip="New chat"

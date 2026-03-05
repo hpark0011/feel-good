@@ -26,7 +26,7 @@ function ConversationListEmpty() {
         </p>
       </div>
       <div className="absolute flex flex-col items-center justify-center">
-        <MirrorTunnel className="size-24" />
+        <MirrorTunnel className="size-22" />
       </div>
     </div>
   );
