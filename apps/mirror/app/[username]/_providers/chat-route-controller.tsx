@@ -25,7 +25,6 @@ type ChatRouteControllerValue = {
   conversationId: Id<"conversations"> | null;
   conversationInvalid: boolean;
   handleConversationIdChange: (id: Id<"conversations"> | null) => void;
-  handleBack: () => void;
 };
 
 const ChatRouteControllerContext =
@@ -67,10 +66,6 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
   const conversationId = parsed.status === "valid" ? parsed.id : null;
   const conversationInvalid = parsed.status === "invalid";
 
-  const handleBack = useCallback(() => {
-    router.push(`/@${profile.username}`);
-  }, [router, profile.username]);
-
   const handleConversationIdChange = useCallback(
     (id: Id<"conversations"> | null) => {
       newConversationIntentRef.current = !id;
@@ -110,7 +105,6 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
       conversationId,
       conversationInvalid,
       handleConversationIdChange,
-      handleBack,
     }),
     [
       conversations,
@@ -118,7 +112,6 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
       conversationId,
       conversationInvalid,
       handleConversationIdChange,
-      handleBack,
     ],
   );
 

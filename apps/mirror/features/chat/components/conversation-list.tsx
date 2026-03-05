@@ -1,10 +1,11 @@
 "use client";
 
-import * as React from "react";
 import type { Id } from "@feel-good/convex/convex/_generated/dataModel";
 import { cn } from "@feel-good/utils/cn";
+import * as React from "react";
 import type { Conversation } from "../types";
 import { formatRelativeTime } from "../utils/format-relative-time";
+import { WireframeSphere } from "./wireframe-sphere";
 
 /* Internal building-block components — not exported. */
 
@@ -12,9 +13,22 @@ function ConversationListEmpty() {
   return (
     <div
       data-slot="conversation-list-empty"
-      className="flex items-center justify-center py-8 px-4"
+      className="flex items-center justify-center pb-20 px-4 h-full relative"
     >
-      <p className="text-sm text-muted-foreground">No conversations yet</p>
+      <div
+        className={cn(
+          "flex flex-col items-center",
+          "text-2xl text-center font-medium z-10 leading-[1.1] capitalize",
+        )}
+      >
+        <p>
+          No conversations yet.
+        </p>
+      </div>
+      <div className="absolute flex flex-col items-center justify-center">
+        <WireframeSphere />
+        {/* <MirrorTunnel className="size-22" /> */}
+      </div>
     </div>
   );
 }

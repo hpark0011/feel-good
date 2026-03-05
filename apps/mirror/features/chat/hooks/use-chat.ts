@@ -47,6 +47,9 @@ export function useChat({
     { initialNumItems: 20, stream: true },
   );
 
+  // When no conversation exists yet, there's nothing to load — treat as empty.
+  const resolvedStatus = conversationId === null ? "Exhausted" : status;
+
   const messages = (results ?? []) as UIMessage[];
   const isStreaming = conversation?.streamingInProgress ?? false;
 
@@ -114,7 +117,7 @@ export function useChat({
     isStreaming,
     conversation,
     conversationNotFound,
-    status,
+    status: resolvedStatus,
     loadMore,
     sendError,
     clearSendError,

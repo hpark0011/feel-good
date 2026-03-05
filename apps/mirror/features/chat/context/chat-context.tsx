@@ -6,6 +6,7 @@ import type { Id } from "@feel-good/convex/convex/_generated/dataModel";
 type ChatContextValue = {
   profileOwnerId: Id<"users">;
   profileName: string;
+  username: string;
   avatarUrl: string | null;
   conversationId: Id<"conversations"> | null;
   conversationInvalid: boolean;
@@ -18,6 +19,7 @@ const ChatContext = createContext<ChatContextValue | null>(null);
 type ChatProviderProps = {
   profileOwnerId: Id<"users">;
   profileName: string;
+  username: string;
   avatarUrl: string | null;
   conversationId: Id<"conversations"> | null;
   conversationInvalid: boolean;
@@ -28,6 +30,7 @@ type ChatProviderProps = {
 export function ChatProvider({
   profileOwnerId,
   profileName,
+  username,
   avatarUrl,
   conversationId,
   conversationInvalid,
@@ -42,13 +45,14 @@ export function ChatProvider({
     () => ({
       profileOwnerId,
       profileName,
+      username,
       avatarUrl,
       conversationId,
       conversationInvalid,
       setConversationId: onConversationIdChange,
       startNewConversation,
     }),
-    [profileOwnerId, profileName, avatarUrl, conversationId, conversationInvalid, onConversationIdChange, startNewConversation],
+    [profileOwnerId, profileName, username, avatarUrl, conversationId, conversationInvalid, onConversationIdChange, startNewConversation],
   );
 
   return <ChatContext value={value}>{children}</ChatContext>;

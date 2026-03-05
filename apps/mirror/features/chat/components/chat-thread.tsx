@@ -8,20 +8,19 @@ import { ChatMessageList } from "./chat-message-list";
 import { ChatInput } from "./chat-input";
 import { cn } from "@feel-good/utils/cn";
 
-type ChatThreadProps = {
-  onBack: () => void;
-};
-
-export function ChatThread({ onBack }: ChatThreadProps) {
+export function ChatThread() {
   const {
     profileOwnerId,
     profileName,
+    username,
     avatarUrl,
     conversationId,
     conversationInvalid,
     setConversationId,
     startNewConversation,
   } = useChatContext();
+
+  const profileHref = `/@${username}`;
 
   const handleConversationCreated = useCallback(
     (id: Parameters<typeof setConversationId>[0]) => {
@@ -52,7 +51,7 @@ export function ChatThread({ onBack }: ChatThreadProps) {
         <ChatHeader
           profileName={profileName}
           avatarUrl={avatarUrl}
-          onBack={onBack}
+          profileHref={profileHref}
           onNewConversation={startNewConversation}
         />
         <div className="flex-1 flex items-center justify-center">
@@ -70,7 +69,7 @@ export function ChatThread({ onBack }: ChatThreadProps) {
         <ChatHeader
           profileName={profileName}
           avatarUrl={avatarUrl}
-          onBack={onBack}
+          profileHref={profileHref}
           onNewConversation={startNewConversation}
         />
       </div>
