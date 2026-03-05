@@ -1,12 +1,12 @@
 @keyframes arc-sphere-wave {
   0% {
-    top: 0;
+    top: 0px;
   }
   25% {
-    top: 16px;
+    top: 24px;
   }
   75% {
-    top: 16px;
+    top: 24px;
   }
   100% {
     top: 0;

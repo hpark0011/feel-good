@@ -4,7 +4,7 @@ import type { UIMessage } from "@convex-dev/agent/react";
 import { cn } from "@feel-good/utils/cn";
 import * as React from "react";
 import { ChatMessageItem } from "./chat-message-item";
-import { WireframeSphere } from "./wireframe-sphere";
+// import { WireframeSphere } from "./wireframe-sphere";
 import { ArcSphere } from "./arc-sphere";
 
 /* Internal building-block components — not exported. */
@@ -65,13 +65,13 @@ function ChatMessageEmptyState({
     <div
       data-slot="chat-message-empty-state"
       className={cn(
-        "flex-1 flex flex-col items-center justify-center px-6 gap-5",
+        "flex-1 flex flex-col items-center justify-center px-6 gap-20",
         className,
       )}
       {...props}
     >
       <ArcSphere />
-      <WireframeSphere />
+      {/* <WireframeSphere /> */}
       {/* <MirrorPageTurn /> */}
       <div className="flex flex-col">
         <div className="text-center leading-[1.2] text-xl pb-20">
