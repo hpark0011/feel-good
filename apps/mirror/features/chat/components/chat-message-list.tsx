@@ -4,28 +4,9 @@ import type { UIMessage } from "@convex-dev/agent/react";
 import { cn } from "@feel-good/utils/cn";
 import * as React from "react";
 import { ChatMessageItem } from "./chat-message-item";
-// import { WireframeSphere } from "./wireframe-sphere";
 import { ArcSphere } from "./arc-sphere";
 
 /* Internal building-block components — not exported. */
-
-/** Shared animated 3-dot loading primitive. */
-function ChatMessageDotsLoader({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
-  return (
-    <div
-      data-slot="chat-message-dots-loader"
-      className={cn("flex gap-1", className)}
-      {...props}
-    >
-      <span className="size-1 rounded-full bg-muted-foreground/40 animate-pulse" />
-      <span className="size-1 rounded-full bg-muted-foreground/40 animate-pulse [animation-delay:150ms]" />
-      <span className="size-1 rounded-full bg-muted-foreground/40 animate-pulse [animation-delay:300ms]" />
-    </div>
-  );
-}
 
 /** Full-height centered loading state shown while the first page loads. */
 function ChatMessageLoadingState({
@@ -35,25 +16,13 @@ function ChatMessageLoadingState({
   return (
     <div
       data-slot="chat-message-loading-state"
-      className={cn("flex-1 flex items-center justify-center", className)}
+      className={cn("flex-1 flex items-center justify-center pb-20", className)}
       {...props}
     >
-      <ChatMessageDotsLoader />
+      <ArcSphere />
     </div>
   );
 }
-
-/** 3D page-turning mirror animation. */
-// function MirrorPageTurn() {
-//   return (
-//     <div className="perspective-midrange">
-//       <div
-//         className="size-10 rounded-t-[40px] [corner-shape:superellipse(1.1)] [box-shadow:inset_0_0_0_1.5px_currentColor] text-primary bg-black"
-//         style={{ animation: "mirror-page-turn 5s linear infinite" }}
-//       />
-//     </div>
-//   );
-// }
 
 /** Greeting shown when no messages exist yet. */
 function ChatMessageEmptyState({
@@ -71,8 +40,6 @@ function ChatMessageEmptyState({
       {...props}
     >
       <ArcSphere />
-      {/* <WireframeSphere /> */}
-      {/* <MirrorPageTurn /> */}
       <div className="flex flex-col">
         <div className="text-center leading-[1.2] text-xl pb-20">
           <p>
@@ -98,7 +65,7 @@ function ChatMessageLoadingMore({
       className={cn("flex justify-center py-2", className)}
       {...props}
     >
-      <ChatMessageDotsLoader />
+      <ArcSphere />
     </div>
   );
 }

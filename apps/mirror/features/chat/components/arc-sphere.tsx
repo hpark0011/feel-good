@@ -7,7 +7,7 @@ const MIDDLE = Math.floor(LAYER_COUNT / 2); // 5
 /** Z-offset, scale, and animation delay for each layer (back → front). */
 function layerStyle(index: number): React.CSSProperties {
   const distFromMiddle = Math.abs(index - MIDDLE);
-  const z = (index - MIDDLE) * -24; // +120 … 0 … –120
+  const z = (index - MIDDLE) * -18; // +120 … 0 … –120
   // Scale: 1.0 at centre, shrinking toward edges
   const scale = [0.45, 0.65, 0.82, 0.92, 0.98, 1.0][MIDDLE - distFromMiddle];
   // Stagger delay so the wave ripples front-to-back
@@ -23,11 +23,11 @@ function ArcSphere({ className }: { className?: string }) {
   return (
     <div
       data-slot="arc-sphere"
-      className={cn("size-[140px] text-primary", className)}
+      className={cn("size-[140px] text-primary pb-4", className)}
       style={{ perspective: "2000px", perspectiveOrigin: "0% 0%" }}
     >
       <div
-        className="relative size-full"
+        className="relative size-full "
         style={{
           transformStyle: "preserve-3d",
           transform: "rotateX(-15deg) rotateY(-48deg)",

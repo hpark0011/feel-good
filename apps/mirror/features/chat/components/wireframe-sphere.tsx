@@ -1,16 +1,17 @@
 import "./wireframe-sphere.css";
 import { cn } from "@feel-good/utils/cn";
 
-const RING_COUNT = 18;
+const RING_COUNT = 15;
 const RING_STEP = 180 / RING_COUNT; // 15°
 
 function WireframeSphere({ className }: { className?: string }) {
   return (
     <div
       data-slot="wireframe-sphere"
-      className={cn("size-28 text-primary", className)}
+      className={cn("size-[152px] text-primary", className)}
       style={{
         perspective: "1000px",
+        perspectiveOrigin: "0% -50%",
       }}
     >
       <div
@@ -26,10 +27,14 @@ function WireframeSphere({ className }: { className?: string }) {
             key={i}
             className="absolute inset-0 rounded-full"
             style={{
-              border:
-                "1px solid color-mix(in srgb, currentColor 30%, transparent)",
               transform: `rotateY(${i * RING_STEP}deg)`,
               transformStyle: "preserve-3d",
+              border:
+                "2px solid color-mix(in srgb, currentColor 10%, transparent)",
+              backgroundColor:
+                "color-mix(in srgb, currentColor 0.3%, transparent)",
+              boxShadow:
+                "0 0 1px color-mix(in srgb, currentColor 0%, transparent), 0px 4px 6px -8px rgba(0,0,0,0.25)",
             }}
           />
         ))}
@@ -39,7 +44,7 @@ function WireframeSphere({ className }: { className?: string }) {
           className="absolute inset-0 rounded-full"
           style={{
             border:
-              "1px dashed color-mix(in srgb, currentColor 30%, transparent)",
+              "2.5px solid color-mix(in srgb, currentColor 15%, transparent)",
             transform: "rotateX(90deg)",
             transformStyle: "preserve-3d",
           }}

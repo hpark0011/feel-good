@@ -5,7 +5,7 @@ import { cn } from "@feel-good/utils/cn";
 import * as React from "react";
 import type { Conversation } from "../types";
 import { formatRelativeTime } from "../utils/format-relative-time";
-import { MirrorTunnel } from "./mirror-tunnel";
+import { WireframeSphere } from "./wireframe-sphere";
 
 /* Internal building-block components — not exported. */
 
@@ -18,7 +18,7 @@ function ConversationListEmpty() {
       <div
         className={cn(
           "flex flex-col items-center",
-          "text-2xl text-white text-center font-[560] drop-shadow-[0px_1px_1px_rgba(0,0,0,0.2)] z-10 leading-[1.1] capitalize",
+          "text-2xl text-center font-medium z-10 leading-[1.1] capitalize",
         )}
       >
         <p>
@@ -26,7 +26,8 @@ function ConversationListEmpty() {
         </p>
       </div>
       <div className="absolute flex flex-col items-center justify-center">
-        <MirrorTunnel className="size-22" />
+        <WireframeSphere />
+        {/* <MirrorTunnel className="size-22" /> */}
       </div>
     </div>
   );
