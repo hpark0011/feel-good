@@ -54,7 +54,7 @@ export const ArticleListItem = memo(function ArticleListItem({
           isOwner && "pl-0",
         )}
       >
-        <Link href={href} className="after:absolute after:inset-0">
+        <Link href={href} scroll={false} className="after:absolute after:inset-0">
           {article.title}
         </Link>
       </TableCell>

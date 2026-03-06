@@ -17,15 +17,9 @@ type WorkspaceShellProps = {
 export function WorkspaceShell({ interaction, content }: WorkspaceShellProps) {
   const isMobile = useIsMobile();
   const segment = useSelectedLayoutSegment();
-  const contentSegment = useSelectedLayoutSegment("content");
   const { isChatOpen } = useChatSearchParams();
 
   const routeMode: RouteMode = segment ? "detail" : "list";
-
-  // Derive content panel mode from @content slot's own segment,
-  // not the primary URL segment. This preserves the correct mode
-  // when the @content slot retains its previous content during chat nav.
-  const contentMode: RouteMode = contentSegment ? "detail" : "list";
 
   if (isMobile) {
     return (
@@ -41,7 +35,7 @@ export function WorkspaceShell({ interaction, content }: WorkspaceShellProps) {
 
   return (
     <DesktopWorkspace interaction={interaction}>
-      <ContentPanel routeMode={contentMode}>{content}</ContentPanel>
+      <ContentPanel routeMode={routeMode}>{content}</ContentPanel>
     </DesktopWorkspace>
   );
 }

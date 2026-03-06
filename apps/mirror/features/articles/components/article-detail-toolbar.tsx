@@ -15,6 +15,7 @@ export function ArticleDetailToolbar({ username }: ArticleDetailToolbarProps) {
     <div className="flex h-10 items-center px-4.5 bg-background">
       <Link
         href={buildChatAwareHref(`/@${username}`)}
+        scroll={false}
         className="flex items-center gap-0.5 text-[14px] text-muted-foreground hover:text-foreground group"
       >
         <Icon
