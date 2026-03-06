@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  robots: { index: false, follow: false },
-};
-
-export default function ChatConversationPage() {
-  return null;
+export default async function ChatConversationRedirect({
+  params,
+}: {
+  params: Promise<{ username: string; conversationId: string }>;
+}) {
+  const { username, conversationId } = await params;
+  redirect(`/@${username}?chat=1&conversation=${conversationId}`);
 }

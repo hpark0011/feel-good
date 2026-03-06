@@ -2,16 +2,19 @@
 
 import Link from "next/link";
 import { Icon } from "@feel-good/ui/components/icon";
+import { useChatSearchParams } from "@/hooks/use-chat-search-params";
 
 type ArticleDetailToolbarProps = {
   username: string;
 };
 
 export function ArticleDetailToolbar({ username }: ArticleDetailToolbarProps) {
+  const { buildChatAwareHref } = useChatSearchParams();
+
   return (
     <div className="flex h-10 items-center px-4.5 bg-background">
       <Link
-        href={`/@${username}`}
+        href={buildChatAwareHref(`/@${username}`)}
         className="flex items-center gap-0.5 text-[14px] text-muted-foreground hover:text-foreground group"
       >
         <Icon

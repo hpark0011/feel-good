@@ -1,18 +1,18 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { useRouter } from "next/navigation";
 import {
   EditActions,
   EditProfileButton,
   ProfileInfo,
 } from "@/features/profile";
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
+import { useChatSearchParams } from "@/hooks/use-chat-search-params";
 import { useProfileRouteData } from "../_providers/profile-route-data-context";
 
 export function ProfilePanel() {
   const { profile, isOwner, setVideoCallOpen } = useProfileRouteData();
-  const router = useRouter();
+  const { openChat } = useChatSearchParams();
   const isMobile = useIsMobile();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -55,7 +55,7 @@ export function ProfilePanel() {
         isEditing={isEditing}
         onEditComplete={handleEditClose}
         onSubmittingChange={setIsSubmitting}
-        onOpenChat={() => router.push(`/@${profile.username}/chat`)}
+        onOpenChat={openChat}
         onOpenVideoCall={() => setVideoCallOpen(true)}
       />
     </div>

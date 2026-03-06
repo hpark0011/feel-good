@@ -1,7 +1,10 @@
+"use client";
+
 import { memo } from "react";
 import Link from "next/link";
 import { TableCell } from "@feel-good/ui/primitives/table";
 import { Checkbox } from "@feel-good/ui/primitives/checkbox";
+import { useChatSearchParams } from "@/hooks/use-chat-search-params";
 import type { Article } from "../types";
 import { formatShortDate } from "../utils/format-date";
 import { AnimatedArticleRow } from "./animated-article-row";
@@ -26,7 +29,8 @@ export const ArticleListItem = memo(function ArticleListItem({
   shouldAnimate = false,
   index = 0,
 }: ArticleListItemProps) {
-  const href = `/@${username}/${article.slug}`;
+  const { buildChatAwareHref } = useChatSearchParams();
+  const href = buildChatAwareHref(`/@${username}/${article.slug}`);
 
   return (
     <AnimatedArticleRow

@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
+import { useChatSearchParams } from "@/hooks/use-chat-search-params";
 import type { RouteMode } from "@/hooks/use-profile-navigation-effects";
 import { DesktopWorkspace } from "./desktop-workspace";
 import { MobileWorkspace } from "./mobile-workspace";
@@ -17,12 +18,9 @@ export function WorkspaceShell({ interaction, content }: WorkspaceShellProps) {
   const isMobile = useIsMobile();
   const segment = useSelectedLayoutSegment();
   const contentSegment = useSelectedLayoutSegment("content");
+  const { isChatOpen } = useChatSearchParams();
 
-  const routeMode: RouteMode = segment === "chat"
-    ? "chat"
-    : segment
-    ? "detail"
-    : "list";
+  const routeMode: RouteMode = segment ? "detail" : "list";
 
   // Derive content panel mode from @content slot's own segment,
   // not the primary URL segment. This preserves the correct mode
@@ -31,7 +29,11 @@ export function WorkspaceShell({ interaction, content }: WorkspaceShellProps) {
 
   if (isMobile) {
     return (
-      <MobileWorkspace routeMode={routeMode} interaction={interaction}>
+      <MobileWorkspace
+        routeMode={routeMode}
+        isChatOpen={isChatOpen}
+        interaction={interaction}
+      >
         {content}
       </MobileWorkspace>
     );
