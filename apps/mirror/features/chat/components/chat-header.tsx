@@ -80,7 +80,10 @@ function ChatHeaderProfile({
     <button
       type="button"
       data-slot="chat-header-profile"
-      className={cn("flex flex-col items-center relative", className)}
+      className={cn(
+        "flex flex-col items-center relative cursor-pointer",
+        className,
+      )}
       onClick={onClick}
     >
       <MirrorAvatar
