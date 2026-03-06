@@ -1,29 +1,54 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useChatContext } from "../context/chat-context";
 import { useChat } from "../hooks/use-chat";
 import { ArcSphere } from "./arc-sphere";
 import { ChatHeader } from "./chat-header";
+import { ChatConversationListSheet } from "./chat-conversation-list-sheet";
 import { ChatMessageList } from "./chat-message-list";
 import { ChatInput } from "./chat-input";
 import { cn } from "@feel-good/utils/cn";
 
 export function ChatThread() {
-  const { routeResolution, profileName, avatarUrl, username, startNewConversation } =
-    useChatContext();
+  const {
+    routeResolution,
+    profileName,
+    avatarUrl,
+    username,
+    conversations,
+    setConversationId,
+    startNewConversation,
+  } = useChatContext();
+
+  const [conversationListOpen, setConversationListOpen] = useState(false);
+  const openConversationList = useCallback(() => setConversationListOpen(true), []);
 
   const profileHref = `/@${username}`;
+  const activeConversationId =
+    routeResolution.status === "ready" ? routeResolution.conversationId : null;
+
+  const conversationListSheet = (
+    <ChatConversationListSheet
+      open={conversationListOpen}
+      onOpenChange={setConversationListOpen}
+      conversations={conversations}
+      activeConversationId={activeConversationId}
+      onSelect={setConversationId}
+    />
+  );
 
   if (routeResolution.status === "resolving") {
     return (
       <div className="flex flex-col h-full relative">
+        {conversationListSheet}
         <div className="absolute top-0 left-0 right-0 z-10 bg-linear-to-b from-transparent to-transparent h-12">
           <ChatHeader
             profileName={profileName}
             avatarUrl={avatarUrl}
             profileHref={profileHref}
             onNewConversation={startNewConversation}
+            onOpenConversationList={openConversationList}
           />
         </div>
         <div className="flex-1 flex items-center justify-center pb-20">
@@ -36,11 +61,13 @@ export function ChatThread() {
   if (routeResolution.status === "invalid") {
     return (
       <div className="flex flex-col h-full relative">
+        {conversationListSheet}
         <ChatHeader
           profileName={profileName}
           avatarUrl={avatarUrl}
           profileHref={profileHref}
           onNewConversation={startNewConversation}
+          onOpenConversationList={openConversationList}
         />
         <div className="flex-1 flex items-center justify-center">
           <p className="text-muted-foreground">
@@ -62,11 +89,18 @@ function ChatActiveThread() {
     username,
     avatarUrl,
     conversationId,
+    conversations,
+    routeResolution,
     setConversationId,
     startNewConversation,
   } = useChatContext();
 
+  const [conversationListOpen, setConversationListOpen] = useState(false);
+  const openConversationList = useCallback(() => setConversationListOpen(true), []);
+
   const profileHref = `/@${username}`;
+  const activeConversationId =
+    routeResolution.status === "ready" ? routeResolution.conversationId : null;
 
   const handleConversationCreated = useCallback(
     (id: Parameters<typeof setConversationId>[0]) => {
@@ -91,14 +125,26 @@ function ChatActiveThread() {
     onConversationCreated: handleConversationCreated,
   });
 
+  const conversationListSheet = (
+    <ChatConversationListSheet
+      open={conversationListOpen}
+      onOpenChange={setConversationListOpen}
+      conversations={conversations}
+      activeConversationId={activeConversationId}
+      onSelect={setConversationId}
+    />
+  );
+
   if (conversationNotFound) {
     return (
       <div className="flex flex-col h-full relative">
+        {conversationListSheet}
         <ChatHeader
           profileName={profileName}
           avatarUrl={avatarUrl}
           profileHref={profileHref}
           onNewConversation={startNewConversation}
+          onOpenConversationList={openConversationList}
         />
         <div className="flex-1 flex items-center justify-center">
           <p className="text-muted-foreground">
@@ -111,12 +157,14 @@ function ChatActiveThread() {
 
   return (
     <div className="flex flex-col h-full relative">
+      {conversationListSheet}
       <div className="absolute top-0 left-0 right-0 z-10 bg-linear-to-b from-transparent to-transparent h-12">
         <ChatHeader
           profileName={profileName}
           avatarUrl={avatarUrl}
           profileHref={profileHref}
           onNewConversation={startNewConversation}
+          onOpenConversationList={openConversationList}
         />
       </div>
 

@@ -129,6 +129,7 @@ type ChatHeaderProps = {
   avatarUrl: string | null;
   profileHref: string;
   onNewConversation?: () => void;
+  onOpenConversationList?: () => void;
 };
 
 function ChatHeader({
@@ -136,16 +137,23 @@ function ChatHeader({
   avatarUrl,
   profileHref,
   onNewConversation,
+  onOpenConversationList,
 }: ChatHeaderProps) {
   return (
     <div
       data-slot="chat-header"
-      className="grid grid-cols-[auto_1fr_auto] items-start px-4 pt-2"
+      className="grid grid-cols-[auto_auto_1fr_auto] items-start px-4 pt-2"
     >
       <ChatHeaderBackLink
         tooltip="Profile"
         icon="ArrowBackwardIcon"
         href={profileHref}
+      />
+
+      <ChatHeaderAction
+        tooltip="Conversations"
+        icon="SidebarLeftIcon"
+        onClick={onOpenConversationList}
       />
 
       <ChatHeaderProfile href={profileHref} avatarUrl={avatarUrl} profileName={profileName} />

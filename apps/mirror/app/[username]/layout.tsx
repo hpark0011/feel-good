@@ -8,14 +8,17 @@ import { ChatRouteController } from "./_providers/chat-route-controller";
 import { WorkspaceShell } from "./_components/workspace-shell";
 
 export default async function ProfileLayout({
-  children,
+  children: _children,
+  content,
   interaction,
   params,
 }: {
   children: React.ReactNode;
+  content: React.ReactNode;
   interaction: React.ReactNode;
   params: Promise<{ username: string }>;
 }) {
+  void _children;
   const { username } = await params;
   if (isReservedUsername(username)) notFound();
 
@@ -57,9 +60,7 @@ export default async function ProfileLayout({
       isOwner={isOwner}
     >
       <ChatRouteController>
-        <WorkspaceShell interaction={interaction}>
-          {children}
-        </WorkspaceShell>
+        <WorkspaceShell interaction={interaction} content={content} />
       </ChatRouteController>
     </ProfileRouteDataProvider>
   );
