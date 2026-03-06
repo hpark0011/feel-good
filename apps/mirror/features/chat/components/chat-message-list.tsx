@@ -5,6 +5,7 @@ import { cn } from "@feel-good/utils/cn";
 import * as React from "react";
 import { ChatMessageItem } from "./chat-message-item";
 import { ArcSphere } from "./arc-sphere";
+import { WireframeSphere } from "./wireframe-sphere";
 
 /* Internal building-block components — not exported. */
 
@@ -34,12 +35,12 @@ function ChatMessageEmptyState({
     <div
       data-slot="chat-message-empty-state"
       className={cn(
-        "flex-1 flex flex-col items-center justify-center px-6 gap-20",
+        "flex-1 flex flex-col items-center justify-center px-6 gap-8",
         className,
       )}
       {...props}
     >
-      <ArcSphere />
+      <WireframeSphere />
       <div className="flex flex-col">
         <div className="text-center leading-[1.2] text-xl pb-20">
           <p>

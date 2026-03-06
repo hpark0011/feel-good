@@ -18,7 +18,7 @@ function WireframeSphere({ className }: { className?: string }) {
         className="relative size-full"
         style={{
           transformStyle: "preserve-3d",
-          animation: "wireframe-sphere-rotate 12s linear infinite",
+          animation: "wireframe-sphere-rotate 20s linear infinite",
         }}
       >
         {/* Longitude rings */}
@@ -30,11 +30,11 @@ function WireframeSphere({ className }: { className?: string }) {
               transform: `rotateY(${i * RING_STEP}deg)`,
               transformStyle: "preserve-3d",
               border:
-                "2px solid color-mix(in srgb, currentColor 10%, transparent)",
+                "1.5px solid color-mix(in srgb, currentColor 15%, transparent)",
               backgroundColor:
-                "color-mix(in srgb, currentColor 0.3%, transparent)",
+                "color-mix(in srgb, currentColor 0.1%, transparent)",
               boxShadow:
-                "0 0 1px color-mix(in srgb, currentColor 0%, transparent), 0px 4px 6px -8px rgba(0,0,0,0.25)",
+                "0 0 1px color-mix(in srgb, currentColor 0%, transparent), 0px 2px 3px -5px rgba(0,0,0,0.25)",
             }}
           />
         ))}

@@ -20,10 +20,15 @@ function ChatHeaderAction({
   icon,
   className,
   ...props
-}: {
-  tooltip: string;
-  icon: IconName;
-} & Omit<React.ComponentProps<typeof Button>, "variant" | "size" | "children">) {
+}:
+  & {
+    tooltip: string;
+    icon: IconName;
+  }
+  & Omit<
+    React.ComponentProps<typeof Button>,
+    "variant" | "size" | "children"
+  >) {
   return (
     <div data-slot="chat-header-action" className="mt-2">
       <Tooltip>
@@ -142,21 +147,27 @@ function ChatHeader({
   return (
     <div
       data-slot="chat-header"
-      className="grid grid-cols-[auto_auto_1fr_auto] items-start px-4 pt-2"
+      className="grid grid-cols-[auto_1fr_auto] items-start px-4 pt-2"
     >
-      <ChatHeaderBackLink
-        tooltip="Profile"
-        icon="ArrowBackwardIcon"
+      <div>
+        <ChatHeaderBackLink
+          tooltip="Profile"
+          icon="ArrowBackwardIcon"
+          href={profileHref}
+        />
+
+        <ChatHeaderAction
+          tooltip="Conversations"
+          icon="SidebarLeftIcon"
+          onClick={onOpenConversationList}
+        />
+      </div>
+
+      <ChatHeaderProfile
         href={profileHref}
+        avatarUrl={avatarUrl}
+        profileName={profileName}
       />
-
-      <ChatHeaderAction
-        tooltip="Conversations"
-        icon="SidebarLeftIcon"
-        onClick={onOpenConversationList}
-      />
-
-      <ChatHeaderProfile href={profileHref} avatarUrl={avatarUrl} profileName={profileName} />
 
       <ChatHeaderAction
         tooltip="New chat"
