@@ -70,16 +70,28 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
 
   const handleConversationIdChange = useCallback(
     (id: Id<"conversations"> | null) => {
-      newConversationIntentRef.current = !id;
-      setNewConversationIntent(!id);
-      if (id) {
-        router.replace(`/@${profile.username}/chat/${id}`);
-      } else {
-        router.replace(`/@${profile.username}/chat`);
+      if (!id) {
+        newConversationIntentRef.current = true;
+        setNewConversationIntent(true);
       }
+      // Intent for non-null id is cleared reactively when conversationId updates
+      router.replace(
+        id ? `/@${profile.username}/chat/${id}` : `/@${profile.username}/chat`,
+      );
     },
     [router, profile.username],
   );
+
+  // Clear new-conversation intent once the URL reflects the selected conversation.
+  // This avoids a transient state where intent is false but conversationId is
+  // still null (the URL hasn't caught up), which could let the auto-select
+  // effect redirect to conversations[0].
+  useEffect(() => {
+    if (conversationId) {
+      newConversationIntentRef.current = false;
+      setNewConversationIntent(false);
+    }
+  }, [conversationId]);
 
   // Auto-select latest conversation when on /chat with no conversationId.
   // Skip when the param is invalid — show "not available" instead.
