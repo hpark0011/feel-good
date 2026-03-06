@@ -7,7 +7,7 @@ import {
 } from "@feel-good/ui/primitives/avatar";
 import { cn } from "@feel-good/utils/cn";
 
-const chatMessageVariants = cva("flex gap-2.5 max-w-[85%]", {
+const chatMessageVariants = cva("flex gap-1.5 max-w-[85%]", {
   variants: {
     variant: {
       sent: "ml-auto flex-row-reverse w-[80%] max-w-md",

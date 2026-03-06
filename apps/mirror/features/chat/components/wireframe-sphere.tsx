@@ -30,9 +30,9 @@ function WireframeSphere({ className }: { className?: string }) {
               transform: `rotateY(${i * RING_STEP}deg)`,
               transformStyle: "preserve-3d",
               border:
-                "1.5px solid color-mix(in srgb, currentColor 15%, transparent)",
+                "1.5px solid color-mix(in srgb, currentColor 10%, transparent)",
               backgroundColor:
-                "color-mix(in srgb, currentColor 1%, transparent)",
+                "color-mix(in srgb, currentColor 5%, transparent)",
               boxShadow:
                 "0 0 1px color-mix(in srgb, currentColor 0%, transparent), 0px 2px 3px -5px rgba(0,0,0,0.1)",
             }}
@@ -44,7 +44,7 @@ function WireframeSphere({ className }: { className?: string }) {
           className="absolute inset-0 rounded-full"
           style={{
             border:
-              "2.5px solid color-mix(in srgb, currentColor 15%, transparent)",
+              "2.5px solid color-mix(in srgb, currentColor 10%, transparent)",
             transform: "rotateX(90deg)",
             transformStyle: "preserve-3d",
           }}

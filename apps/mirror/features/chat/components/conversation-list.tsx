@@ -13,7 +13,7 @@ function ConversationListEmpty() {
   return (
     <div
       data-slot="conversation-list-empty"
-      className="flex items-center justify-center pb-20 px-4 h-full relative"
+      className="flex items-center justify-center pb-8 px-4 h-full relative"
     >
       <div
         className={cn(
