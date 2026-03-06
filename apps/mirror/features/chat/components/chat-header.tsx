@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import { Button } from "@feel-good/ui/primitives/button";
 import {
   Tooltip,
@@ -65,24 +64,24 @@ function ChatHeaderProfileName({
   );
 }
 
-/** Center column with avatar and name badge — links to the profile page. */
+/** Center column with avatar and name badge — calls onClick callback. */
 function ChatHeaderProfile({
-  href,
   avatarUrl,
   profileName,
   className,
-  ...props
+  onClick,
 }: {
-  href: string;
   avatarUrl: string | null;
   profileName: string;
-} & Omit<React.ComponentProps<typeof Link>, "children">) {
+  className?: string;
+  onClick?: () => void;
+}) {
   return (
-    <Link
-      href={href}
+    <button
+      type="button"
       data-slot="chat-header-profile"
       className={cn("flex flex-col items-center relative", className)}
-      {...props}
+      onClick={onClick}
     >
       <MirrorAvatar
         className="shrink-0"
@@ -90,7 +89,7 @@ function ChatHeaderProfile({
         profileName={profileName}
       />
       <ChatHeaderProfileName>{profileName}</ChatHeaderProfileName>
-    </Link>
+    </button>
   );
 }
 
@@ -99,7 +98,7 @@ function ChatHeaderProfile({
 type ChatHeaderProps = {
   profileName: string;
   avatarUrl: string | null;
-  profileHref: string;
+  onProfileClick?: () => void;
   onNewConversation?: () => void;
   onOpenConversationList?: () => void;
 };
@@ -107,7 +106,7 @@ type ChatHeaderProps = {
 function ChatHeader({
   profileName,
   avatarUrl,
-  profileHref,
+  onProfileClick,
   onNewConversation,
   onOpenConversationList,
 }: ChatHeaderProps) {
@@ -123,9 +122,9 @@ function ChatHeader({
       />
 
       <ChatHeaderProfile
-        href={profileHref}
         avatarUrl={avatarUrl}
         profileName={profileName}
+        onClick={onProfileClick}
       />
 
       <ChatHeaderAction

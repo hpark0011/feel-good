@@ -6,7 +6,7 @@ import { useChatRouteController } from "../_providers/chat-route-controller";
 
 export function ChatPanel() {
   const { profile } = useProfileRouteData();
-  const { conversations, routeResolution, handleConversationIdChange } =
+  const { conversations, routeResolution, handleConversationIdChange, closeChat } =
     useChatRouteController();
 
   const conversationId =
@@ -22,6 +22,7 @@ export function ChatPanel() {
       conversations={conversations}
       routeResolution={routeResolution}
       onConversationIdChange={handleConversationIdChange}
+      onCloseChat={closeChat}
     >
       <ChatThread />
     </ChatProvider>

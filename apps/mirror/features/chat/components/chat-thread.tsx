@@ -15,16 +15,14 @@ export function ChatThread() {
     routeResolution,
     profileName,
     avatarUrl,
-    username,
     conversations,
     setConversationId,
     startNewConversation,
+    closeChat,
   } = useChatContext();
 
   const [conversationListOpen, setConversationListOpen] = useState(false);
   const openConversationList = useCallback(() => setConversationListOpen(true), []);
-
-  const profileHref = `/@${username}`;
   const activeConversationId =
     routeResolution.status === "ready" ? routeResolution.conversationId : null;
 
@@ -46,7 +44,7 @@ export function ChatThread() {
           <ChatHeader
             profileName={profileName}
             avatarUrl={avatarUrl}
-            profileHref={profileHref}
+            onProfileClick={closeChat}
             onNewConversation={startNewConversation}
             onOpenConversationList={openConversationList}
           />
@@ -65,7 +63,7 @@ export function ChatThread() {
         <ChatHeader
           profileName={profileName}
           avatarUrl={avatarUrl}
-          profileHref={profileHref}
+          onProfileClick={closeChat}
           onNewConversation={startNewConversation}
           onOpenConversationList={openConversationList}
         />
@@ -86,19 +84,17 @@ function ChatActiveThread() {
   const {
     profileOwnerId,
     profileName,
-    username,
     avatarUrl,
     conversationId,
     conversations,
     routeResolution,
     setConversationId,
     startNewConversation,
+    closeChat,
   } = useChatContext();
 
   const [conversationListOpen, setConversationListOpen] = useState(false);
   const openConversationList = useCallback(() => setConversationListOpen(true), []);
-
-  const profileHref = `/@${username}`;
   const activeConversationId =
     routeResolution.status === "ready" ? routeResolution.conversationId : null;
 
@@ -142,7 +138,7 @@ function ChatActiveThread() {
         <ChatHeader
           profileName={profileName}
           avatarUrl={avatarUrl}
-          profileHref={profileHref}
+          onProfileClick={closeChat}
           onNewConversation={startNewConversation}
           onOpenConversationList={openConversationList}
         />
@@ -162,7 +158,7 @@ function ChatActiveThread() {
         <ChatHeader
           profileName={profileName}
           avatarUrl={avatarUrl}
-          profileHref={profileHref}
+          onProfileClick={closeChat}
           onNewConversation={startNewConversation}
           onOpenConversationList={openConversationList}
         />

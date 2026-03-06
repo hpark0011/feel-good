@@ -22,6 +22,7 @@ type ChatRouteControllerValue = {
   conversationsLoading: boolean;
   routeResolution: ChatRouteResolution;
   handleConversationIdChange: (id: Id<"conversations"> | null) => void;
+  closeChat: () => void;
 };
 
 const ChatRouteControllerContext =
@@ -48,6 +49,7 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
     conversationId: rawConversationId,
     setConversation,
     openChat,
+    closeChat,
   } = useChatSearchParams();
 
   const { conversations, isLoading: conversationsLoading } = useConversations({
@@ -126,8 +128,9 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
       conversationsLoading,
       routeResolution,
       handleConversationIdChange,
+      closeChat,
     }),
-    [conversations, conversationsLoading, routeResolution, handleConversationIdChange],
+    [conversations, conversationsLoading, routeResolution, handleConversationIdChange, closeChat],
   );
 
   return (

@@ -14,6 +14,7 @@ type ChatContextValue = {
   routeResolution: ChatRouteResolution;
   setConversationId: (id: Id<"conversations"> | null) => void;
   startNewConversation: () => void;
+  closeChat: () => void;
 };
 
 const ChatContext = createContext<ChatContextValue | null>(null);
@@ -27,6 +28,7 @@ type ChatProviderProps = {
   conversations: Conversation[];
   routeResolution: ChatRouteResolution;
   onConversationIdChange: (id: Id<"conversations"> | null) => void;
+  onCloseChat: () => void;
   children: React.ReactNode;
 };
 
@@ -39,6 +41,7 @@ export function ChatProvider({
   conversations,
   routeResolution,
   onConversationIdChange,
+  onCloseChat,
   children,
 }: ChatProviderProps) {
   const startNewConversation = useCallback(() => {
@@ -56,8 +59,9 @@ export function ChatProvider({
       routeResolution,
       setConversationId: onConversationIdChange,
       startNewConversation,
+      closeChat: onCloseChat,
     }),
-    [profileOwnerId, profileName, username, avatarUrl, conversationId, conversations, routeResolution, onConversationIdChange, startNewConversation],
+    [profileOwnerId, profileName, username, avatarUrl, conversationId, conversations, routeResolution, onConversationIdChange, startNewConversation, onCloseChat],
   );
 
   return <ChatContext value={value}>{children}</ChatContext>;

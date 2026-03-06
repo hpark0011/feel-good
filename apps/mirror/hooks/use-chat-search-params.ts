@@ -14,6 +14,7 @@ export function useChatSearchParams() {
   const openChat = useCallback(() => {
     const params = new URLSearchParams(searchParams);
     params.set("chat", "1");
+    params.delete("conversation");
     router.push(`${pathname}?${params.toString()}`);
   }, [searchParams, pathname, router]);
 
