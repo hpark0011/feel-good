@@ -10,15 +10,11 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useParams, useRouter, useSelectedLayoutSegment } from "next/navigation";
-// Note: useSelectedLayoutSegment() without a parallel routes key returns the
-// children slot segment. Since @interaction mirrors the same URL structure,
-// this correctly detects chat routes. Using the "interaction" key returns
-// incorrect segments due to a (slot) prefix in the segment tree.
 import type { Id } from "@feel-good/convex/convex/_generated/dataModel";
 import { useConversations, type Conversation } from "@/features/chat";
 import type { ChatRouteResolution } from "@/features/chat/types";
 import { parseConversationId } from "@/features/chat/lib/parse-conversation-id";
+import { useChatSearchParams } from "@/hooks/use-chat-search-params";
 import { useProfileRouteData } from "./profile-route-data-context";
 
 type ChatRouteControllerValue = {
@@ -26,6 +22,7 @@ type ChatRouteControllerValue = {
   conversationsLoading: boolean;
   routeResolution: ChatRouteResolution;
   handleConversationIdChange: (id: Id<"conversations"> | null) => void;
+  closeChat: () => void;
 };
 
 const ChatRouteControllerContext =
@@ -47,23 +44,25 @@ type ChatRouteControllerProps = {
 
 export function ChatRouteController({ children }: ChatRouteControllerProps) {
   const { profile } = useProfileRouteData();
-  const router = useRouter();
-  const segment = useSelectedLayoutSegment();
-  const params = useParams<{ conversationId?: string }>();
-
-  const isChatRoute = segment === "chat";
+  const {
+    isChatOpen,
+    conversationId: rawConversationId,
+    setConversation,
+    openChat,
+    closeChat,
+  } = useChatSearchParams();
 
   const { conversations, isLoading: conversationsLoading } = useConversations({
     profileOwnerId: profile._id,
-    enabled: isChatRoute,
+    enabled: isChatOpen,
   });
 
   const newConversationIntentRef = useRef(false);
   const [newConversationIntent, setNewConversationIntent] = useState(false);
 
   const parsed = useMemo(
-    () => parseConversationId(params.conversationId),
-    [params.conversationId],
+    () => parseConversationId(rawConversationId),
+    [rawConversationId],
   );
   const conversationId = parsed.status === "valid" ? parsed.id : null;
   const conversationInvalid = parsed.status === "invalid";
@@ -73,19 +72,15 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
       if (!id) {
         newConversationIntentRef.current = true;
         setNewConversationIntent(true);
+        openChat();
+      } else {
+        setConversation(id);
       }
-      // Intent for non-null id is cleared reactively when conversationId updates
-      router.replace(
-        id ? `/@${profile.username}/chat/${id}` : `/@${profile.username}/chat`,
-      );
     },
-    [router, profile.username],
+    [openChat, setConversation],
   );
 
   // Clear new-conversation intent once the URL reflects the selected conversation.
-  // This avoids a transient state where intent is false but conversationId is
-  // still null (the URL hasn't caught up), which could let the auto-select
-  // effect redirect to conversations[0].
   useEffect(() => {
     if (conversationId) {
       newConversationIntentRef.current = false;
@@ -93,27 +88,23 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
     }
   }, [conversationId]);
 
-  // Auto-select latest conversation when on /chat with no conversationId.
-  // Skip when the param is invalid — show "not available" instead.
+  // Auto-select latest conversation when chat is open with no conversationId.
   useEffect(() => {
-    if (!isChatRoute) return;
+    if (!isChatOpen) return;
     if (conversationId) return;
     if (conversationInvalid) return;
     if (conversationsLoading) return;
     if (newConversationIntentRef.current) return;
     if (conversations.length > 0) {
-      // Navigate directly instead of through handleConversationIdChange
-      // to avoid triggering setState inside the effect.
-      router.replace(`/@${profile.username}/chat/${conversations[0]._id}`);
+      setConversation(conversations[0]._id);
     }
   }, [
-    isChatRoute,
+    isChatOpen,
     conversationId,
     conversationInvalid,
     conversationsLoading,
     conversations,
-    router,
-    profile.username,
+    setConversation,
   ]);
 
   const routeResolution = useMemo((): ChatRouteResolution => {
@@ -137,8 +128,9 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
       conversationsLoading,
       routeResolution,
       handleConversationIdChange,
+      closeChat,
     }),
-    [conversations, conversationsLoading, routeResolution, handleConversationIdChange],
+    [conversations, conversationsLoading, routeResolution, handleConversationIdChange, closeChat],
   );
 
   return (

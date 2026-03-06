@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import { Button } from "@feel-good/ui/primitives/button";
 import {
   Tooltip,
@@ -20,12 +19,17 @@ function ChatHeaderAction({
   icon,
   className,
   ...props
-}: {
-  tooltip: string;
-  icon: IconName;
-} & Omit<React.ComponentProps<typeof Button>, "variant" | "size" | "children">) {
+}:
+  & {
+    tooltip: string;
+    icon: IconName;
+  }
+  & Omit<
+    React.ComponentProps<typeof Button>,
+    "variant" | "size" | "children"
+  >) {
   return (
-    <div data-slot="chat-header-action" className="mt-2">
+    <div data-slot="chat-header-action" className="mt-1.5">
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
@@ -34,40 +38,7 @@ function ChatHeaderAction({
             className={cn("shrink-0 rounded-full", className)}
             {...props}
           >
-            <Icon name={icon} className="size-5" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>{tooltip}</TooltipContent>
-      </Tooltip>
-    </div>
-  );
-}
-
-/** Tooltip-wrapped icon link used for the back arrow. */
-function ChatHeaderBackLink({
-  tooltip,
-  icon,
-  href,
-  className,
-}: {
-  tooltip: string;
-  icon: IconName;
-  href: string;
-  className?: string;
-}) {
-  return (
-    <div data-slot="chat-header-action" className="mt-2">
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="secondary"
-            size="icon"
-            className={cn("shrink-0 rounded-full", className)}
-            asChild
-          >
-            <Link href={href}>
-              <Icon name={icon} className="size-5" />
-            </Link>
+            <Icon name={icon} className="size-6" />
           </Button>
         </TooltipTrigger>
         <TooltipContent>{tooltip}</TooltipContent>
@@ -93,24 +64,27 @@ function ChatHeaderProfileName({
   );
 }
 
-/** Center column with avatar and name badge — links to the profile page. */
+/** Center column with avatar and name badge — calls onClick callback. */
 function ChatHeaderProfile({
-  href,
   avatarUrl,
   profileName,
   className,
-  ...props
+  onClick,
 }: {
-  href: string;
   avatarUrl: string | null;
   profileName: string;
-} & Omit<React.ComponentProps<typeof Link>, "children">) {
+  className?: string;
+  onClick?: () => void;
+}) {
   return (
-    <Link
-      href={href}
+    <button
+      type="button"
       data-slot="chat-header-profile"
-      className={cn("flex flex-col items-center relative", className)}
-      {...props}
+      className={cn(
+        "flex flex-col items-center relative cursor-pointer",
+        className,
+      )}
+      onClick={onClick}
     >
       <MirrorAvatar
         className="shrink-0"
@@ -118,7 +92,7 @@ function ChatHeaderProfile({
         profileName={profileName}
       />
       <ChatHeaderProfileName>{profileName}</ChatHeaderProfileName>
-    </Link>
+    </button>
   );
 }
 
@@ -127,28 +101,34 @@ function ChatHeaderProfile({
 type ChatHeaderProps = {
   profileName: string;
   avatarUrl: string | null;
-  profileHref: string;
+  onProfileClick?: () => void;
   onNewConversation?: () => void;
+  onOpenConversationList?: () => void;
 };
 
 function ChatHeader({
   profileName,
   avatarUrl,
-  profileHref,
+  onProfileClick,
   onNewConversation,
+  onOpenConversationList,
 }: ChatHeaderProps) {
   return (
     <div
       data-slot="chat-header"
       className="grid grid-cols-[auto_1fr_auto] items-start px-4 pt-2"
     >
-      <ChatHeaderBackLink
-        tooltip="Profile"
-        icon="ArrowBackwardIcon"
-        href={profileHref}
+      <ChatHeaderAction
+        tooltip="Conversations"
+        icon="ListBulletIcon"
+        onClick={onOpenConversationList}
       />
 
-      <ChatHeaderProfile href={profileHref} avatarUrl={avatarUrl} profileName={profileName} />
+      <ChatHeaderProfile
+        avatarUrl={avatarUrl}
+        profileName={profileName}
+        onClick={onProfileClick}
+      />
 
       <ChatHeaderAction
         tooltip="New chat"

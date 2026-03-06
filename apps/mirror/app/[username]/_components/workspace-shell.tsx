@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
+import { useChatSearchParams } from "@/hooks/use-chat-search-params";
 import type { RouteMode } from "@/hooks/use-profile-navigation-effects";
 import { DesktopWorkspace } from "./desktop-workspace";
 import { MobileWorkspace } from "./mobile-workspace";
@@ -10,33 +11,31 @@ import { ContentPanel } from "./content-panel";
 
 type WorkspaceShellProps = {
   interaction: ReactNode;
-  children: ReactNode;
+  content: ReactNode;
 };
 
-export function WorkspaceShell({ interaction, children }: WorkspaceShellProps) {
+export function WorkspaceShell({ interaction, content }: WorkspaceShellProps) {
   const isMobile = useIsMobile();
   const segment = useSelectedLayoutSegment();
-  const routeMode: RouteMode = segment === "chat"
-    ? "chat"
-    : segment
-    ? "detail"
-    : "list";
+  const { isChatOpen } = useChatSearchParams();
+
+  const routeMode: RouteMode = segment ? "detail" : "list";
 
   if (isMobile) {
     return (
-      <MobileWorkspace routeMode={routeMode} interaction={interaction}>
-        {children}
+      <MobileWorkspace
+        routeMode={routeMode}
+        isChatOpen={isChatOpen}
+        interaction={interaction}
+      >
+        {content}
       </MobileWorkspace>
     );
   }
 
   return (
-    <DesktopWorkspace
-      interaction={interaction}
-    >
-      {routeMode === "chat"
-        ? children
-        : <ContentPanel routeMode={routeMode}>{children}</ContentPanel>}
+    <DesktopWorkspace interaction={interaction}>
+      <ContentPanel routeMode={routeMode}>{content}</ContentPanel>
     </DesktopWorkspace>
   );
 }

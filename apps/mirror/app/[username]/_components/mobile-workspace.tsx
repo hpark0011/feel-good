@@ -15,19 +15,21 @@ import {
 
 type MobileWorkspaceProps = {
   routeMode: RouteMode;
+  isChatOpen: boolean;
   interaction: ReactNode;
   children: ReactNode;
 };
 
 export function MobileWorkspace({
   routeMode,
+  isChatOpen,
   interaction,
   children,
 }: MobileWorkspaceProps) {
   const [scrollRoot, setScrollRoot] = useState<HTMLDivElement | null>(null);
   useProfileNavigationEffects(scrollRoot, routeMode);
 
-  if (routeMode === "chat") {
+  if (isChatOpen) {
     return <main className="h-screen">{interaction}</main>;
   }
 

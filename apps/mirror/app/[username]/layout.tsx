@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { MOCK_PROFILE } from "@/features/profile";
 import type { Profile } from "@/features/profile";
 import { isReservedUsername } from "@/lib/reserved-usernames";
 import { fetchAuthQuery, preloadAuthQuery } from "@/lib/auth-server";
@@ -9,14 +8,17 @@ import { ChatRouteController } from "./_providers/chat-route-controller";
 import { WorkspaceShell } from "./_components/workspace-shell";
 
 export default async function ProfileLayout({
-  children,
+  children: _children,
+  content,
   interaction,
   params,
 }: {
   children: React.ReactNode;
+  content: React.ReactNode;
   interaction: React.ReactNode;
   params: Promise<{ username: string }>;
 }) {
+  void _children;
   const { username } = await params;
   if (isReservedUsername(username)) notFound();
 
@@ -27,27 +29,19 @@ export default async function ProfileLayout({
       preloadAuthQuery(api.articles.queries.getByUsername, { username }),
     ]);
 
-  let profileData: Profile;
+  if (!convexProfile) notFound();
 
-  if (!convexProfile) {
-    if (username === MOCK_PROFILE.username) {
-      profileData = MOCK_PROFILE;
-    } else {
-      notFound();
-    }
-  } else {
-    profileData = {
-      _id: convexProfile._id,
-      authId: convexProfile.authId,
-      username: convexProfile.username ?? username,
-      name: convexProfile.name ?? "",
-      bio: convexProfile.bio ?? "",
-      avatarUrl: convexProfile.avatarUrl,
-      ...(convexProfile.username === "rick-rubin" && {
-        media: { video: "/portrait-video.mp4", poster: "/rr.webp" },
-      }),
-    };
-  }
+  const profileData: Profile = {
+    _id: convexProfile._id,
+    authId: convexProfile.authId,
+    username: convexProfile.username ?? username,
+    name: convexProfile.name ?? "",
+    bio: convexProfile.bio ?? "",
+    avatarUrl: convexProfile.avatarUrl,
+    ...(convexProfile.username === "rick-rubin" && {
+      media: { video: "/portrait-video.mp4", poster: "/rr.webp" },
+    }),
+  };
 
   const currentAuthUser = await fetchAuthQuery(
     api.auth.queries.getCurrentUser,
@@ -66,9 +60,7 @@ export default async function ProfileLayout({
       isOwner={isOwner}
     >
       <ChatRouteController>
-        <WorkspaceShell interaction={interaction}>
-          {children}
-        </WorkspaceShell>
+        <WorkspaceShell interaction={interaction} content={content} />
       </ChatRouteController>
     </ProfileRouteDataProvider>
   );

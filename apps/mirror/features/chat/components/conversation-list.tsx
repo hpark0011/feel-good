@@ -5,7 +5,7 @@ import { cn } from "@feel-good/utils/cn";
 import * as React from "react";
 import type { Conversation } from "../types";
 import { formatRelativeTime } from "../utils/format-relative-time";
-import { WireframeSphere } from "./wireframe-sphere";
+import { WireframeSphere } from "../../../components/animated-geometries/wireframe-sphere";
 
 /* Internal building-block components — not exported. */
 
@@ -13,7 +13,7 @@ function ConversationListEmpty() {
   return (
     <div
       data-slot="conversation-list-empty"
-      className="flex items-center justify-center pb-20 px-4 h-full relative"
+      className="flex items-center justify-center pb-8 px-4 h-full relative"
     >
       <div
         className={cn(
@@ -44,8 +44,8 @@ function ConversationListItem({
       type="button"
       className={cn(
         "flex gap-4 px-4 py-0 text-left justify-between items-baseline",
-        "transition-colors hover:bg-muted cursor-pointer group-hover/list:text-muted-foreground hover:text-secondary-foreground",
-        isActive && "bg-muted",
+        "transition-colors hover:bg-muted/50 cursor-pointer group-hover/list:text-muted-foreground hover:text-secondary-foreground",
+        isActive && "bg-muted/50",
         className,
       )}
       {...props}

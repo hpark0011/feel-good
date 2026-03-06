@@ -47,8 +47,6 @@ features/
       mobile-profile-layout.tsx
     context/
       profile-context.tsx
-    lib/
-      mock-profile.ts
 
   onboarding/           # New user onboarding wizard
     components/

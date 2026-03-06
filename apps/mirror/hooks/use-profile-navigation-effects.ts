@@ -2,7 +2,7 @@
 
 import { useLayoutEffect, useRef } from "react";
 
-export type RouteMode = "list" | "detail" | "chat";
+export type RouteMode = "list" | "detail";
 
 export function useProfileNavigationEffects(
   scrollContainer: HTMLElement | null,
