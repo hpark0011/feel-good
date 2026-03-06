@@ -5,7 +5,7 @@ import { cn } from "@feel-good/utils/cn";
 import * as React from "react";
 import type { Conversation } from "../types";
 import { formatRelativeTime } from "../utils/format-relative-time";
-import { WireframeSphere } from "./wireframe-sphere";
+import { WireframeSphere } from "../../../components/animated-geometries/wireframe-sphere";
 
 /* Internal building-block components — not exported. */
 

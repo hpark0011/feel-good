@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 import { useChatContext } from "../context/chat-context";
 import { useChat } from "../hooks/use-chat";
-import { ArcSphere } from "./arc-sphere";
+import { ArcSphere } from "../../../components/animated-geometries/arc-sphere";
 import { ChatHeader } from "./chat-header";
 import { ChatConversationListSheet } from "./chat-conversation-list-sheet";
 import { ChatMessageList } from "./chat-message-list";
@@ -22,9 +22,13 @@ export function ChatThread() {
   } = useChatContext();
 
   const [conversationListOpen, setConversationListOpen] = useState(false);
-  const openConversationList = useCallback(() => setConversationListOpen(true), []);
-  const activeConversationId =
-    routeResolution.status === "ready" ? routeResolution.conversationId : null;
+  const openConversationList = useCallback(
+    () => setConversationListOpen(true),
+    [],
+  );
+  const activeConversationId = routeResolution.status === "ready"
+    ? routeResolution.conversationId
+    : null;
 
   const conversationListSheet = (
     <ChatConversationListSheet
@@ -94,9 +98,13 @@ function ChatActiveThread() {
   } = useChatContext();
 
   const [conversationListOpen, setConversationListOpen] = useState(false);
-  const openConversationList = useCallback(() => setConversationListOpen(true), []);
-  const activeConversationId =
-    routeResolution.status === "ready" ? routeResolution.conversationId : null;
+  const openConversationList = useCallback(
+    () => setConversationListOpen(true),
+    [],
+  );
+  const activeConversationId = routeResolution.status === "ready"
+    ? routeResolution.conversationId
+    : null;
 
   const handleConversationCreated = useCallback(
     (id: Parameters<typeof setConversationId>[0]) => {

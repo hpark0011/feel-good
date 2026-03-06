@@ -4,8 +4,8 @@ import type { UIMessage } from "@convex-dev/agent/react";
 import { cn } from "@feel-good/utils/cn";
 import * as React from "react";
 import { ChatMessageItem } from "./chat-message-item";
-import { ArcSphere } from "./arc-sphere";
-import { WireframeSphere } from "./wireframe-sphere";
+import { ArcSphere } from "../../../components/animated-geometries/arc-sphere";
+import { WireframeSphere } from "../../../components/animated-geometries/wireframe-sphere";
 
 /* Internal building-block components — not exported. */
 
