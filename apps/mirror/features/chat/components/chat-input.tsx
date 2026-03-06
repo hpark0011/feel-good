@@ -67,8 +67,8 @@ export function ChatInput({
           "has-[[data-slot=input-group-control]:focus-visible]:border-gray-1",
           "dark:has-[[data-slot=input-group-control]:focus-visible]:border-gray-3",
           "has-[[data-slot=input-group-control]:focus-visible]:ring-1",
-          "has-[[data-slot=input-grou p-control]:focus-visible]:ring-transparent",
-          "has-[[data-slot=input-group-control]:focus-visible]:bg-white",
+          "has-[[data-slot=input-group-control]:focus-visible]:ring-transparent",
+          "has-[[data-slot=input-group-control]:focus-visible]:bg-hover",
           "has-[[data-slot=input-group-control]:focus-visible]:bg-gray-2",
         )}
       >
