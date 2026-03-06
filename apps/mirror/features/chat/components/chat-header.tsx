@@ -30,7 +30,7 @@ function ChatHeaderAction({
     "variant" | "size" | "children"
   >) {
   return (
-    <div data-slot="chat-header-action" className="mt-2">
+    <div data-slot="chat-header-action" className="mt-1.5">
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
