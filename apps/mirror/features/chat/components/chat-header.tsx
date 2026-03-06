@@ -39,40 +39,7 @@ function ChatHeaderAction({
             className={cn("shrink-0 rounded-full", className)}
             {...props}
           >
-            <Icon name={icon} className="size-5" />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>{tooltip}</TooltipContent>
-      </Tooltip>
-    </div>
-  );
-}
-
-/** Tooltip-wrapped icon link used for the back arrow. */
-function ChatHeaderBackLink({
-  tooltip,
-  icon,
-  href,
-  className,
-}: {
-  tooltip: string;
-  icon: IconName;
-  href: string;
-  className?: string;
-}) {
-  return (
-    <div data-slot="chat-header-action" className="mt-2">
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="secondary"
-            size="icon"
-            className={cn("shrink-0 rounded-full", className)}
-            asChild
-          >
-            <Link href={href}>
-              <Icon name={icon} className="size-5" />
-            </Link>
+            <Icon name={icon} className="size-6" />
           </Button>
         </TooltipTrigger>
         <TooltipContent>{tooltip}</TooltipContent>
@@ -149,19 +116,11 @@ function ChatHeader({
       data-slot="chat-header"
       className="grid grid-cols-[auto_1fr_auto] items-start px-4 pt-2"
     >
-      <div>
-        <ChatHeaderBackLink
-          tooltip="Profile"
-          icon="ArrowBackwardIcon"
-          href={profileHref}
-        />
-
-        <ChatHeaderAction
-          tooltip="Conversations"
-          icon="SidebarLeftIcon"
-          onClick={onOpenConversationList}
-        />
-      </div>
+      <ChatHeaderAction
+        tooltip="Conversations"
+        icon="ListBulletIcon"
+        onClick={onOpenConversationList}
+      />
 
       <ChatHeaderProfile
         href={profileHref}

@@ -44,8 +44,8 @@ function ConversationListItem({
       type="button"
       className={cn(
         "flex gap-4 px-4 py-0 text-left justify-between items-baseline",
-        "transition-colors hover:bg-muted cursor-pointer group-hover/list:text-muted-foreground hover:text-secondary-foreground",
-        isActive && "bg-muted",
+        "transition-colors hover:bg-muted/50 cursor-pointer group-hover/list:text-muted-foreground hover:text-secondary-foreground",
+        isActive && "bg-muted/50",
         className,
       )}
       {...props}

@@ -82,7 +82,7 @@ export function ChatInput({
           className={cn(
             "min-h-[40px] max-h-[120px]",
             "py-2.5 px-3.5",
-            "text-[20px] md:text-[16px]",
+            "md:text-[16px]",
             "leading-[1.3]",
           )}
           rows={1}
