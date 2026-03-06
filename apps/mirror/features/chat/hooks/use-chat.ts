@@ -47,8 +47,9 @@ export function useChat({
     { initialNumItems: 20, stream: true },
   );
 
-  // When no conversation exists yet, there's nothing to load — treat as empty.
-  const resolvedStatus = conversationId === null ? "Exhausted" : status;
+  // When no conversation exists yet (new_conversation / empty), show loading
+  // as defense-in-depth — ChatThread gates mounting so this rarely fires.
+  const resolvedStatus = conversationId === null ? "LoadingFirstPage" : status;
 
   const messages = (results ?? []) as UIMessage[];
   const isStreaming = conversation?.streamingInProgress ?? false;

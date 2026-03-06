@@ -7,6 +7,7 @@ import {
   useEffect,
   useMemo,
   useRef,
+  useState,
   type ReactNode,
 } from "react";
 import { useParams, useRouter, useSelectedLayoutSegment } from "next/navigation";
@@ -16,14 +17,14 @@ import { useParams, useRouter, useSelectedLayoutSegment } from "next/navigation"
 // incorrect segments due to a (slot) prefix in the segment tree.
 import type { Id } from "@feel-good/convex/convex/_generated/dataModel";
 import { useConversations, type Conversation } from "@/features/chat";
+import type { ChatRouteResolution } from "@/features/chat/types";
 import { parseConversationId } from "@/features/chat/lib/parse-conversation-id";
 import { useProfileRouteData } from "./profile-route-data-context";
 
 type ChatRouteControllerValue = {
   conversations: Conversation[];
   conversationsLoading: boolean;
-  conversationId: Id<"conversations"> | null;
-  conversationInvalid: boolean;
+  routeResolution: ChatRouteResolution;
   handleConversationIdChange: (id: Id<"conversations"> | null) => void;
 };
 
@@ -58,6 +59,7 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
   });
 
   const newConversationIntentRef = useRef(false);
+  const [newConversationIntent, setNewConversationIntent] = useState(false);
 
   const parsed = useMemo(
     () => parseConversationId(params.conversationId),
@@ -69,6 +71,7 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
   const handleConversationIdChange = useCallback(
     (id: Id<"conversations"> | null) => {
       newConversationIntentRef.current = !id;
+      setNewConversationIntent(!id);
       if (id) {
         router.replace(`/@${profile.username}/chat/${id}`);
       } else {
@@ -87,7 +90,9 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
     if (conversationsLoading) return;
     if (newConversationIntentRef.current) return;
     if (conversations.length > 0) {
-      handleConversationIdChange(conversations[0]._id);
+      // Navigate directly instead of through handleConversationIdChange
+      // to avoid triggering setState inside the effect.
+      router.replace(`/@${profile.username}/chat/${conversations[0]._id}`);
     }
   }, [
     isChatRoute,
@@ -95,24 +100,33 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
     conversationInvalid,
     conversationsLoading,
     conversations,
-    handleConversationIdChange,
+    router,
+    profile.username,
+  ]);
+
+  const routeResolution = useMemo((): ChatRouteResolution => {
+    if (conversationInvalid) return { status: "invalid" };
+    if (conversationId) return { status: "ready", conversationId };
+    if (newConversationIntent) return { status: "new_conversation" };
+    if (conversationsLoading || conversations.length > 0)
+      return { status: "resolving" };
+    return { status: "empty" };
+  }, [
+    conversationId,
+    conversationInvalid,
+    newConversationIntent,
+    conversationsLoading,
+    conversations.length,
   ]);
 
   const value = useMemo(
     () => ({
       conversations,
       conversationsLoading,
-      conversationId,
-      conversationInvalid,
+      routeResolution,
       handleConversationIdChange,
     }),
-    [
-      conversations,
-      conversationsLoading,
-      conversationId,
-      conversationInvalid,
-      handleConversationIdChange,
-    ],
+    [conversations, conversationsLoading, routeResolution, handleConversationIdChange],
   );
 
   return (
