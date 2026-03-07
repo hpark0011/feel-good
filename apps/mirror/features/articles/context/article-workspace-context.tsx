@@ -11,7 +11,7 @@ import {
 import { useMutation } from "convex/react";
 import { api } from "@feel-good/convex/convex/_generated/api";
 import type { SortOrder } from "../hooks/use-article-sort";
-import type { Article } from "../types";
+import type { ArticleSummary } from "../types";
 import { useArticlePagination } from "../hooks/use-article-pagination";
 import { useArticleSearch } from "../hooks/use-article-search";
 import { useArticleSelection } from "../hooks/use-article-selection";
@@ -23,7 +23,7 @@ import { ArticleToolbarContext } from "./article-toolbar-context";
 import { ArticleListContext } from "./article-list-context";
 
 type ArticleWorkspaceProviderProps = {
-  articles: Article[];
+  articles: ArticleSummary[];
   username: string;
   children: ReactNode;
 };

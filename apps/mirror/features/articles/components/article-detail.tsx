@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { formatLongDate } from "../utils/format-date";
-import type { Article } from "../types";
+import type { ArticleWithBody } from "../types";
 
 const RichTextViewer = dynamic(
   () =>
@@ -18,7 +18,7 @@ const RichTextViewer = dynamic(
 );
 
 type ArticleDetailProps = {
-  article: Article;
+  article: ArticleWithBody;
 };
 
 export function ArticleDetail({ article }: ArticleDetailProps) {

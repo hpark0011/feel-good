@@ -2,7 +2,7 @@ import { usePreloadedQuery } from "convex/react";
 import type { Preloaded } from "convex/react";
 import type { api } from "@feel-good/convex/convex/_generated/api";
 import type { Profile } from "../types";
-import type { Article } from "@/features/articles/types";
+import type { ArticleSummary } from "@/features/articles/types";
 
 type UseProfileDataArgs = {
   initialProfile: Profile;
@@ -16,13 +16,13 @@ export function useProfileData({
   preloadedArticles,
 }: UseProfileDataArgs): {
   profile: Profile;
-  articles: Article[];
+  articles: ArticleSummary[];
   chatAuthRequired: boolean;
 } {
   const reactiveProfile = usePreloadedQuery(preloadedProfile);
   const reactiveArticles = usePreloadedQuery(preloadedArticles);
 
-  const articles: Article[] = (reactiveArticles ?? []) as Article[];
+  const articles: ArticleSummary[] = (reactiveArticles ?? []) as ArticleSummary[];
   const profile: Profile = reactiveProfile
     ? {
       _id: reactiveProfile._id,

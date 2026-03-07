@@ -2,7 +2,7 @@ import { v } from "convex/values";
 import type { QueryCtx, MutationCtx } from "../_generated/server";
 import type { Id } from "../_generated/dataModel";
 
-export const articleReturnValidator = v.object({
+const articleSummaryFields = {
   _id: v.id("articles"),
   _creationTime: v.number(),
   userId: v.id("users"),
@@ -13,6 +13,17 @@ export const articleReturnValidator = v.object({
   publishedAt: v.optional(v.number()),
   status: v.union(v.literal("draft"), v.literal("published")),
   category: v.string(),
+};
+
+export const articleSummaryReturnValidator = v.object(articleSummaryFields);
+
+export const articleWithBodyReturnValidator = v.object({
+  ...articleSummaryFields,
+  body: v.any(),
+});
+
+export const conversationArticleReturnValidator = v.object({
+  title: v.string(),
   body: v.any(),
 });
 

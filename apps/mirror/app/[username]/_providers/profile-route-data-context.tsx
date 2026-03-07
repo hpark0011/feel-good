@@ -11,7 +11,6 @@ import dynamic from "next/dynamic";
 import type { Preloaded } from "convex/react";
 import type { api } from "@feel-good/convex/convex/_generated/api";
 import type { Profile } from "@/features/profile";
-import type { Article } from "@/features/articles";
 import { ProfileProvider } from "@/features/profile";
 import { ArticleWorkspaceProvider } from "@/features/articles";
 import { useProfileData } from "@/features/profile/hooks/use-profile-data";
@@ -23,7 +22,6 @@ const VideoCallModal = dynamic(
 
 type ProfileRouteData = {
   profile: Profile;
-  articles: Article[];
   isOwner: boolean;
   videoCallOpen: boolean;
   setVideoCallOpen: (open: boolean) => void;
@@ -67,8 +65,8 @@ export function ProfileRouteDataProvider({
   const profileContextValue = useMemo(() => ({ isOwner }), [isOwner]);
 
   const routeDataValue = useMemo(
-    () => ({ profile, articles, isOwner, videoCallOpen, setVideoCallOpen }),
-    [profile, articles, isOwner, videoCallOpen],
+    () => ({ profile, isOwner, videoCallOpen, setVideoCallOpen }),
+    [profile, isOwner, videoCallOpen],
   );
 
   return (
@@ -83,7 +81,7 @@ export function ProfileRouteDataProvider({
       </ProfileProvider>
       {videoCallOpen && (
         <VideoCallModal
-          articles={articles}
+          username={profile.username}
           onClose={() => setVideoCallOpen(false)}
         />
       )}
