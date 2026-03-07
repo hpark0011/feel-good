@@ -19,6 +19,7 @@ function layerStyle(index: number): React.CSSProperties {
   };
 }
 
+/** 3D animated arc-sphere geometry designed for loading states. */
 function ArcSphere({ className }: { className?: string }) {
   return (
     <div

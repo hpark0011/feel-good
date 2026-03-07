@@ -53,7 +53,8 @@ const tabsListVariants = cva(
       variant: {
         default: "bg-muted",
         line: "gap-1 bg-transparent",
-        folder: "bg-transparent",
+        folder:
+          "bg-transparent p-0 group-data-[orientation=horizontal]/tabs:h-7 rounded-none",
       },
     },
     defaultVariants: {
@@ -88,7 +89,7 @@ function TabsTrigger({
       data-slot="tabs-trigger"
       className={cn(
         // positioning & layout
-        "relative inline-flex flex-1 items-center justify-center gap-1.5",
+        "relative inline-flex flex-1 items-center justify-center gap-1.5 cursor-pointer",
         // sizing
         "h-[calc(100%-1px)] px-2 py-1",
         // shape
@@ -137,13 +138,16 @@ function TabsTrigger({
         "group-data-[orientation=vertical]/tabs:after:w-0.5",
         // after: show on active line variant
         "group-data-[variant=line]/tabs-list:data-[state=active]:after:opacity-100",
+        // variant: folder
+        "group-data-[variant=folder]/tabs-list:text-[13px]",
         // variant: folder — 3D perspective tab shape (before pseudo-element)
         "group-data-[variant=folder]/tabs-list:before:absolute",
         "group-data-[variant=folder]/tabs-list:before:inset-0",
-        "group-data-[variant=folder]/tabs-list:before:[transform:perspective(10px)_rotateX(2deg)]",
-        "group-data-[variant=folder]/tabs-list:before:rounded-t-[10px]",
+        "group-data-[variant=folder]/tabs-list:before:[transform:perspective(14px)_rotateX(3deg)]",
+        "group-data-[variant=folder]/tabs-list:before:rounded-t-[9px]",
         "group-data-[variant=folder]/tabs-list:before:rounded-b-none",
-        "group-data-[variant=folder]/tabs-list:before:bg-background",
+        "group-data-[variant=folder]/tabs-list:before:bg-gray-5",
+        "dark:group-data-[variant=folder]/tabs-list:before:bg-gray-2",
         "group-data-[variant=folder]/tabs-list:before:border",
         "group-data-[variant=folder]/tabs-list:before:border-border",
         "group-data-[variant=folder]/tabs-list:before:-z-[1]",
@@ -156,11 +160,15 @@ function TabsTrigger({
         "group-data-[variant=folder]/tabs-list:isolate",
         // folder: hide the trigger's own background/border
         "group-data-[variant=folder]/tabs-list:bg-transparent",
+        "group-data-[variant=folder]/tabs-list:data-[state=active]:bg-transparent",
+        "dark:group-data-[variant=folder]/tabs-list:data-[state=active]:bg-transparent",
+        "dark:group-data-[variant=folder]/tabs-list:data-[state=active]:before:bg-background",
+        "dark:group-data-[variant=folder]/tabs-list:data-[state=active]:border-transparent",
         "group-data-[variant=folder]/tabs-list:border-transparent",
         // folder: padding
         "group-data-[variant=folder]/tabs-list:px-3.5",
-        "group-data-[variant=folder]/tabs-list:py-4",
-        "group-data-[variant=folder]/tabs-list:pt-4.5",
+        "group-data-[variant=folder]/tabs-list:py-3.5",
+        "group-data-[variant=folder]/tabs-list:pt-4",
         // svg defaults
         "[&_svg]:pointer-events-none [&_svg]:shrink-0",
         "[&_svg:not([class*='size-'])]:size-4",
