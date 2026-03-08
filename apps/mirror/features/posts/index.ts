@@ -1,4 +1,5 @@
 export { PostWorkspaceProvider } from "./context/post-workspace-context";
+export { PostListToolbarConnector } from "./components/post-list-toolbar-connector";
 export { PostListToolbar } from "./components/post-list-toolbar";
 export { ScrollablePostList } from "./components/scrollable-post-list";
 export { PostDetail } from "./components/post-detail";

@@ -1,26 +1,21 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useMemo,
-  type ReactNode,
-} from "react";
+import { useMemo, type ReactNode } from "react";
 import { usePreloadedQuery } from "convex/react";
 import type { Preloaded } from "convex/react";
 import type { api } from "@feel-good/convex/convex/_generated/api";
 import { useIsProfileOwner } from "@/features/profile";
 import type { PostSummary } from "../types";
-
-type PostWorkspaceContextValue = {
-  posts: PostSummary[];
-  username: string;
-  isOwner: boolean;
-  hasNoPosts: boolean;
-};
-
-const PostWorkspaceContext =
-  createContext<PostWorkspaceContextValue | null>(null);
+import { usePostFilter } from "../hooks/use-post-filter";
+import { usePostSearch } from "../hooks/use-post-search";
+import { usePostSort } from "../hooks/use-post-sort";
+import {
+  filterPosts,
+  getUniquePostCategories,
+  sortPosts,
+} from "../utils/post-filter";
+import { PostListContext } from "./post-list-context";
+import { PostToolbarContext } from "./post-toolbar-context";
 
 type PostWorkspaceProviderProps = {
   preloadedPosts: Preloaded<typeof api.posts.queries.getByUsername>;
@@ -35,38 +30,62 @@ export function PostWorkspaceProvider({
 }: PostWorkspaceProviderProps) {
   const reactivePosts = usePreloadedQuery(preloadedPosts);
   const isOwner = useIsProfileOwner();
-  const posts = useMemo(() => {
-    const nextPosts = [...((reactivePosts ?? []) as PostSummary[])];
-    nextPosts.sort(
-      (a, b) =>
-        (b.publishedAt ?? b.createdAt) - (a.publishedAt ?? a.createdAt),
-    );
-    return nextPosts;
-  }, [reactivePosts]);
+  const posts = useMemo(
+    () => ((reactivePosts ?? []) as PostSummary[]),
+    [reactivePosts],
+  );
+  const search = usePostSearch(posts);
+  const { sortOrder, setSortOrder } = usePostSort();
+  const filter = usePostFilter();
+  const filteredPosts = useMemo(
+    () => filterPosts(search.filteredPosts, filter.filterState, isOwner),
+    [search.filteredPosts, filter.filterState, isOwner],
+  );
+  const visiblePosts = useMemo(
+    () => sortPosts(filteredPosts, sortOrder, search.isFiltered),
+    [filteredPosts, sortOrder, search.isFiltered],
+  );
+  const categories = useMemo(() => getUniquePostCategories(posts), [posts]);
+  const hasNoPosts = posts.length === 0;
+  const showEmpty =
+    visiblePosts.length === 0 &&
+    (search.query.trim() !== "" || filter.hasActiveFilters);
+  const emptyMessage =
+    search.query.trim() !== "" && filter.hasActiveFilters
+      ? "No posts match your search and filters"
+      : filter.hasActiveFilters
+        ? "No posts match the current filters"
+        : "No posts found";
 
-  const value = useMemo(
+  const toolbarValue = useMemo(
     () => ({
-      posts,
+      isOwner,
+      sortOrder,
+      onSortChange: setSortOrder,
+      search,
+      filter,
+      categories,
+    }),
+    [isOwner, sortOrder, setSortOrder, search, filter, categories],
+  );
+
+  const listValue = useMemo(
+    () => ({
+      posts: visiblePosts,
       username,
       isOwner,
-      hasNoPosts: posts.length === 0,
+      hasNoPosts,
+      showEmpty,
+      emptyMessage,
     }),
-    [posts, username, isOwner],
+    [visiblePosts, username, isOwner, hasNoPosts, showEmpty, emptyMessage],
   );
 
   return (
-    <PostWorkspaceContext.Provider value={value}>
-      {children}
-    </PostWorkspaceContext.Provider>
+    <PostToolbarContext.Provider value={toolbarValue}>
+      <PostListContext.Provider value={listValue}>
+        {children}
+      </PostListContext.Provider>
+    </PostToolbarContext.Provider>
   );
-}
-
-export function usePostWorkspace() {
-  const context = useContext(PostWorkspaceContext);
-  if (!context) {
-    throw new Error(
-      "usePostWorkspace must be used within PostWorkspaceProvider",
-    );
-  }
-  return context;
 }

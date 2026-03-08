@@ -26,19 +26,24 @@ export function PostListItem({ post, username }: PostListItemProps) {
         className="block px-4.5 py-8 transition-colors hover:text-blue-11"
       >
         <div className="flex items-start justify-between gap-20 w-full">
-          <span className="shrink-0 text-[13px] font-medium w-24 whitespace-nowrap tracking-[-0.06em] leading-1.4 pt-[2px] uppercase">
-            {publishedLabel}
-          </span>
-          <div className="min-w-0 space-y-3 w-lg">
-            <h2 className="text-xl leading-tight underline">
-              {post.title}
-            </h2>
-            <span className="block text-[15px] font-medium text-muted-foreground leading-[1.2]">
+          <div className="flex flex-col">
+            <span className="shrink-0 text-[13px] font-medium w-24 whitespace-nowrap tracking-[-0.06em] leading-1.2 uppercase">
+              {publishedLabel}
+            </span>
+            <span className="text-[14px] font-medium leading-[1.2]">
               {post.category}
             </span>
+          </div>
+          <div className="min-w-0 space-y-3 w-lg">
+            <div className="flex flex-col gap-3">
+              <h2 className="text-xl leading-tight underline">
+                {post.title}
+              </h2>
+            </div>
+
             <ContentBody
               content={post.body}
-              className="max-w-xl text-[17px] leading-[1.3] font-regular space-y-2 [&_img]:my-3"
+              className="max-w-xl text-[17px] leading-[1.3] font-regular space-y-2 [&_img]:my-3 mt-4"
             />
           </div>
         </div>
