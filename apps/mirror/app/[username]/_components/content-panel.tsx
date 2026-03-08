@@ -28,10 +28,10 @@ export function ContentPanel({ routeMode, children }: ContentPanelProps) {
         <WorkspaceNavbar />
         <ToolbarSlotTarget />
         <div className="flex-1 min-h-0 *:h-full relative">
-          <div className="w-full absolute top-0 bg-linear-to-b from-background to-transparent max-h-[24px] z-10" />
+          <div className="w-full absolute top-0 bg-linear-to-b to-transparent max-h-[40px] z-10 from-background" />
           <div
             ref={setScrollRoot}
-            className="overflow-y-auto h-full pb-[64px] pt-4"
+            className="overflow-y-auto h-full pb-[64px] pt-0"
           >
             <ScrollRootProvider value={scrollRoot}>
               {children}

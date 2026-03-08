@@ -46,7 +46,7 @@ export function ArticleListToolbar({
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   return (
-    <div className="flex h-14 items-center gap-3 px-4.5 justify-end bg-background relative">
+    <div className="flex h-10 items-center gap-3 px-4.5 justify-end bg-background relative border-b border-border-subtle">
       <div className="flex items-center justify-end w-full gap-3">
         {isOwner && (
           <div className="flex items-center">

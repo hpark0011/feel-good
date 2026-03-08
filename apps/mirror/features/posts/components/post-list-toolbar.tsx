@@ -29,8 +29,8 @@ export function PostListToolbar({
   filter,
 }: PostListToolbarProps) {
   return (
-    <div className="relative flex h-14 items-center justify-end gap-3 bg-background px-4.5">
-      <div className="flex w-full items-center justify-end gap-3">
+    <div className="relative flex h-10 items-center justify-end gap-3 bg-background px-4.5 border-b border-border-subtle">
+      <div className="flex w-full items-center justify-end gap-0">
         <ContentListSearchInput
           query={search.query}
           onQueryChange={search.setQuery}

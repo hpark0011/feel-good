@@ -23,25 +23,26 @@ type PostDetailProps = {
 
 export function PostDetail({ post }: PostDetailProps) {
   return (
-    <div className="min-h-[calc(100vh-40px)] bg-background px-4 py-8">
-      <article className="mx-auto max-w-2xl">
-        <div className="mb-12 space-y-3">
-          <div className="flex flex-col items-start gap-0.5">
-            <span className="text-[15px] leading-[1.2] text-muted-foreground">
+    <div className="h-full px-4 py-20 flex">
+      <article className="mx-auto max-w-3xl flex gap-20">
+        <div className="pt-1">
+          <div className="flex flex-col items-start gap-0.5 text-nowrap">
+            <span className="text-[13px] leading-[1.2] uppercase font-medium">
               {post.status === "draft"
                 ? "Draft"
                 : formatLongDate(post.publishedAt ?? post.createdAt)}
             </span>
-            <span className="text-[15px] font-medium text-muted-foreground leading-[1.2]">
+            <span className="text-[14px] font-medium leading-[1.2]">
               {post.category}
             </span>
           </div>
-          <h1 className="max-w-xl text-3xl font-medium leading-tight tracking-[-0.02em]">
-            {post.title}
-          </h1>
         </div>
 
-        <div className="max-w-xl">
+        <div className="max-w-lg flex flex-col gap-2.5">
+          <h1 className="max-w-xl text-xl font-regular leading-tight tracking-[-0.02em] underline">
+            {post.title}
+          </h1>
+
           <RichTextViewer content={post.body} />
         </div>
       </article>

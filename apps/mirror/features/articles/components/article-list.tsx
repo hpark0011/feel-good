@@ -43,7 +43,7 @@ export function ArticleList({
   shouldAnimate = false,
 }: ArticleListProps) {
   return (
-    <section className="w-full mx-auto **:data-[slot=table-container]:overflow-visible">
+    <section className="w-full mx-auto **:data-[slot=table-container]:overflow-visible pt-7">
       <Table>
         <TableHeader className="[&_tr]:border-b-0">
           <TableRow className="border-b-0 hover:bg-transparent">
