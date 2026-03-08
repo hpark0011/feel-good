@@ -1,11 +1,13 @@
 "use client";
 
+import { HeptagonalPrism } from "@/components/animated-geometries/heptagonal-prism";
 import { usePostWorkspace } from "../context/post-workspace-context";
 import { PostListItem } from "./post-list-item";
 
 function EmptyMessage({ message }: { message: string }) {
   return (
-    <div className="flex items-center justify-center py-16 text-muted-foreground">
+    <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
+      <HeptagonalPrism />
       {message}
     </div>
   );
