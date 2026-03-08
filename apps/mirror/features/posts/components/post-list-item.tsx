@@ -25,11 +25,11 @@ export function PostListItem({ post, username }: PostListItemProps) {
         scroll={false}
         className="block px-4.5 py-8 transition-colors hover:text-blue-11"
       >
-        <div className="flex items-start justify-between gap-20">
+        <div className="flex items-start justify-between gap-20 w-full">
           <span className="shrink-0 text-[13px] font-medium w-24 whitespace-nowrap tracking-[-0.06em] leading-1.4 pt-[2px] uppercase">
             {publishedLabel}
           </span>
-          <div className="min-w-0 space-y-3 w-full">
+          <div className="min-w-0 space-y-3 w-lg">
             <h2 className="text-xl leading-tight underline">
               {post.title}
             </h2>
