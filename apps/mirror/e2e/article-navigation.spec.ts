@@ -6,6 +6,7 @@ const articleTitle = "The Art of Listening";
 const articleExcerpt =
   "Most people think producing music is about adding things.";
 const postTitle = "Listening Before Speaking";
+const postCategory = "Attention";
 
 test.describe("Article navigation", () => {
   test("redirects the profile root to the typed article list", async ({
@@ -91,10 +92,16 @@ test.describe("Article navigation", () => {
     }
 
     await expect(seededPostLink).toBeVisible({ timeout: 10000 });
+    await expect(
+      page.locator("article").filter({ has: seededPostLink }).getByText(postCategory),
+    ).toBeVisible({ timeout: 10000 });
     await seededPostLink.click();
     await expect(page).toHaveURL(new RegExp(`/@${username}/posts/.+`));
     await expect(
       page.getByRole("heading", { name: postTitle }),
+    ).toBeVisible({ timeout: 10000 });
+    await expect(
+      page.locator("article").getByText(postCategory),
     ).toBeVisible({ timeout: 10000 });
   });
 

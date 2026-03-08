@@ -31,7 +31,7 @@ export function ContentPanel({ routeMode, children }: ContentPanelProps) {
           <div className="w-full absolute top-0 bg-linear-to-b from-background to-transparent max-h-[24px] z-10" />
           <div
             ref={setScrollRoot}
-            className="overflow-y-auto h-full pb-[64px] pt-8"
+            className="overflow-y-auto h-full pb-[64px] pt-4"
           >
             <ScrollRootProvider value={scrollRoot}>
               {children}

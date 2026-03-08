@@ -11,6 +11,7 @@ export type PostSummary = {
   createdAt: number;
   publishedAt?: number;
   status: "draft" | "published";
+  category: string;
 };
 
 export type PostWithBody = PostSummary;

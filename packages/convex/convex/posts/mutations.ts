@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import type { Doc } from "../_generated/dataModel";
+import { internalMutation } from "../_generated/server";
 import { authMutation } from "../lib/auth";
 import { getAppUser } from "../users/helpers";
 import {
@@ -8,6 +9,10 @@ import {
   validateContentStringLength,
 } from "../content/helpers";
 import { MAX_SLUG_LENGTH, MAX_TITLE_LENGTH } from "../content/schema";
+import {
+  getPostCategoryForSlug,
+  MAX_POST_CATEGORY_LENGTH,
+} from "./categories";
 
 type PostPatch = Partial<
   Omit<Doc<"posts">, "_id" | "_creationTime" | "userId" | "createdAt">
@@ -17,6 +22,7 @@ export const create = authMutation({
   args: {
     title: v.string(),
     slug: v.optional(v.string()),
+    category: v.string(),
     body: v.any(),
     status: v.union(v.literal("draft"), v.literal("published")),
   },
@@ -25,6 +31,11 @@ export const create = authMutation({
     const appUser = await getAppUser(ctx, ctx.user._id);
 
     validateContentStringLength(args.title, "Title", MAX_TITLE_LENGTH);
+    validateContentStringLength(
+      args.category,
+      "Category",
+      MAX_POST_CATEGORY_LENGTH,
+    );
 
     const slug = args.slug || generateSlug(args.title);
     validateContentStringLength(slug, "Slug", MAX_SLUG_LENGTH);
@@ -48,6 +59,7 @@ export const create = authMutation({
       userId: appUser._id,
       slug,
       title: args.title,
+      category: args.category,
       body: args.body,
       status: args.status,
       createdAt: now,
@@ -61,6 +73,7 @@ export const update = authMutation({
     id: v.id("posts"),
     title: v.optional(v.string()),
     slug: v.optional(v.string()),
+    category: v.optional(v.string()),
     body: v.optional(v.any()),
     status: v.optional(v.union(v.literal("draft"), v.literal("published"))),
   },
@@ -81,6 +94,13 @@ export const update = authMutation({
     if (args.slug !== undefined) {
       validateContentStringLength(args.slug, "Slug", MAX_SLUG_LENGTH);
     }
+    if (args.category !== undefined) {
+      validateContentStringLength(
+        args.category,
+        "Category",
+        MAX_POST_CATEGORY_LENGTH,
+      );
+    }
 
     if (args.slug && args.slug !== post.slug) {
       const existing = await ctx.db
@@ -97,6 +117,7 @@ export const update = authMutation({
     const patch: PostPatch = {};
     if (args.title !== undefined) patch.title = args.title;
     if (args.slug !== undefined) patch.slug = args.slug;
+    if (args.category !== undefined) patch.category = args.category;
     if (args.body !== undefined) patch.body = args.body;
 
     if (args.status !== undefined) {
@@ -129,5 +150,33 @@ export const remove = authMutation({
     }
 
     return null;
+  },
+});
+
+export const backfillCategories = internalMutation({
+  args: {},
+  returns: v.object({
+    scanned: v.number(),
+    updated: v.number(),
+  }),
+  handler: async (ctx) => {
+    const posts = await ctx.db.query("posts").collect();
+    let updated = 0;
+
+    for (const post of posts) {
+      if (post.category?.trim()) {
+        continue;
+      }
+
+      await ctx.db.patch(post._id, {
+        category: getPostCategoryForSlug(post.slug),
+      });
+      updated += 1;
+    }
+
+    return {
+      scanned: posts.length,
+      updated,
+    };
   },
 });

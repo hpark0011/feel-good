@@ -4,6 +4,7 @@ import { v } from "convex/values";
 import { createThread, saveMessage } from "@convex-dev/agent";
 import { components } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
+import { getPostCategoryForSlug } from "./posts/categories";
 
 // ── Seed data ───────────────────────────────────────────────────────
 
@@ -248,6 +249,7 @@ async function ensureRickRubinPosts(
       userId,
       slug: post.slug,
       title: post.title,
+      category: getPostCategoryForSlug(post.slug),
       body: post.body,
       status: "published",
       createdAt,

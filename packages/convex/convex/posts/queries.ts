@@ -7,6 +7,7 @@ import {
 import {
   postSummaryReturnValidator,
   postWithBodyReturnValidator,
+  serializePost,
 } from "./helpers";
 
 export const getByUsername = query({
@@ -24,7 +25,7 @@ export const getByUsername = query({
       .withIndex("by_userId", (q) => q.eq("userId", user._id))
       .collect();
 
-    return filterVisibleContent(posts, isOwner);
+    return filterVisibleContent(posts, isOwner).map(serializePost);
   },
 });
 
@@ -52,6 +53,6 @@ export const getBySlug = query({
       return null;
     }
 
-    return post;
+    return serializePost(post);
   },
 });

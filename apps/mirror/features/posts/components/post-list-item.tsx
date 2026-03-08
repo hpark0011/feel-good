@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { getPlainText } from "@feel-good/features/editor";
+import { ContentBody } from "@feel-good/features/editor/components";
 import { useChatSearchParams } from "@/hooks/use-chat-search-params";
 import { formatLongDate, getContentHref } from "@/features/content";
 import type { PostSummary } from "../types";
@@ -33,9 +33,13 @@ export function PostListItem({ post, username }: PostListItemProps) {
             <h2 className="text-xl leading-tight underline">
               {post.title}
             </h2>
-            <p className="max-w-xl text-[17px] leading-[1.3] font-regular">
-              {getPlainText(post.body)}
-            </p>
+            <span className="block text-[15px] font-medium text-muted-foreground leading-[1.2]">
+              {post.category}
+            </span>
+            <ContentBody
+              content={post.body}
+              className="max-w-xl text-[17px] leading-[1.3] font-regular space-y-2 [&_img]:my-3"
+            />
           </div>
         </div>
       </Link>
