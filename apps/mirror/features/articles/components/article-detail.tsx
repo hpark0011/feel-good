@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { formatLongDate } from "../utils/format-date";
+import { formatLongDate } from "@/features/content";
 import type { ArticleWithBody } from "../types";
 
 const RichTextViewer = dynamic(

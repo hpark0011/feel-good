@@ -5,7 +5,7 @@ import { fetchAuthQuery } from "@/lib/auth-server";
 import { api } from "@feel-good/convex/convex/_generated/api";
 import { WorkspaceToolbar } from "@/components/workspace-toolbar-slot";
 
-export default async function ContentArticlePage({
+export default async function ArticleContentPage({
   params,
 }: { params: Promise<{ username: string; slug: string }> }) {
   const { username, slug } = await params;

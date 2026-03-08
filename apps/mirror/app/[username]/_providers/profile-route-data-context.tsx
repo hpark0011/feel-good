@@ -12,7 +12,6 @@ import type { Preloaded } from "convex/react";
 import type { api } from "@feel-good/convex/convex/_generated/api";
 import type { Profile } from "@/features/profile";
 import { ProfileProvider } from "@/features/profile";
-import { ArticleWorkspaceProvider } from "@/features/articles";
 import { useProfileData } from "@/features/profile/hooks/use-profile-data";
 
 const VideoCallModal = dynamic(
@@ -42,7 +41,6 @@ export function useProfileRouteData() {
 type ProfileRouteDataProviderProps = {
   profile: Profile;
   preloadedProfile: Preloaded<typeof api.users.queries.getByUsername>;
-  preloadedArticles: Preloaded<typeof api.articles.queries.getByUsername>;
   isOwner: boolean;
   children: ReactNode;
 };
@@ -50,14 +48,12 @@ type ProfileRouteDataProviderProps = {
 export function ProfileRouteDataProvider({
   profile: initialProfile,
   preloadedProfile,
-  preloadedArticles,
   isOwner,
   children,
 }: ProfileRouteDataProviderProps) {
-  const { profile, articles } = useProfileData({
+  const { profile } = useProfileData({
     initialProfile,
     preloadedProfile,
-    preloadedArticles,
   });
 
   const [videoCallOpen, setVideoCallOpen] = useState(false);
@@ -71,14 +67,7 @@ export function ProfileRouteDataProvider({
 
   return (
     <ProfileRouteDataContext.Provider value={routeDataValue}>
-      <ProfileProvider value={profileContextValue}>
-        <ArticleWorkspaceProvider
-          articles={articles}
-          username={profile.username}
-        >
-          {children}
-        </ArticleWorkspaceProvider>
-      </ProfileProvider>
+      <ProfileProvider value={profileContextValue}>{children}</ProfileProvider>
       {videoCallOpen && (
         <VideoCallModal
           username={profile.username}

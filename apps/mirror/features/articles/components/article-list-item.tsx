@@ -5,8 +5,8 @@ import Link from "next/link";
 import { TableCell } from "@feel-good/ui/primitives/table";
 import { Checkbox } from "@feel-good/ui/primitives/checkbox";
 import { useChatSearchParams } from "@/hooks/use-chat-search-params";
+import { formatShortDate, getContentHref } from "@/features/content";
 import type { ArticleSummary } from "../types";
-import { formatShortDate } from "../utils/format-date";
 import { AnimatedArticleRow } from "./animated-article-row";
 import { cn } from "@feel-good/utils/cn";
 
@@ -30,7 +30,9 @@ export const ArticleListItem = memo(function ArticleListItem({
   index = 0,
 }: ArticleListItemProps) {
   const { buildChatAwareHref } = useChatSearchParams();
-  const href = buildChatAwareHref(`/@${username}/${article.slug}`);
+  const href = buildChatAwareHref(
+    getContentHref(username, "articles", article.slug),
+  );
 
   return (
     <AnimatedArticleRow

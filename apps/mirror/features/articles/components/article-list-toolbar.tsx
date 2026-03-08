@@ -6,7 +6,6 @@ import {
   AlertDialogTrigger,
 } from "@feel-good/ui/primitives/alert-dialog";
 import { Button } from "@feel-good/ui/primitives/button";
-import { Tabs, TabsList, TabsTrigger } from "@feel-good/ui/primitives/tabs";
 import {
   Tooltip,
   TooltipContent,
@@ -47,28 +46,8 @@ export function ArticleListToolbar({
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   return (
-    <div className="flex h-12 items-center gap-2 px-4.5 justify-end bg-background relative">
-      <Tabs defaultValue="tab1">
-        <TabsList variant="folder">
-          <TabsTrigger
-            value="tab1"
-            className="group-data-[variant=folder]/tabs-list:before:border-border-subtle"
-          >
-            Articles
-          </TabsTrigger>
-          <TabsTrigger
-            value="tab2"
-            className="group-data-[variant=folder]/tabs-list:before:border-border-subtle"
-          >
-            Posts
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
-      <div
-        className={cn(
-          "flex items-center justify-end w-full gap-3",
-        )}
-      >
+    <div className="flex h-12 items-center gap-3 px-4.5 justify-end bg-background relative">
+      <div className="flex items-center justify-end w-full gap-3">
         {isOwner && (
           <div className="flex items-center">
             {hasSelection && (

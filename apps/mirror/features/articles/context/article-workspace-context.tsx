@@ -8,7 +8,8 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useMutation } from "convex/react";
+import { useMutation, usePreloadedQuery } from "convex/react";
+import type { Preloaded } from "convex/react";
 import { api } from "@feel-good/convex/convex/_generated/api";
 import type { SortOrder } from "../hooks/use-article-sort";
 import type { ArticleSummary } from "../types";
@@ -23,16 +24,21 @@ import { ArticleToolbarContext } from "./article-toolbar-context";
 import { ArticleListContext } from "./article-list-context";
 
 type ArticleWorkspaceProviderProps = {
-  articles: ArticleSummary[];
+  preloadedArticles: Preloaded<typeof api.articles.queries.getByUsername>;
   username: string;
   children: ReactNode;
 };
 
 export function ArticleWorkspaceProvider({
-  articles,
+  preloadedArticles,
   username,
   children,
 }: ArticleWorkspaceProviderProps) {
+  const reactiveArticles = usePreloadedQuery(preloadedArticles);
+  const articles = useMemo(
+    () => ((reactiveArticles ?? []) as ArticleSummary[]),
+    [reactiveArticles],
+  );
   const isOwner = useIsProfileOwner();
   const removeArticles = useMutation(api.articles.mutations.remove);
   const search = useArticleSearch(articles);

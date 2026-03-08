@@ -1,49 +1,11 @@
 import { internalMutation } from "./_generated/server";
+import type { MutationCtx } from "./_generated/server";
 import { v } from "convex/values";
 import { createThread, saveMessage } from "@convex-dev/agent";
 import { components } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 
-export const seedRickRubin = internalMutation({
-  args: {},
-  returns: v.id("users"),
-  handler: async (ctx) => {
-    const existing = await ctx.db
-      .query("users")
-      .withIndex("by_username", (q) => q.eq("username", "rick-rubin"))
-      .unique();
-
-    if (existing) {
-      return existing._id;
-    }
-
-    return await ctx.db.insert("users", {
-      authId: "seed_rick_rubin",
-      email: "rick@example.com",
-      username: "rick-rubin",
-      name: "Rick Rubin",
-      bio: "Rick Rubin has been a singular, transformative creative muse for artists across genres and generations — from the Beastie Boys to Johnny Cash, from Public Enemy to the Red Hot Chili Peppers, from Adele to Jay-Z.",
-      onboardingComplete: true,
-    });
-  },
-});
-
-// ── Helper ──────────────────────────────────────────────────────────
-
-async function getRickRubinId(
-  ctx: { db: { query: (table: "users") => any } },
-): Promise<Id<"users">> {
-  const user = await ctx.db
-    .query("users")
-    .withIndex("by_username", (q: any) => q.eq("username", "rick-rubin"))
-    .unique();
-  if (!user) {
-    throw new Error(
-      "rick-rubin user not found. Run seed:seedRickRubin first.",
-    );
-  }
-  return user._id;
-}
+// ── Seed data ───────────────────────────────────────────────────────
 
 function tiptapDoc(paragraphs: string[]) {
   return {
@@ -54,8 +16,6 @@ function tiptapDoc(paragraphs: string[]) {
     })),
   };
 }
-
-// ── Articles ────────────────────────────────────────────────────────
 
 const SEED_ARTICLES = [
   {
@@ -92,40 +52,32 @@ const SEED_ARTICLES = [
   },
 ];
 
-export const seedRickRubinArticles = internalMutation({
-  args: {},
-  returns: v.null(),
-  handler: async (ctx) => {
-    const userId = await getRickRubinId(ctx);
-
-    const existing = await ctx.db
-      .query("articles")
-      .withIndex("by_userId", (q) => q.eq("userId", userId))
-      .first();
-    if (existing) {
-      return null;
-    }
-
-    const now = Date.now();
-    for (const article of SEED_ARTICLES) {
-      const createdAt = now - article.daysAgo * 24 * 60 * 60 * 1000;
-      await ctx.db.insert("articles", {
-        userId,
-        slug: article.slug,
-        title: article.title,
-        category: article.category,
-        body: article.body,
-        status: "published",
-        createdAt,
-        publishedAt: createdAt,
-      });
-    }
-
-    return null;
+const SEED_POSTS = [
+  {
+    slug: "listening-before-speaking",
+    title: "Listening Before Speaking",
+    daysAgo: 5,
+    body: tiptapDoc([
+      "Most breakthroughs arrive after the room gets quiet enough to hear what was already there.",
+    ]),
   },
-});
-
-// ── Conversations ───────────────────────────────────────────────────
+  {
+    slug: "remove-the-unnecessary",
+    title: "Remove the Unnecessary",
+    daysAgo: 3,
+    body: tiptapDoc([
+      "If the work feels crowded, it usually means the idea wants more space, not more decoration.",
+    ]),
+  },
+  {
+    slug: "make-the-room-safe",
+    title: "Make the Room Safe",
+    daysAgo: 1,
+    body: tiptapDoc([
+      "Artists do their best work when they do not feel judged while reaching for something new.",
+    ]),
+  },
+];
 
 const SEED_CONVERSATIONS = [
   {
@@ -156,50 +108,176 @@ const SEED_CONVERSATIONS = [
   },
 ];
 
+// ── Helpers ─────────────────────────────────────────────────────────
+
+async function ensureRickRubinUser(
+  ctx: MutationCtx,
+): Promise<Id<"users">> {
+  const existing = await ctx.db
+    .query("users")
+    .withIndex("by_username", (q: any) => q.eq("username", "rick-rubin"))
+    .unique();
+
+  if (existing) {
+    return existing._id;
+  }
+
+  return await ctx.db.insert("users", {
+    authId: "seed_rick_rubin",
+    email: "rick@example.com",
+    username: "rick-rubin",
+    name: "Rick Rubin",
+    bio: "Rick Rubin has been a singular, transformative creative muse for artists across genres and generations — from the Beastie Boys to Johnny Cash, from Public Enemy to the Red Hot Chili Peppers, from Adele to Jay-Z.",
+    onboardingComplete: true,
+  });
+}
+
+async function ensureRickRubinArticles(
+  ctx: MutationCtx,
+  userId: Id<"users">,
+): Promise<void> {
+  const existing = await ctx.db
+    .query("articles")
+    .withIndex("by_userId", (q: any) => q.eq("userId", userId))
+    .first();
+  if (existing) {
+    return;
+  }
+
+  const now = Date.now();
+  for (const article of SEED_ARTICLES) {
+    const createdAt = now - article.daysAgo * 24 * 60 * 60 * 1000;
+    await ctx.db.insert("articles", {
+      userId,
+      slug: article.slug,
+      title: article.title,
+      category: article.category,
+      body: article.body,
+      status: "published",
+      createdAt,
+      publishedAt: createdAt,
+    });
+  }
+}
+
+async function ensureRickRubinPosts(
+  ctx: MutationCtx,
+  userId: Id<"users">,
+): Promise<void> {
+  const existing = await ctx.db
+    .query("posts")
+    .withIndex("by_userId", (q: any) => q.eq("userId", userId))
+    .first();
+  if (existing) {
+    return;
+  }
+
+  const now = Date.now();
+  for (const post of SEED_POSTS) {
+    const createdAt = now - post.daysAgo * 24 * 60 * 60 * 1000;
+    await ctx.db.insert("posts", {
+      userId,
+      slug: post.slug,
+      title: post.title,
+      body: post.body,
+      status: "published",
+      createdAt,
+      publishedAt: createdAt,
+    });
+  }
+}
+
+async function ensureRickRubinConversations(
+  ctx: MutationCtx,
+  userId: Id<"users">,
+): Promise<void> {
+  const existing = await ctx.db
+    .query("conversations")
+    .withIndex("by_profileOwnerId_and_viewerId", (q: any) =>
+      q.eq("profileOwnerId", userId),
+    )
+    .first();
+  if (existing) {
+    return;
+  }
+
+  for (const convo of SEED_CONVERSATIONS) {
+    const threadId = await createThread(ctx, components.agent, {});
+
+    await ctx.db.insert("conversations", {
+      profileOwnerId: userId,
+      threadId,
+      status: "active",
+      title: convo.title,
+    });
+
+    for (const msg of convo.messages) {
+      if (msg.role === "user") {
+        await saveMessage(ctx, components.agent, {
+          threadId,
+          prompt: msg.text,
+        });
+      } else {
+        await saveMessage(ctx, components.agent, {
+          threadId,
+          message: {
+            role: "assistant",
+            content: [{ type: "text", text: msg.text }],
+          },
+        });
+      }
+    }
+  }
+}
+
+// ── Exported mutations ──────────────────────────────────────────────
+
+export const seedRickRubin = internalMutation({
+  args: {},
+  returns: v.id("users"),
+  handler: async (ctx) => {
+    return await ensureRickRubinUser(ctx);
+  },
+});
+
+export const seedRickRubinArticles = internalMutation({
+  args: {},
+  returns: v.null(),
+  handler: async (ctx) => {
+    const userId = await ensureRickRubinUser(ctx);
+    await ensureRickRubinArticles(ctx, userId);
+    return null;
+  },
+});
+
+export const seedRickRubinPosts = internalMutation({
+  args: {},
+  returns: v.null(),
+  handler: async (ctx) => {
+    const userId = await ensureRickRubinUser(ctx);
+    await ensureRickRubinPosts(ctx, userId);
+    return null;
+  },
+});
+
 export const seedRickRubinConversations = internalMutation({
   args: {},
   returns: v.null(),
   handler: async (ctx) => {
-    const userId = await getRickRubinId(ctx);
+    const userId = await ensureRickRubinUser(ctx);
+    await ensureRickRubinConversations(ctx, userId);
+    return null;
+  },
+});
 
-    const existing = await ctx.db
-      .query("conversations")
-      .withIndex("by_profileOwnerId_and_viewerId", (q) =>
-        q.eq("profileOwnerId", userId),
-      )
-      .first();
-    if (existing) {
-      return null;
-    }
-
-    for (const convo of SEED_CONVERSATIONS) {
-      const threadId = await createThread(ctx, components.agent, {});
-
-      await ctx.db.insert("conversations", {
-        profileOwnerId: userId,
-        threadId,
-        status: "active",
-        title: convo.title,
-      });
-
-      for (const msg of convo.messages) {
-        if (msg.role === "user") {
-          await saveMessage(ctx, components.agent, {
-            threadId,
-            prompt: msg.text,
-          });
-        } else {
-          await saveMessage(ctx, components.agent, {
-            threadId,
-            message: {
-              role: "assistant",
-              content: [{ type: "text", text: msg.text }],
-            },
-          });
-        }
-      }
-    }
-
+export const seedRickRubinDemo = internalMutation({
+  args: {},
+  returns: v.null(),
+  handler: async (ctx) => {
+    const userId = await ensureRickRubinUser(ctx);
+    await ensureRickRubinArticles(ctx, userId);
+    await ensureRickRubinPosts(ctx, userId);
+    await ensureRickRubinConversations(ctx, userId);
     return null;
   },
 });

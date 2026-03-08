@@ -1,39 +1,21 @@
 import { query } from "../_generated/server";
-import type { QueryCtx } from "../_generated/server";
 import { v } from "convex/values";
-import type { Doc } from "../_generated/dataModel";
-import { authComponent } from "../auth/client";
 import {
   articleSummaryReturnValidator,
   articleWithBodyReturnValidator,
   conversationArticleReturnValidator,
   resolveCoverImageUrl,
 } from "./helpers";
-
-async function getUserAndArticleAccess(ctx: QueryCtx, username: string) {
-  const user = await ctx.db
-    .query("users")
-    .withIndex("by_username", (q) => q.eq("username", username))
-    .unique();
-  if (!user) {
-    return null;
-  }
-
-  const authUser = await authComponent.safeGetAuthUser(ctx);
-  const isOwner = !!authUser && user.authId === authUser._id;
-
-  return { user, isOwner };
-}
-
-function filterVisibleArticles(articles: Doc<"articles">[], isOwner: boolean) {
-  return articles.filter((article) => isOwner || article.status !== "draft");
-}
+import {
+  filterVisibleContent,
+  getUserAndContentAccess,
+} from "../content/helpers";
 
 export const getByUsername = query({
   args: { username: v.string() },
   returns: v.union(v.array(articleSummaryReturnValidator), v.null()),
   handler: async (ctx, args) => {
-    const access = await getUserAndArticleAccess(ctx, args.username);
+    const access = await getUserAndContentAccess(ctx, args.username);
     if (!access) {
       return null;
     }
@@ -45,7 +27,7 @@ export const getByUsername = query({
       .withIndex("by_userId", (q) => q.eq("userId", user._id))
       .collect();
 
-    const visible = filterVisibleArticles(articles, isOwner);
+    const visible = filterVisibleContent(articles, isOwner);
 
     const coverImageUrls = await Promise.all(
       visible.map((a) => resolveCoverImageUrl(ctx, a.coverImageStorageId)),
@@ -70,7 +52,7 @@ export const getByUsernameForConversation = query({
   args: { username: v.string() },
   returns: v.union(v.array(conversationArticleReturnValidator), v.null()),
   handler: async (ctx, args) => {
-    const access = await getUserAndArticleAccess(ctx, args.username);
+    const access = await getUserAndContentAccess(ctx, args.username);
     if (!access) {
       return null;
     }
@@ -81,7 +63,7 @@ export const getByUsernameForConversation = query({
       .withIndex("by_userId", (q) => q.eq("userId", user._id))
       .collect();
 
-    return filterVisibleArticles(articles, isOwner).map((article) => ({
+    return filterVisibleContent(articles, isOwner).map((article) => ({
       title: article.title,
       body: article.body,
     }));
@@ -92,13 +74,12 @@ export const getBySlug = query({
   args: { username: v.string(), slug: v.string() },
   returns: v.union(articleWithBodyReturnValidator, v.null()),
   handler: async (ctx, args) => {
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_username", (q) => q.eq("username", args.username))
-      .unique();
-    if (!user) {
+    const access = await getUserAndContentAccess(ctx, args.username);
+    if (!access) {
       return null;
     }
+
+    const { user, isOwner } = access;
 
     const article = await ctx.db
       .query("articles")
@@ -110,12 +91,8 @@ export const getBySlug = query({
       return null;
     }
 
-    if (article.status === "draft") {
-      const authUser = await authComponent.safeGetAuthUser(ctx);
-      const isOwner = !!authUser && user.authId === authUser._id;
-      if (!isOwner) {
-        return null;
-      }
+    if (article.status === "draft" && !isOwner) {
+      return null;
     }
 
     const coverImageUrl = await resolveCoverImageUrl(

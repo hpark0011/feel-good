@@ -22,11 +22,10 @@ export default async function ProfileLayout({
   const { username } = await params;
   if (isReservedUsername(username)) notFound();
 
-  const [convexProfile, preloadedProfile, preloadedArticles, currentAuthUser] =
+  const [convexProfile, preloadedProfile, currentAuthUser] =
     await Promise.all([
       fetchAuthQuery(api.users.queries.getByUsername, { username }),
       preloadAuthQuery(api.users.queries.getByUsername, { username }),
-      preloadAuthQuery(api.articles.queries.getByUsername, { username }),
       fetchAuthQuery(api.auth.queries.getCurrentUser, {}),
     ]);
 
@@ -52,7 +51,6 @@ export default async function ProfileLayout({
     <ProfileRouteDataProvider
       profile={profileData}
       preloadedProfile={preloadedProfile}
-      preloadedArticles={preloadedArticles}
       isOwner={isOwner}
     >
       <ChatRouteController>
