@@ -53,28 +53,97 @@ const SEED_ARTICLES = [
 ];
 
 const SEED_POSTS = [
+  // ── Short posts (1 paragraph) ──────────────────────────────────────
   {
     slug: "listening-before-speaking",
     title: "Listening Before Speaking",
-    daysAgo: 5,
+    daysAgo: 21,
     body: tiptapDoc([
       "Most breakthroughs arrive after the room gets quiet enough to hear what was already there.",
     ]),
   },
   {
+    slug: "make-the-room-safe",
+    title: "Make the Room Safe",
+    daysAgo: 2,
+    body: tiptapDoc([
+      "Artists do their best work when they do not feel judged while reaching for something new.",
+    ]),
+  },
+
+  // ── Medium posts (2-3 paragraphs) ──────────────────────────────────
+  {
     slug: "remove-the-unnecessary",
     title: "Remove the Unnecessary",
-    daysAgo: 3,
+    daysAgo: 16,
     body: tiptapDoc([
       "If the work feels crowded, it usually means the idea wants more space, not more decoration.",
+      "I have watched artists spend weeks layering sounds only to realize the demo they recorded on their phone was better. The rawness carried something the polish took away.",
+      "Subtraction is a creative act. Every element you remove is a decision, and decisions are where artistry lives.",
     ]),
   },
   {
-    slug: "make-the-room-safe",
-    title: "Make the Room Safe",
+    slug: "the-body-knows-first",
+    title: "The Body Knows First",
+    daysAgo: 12,
+    body: tiptapDoc([
+      "Before the mind forms an opinion about a piece of music, the body has already responded. A chill down the spine, a foot tapping without permission, tears arriving before you understand why.",
+      "I have learned to trust that physical response more than any intellectual analysis. The body does not lie about what moves it.",
+    ]),
+  },
+  {
+    slug: "seasons-of-making",
+    title: "Seasons of Making",
+    daysAgo: 9,
+    body: tiptapDoc([
+      "Not every season is for harvesting. Some seasons are for planting, some for tending, and some for letting the field rest.",
+      "Artists who try to produce at the same pace year-round eventually burn out. The ones who last understand that dormancy is not laziness — it is preparation.",
+      "When nothing seems to be happening on the surface, the roots are doing their deepest work.",
+    ]),
+  },
+  {
+    slug: "doubt-as-compass",
+    title: "Doubt as Compass",
+    daysAgo: 6,
+    body: tiptapDoc([
+      "Doubt usually shows up right before a breakthrough. It is the mind recognizing that you are in unfamiliar territory, which is exactly where you need to be.",
+      "The trick is not to eliminate doubt but to keep working alongside it. Let it inform you without letting it stop you.",
+    ]),
+  },
+
+  // ── Long posts (4+ paragraphs) ─────────────────────────────────────
+  {
+    slug: "rules-and-breaking-them",
+    title: "Rules and Breaking Them",
+    daysAgo: 14,
+    body: tiptapDoc([
+      "Every great artist I have worked with learned the rules before they broke them. There is a difference between ignorance and transcendence. One comes from not knowing, the other from knowing so deeply that you can see past the boundary.",
+      "The rules exist for a reason. They represent centuries of accumulated understanding about what works. Respecting that history is not the same as being trapped by it.",
+      "When Johnny Cash recorded those final albums, he was not ignoring country music conventions. He had lived inside them for forty years. He understood them so completely that he could strip everything away and find something more honest underneath.",
+      "The permission to break rules is earned through the patience of learning them first.",
+    ]),
+  },
+  {
+    slug: "attention-is-the-gift",
+    title: "Attention Is the Gift",
+    daysAgo: 4,
+    body: tiptapDoc([
+      "We live in a world that treats attention as a commodity to be captured. But in the creative process, attention is a gift you offer freely.",
+      "When I sit with an artist, I am not thinking about what I want the record to sound like. I am not comparing it to anything else. I am simply there, fully present, letting the music exist without imposing my expectations on it.",
+      "This quality of attention changes everything. The artist feels it. They relax. They stop performing and start expressing. The difference between those two states is the difference between a good record and a great one.",
+      "You cannot fake this kind of presence. It requires a genuine emptying of agenda. Most people find that harder than any technical skill.",
+      "But it is the single most important thing I do.",
+    ]),
+  },
+  {
+    slug: "the-source-is-everywhere",
+    title: "The Source Is Everywhere",
     daysAgo: 1,
     body: tiptapDoc([
-      "Artists do their best work when they do not feel judged while reaching for something new.",
+      "People ask where creativity comes from as if there is a single wellspring hidden somewhere. In my experience, it is everywhere — in a conversation with a stranger, in the pattern of light through a window, in the rhythm of a city street at dusk.",
+      "The question is not where to find inspiration. The question is whether you are open to receiving it when it arrives.",
+      "I have seen entire albums born from a single overheard phrase. I have watched producers build worlds from the sound of rain hitting a tin roof. The material is always there. The variable is awareness.",
+      "Creativity is not a talent some people have and others do not. It is a way of paying attention.",
     ]),
   },
 ];

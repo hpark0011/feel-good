@@ -27,7 +27,7 @@ export function WorkspaceNavbar({ className }: WorkspaceNavbarProps) {
         username={profile.username}
         currentKind={routeState.kind}
       />
-      <div className="mb-4">
+      <div className="mb-4.5">
         <ThemeToggleButton />
       </div>
     </nav>

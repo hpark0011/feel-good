@@ -52,7 +52,7 @@ export const ArticleListItem = memo(function ArticleListItem({
       )}
       <TableCell
         className={cn(
-          "font-medium truncate max-w-0 py-0 text-lg pl-4.5",
+          "font-medium truncate max-w-0 py-0 text-lg pl-6",
           isOwner && "pl-0",
         )}
       >
@@ -67,7 +67,7 @@ export const ArticleListItem = memo(function ArticleListItem({
       <TableCell className="hidden md:table-cell py-0 font-medium">
         {article.category}
       </TableCell>
-      <TableCell className="text-right py-0 font-medium pr-4.5">
+      <TableCell className="text-right py-0 font-medium pr-6">
         {article.status === "draft"
           ? <span className="text-muted-foreground">Draft</span>
           : article.publishedAt

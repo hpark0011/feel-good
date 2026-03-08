@@ -58,7 +58,7 @@ export function ArticleList({
             )}
             <TableHead
               className={cn(
-                "w-4/5 md:w-3/5 text-muted-foreground h-8 pl-4.5",
+                "w-4/5 md:w-3/5 text-muted-foreground h-8 pl-6",
                 isOwner && "pl-0",
               )}
             >
@@ -67,7 +67,7 @@ export function ArticleList({
             <TableHead className="hidden md:table-cell w-1/5 text-muted-foreground h-8">
               Category
             </TableHead>
-            <TableHead className="text-right w-1/5 text-muted-foreground h-8 pr-4.5">
+            <TableHead className="text-right w-1/5 text-muted-foreground h-8 pr-6">
               Published
             </TableHead>
           </TableRow>
