@@ -38,7 +38,7 @@ export function PostDetail({ post }: PostDetailProps) {
           </div>
         </div>
 
-        <div className="max-w-lg flex flex-col gap-2.5">
+        <div className="max-w-lg flex flex-col gap-2">
           <h1 className="max-w-xl text-xl font-regular leading-tight tracking-[-0.02em] underline">
             {post.title}
           </h1>

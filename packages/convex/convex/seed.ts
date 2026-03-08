@@ -234,16 +234,18 @@ async function ensureRickRubinPosts(
   ctx: MutationCtx,
   userId: Id<"users">,
 ): Promise<void> {
-  const existing = await ctx.db
+  const existingPosts = await ctx.db
     .query("posts")
     .withIndex("by_userId", (q: any) => q.eq("userId", userId))
-    .first();
-  if (existing) {
-    return;
-  }
+    .collect();
+  const existingSlugs = new Set(existingPosts.map((post) => post.slug));
 
   const now = Date.now();
   for (const post of SEED_POSTS) {
+    if (existingSlugs.has(post.slug)) {
+      continue;
+    }
+
     const createdAt = now - post.daysAgo * 24 * 60 * 60 * 1000;
     await ctx.db.insert("posts", {
       userId,

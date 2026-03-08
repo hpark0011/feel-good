@@ -1,7 +1,6 @@
 "use client";
 
-import { startTransition } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger } from "@feel-good/ui/primitives/tabs";
 import { useChatSearchParams } from "@/hooks/use-chat-search-params";
 import {
@@ -9,7 +8,6 @@ import {
   CONTENT_KINDS,
   type ContentKind,
   getContentHref,
-  isContentKind,
 } from "../types";
 
 type ContentKindTabsProps = {
@@ -21,30 +19,24 @@ export function ContentKindTabs({
   username,
   currentKind,
 }: ContentKindTabsProps) {
-  const router = useRouter();
   const { buildChatAwareHref } = useChatSearchParams();
 
   return (
-    <Tabs
-      value={currentKind}
-      onValueChange={(nextKind) => {
-        if (!isContentKind(nextKind) || nextKind === currentKind) {
-          return;
-        }
-
-        startTransition(() => {
-          router.push(buildChatAwareHref(getContentHref(username, nextKind)));
-        });
-      }}
-    >
+    <Tabs value={currentKind}>
       <TabsList variant="folder">
         {CONTENT_KINDS.map((kind) => (
           <TabsTrigger
+            asChild
             key={kind}
             value={kind}
             className="group-data-[variant=folder]/tabs-list:before:border-border-subtle h-8"
           >
-            {CONTENT_KIND_LABELS[kind]}
+            <Link
+              href={buildChatAwareHref(getContentHref(username, kind))}
+              scroll={false}
+            >
+              {CONTENT_KIND_LABELS[kind]}
+            </Link>
           </TabsTrigger>
         ))}
       </TabsList>
