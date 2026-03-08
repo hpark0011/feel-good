@@ -8,7 +8,7 @@ function EmptyMessage({
   message,
   showGraphic = false,
 }: {
-  message: string;
+  message?: string;
   showGraphic?: boolean;
 }) {
   return (
@@ -23,7 +23,7 @@ export function ScrollablePostList() {
   const context = usePostList();
 
   if (context.hasNoPosts) {
-    return <EmptyMessage message="No posts yet" showGraphic />;
+    return <EmptyMessage showGraphic />;
   }
 
   if (context.showEmpty) {
