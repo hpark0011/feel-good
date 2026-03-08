@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger } from "@feel-good/ui/primitives/tabs";
 import { useChatSearchParams } from "@/hooks/use-chat-search-params";
 import {
-  CONTENT_KINDS,
   CONTENT_KIND_LABELS,
+  CONTENT_KINDS,
+  type ContentKind,
   getContentHref,
   isContentKind,
-  type ContentKind,
 } from "../types";
 
 type ContentKindTabsProps = {
@@ -42,7 +42,7 @@ export function ContentKindTabs({
           <TabsTrigger
             key={kind}
             value={kind}
-            className="group-data-[variant=folder]/tabs-list:before:border-border-subtle"
+            className="group-data-[variant=folder]/tabs-list:before:border-border-subtle h-8"
           >
             {CONTENT_KIND_LABELS[kind]}
           </TabsTrigger>

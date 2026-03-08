@@ -144,7 +144,7 @@ function TabsTrigger({
         "group-data-[variant=folder]/tabs-list:before:absolute",
         "group-data-[variant=folder]/tabs-list:before:inset-0",
         "group-data-[variant=folder]/tabs-list:before:[transform:perspective(14px)_rotateX(3deg)]",
-        "group-data-[variant=folder]/tabs-list:before:rounded-t-[9px]",
+        "group-data-[variant=folder]/tabs-list:before:rounded-t-[10px]",
         "group-data-[variant=folder]/tabs-list:before:rounded-b-none",
         "group-data-[variant=folder]/tabs-list:before:bg-gray-5",
         "dark:group-data-[variant=folder]/tabs-list:before:bg-gray-2",
@@ -153,7 +153,7 @@ function TabsTrigger({
         "group-data-[variant=folder]/tabs-list:before:-z-[1]",
         "group-data-[variant=folder]/tabs-list:before:content-['']",
         // folder: active tab — remove bottom border, raise above siblings
-        "group-data-[variant=folder]/tabs-list:data-[state=active]:before:border-b-transparent",
+        "group-data-[variant=folder]/tabs-list:data-[state=active]:before:border-b-background",
         "group-data-[variant=folder]/tabs-list:data-[state=active]:before:bg-background",
         "group-data-[variant=folder]/tabs-list:data-[state=active]:z-10",
         // folder: isolate stacking context so before stays visible

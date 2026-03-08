@@ -8,7 +8,7 @@ export function PostListToolbar() {
   const { isOwner } = usePostWorkspace();
 
   return (
-    <div className="flex h-12 items-center justify-end bg-background px-4.5">
+    <div className="flex h-14 items-center justify-end bg-background px-4.5">
       {isOwner && (
         <Button
           variant="primary"
