@@ -23,7 +23,7 @@ export function PostListItem({ post, username }: PostListItemProps) {
       <Link
         href={href}
         scroll={false}
-        className="block px-4.5 py-8 transition-colors hover:text-blue-10"
+        className="block px-4.5 py-8 transition-colors hover:text-blue-11"
       >
         <div className="flex items-start justify-between gap-20">
           <span className="shrink-0 text-[13px] font-medium w-24 whitespace-nowrap tracking-[-0.06em] leading-1.4 pt-[2px] uppercase">

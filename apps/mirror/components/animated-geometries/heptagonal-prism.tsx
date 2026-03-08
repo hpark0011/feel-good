@@ -17,14 +17,14 @@ function HeptagonalPrism({ className }: { className?: string }) {
       stageStyle={{
         animation: "heptagonal-prism-spin 11s linear infinite",
       }}
-      perspectiveOrigin="100% 300%"
+      perspectiveOrigin="100% -480%"
     >
       {Array.from({ length: SIDE_COUNT }, (_, i) => {
         const angle = ANGLE_STEP * i;
         return (
           <div
             key={i}
-            className="pointer-events-none absolute left-1/2 top-1/2 flex flex-col items-center justify-center border-[1.5px] border-gray-1 dark:border-gray-12/15 bg-white/50 dark:bg-white/20 backdrop-blur-2xl"
+            className="pointer-events-none absolute left-1/2 top-1/2 flex flex-col items-center justify-center border-x border-t border-white dark:border-gray-5 bg-gray-3 dark:bg-gray-3 shadow-[0px_3px_4px_-3px_rgba(0,0,0,0.07)] dark:shadow-[0px_2px_4px_-2px_rgba(0,0,0,0.4)]"
             style={{
               width: `${ARC_WIDTH}px`,
               height: `${ARC_HEIGHT}px`,
@@ -32,7 +32,7 @@ function HeptagonalPrism({ className }: { className?: string }) {
               marginTop: `${-ARC_HEIGHT / 2}px`,
               transform: `rotateY(${
                 (angle * 180) / Math.PI
-              }deg) translateZ(${RADIUS}px)`,
+              }deg) translateZ(${RADIUS}px) rotateX(20deg)`,
               transformStyle: "preserve-3d",
               borderTopLeftRadius: "80px",
               borderTopRightRadius: "80px",
