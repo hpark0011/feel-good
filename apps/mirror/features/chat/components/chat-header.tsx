@@ -56,7 +56,7 @@ function ChatHeaderProfileName({
     <span
       data-slot="chat-header-profile-name"
       className={cn(
-        "text-[13px] font-medium truncate px-2.5 py-0.5 bg-card border border-gray-1 rounded-xl shadow-xl top-[-4px] relative min-w-[48px] group-hover:shadow-sm transition-all ease-in-out duration-200 group-hover:bg-gray-1",
+        "text-[13px] font-medium truncate px-2.5 py-0.5 bg-card border border-gray-1 dark:border-gray-4 rounded-xl shadow-xl top-[-4px] relative min-w-[48px] group-hover:shadow-sm transition-all ease-in-out duration-200 group-hover:bg-gray-1",
         className,
       )}
       {...props}
