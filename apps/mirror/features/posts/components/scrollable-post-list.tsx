@@ -4,11 +4,10 @@ import { HeptagonalPrism } from "@/components/animated-geometries/heptagonal-pri
 import { usePostWorkspace } from "../context/post-workspace-context";
 import { PostListItem } from "./post-list-item";
 
-function EmptyMessage({ message }: { message: string }) {
+function EmptyMessage() {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
+    <div className="flex flex-col items-center justify-center pb-16 text-muted-foreground gap-4 h-full">
       <HeptagonalPrism />
-      {message}
     </div>
   );
 }
@@ -17,7 +16,7 @@ export function ScrollablePostList() {
   const { posts, username, hasNoPosts } = usePostWorkspace();
 
   if (hasNoPosts) {
-    return <EmptyMessage message="No posts yet" />;
+    return <EmptyMessage />;
   }
 
   return (

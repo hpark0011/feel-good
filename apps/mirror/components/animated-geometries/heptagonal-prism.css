@@ -1,8 +1,8 @@
 @keyframes heptagonal-prism-spin {
   0% {
-    transform: rotateX(-15deg) rotateZ(10deg) rotateY(0deg);
+    transform: rotateY(0deg);
   }
   100% {
-    transform: rotateX(-15deg) rotateZ(10deg) rotateY(360deg);
+    transform: rotateY(360deg);
   }
 }
