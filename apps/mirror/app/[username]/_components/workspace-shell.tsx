@@ -1,9 +1,10 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useSelectedLayoutSegment } from "next/navigation";
+import { useSelectedLayoutSegments } from "next/navigation";
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
 import { useChatSearchParams } from "@/hooks/use-chat-search-params";
+import { getContentRouteState } from "@/features/content";
 import type { RouteMode } from "@/hooks/use-profile-navigation-effects";
 import { DesktopWorkspace } from "./desktop-workspace";
 import { MobileWorkspace } from "./mobile-workspace";
@@ -16,10 +17,12 @@ type WorkspaceShellProps = {
 
 export function WorkspaceShell({ interaction, content }: WorkspaceShellProps) {
   const isMobile = useIsMobile();
-  const segment = useSelectedLayoutSegment();
+  const segments = useSelectedLayoutSegments();
   const { isChatOpen } = useChatSearchParams();
+  const routeState = getContentRouteState(segments);
 
-  const routeMode: RouteMode = segment ? "detail" : "list";
+  const routeMode: RouteMode =
+    routeState.view === "detail" ? "detail" : "list";
 
   if (isMobile) {
     return (

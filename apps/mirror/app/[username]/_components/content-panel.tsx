@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
-import { ScrollRootProvider } from "@/features/articles";
+import { type ReactNode, useState } from "react";
+import { ScrollRootProvider } from "@/features/content";
 import { WorkspaceNavbar } from "@/components/workspace-navbar";
 import {
   ToolbarSlotProvider,
   ToolbarSlotTarget,
 } from "@/components/workspace-toolbar-slot";
 import {
-  useProfileNavigationEffects,
   type RouteMode,
+  useProfileNavigationEffects,
 } from "@/hooks/use-profile-navigation-effects";
 
 type ContentPanelProps = {
