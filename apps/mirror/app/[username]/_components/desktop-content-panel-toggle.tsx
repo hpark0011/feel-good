@@ -28,7 +28,7 @@ export function DesktopContentPanelToggle({
     >
       <div
         className={cn(
-          "absolute top-2 flex items-center gap-2 transition-all duration-200 ease-in-out",
+          "absolute top-2 flex items-center gap-2 transition-[right,opacity] duration-200 ease-in-out",
           isContentPanelCollapsed ? "right-3" : "-right-5 group-hover:right-3",
         )}
       >

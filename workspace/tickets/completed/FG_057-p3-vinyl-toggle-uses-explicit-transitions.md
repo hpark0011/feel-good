@@ -3,7 +3,7 @@ id: FG_057
 title: "Vinyl toggle uses explicit CSS transition properties"
 date: 2026-03-09
 type: improvement
-status: to-do
+status: completed
 priority: p3
 description: "The DesktopContentPanelToggle in profile-panel.tsx uses transition-all which transitions every CSS property that changes, including unintended ones like color and background from theme changes. Should use explicit transition-[right] or transition-[right,opacity] to prevent unexpected jank."
 dependencies: []

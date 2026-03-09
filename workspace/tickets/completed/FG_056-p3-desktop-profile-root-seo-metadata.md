@@ -3,7 +3,7 @@ id: FG_056
 title: "Desktop profile root returns metadata instead of null"
 date: 2026-03-09
 type: improvement
-status: to-do
+status: completed
 priority: p3
 description: "The profile root page.tsx returns null for desktop user agents, meaning crawlers and link previews hitting /@username on desktop get an empty page. Should return appropriate metadata or a minimal server component for SEO and social sharing."
 dependencies: []

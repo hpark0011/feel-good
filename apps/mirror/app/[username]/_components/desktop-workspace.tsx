@@ -15,10 +15,9 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@feel-good/ui/primitives/resizable";
-import {
-  CONTENT_PANEL_ID,
-  WorkspaceChromeProvider,
-} from "../_providers/workspace-chrome-context";
+import { WorkspaceChromeProvider } from "../_providers/workspace-chrome-context";
+
+const CONTENT_PANEL_ID = "profile-content-panel";
 
 type DesktopWorkspaceProps = {
   hasContentRoute: boolean;

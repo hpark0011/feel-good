@@ -6,8 +6,6 @@ import {
   type ReactNode,
 } from "react";
 
-const CONTENT_PANEL_ID = "profile-content-panel";
-
 type WorkspaceChromeContextValue = {
   contentPanelId: string;
   isContentPanelCollapsed: boolean;
@@ -48,4 +46,3 @@ export function WorkspaceChromeProvider({
   );
 }
 
-export { CONTENT_PANEL_ID };

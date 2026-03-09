@@ -3,7 +3,7 @@ id: FG_058
 title: "Minor cleanups: stageStyle allocation and CONTENT_PANEL_ID location"
 date: 2026-03-09
 type: refactor
-status: to-do
+status: completed
 priority: p3
 description: "Two minor cleanups from PR #193 review: vinyl-record.tsx passes stageStyle={{}} creating a new object each render (should be a module constant), and CONTENT_PANEL_ID is exported from workspace-chrome-context.tsx but is a DOM concern owned by desktop-workspace.tsx (should be co-located there)."
 dependencies: []
