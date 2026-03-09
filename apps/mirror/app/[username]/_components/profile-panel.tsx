@@ -11,17 +11,61 @@ import { useChatSearchParams } from "@/hooks/use-chat-search-params";
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
 import { useCallback, useState } from "react";
 import { useProfileRouteData } from "../_providers/profile-route-data-context";
-import { useWorkspaceChrome } from "../_providers/workspace-chrome-context";
+import {
+  useOptionalWorkspaceChrome,
+} from "../_providers/workspace-chrome-context";
+
+type DesktopContentPanelToggleProps = {
+  contentPanelId: string;
+  isContentPanelCollapsed: boolean;
+  toggleContentPanel: () => void;
+};
+
+function DesktopContentPanelToggle({
+  contentPanelId,
+  isContentPanelCollapsed,
+  toggleContentPanel,
+}: DesktopContentPanelToggleProps) {
+  const buttonLabel = isContentPanelCollapsed
+    ? "Show Artifacts"
+    : "Hide Artifacts";
+
+  return (
+    <button
+      type="button"
+      aria-controls={contentPanelId}
+      aria-expanded={!isContentPanelCollapsed}
+      aria-label={buttonLabel}
+      data-state={isContentPanelCollapsed ? "closed" : "open"}
+      className="absolute top-1/2 right-0 group h-10 w-[136px] -translate-y-full cursor-pointer z-40 pointer-events-auto"
+      onClick={toggleContentPanel}
+    >
+      <div
+        className={cn(
+          "absolute top-2 flex items-center gap-2 transition-all duration-200 ease-in-out",
+          isContentPanelCollapsed
+            ? "right-3"
+            : "-right-5 group-hover:right-3",
+        )}
+      >
+        <div
+          className={cn(
+            "text-xs leading-[1.1] text-muted-foreground transition-opacity duration-200 ease-in-out",
+            "opacity-0 group-hover:opacity-100",
+          )}
+        >
+          {buttonLabel}
+        </div>
+        <VinylRecord />
+      </div>
+    </button>
+  );
+}
 
 export function ProfilePanel() {
   const { profile, isOwner, setVideoCallOpen } = useProfileRouteData();
   const { openChat } = useChatSearchParams();
-  const {
-    contentPanelId,
-    isContentPanelOpen,
-    isTransitioning,
-    toggleContentPanel,
-  } = useWorkspaceChrome();
+  const workspaceChrome = useOptionalWorkspaceChrome();
   const isMobile = useIsMobile();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -35,9 +79,6 @@ export function ProfilePanel() {
   const editButtonClassName = isMobile
     ? "absolute top-0 right-5 z-10"
     : "absolute top-3 right-3";
-  const recordsButtonLabel = isContentPanelOpen
-    ? "Hide Artifacts"
-    : "Show Artifacts";
 
   return (
     <div
@@ -59,36 +100,12 @@ export function ProfilePanel() {
         </div>
       )}
 
-      {!isMobile && (
-        <button
-          type="button"
-          aria-controls={contentPanelId}
-          aria-expanded={isContentPanelOpen}
-          aria-label={recordsButtonLabel}
-          data-state={isContentPanelOpen ? "open" : "closed"}
-          className="absolute top-1/2 right-0 group h-10 w-[136px] -translate-y-full cursor-pointer disabled:cursor-default"
-          disabled={isTransitioning}
-          onClick={toggleContentPanel}
-        >
-          <div
-            className={cn(
-              "absolute top-2 flex items-center gap-2 transition-all duration-200 ease-in-out",
-              isTransitioning || !isContentPanelOpen
-                ? "right-3"
-                : "-right-5 group-hover:right-3",
-            )}
-          >
-            <div
-              className={cn(
-                "text-xs leading-[1.1] text-muted-foreground transition-opacity duration-200 ease-in-out",
-                "opacity-0 group-hover:opacity-100",
-              )}
-            >
-              {recordsButtonLabel}
-            </div>
-            <VinylRecord />
-          </div>
-        </button>
+      {workspaceChrome && (
+        <DesktopContentPanelToggle
+          contentPanelId={workspaceChrome.contentPanelId}
+          isContentPanelCollapsed={workspaceChrome.isContentPanelCollapsed}
+          toggleContentPanel={workspaceChrome.toggleContentPanel}
+        />
       )}
 
       <ProfileInfo

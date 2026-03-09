@@ -1,21 +1,22 @@
 "use client";
 
 import {
-  useEffect,
+  useCallback,
+  useMemo,
   useRef,
   useState,
   type ComponentRef,
   type ReactNode,
 } from "react";
-import { cn } from "@feel-good/utils/cn";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@feel-good/ui/primitives/resizable";
-import { useWorkspaceChrome } from "../_providers/workspace-chrome-context";
-
-const CONTENT_PANEL_TRANSITION_MS = 300;
+import {
+  CONTENT_PANEL_ID,
+  WorkspaceChromeProvider,
+} from "../_providers/workspace-chrome-context";
 
 type DesktopWorkspaceProps = {
   interaction: ReactNode;
@@ -26,106 +27,93 @@ export function DesktopWorkspace({
   interaction,
   children,
 }: DesktopWorkspaceProps) {
-  const {
-    contentPanelId,
-    contentPanelPhase,
-    completeClosing,
-    completeOpening,
-  } = useWorkspaceChrome();
   const groupRef = useRef<ComponentRef<typeof ResizablePanelGroup>>(null);
   const contentPanelRef = useRef<ComponentRef<typeof ResizablePanel>>(null);
-  const [isContentShifted, setIsContentShifted] = useState(false);
+  const [isContentPanelCollapsed, setIsContentPanelCollapsed] = useState(false);
 
-  useEffect(() => {
-    const shouldShiftContent =
-      contentPanelPhase === "closing" || contentPanelPhase === "closed";
-    let timeoutId: number | undefined;
+  const handleContentPanelCollapse = useCallback(() => {
+    setIsContentPanelCollapsed(true);
+  }, []);
 
-    if (contentPanelPhase === "opening") {
+  const handleContentPanelExpand = useCallback(() => {
+    setIsContentPanelCollapsed(false);
+  }, []);
+
+  const toggleContentPanel = useCallback(() => {
+    if (isContentPanelCollapsed) {
       groupRef.current?.setLayout([50, 50]);
-      timeoutId = window.setTimeout(() => {
-        completeOpening();
-      }, CONTENT_PANEL_TRANSITION_MS);
+      return;
     }
 
-    if (contentPanelPhase === "closing") {
-      timeoutId = window.setTimeout(() => {
-        contentPanelRef.current?.collapse();
-        completeClosing();
-      }, CONTENT_PANEL_TRANSITION_MS);
-    }
+    contentPanelRef.current?.collapse();
+  }, [isContentPanelCollapsed]);
 
-    const frameId = requestAnimationFrame(() => {
-      setIsContentShifted(shouldShiftContent);
-    });
+  const handleResizePointerDownCapture = useCallback(() => {
+    if (!isContentPanelCollapsed) return;
+    groupRef.current?.setLayout([50, 50]);
+  }, [isContentPanelCollapsed]);
 
-    return () => {
-      cancelAnimationFrame(frameId);
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-    };
-  }, [contentPanelPhase, completeClosing, completeOpening]);
-
-  const contentPanelState = contentPanelPhase === "open"
-    ? "open"
-    : contentPanelPhase === "closed"
-      ? "closed"
-      : "transitioning";
+  const workspaceChromeValue = useMemo(
+    () => ({
+      contentPanelId: CONTENT_PANEL_ID,
+      isContentPanelCollapsed,
+      toggleContentPanel,
+    }),
+    [isContentPanelCollapsed, toggleContentPanel],
+  );
 
   return (
-    <main className="h-screen">
-      <ResizablePanelGroup
-        id="profile-workspace"
-        ref={groupRef}
-        direction="horizontal"
-        className="h-full"
-      >
-        <ResizablePanel
-          id="profile-workspace-interaction"
-          defaultSize={50}
-          minSize={25}
-          maxSize={100}
+    <WorkspaceChromeProvider value={workspaceChromeValue}>
+      <main className="h-screen">
+        <ResizablePanelGroup
+          id="profile-workspace"
+          ref={groupRef}
+          direction="horizontal"
+          className="h-full"
         >
-          {interaction}
-        </ResizablePanel>
-
-        <ResizableHandle
-          className={cn(
-            "bg-border-subtle data-[resize-handle-state=hover]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] data-[resize-handle-state=drag]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] z-30 relative transition-opacity duration-200 ease-in-out",
-            contentPanelPhase === "closed" && "pointer-events-none opacity-0",
-          )}
-        />
-
-        <ResizablePanel
-          id="profile-workspace-content"
-          ref={contentPanelRef}
-          defaultSize={50}
-          minSize={25}
-          maxSize={80}
-          collapsible
-          collapsedSize={0}
-        >
-          <div
-            id={contentPanelId}
-            data-state={contentPanelState}
-            data-testid="desktop-content-panel"
-            aria-hidden={contentPanelPhase !== "open"}
-            inert={contentPanelPhase !== "open"}
-            className={cn(
-              "h-full transform-gpu transition-[transform,opacity] duration-300 ease-in-out",
-              contentPanelPhase !== "open" && "pointer-events-none",
-              isContentShifted ? "translate-x-full opacity-0" : "translate-x-0 opacity-100",
-            )}
+          <ResizablePanel
+            id="profile-workspace-interaction"
+            defaultSize={50}
+            minSize={25}
+            maxSize={100}
           >
-            {/*
-              Keep the content subtree mounted so route and scroll state survive
-              desktop panel toggles.
-            */}
-            {children}
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </main>
+            {interaction}
+          </ResizablePanel>
+
+          <ResizableHandle
+            className="bg-border-subtle data-[resize-handle-state=hover]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] data-[resize-handle-state=drag]:shadow-[0_0_0_1px_var(--color-resizable-handle-hover)] z-30 relative"
+            onPointerDownCapture={handleResizePointerDownCapture}
+          />
+
+          <ResizablePanel
+            id="profile-workspace-content"
+            ref={contentPanelRef}
+            defaultSize={50}
+            minSize={25}
+            maxSize={80}
+            collapsible
+            collapsedSize={0}
+            className="min-w-0 overflow-hidden"
+            onCollapse={handleContentPanelCollapse}
+            onExpand={handleContentPanelExpand}
+          >
+            <div
+              id={CONTENT_PANEL_ID}
+              data-state={isContentPanelCollapsed ? "closed" : "open"}
+              data-testid="desktop-content-panel"
+              aria-hidden={isContentPanelCollapsed}
+              inert={isContentPanelCollapsed}
+              className="h-full"
+            >
+              {/*
+                Keep the content subtree mounted so route and scroll state survive
+                desktop panel toggles.
+              */}
+              {children}
+            </div>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </main>
+    </WorkspaceChromeProvider>
   );
 }

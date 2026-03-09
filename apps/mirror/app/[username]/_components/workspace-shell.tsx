@@ -5,7 +5,6 @@ import { useSelectedLayoutSegments } from "next/navigation";
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
 import { useChatSearchParams } from "@/hooks/use-chat-search-params";
 import { getContentRouteState } from "@/features/content";
-import { WorkspaceChromeProvider } from "../_providers/workspace-chrome-context";
 import { DesktopWorkspace } from "./desktop-workspace";
 import { MobileWorkspace } from "./mobile-workspace";
 import { ContentPanel } from "./content-panel";
@@ -22,22 +21,20 @@ export function WorkspaceShell({ interaction, content }: WorkspaceShellProps) {
   const routeState = getContentRouteState(segments);
 
   return (
-    <WorkspaceChromeProvider>
-      {isMobile
-        ? (
-          <MobileWorkspace
-            routeState={routeState}
-            isChatOpen={isChatOpen}
-            interaction={interaction}
-          >
-            {content}
-          </MobileWorkspace>
-        )
-        : (
-          <DesktopWorkspace interaction={interaction}>
-            <ContentPanel routeState={routeState}>{content}</ContentPanel>
-          </DesktopWorkspace>
-        )}
-    </WorkspaceChromeProvider>
+    isMobile
+      ? (
+        <MobileWorkspace
+          routeState={routeState}
+          isChatOpen={isChatOpen}
+          interaction={interaction}
+        >
+          {content}
+        </MobileWorkspace>
+      )
+      : (
+        <DesktopWorkspace interaction={interaction}>
+          <ContentPanel routeState={routeState}>{content}</ContentPanel>
+        </DesktopWorkspace>
+      )
   );
 }
