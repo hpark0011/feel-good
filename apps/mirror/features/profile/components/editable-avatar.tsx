@@ -71,7 +71,7 @@ export function EditableAvatar({
 
   if (isOwner && !profile.media) {
     return (
-      <div className="flex flex-col items-center pt-[48px]">
+      <div className="flex flex-col items-center pt-[40px]">
         <AvatarWindow isEditing={isEditing}>
           <AnimatePresence>
             {isEditing && (
@@ -119,7 +119,7 @@ export function EditableAvatar({
   }
 
   return (
-    <div className="flex flex-col items-center pt-[48px]">
+    <div className="flex flex-col items-center pt-[40px]">
       <AnimatePresence mode="popLayout">
         {isEditing
           ? (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, type ReactNode } from "react";
 import {
   useParams,
   useRouter,
@@ -44,6 +44,11 @@ export function WorkspaceShell({ interaction, content }: WorkspaceShellProps) {
     return queryString ? `${href}?${queryString}` : href;
   }, [searchParams, username]);
 
+  const openDefaultContent = useCallback(() => {
+    if (!defaultContentHref) return;
+    router.push(defaultContentHref);
+  }, [defaultContentHref, router]);
+
   useEffect(() => {
     if (!isMobile || hasContentRoute || !defaultContentHref) return;
     router.replace(defaultContentHref);
@@ -68,6 +73,7 @@ export function WorkspaceShell({ interaction, content }: WorkspaceShellProps) {
         <DesktopWorkspace
           interaction={interaction}
           hasContentRoute={hasContentRoute}
+          onOpenDefaultContent={defaultContentHref ? openDefaultContent : null}
         >
           <ContentPanel routeState={routeState}>{content}</ContentPanel>
         </DesktopWorkspace>
