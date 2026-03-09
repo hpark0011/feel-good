@@ -1,15 +1,15 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { VinylRecord } from "@/components/animated-geometries/vinyl-record";
 import {
   EditActions,
   EditProfileButton,
   ProfileInfo,
 } from "@/features/profile";
-import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
 import { useChatSearchParams } from "@/hooks/use-chat-search-params";
+import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
+import { useCallback, useState } from "react";
 import { useProfileRouteData } from "../_providers/profile-route-data-context";
-import { VinylRecord } from "@/components/animated-geometries/vinyl-record";
 
 export function ProfilePanel() {
   const { profile, isOwner, setVideoCallOpen } = useProfileRouteData();
@@ -26,7 +26,7 @@ export function ProfilePanel() {
 
   const editButtonClassName = isMobile
     ? "absolute top-0 right-5 z-10"
-    : "absolute top-4 right-4";
+    : "absolute top-3 right-3";
 
   return (
     <div
@@ -47,8 +47,14 @@ export function ProfilePanel() {
             : <EditProfileButton onClick={() => setIsEditing(true)} />}
         </div>
       )}
-      <div>
-        <VinylRecord />
+
+      <div className="absolute top-1/2 right-0 group w-[120px] h-10 -translate-y-1/2">
+        <div className="absolute top-2 -right-5 flex items-center gap-1.5 group-hover:right-3 transition-all ease-in-out duration-200 group">
+          <div className="text-xs text-muted-foreground leading-[1.1] opacity-0 group-hover:opacity-100">
+            Hide Records
+          </div>
+          <VinylRecord />
+        </div>
       </div>
 
       <ProfileInfo

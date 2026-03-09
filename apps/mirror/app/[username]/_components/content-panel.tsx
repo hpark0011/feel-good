@@ -1,7 +1,7 @@
 "use client";
 
 import { type ReactNode, useState } from "react";
-import { ScrollRootProvider, type ContentRouteState } from "@/features/content";
+import { type ContentRouteState, ScrollRootProvider } from "@/features/content";
 import { WorkspaceNavbar } from "@/components/workspace-navbar";
 import {
   ToolbarSlotProvider,
