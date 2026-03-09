@@ -21,15 +21,36 @@ function isPrefetchRequest(headers: Record<string, string | undefined>) {
 }
 
 test.describe("Article navigation", () => {
-  test("redirects the profile root to the typed article list", async ({
+  test("keeps the desktop profile root hidden until artifacts are opened", async ({
     page,
   }) => {
+    await page.setViewportSize({ width: 1440, height: 960 });
     await page.goto(`/@${username}`);
 
-    await expect(page).toHaveURL(new RegExp(`/@${username}/articles(\\?.*)?$`));
+    await expect(
+      page,
+    ).toHaveURL(new RegExp(`/@${username}(\\?.*)?$`));
+    await expect(
+      page.getByRole("button", { name: "Show Artifacts" }),
+    ).toBeVisible({ timeout: 10000 });
     await expect(
       page.getByRole("link", { name: articleTitle }),
-    ).toBeVisible({ timeout: 10000 });
+    ).toHaveCount(0);
+  });
+
+  test("redirects the mobile profile root to posts", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`/@${username}`);
+
+    await expect(page).toHaveURL(new RegExp(`/@${username}/posts(\\?.*)?$`));
+
+    const emptyState = page.getByText("No posts yet");
+    const seededPostLink = page.getByRole("link", { name: postTitle });
+
+    await Promise.race([
+      emptyState.waitFor({ state: "visible", timeout: 10000 }),
+      seededPostLink.waitFor({ state: "visible", timeout: 10000 }),
+    ]);
   });
 
   test("shows loading UI during list-to-detail navigation and returns to the typed list", async ({

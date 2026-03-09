@@ -2,12 +2,22 @@
 
 import {
   useCallback,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
   type ComponentRef,
   type ReactNode,
 } from "react";
+import {
+  useParams,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
+import {
+  DEFAULT_PROFILE_CONTENT_KIND,
+  getContentHref,
+} from "@/features/content";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -19,17 +29,35 @@ import {
 } from "../_providers/workspace-chrome-context";
 
 type DesktopWorkspaceProps = {
+  hasContentRoute: boolean;
   interaction: ReactNode;
   children: ReactNode;
 };
 
 export function DesktopWorkspace({
+  hasContentRoute,
   interaction,
   children,
 }: DesktopWorkspaceProps) {
+  const params = useParams<{ username: string | string[] }>();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const groupRef = useRef<ComponentRef<typeof ResizablePanelGroup>>(null);
   const contentPanelRef = useRef<ComponentRef<typeof ResizablePanel>>(null);
-  const [isContentPanelCollapsed, setIsContentPanelCollapsed] = useState(false);
+  const previousHasContentRouteRef = useRef(hasContentRoute);
+  const [isContentPanelCollapsed, setIsContentPanelCollapsed] = useState(
+    () => !hasContentRoute,
+  );
+  const username = Array.isArray(params.username)
+    ? params.username[0]
+    : params.username;
+  const defaultContentHref = useMemo(() => {
+    if (!username) return null;
+
+    const href = getContentHref(username, DEFAULT_PROFILE_CONTENT_KIND);
+    const queryString = searchParams.toString();
+    return queryString ? `${href}?${queryString}` : href;
+  }, [searchParams, username]);
 
   const handleContentPanelCollapse = useCallback(() => {
     setIsContentPanelCollapsed(true);
@@ -39,19 +67,55 @@ export function DesktopWorkspace({
     setIsContentPanelCollapsed(false);
   }, []);
 
+  const openDefaultContentRoute = useCallback(() => {
+    if (!defaultContentHref) return;
+    router.push(defaultContentHref);
+  }, [defaultContentHref, router]);
+
   const toggleContentPanel = useCallback(() => {
     if (isContentPanelCollapsed) {
+      if (!hasContentRoute) {
+        openDefaultContentRoute();
+        return;
+      }
+
       groupRef.current?.setLayout([50, 50]);
       return;
     }
 
     contentPanelRef.current?.collapse();
-  }, [isContentPanelCollapsed]);
+  }, [hasContentRoute, isContentPanelCollapsed, openDefaultContentRoute]);
 
   const handleResizePointerDownCapture = useCallback(() => {
     if (!isContentPanelCollapsed) return;
+
+    if (!hasContentRoute) {
+      openDefaultContentRoute();
+      return;
+    }
+
     groupRef.current?.setLayout([50, 50]);
-  }, [isContentPanelCollapsed]);
+  }, [
+    hasContentRoute,
+    isContentPanelCollapsed,
+    openDefaultContentRoute,
+  ]);
+
+  useLayoutEffect(() => {
+    const previousHasContentRoute = previousHasContentRouteRef.current;
+    previousHasContentRouteRef.current = hasContentRoute;
+
+    if (previousHasContentRoute === hasContentRoute) {
+      return;
+    }
+
+    if (hasContentRoute) {
+      groupRef.current?.setLayout([50, 50]);
+      return;
+    }
+
+    contentPanelRef.current?.collapse();
+  }, [hasContentRoute]);
 
   const workspaceChromeValue = useMemo(
     () => ({
@@ -73,7 +137,7 @@ export function DesktopWorkspace({
         >
           <ResizablePanel
             id="profile-workspace-interaction"
-            defaultSize={50}
+            defaultSize={hasContentRoute ? 50 : 100}
             minSize={25}
             maxSize={100}
           >
@@ -88,7 +152,7 @@ export function DesktopWorkspace({
           <ResizablePanel
             id="profile-workspace-content"
             ref={contentPanelRef}
-            defaultSize={50}
+            defaultSize={hasContentRoute ? 50 : 0}
             minSize={25}
             maxSize={80}
             collapsible

@@ -62,7 +62,81 @@ async function openDesktopArticle(page: Page) {
   ).toBeVisible({ timeout: 10000 });
 }
 
+async function openDesktopProfileRoot(page: Page) {
+  await page.setViewportSize({ width: 1440, height: 960 });
+  await page.goto(`/@${username}`);
+
+  await expect(
+    page.getByRole("button", { name: "Show Artifacts" }),
+  ).toBeVisible({ timeout: 10000 });
+}
+
 test.describe("Profile content panel toggle", () => {
+  test("starts collapsed on the desktop profile root and opens posts from the toggle", async ({
+    page,
+  }) => {
+    await openDesktopProfileRoot(page);
+
+    const toggle = page.getByRole("button", { name: "Show Artifacts" });
+    const contentRegion = page.getByTestId("desktop-content-panel");
+    const resizablePanels = page.locator('[data-slot="resizable-panel"]');
+    const contentResizablePanel = resizablePanels.nth(1);
+    const handle = page.locator('[data-slot="resizable-handle"]');
+
+    await expect(page).toHaveURL(new RegExp(`/@${username}(\\?.*)?$`));
+    await expect(contentRegion).toHaveAttribute("data-state", "closed");
+    await expect(handle).toBeVisible();
+    await expect(toggle).toBeVisible();
+
+    await expect
+      .poll(async () => await getPanelWidth(contentResizablePanel))
+      .toBeLessThan(COLLAPSED_PANEL_MAX_WIDTH);
+
+    await toggle.click();
+
+    await expect(page).toHaveURL(new RegExp(`/@${username}/posts(\\?.*)?$`));
+    await expect(contentRegion).toHaveAttribute("data-state", "open");
+    await expect(
+      page.getByRole("button", { name: "Hide Artifacts" }),
+    ).toBeVisible({ timeout: 5000 });
+    await expect(handle).toBeVisible();
+    await expect(
+      page.getByRole("tab", { name: "Posts" }),
+    ).toBeVisible({ timeout: 10000 });
+
+    await expect
+      .poll(async () => await getPanelWidth(contentResizablePanel))
+      .toBeGreaterThan(120);
+  });
+
+  test("opens posts when dragging the collapsed root handle", async ({
+    page,
+  }) => {
+    await openDesktopProfileRoot(page);
+
+    const contentRegion = page.getByTestId("desktop-content-panel");
+    const contentResizablePanel = page.locator('[data-slot="resizable-panel"]').nth(1);
+    const handle = page.locator('[data-slot="resizable-handle"]');
+
+    await expect(contentRegion).toHaveAttribute("data-state", "closed");
+
+    await dragHandleBy(page, handle, REOPEN_DELTA_X);
+
+    await expect(page).toHaveURL(new RegExp(`/@${username}/posts(\\?.*)?$`));
+    await expect(contentRegion).toHaveAttribute("data-state", "open");
+    await expect(
+      page.getByRole("button", { name: "Hide Artifacts" }),
+    ).toBeVisible({ timeout: 5000 });
+    await expect(handle).toBeVisible();
+    await expect(
+      page.getByRole("tab", { name: "Posts" }),
+    ).toBeVisible({ timeout: 10000 });
+
+    await expect
+      .poll(async () => await getPanelWidth(contentResizablePanel))
+      .toBeGreaterThan(120);
+  });
+
   test("closes and reopens to a 50/50 layout from the desktop toggle", async ({
     page,
   }) => {

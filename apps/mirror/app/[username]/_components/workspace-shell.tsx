@@ -1,10 +1,20 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { useSelectedLayoutSegments } from "next/navigation";
+import { useEffect, useMemo, type ReactNode } from "react";
+import {
+  useParams,
+  useRouter,
+  useSearchParams,
+  useSelectedLayoutSegments,
+} from "next/navigation";
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
 import { useChatSearchParams } from "@/hooks/use-chat-search-params";
-import { getContentRouteState } from "@/features/content";
+import {
+  DEFAULT_PROFILE_CONTENT_KIND,
+  getContentHref,
+  getContentRouteState,
+  isContentKind,
+} from "@/features/content";
 import { DesktopWorkspace } from "./desktop-workspace";
 import { MobileWorkspace } from "./mobile-workspace";
 import { ContentPanel } from "./content-panel";
@@ -16,9 +26,32 @@ type WorkspaceShellProps = {
 
 export function WorkspaceShell({ interaction, content }: WorkspaceShellProps) {
   const isMobile = useIsMobile();
+  const params = useParams<{ username: string | string[] }>();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const segments = useSelectedLayoutSegments();
   const { isChatOpen } = useChatSearchParams();
+  const hasContentRoute = isContentKind(segments[0]);
   const routeState = getContentRouteState(segments);
+  const username = Array.isArray(params.username)
+    ? params.username[0]
+    : params.username;
+  const defaultContentHref = useMemo(() => {
+    if (!username) return null;
+
+    const href = getContentHref(username, DEFAULT_PROFILE_CONTENT_KIND);
+    const queryString = searchParams.toString();
+    return queryString ? `${href}?${queryString}` : href;
+  }, [searchParams, username]);
+
+  useEffect(() => {
+    if (!isMobile || hasContentRoute || !defaultContentHref) return;
+    router.replace(defaultContentHref);
+  }, [defaultContentHref, hasContentRoute, isMobile, router]);
+
+  if (isMobile && !hasContentRoute && defaultContentHref) {
+    return null;
+  }
 
   return (
     isMobile
@@ -32,7 +65,10 @@ export function WorkspaceShell({ interaction, content }: WorkspaceShellProps) {
         </MobileWorkspace>
       )
       : (
-        <DesktopWorkspace interaction={interaction}>
+        <DesktopWorkspace
+          interaction={interaction}
+          hasContentRoute={hasContentRoute}
+        >
           <ContentPanel routeState={routeState}>{content}</ContentPanel>
         </DesktopWorkspace>
       )

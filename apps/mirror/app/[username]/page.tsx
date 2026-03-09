@@ -1,5 +1,10 @@
+import { userAgentFromString } from "next/server";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { CONTENT_KINDS, getContentHref } from "@/features/content";
+import {
+  DEFAULT_PROFILE_CONTENT_KIND,
+  getContentHref,
+} from "@/features/content";
 
 export default async function ProfilePage({
   params,
@@ -23,7 +28,18 @@ export default async function ProfilePage({
     }
   });
 
-  const href = getContentHref(username, CONTENT_KINDS[0]);
+  const requestHeaders = await headers();
+  const userAgent = userAgentFromString(
+    requestHeaders.get("user-agent") ?? undefined,
+  );
+  const isMobileUserAgent =
+    userAgent.device.type === "mobile" || userAgent.device.type === "tablet";
+
+  if (!isMobileUserAgent) {
+    return null;
+  }
+
+  const href = getContentHref(username, DEFAULT_PROFILE_CONTENT_KIND);
   const queryString = nextSearchParams.toString();
 
   redirect(queryString ? `${href}?${queryString}` : href);
