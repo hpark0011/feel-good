@@ -3,7 +3,7 @@ id: FG_054
 title: "Resizable primitives use React 19 ref pattern"
 date: 2026-03-09
 type: refactor
-status: to-do
+status: completed
 priority: p2
 description: "resizable.tsx is the only primitive in @feel-good/ui using React.forwardRef. All 53 other primitives use React 19's native ref-as-prop pattern (React.ComponentProps includes ref). The forwardRef wrapper should be migrated to match the codebase convention."
 dependencies: []

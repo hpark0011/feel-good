@@ -3,7 +3,7 @@ id: FG_055
 title: "Mobile profile root avoids layout flash before redirect"
 date: 2026-03-09
 type: fix
-status: to-do
+status: completed
 priority: p2
 description: "useMediaQuery initializes with useState(false), so mobile users see one frame of desktop layout, then blank (return null), then content after router.replace. This causes two layout shifts before meaningful content on the mobile profile root."
 dependencies: []
