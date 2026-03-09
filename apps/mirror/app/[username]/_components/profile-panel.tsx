@@ -9,6 +9,7 @@ import {
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
 import { useChatSearchParams } from "@/hooks/use-chat-search-params";
 import { useProfileRouteData } from "../_providers/profile-route-data-context";
+import { VinylRecord } from "@/components/animated-geometries/vinyl-record";
 
 export function ProfilePanel() {
   const { profile, isOwner, setVideoCallOpen } = useProfileRouteData();
@@ -29,11 +30,9 @@ export function ProfilePanel() {
 
   return (
     <div
-      className={
-        isMobile
-          ? "relative h-full"
-          : "relative z-20 h-full flex flex-col justify-start items-center px-6 pt-[88px]"
-      }
+      className={isMobile
+        ? "relative h-full"
+        : "relative z-20 h-full flex flex-col justify-start items-center px-6 pt-[88px]"}
     >
       {isOwner && (
         <div className={editButtonClassName}>
@@ -45,11 +44,13 @@ export function ProfilePanel() {
                 onCancel={handleEditClose}
               />
             )
-            : (
-              <EditProfileButton onClick={() => setIsEditing(true)} />
-            )}
+            : <EditProfileButton onClick={() => setIsEditing(true)} />}
         </div>
       )}
+      <div>
+        <VinylRecord />
+      </div>
+
       <ProfileInfo
         profile={profile}
         isEditing={isEditing}
