@@ -162,7 +162,7 @@ export function ProfileInfo({
         avatarPreview={avatarPreview}
         onAvatarChange={handleAvatarChange}
       />
-      <div className="w-full flex flex-col items-center justify-center my-4">
+      <div className="w-full flex flex-col items-center justify-center mb-4 mt-2">
         <EditableProfileActions
           isEditing={isEditing}
           onOpenChat={onOpenChat}
