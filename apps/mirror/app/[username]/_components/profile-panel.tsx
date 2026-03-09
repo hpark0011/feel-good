@@ -1,6 +1,7 @@
 "use client";
 
 import { VinylRecord } from "@/components/animated-geometries/vinyl-record";
+import { cn } from "@feel-good/utils/cn";
 import {
   EditActions,
   EditProfileButton,
@@ -10,10 +11,17 @@ import { useChatSearchParams } from "@/hooks/use-chat-search-params";
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
 import { useCallback, useState } from "react";
 import { useProfileRouteData } from "../_providers/profile-route-data-context";
+import { useWorkspaceChrome } from "../_providers/workspace-chrome-context";
 
 export function ProfilePanel() {
   const { profile, isOwner, setVideoCallOpen } = useProfileRouteData();
   const { openChat } = useChatSearchParams();
+  const {
+    contentPanelId,
+    isContentPanelOpen,
+    isTransitioning,
+    toggleContentPanel,
+  } = useWorkspaceChrome();
   const isMobile = useIsMobile();
 
   const [isEditing, setIsEditing] = useState(false);
@@ -27,6 +35,9 @@ export function ProfilePanel() {
   const editButtonClassName = isMobile
     ? "absolute top-0 right-5 z-10"
     : "absolute top-3 right-3";
+  const recordsButtonLabel = isContentPanelOpen
+    ? "Hide Artifacts"
+    : "Show Artifacts";
 
   return (
     <div
@@ -48,14 +59,39 @@ export function ProfilePanel() {
         </div>
       )}
 
-      <div className="absolute top-1/2 right-0 group w-[120px] h-10 -translate-y-1/2">
-        <div className="absolute top-2 -right-6 flex items-center gap-1.5 group-hover:right-3 transition-all ease-in-out duration-200 group">
-          <div className="text-xs text-muted-foreground leading-[1.1] opacity-0 group-hover:opacity-100">
-            Hide Records
+      {!isMobile && (
+        <button
+          type="button"
+          aria-controls={contentPanelId}
+          aria-expanded={isContentPanelOpen}
+          aria-label={recordsButtonLabel}
+          data-state={isContentPanelOpen ? "open" : "closed"}
+          className="absolute top-1/2 right-0 group h-10 w-[136px] -translate-y-1/2 cursor-pointer disabled:cursor-default"
+          disabled={isTransitioning}
+          onClick={toggleContentPanel}
+        >
+          <div
+            className={cn(
+              "absolute top-2 flex items-center gap-2 transition-all duration-200 ease-in-out",
+              isTransitioning || !isContentPanelOpen
+                ? "right-3"
+                : "-right-5 group-hover:right-3",
+            )}
+          >
+            <div
+              className={cn(
+                "text-xs leading-[1.1] text-muted-foreground transition-opacity duration-200 ease-in-out",
+                isTransitioning || !isContentPanelOpen
+                  ? "opacity-100"
+                  : "opacity-0 group-hover:opacity-100",
+              )}
+            >
+              {recordsButtonLabel}
+            </div>
+            <VinylRecord />
           </div>
-          <VinylRecord />
-        </div>
-      </div>
+        </button>
+      )}
 
       <ProfileInfo
         profile={profile}
