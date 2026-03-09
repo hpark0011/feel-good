@@ -1,4 +1,4 @@
-export const CONTENT_KINDS = ["articles", "posts"] as const;
+export const CONTENT_KINDS = ["posts", "articles"] as const;
 
 export type ContentKind = (typeof CONTENT_KINDS)[number];
 
@@ -11,11 +11,13 @@ export type ContentRouteState = {
 };
 
 export const CONTENT_KIND_LABELS: Record<ContentKind, string> = {
-  articles: "Articles",
   posts: "Posts",
+  articles: "Articles",
 };
 
-export function isContentKind(value: string | null | undefined): value is ContentKind {
+export function isContentKind(
+  value: string | null | undefined,
+): value is ContentKind {
   return value === "articles" || value === "posts";
 }
 
@@ -32,7 +34,7 @@ export function getContentRouteState(
   segments: readonly string[],
 ): ContentRouteState {
   const [kindSegment, slug] = segments;
-  const kind = isContentKind(kindSegment) ? kindSegment : "articles";
+  const kind = isContentKind(kindSegment) ? kindSegment : CONTENT_KINDS[0];
 
   return {
     kind,

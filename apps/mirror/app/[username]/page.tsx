@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getContentHref } from "@/features/content";
+import { CONTENT_KINDS, getContentHref } from "@/features/content";
 
 export default async function ProfilePage({
   params,
@@ -23,7 +23,7 @@ export default async function ProfilePage({
     }
   });
 
-  const href = getContentHref(username, "articles");
+  const href = getContentHref(username, CONTENT_KINDS[0]);
   const queryString = nextSearchParams.toString();
 
   redirect(queryString ? `${href}?${queryString}` : href);
