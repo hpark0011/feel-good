@@ -34,16 +34,14 @@ type WorkspaceShellProps = {
 
 export function WorkspaceShell({ interaction, content }: WorkspaceShellProps) {
   const isMobile = useIsMobile();
-  const params = useParams<{ username: string | string[] }>();
+  const params = useParams<{ username: string }>();
   const router = useRouter();
   const searchParams = useSearchParams();
   const segments = useSelectedLayoutSegments();
   const { isChatOpen } = useChatSearchParams();
   const hasContentRoute = isContentKind(segments[0]);
   const routeState = getContentRouteState(segments);
-  const username = Array.isArray(params.username)
-    ? params.username[0]
-    : params.username;
+  const username = params.username;
   const defaultContentHref = useMemo(() => {
     if (!username) return null;
 

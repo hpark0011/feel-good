@@ -47,7 +47,7 @@ export function EditableName({ isEditing, name }: EditableNameProps) {
             <FormLabel className="absolute left-0.5 top-0.5 rounded-xl text-xs">
               <motion.div
                 className={cn(
-                  "py-[3px] text-muted-foreground text-xs px-[6px] backdrop-blur-xs",
+                  "py-[3px] text-muted-foreground text-xs px-[6px] backdrop-blur-xs rounded-xl",
                 )}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: isEditing ? "100%" : "0%" }}

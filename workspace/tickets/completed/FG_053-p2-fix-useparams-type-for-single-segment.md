@@ -3,7 +3,7 @@ id: FG_053
 title: "useParams typed correctly for single dynamic segment"
 date: 2026-03-09
 type: fix
-status: to-do
+status: completed
 priority: p2
 description: "useParams is typed as { username: string | string[] } in desktop-workspace.tsx and workspace-shell.tsx, but the route is [username] (single segment, not catch-all). The correct type is { username: string }. The Array.isArray guard masks potential routing bugs."
 dependencies:

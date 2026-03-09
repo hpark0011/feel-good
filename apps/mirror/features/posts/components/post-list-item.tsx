@@ -21,7 +21,7 @@ export function PostListItem({ post, username }: PostListItemProps) {
   return (
     <article className="border-b border-border-subtle px-4.5 py-8 pb-10 last:border-b-0">
       <div className="flex items-start justify-between gap-12 w-full">
-        <div className="flex flex-col">
+        <div className="flex flex-col mt-0.5">
           <span className="shrink-0 text-[13px] font-medium w-24 whitespace-nowrap tracking-[-0.06em] leading-1.2 uppercase">
             {publishedLabel}
           </span>

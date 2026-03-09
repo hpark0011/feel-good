@@ -59,7 +59,7 @@ export function EditableBio({ isEditing, bio }: EditableBioProps) {
                 }}
                 animate={{ opacity: isEditing ? "100%" : "0%" }}
                 transition={springTransition}
-                className="py-[3px] text-muted-foreground text-xs px-[6px] backdrop-blur-xs"
+                className="py-[3px] text-muted-foreground text-xs px-[6px] backdrop-blur-xs rounded-xl"
               >
                 Bio
               </motion.div>
