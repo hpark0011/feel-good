@@ -8,6 +8,47 @@ const REVERSE_DELTA_X = 420;
 const REOPEN_DELTA_X = -520;
 const COLLAPSED_PANEL_MAX_WIDTH = 8;
 
+async function instrumentPostsFetches(page: Page) {
+  await page.addInitScript((postsPath) => {
+    const trackedFetches: string[] = [];
+    const windowWithTrackedFetches = window as typeof window & {
+      __trackedPostsFetches?: string[];
+    };
+    const originalFetch = window.fetch.bind(window);
+
+    windowWithTrackedFetches.__trackedPostsFetches = trackedFetches;
+
+    window.fetch = async (...args) => {
+      const [input] = args;
+      const url = typeof input === "string"
+        ? input
+        : input instanceof Request
+          ? input.url
+          : String(input);
+
+      if (url.includes(postsPath)) {
+        trackedFetches.push(url);
+
+        if (trackedFetches.length === 1) {
+          await new Promise((resolve) => setTimeout(resolve, 700));
+        }
+      }
+
+      return originalFetch(...args);
+    };
+  }, `/@${username}/posts`);
+}
+
+async function getTrackedPostsFetches(page: Page) {
+  return page.evaluate(() => {
+    const windowWithTrackedFetches = window as typeof window & {
+      __trackedPostsFetches?: string[];
+    };
+
+    return [...(windowWithTrackedFetches.__trackedPostsFetches ?? [])];
+  });
+}
+
 async function getPanelWidth(locator: Locator) {
   return locator.evaluate((element) => {
     return Math.round(element.getBoundingClientRect().width);
@@ -107,6 +148,28 @@ test.describe("Profile content panel toggle", () => {
     await expect
       .poll(async () => await getPanelWidth(contentResizablePanel))
       .toBeGreaterThan(120);
+  });
+
+  test("double-clicking the collapsed toggle only starts one posts navigation", async ({
+    page,
+  }) => {
+    await instrumentPostsFetches(page);
+    await openDesktopProfileRoot(page);
+
+    const toggle = page.getByRole("button", { name: "Show Artifacts" });
+    const contentRegion = page.getByTestId("desktop-content-panel");
+
+    await toggle.dblclick({ delay: 10 });
+
+    await expect(page).toHaveURL(new RegExp(`/@${username}/posts(\\?.*)?$`));
+    await expect(contentRegion).toHaveAttribute("data-state", "open");
+    await expect(
+      page.getByRole("button", { name: "Hide Artifacts" }),
+    ).toBeVisible({ timeout: 5000 });
+
+    await expect
+      .poll(async () => (await getTrackedPostsFetches(page)).length)
+      .toBe(1);
   });
 
   test("opens posts when dragging the collapsed root handle", async ({

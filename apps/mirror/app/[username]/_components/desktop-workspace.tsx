@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
   type ComponentRef,
+  type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
 import {
@@ -44,6 +45,7 @@ export function DesktopWorkspace({
   const searchParams = useSearchParams();
   const groupRef = useRef<ComponentRef<typeof ResizablePanelGroup>>(null);
   const contentPanelRef = useRef<ComponentRef<typeof ResizablePanel>>(null);
+  const isPendingNavigationRef = useRef(false);
   const previousHasContentRouteRef = useRef(hasContentRoute);
   const [isContentPanelCollapsed, setIsContentPanelCollapsed] = useState(
     () => !hasContentRoute,
@@ -69,10 +71,14 @@ export function DesktopWorkspace({
 
   const openDefaultContentRoute = useCallback(() => {
     if (!defaultContentHref) return;
+
+    isPendingNavigationRef.current = true;
     router.push(defaultContentHref);
   }, [defaultContentHref, router]);
 
   const toggleContentPanel = useCallback(() => {
+    if (isPendingNavigationRef.current) return;
+
     if (isContentPanelCollapsed) {
       if (!hasContentRoute) {
         openDefaultContentRoute();
@@ -86,8 +92,13 @@ export function DesktopWorkspace({
     contentPanelRef.current?.collapse();
   }, [hasContentRoute, isContentPanelCollapsed, openDefaultContentRoute]);
 
-  const handleResizePointerDownCapture = useCallback(() => {
+  const handleResizePointerDownCapture = useCallback((event: ReactPointerEvent) => {
     if (!isContentPanelCollapsed) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (isPendingNavigationRef.current) return;
 
     if (!hasContentRoute) {
       openDefaultContentRoute();
@@ -110,6 +121,7 @@ export function DesktopWorkspace({
     }
 
     if (hasContentRoute) {
+      isPendingNavigationRef.current = false;
       groupRef.current?.setLayout([50, 50]);
       return;
     }

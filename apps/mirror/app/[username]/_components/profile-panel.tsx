@@ -1,7 +1,6 @@
 "use client";
 
 import { VinylRecord } from "@/components/animated-geometries/vinyl-record";
-import { cn } from "@feel-good/utils/cn";
 import {
   EditActions,
   EditProfileButton,
@@ -9,6 +8,7 @@ import {
 } from "@/features/profile";
 import { useChatSearchParams } from "@/hooks/use-chat-search-params";
 import { useIsMobile } from "@feel-good/ui/hooks/use-mobile";
+import { cn } from "@feel-good/utils/cn";
 import { useCallback, useState } from "react";
 import { useProfileRouteData } from "../_providers/profile-route-data-context";
 import {
@@ -37,15 +37,13 @@ function DesktopContentPanelToggle({
       aria-expanded={!isContentPanelCollapsed}
       aria-label={buttonLabel}
       data-state={isContentPanelCollapsed ? "closed" : "open"}
-      className="absolute top-1/2 right-0 group h-10 w-[136px] -translate-y-full cursor-pointer z-40 pointer-events-auto"
+      className="absolute top-1/2 right-0 group h-14 w-[136px] -translate-y-full cursor-pointer z-40 pointer-events-auto"
       onClick={toggleContentPanel}
     >
       <div
         className={cn(
           "absolute top-2 flex items-center gap-2 transition-all duration-200 ease-in-out",
-          isContentPanelCollapsed
-            ? "right-3"
-            : "-right-5 group-hover:right-3",
+          isContentPanelCollapsed ? "right-3" : "-right-5 group-hover:right-3",
         )}
       >
         <div
