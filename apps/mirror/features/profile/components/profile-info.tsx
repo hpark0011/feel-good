@@ -163,7 +163,11 @@ export function ProfileInfo({
         onAvatarChange={handleAvatarChange}
       />
       <div className="w-full flex flex-col items-center justify-center">
-        <EditableProfileActions isEditing={isEditing} onOpenChat={onOpenChat} onOpenVideoCall={onOpenVideoCall} />
+        <EditableProfileActions
+          isEditing={isEditing}
+          onOpenChat={onOpenChat}
+          onOpenVideoCall={onOpenVideoCall}
+        />
       </div>
       <div className="mt-[16px] w-full">
         <EditableBio isEditing={isEditing} bio={profile.bio} />

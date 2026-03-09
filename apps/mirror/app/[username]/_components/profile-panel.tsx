@@ -49,7 +49,7 @@ export function ProfilePanel() {
       )}
 
       <div className="absolute top-1/2 right-0 group w-[120px] h-10 -translate-y-1/2">
-        <div className="absolute top-2 -right-5 flex items-center gap-1.5 group-hover:right-3 transition-all ease-in-out duration-200 group">
+        <div className="absolute top-2 -right-6 flex items-center gap-1.5 group-hover:right-3 transition-all ease-in-out duration-200 group">
           <div className="text-xs text-muted-foreground leading-[1.1] opacity-0 group-hover:opacity-100">
             Hide Records
           </div>
