@@ -6,8 +6,8 @@ import {
   useMemo,
   useRef,
   useState,
+  type ComponentProps,
   type ComponentRef,
-  type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
 import {
@@ -26,6 +26,10 @@ type DesktopWorkspaceProps = {
   children: ReactNode;
   onOpenDefaultContent: (() => void) | null;
 };
+
+type ResizableHandlePointerDownCapture = NonNullable<
+  ComponentProps<typeof ResizableHandle>["onPointerDownCapture"]
+>;
 
 export function DesktopWorkspace({
   hasContentRoute,
@@ -72,7 +76,9 @@ export function DesktopWorkspace({
     contentPanelRef.current?.collapse();
   }, [hasContentRoute, isContentPanelCollapsed, openDefaultContentRoute]);
 
-  const handleResizePointerDownCapture = useCallback((event: ReactPointerEvent) => {
+  const handleResizePointerDownCapture = useCallback<
+    ResizableHandlePointerDownCapture
+  >((event) => {
     if (!isContentPanelCollapsed) return;
 
     event.preventDefault();

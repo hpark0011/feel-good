@@ -19,6 +19,14 @@ import { DesktopWorkspace } from "./desktop-workspace";
 import { MobileWorkspace } from "./mobile-workspace";
 import { ContentPanel } from "./content-panel";
 
+const MOBILE_MEDIA_QUERY = "(max-width: 767px)";
+
+function hasMobileViewport() {
+  return typeof window !== "undefined" &&
+    typeof window.matchMedia === "function" &&
+    window.matchMedia(MOBILE_MEDIA_QUERY).matches;
+}
+
 type WorkspaceShellProps = {
   interaction: ReactNode;
   content: ReactNode;
@@ -43,6 +51,9 @@ export function WorkspaceShell({ interaction, content }: WorkspaceShellProps) {
     const queryString = searchParams.toString();
     return queryString ? `${href}?${queryString}` : href;
   }, [searchParams, username]);
+  const shouldRedirectMobileRoot = !hasContentRoute &&
+    !!defaultContentHref &&
+    (isMobile || hasMobileViewport());
 
   const openDefaultContent = useCallback(() => {
     if (!defaultContentHref) return;
@@ -50,11 +61,11 @@ export function WorkspaceShell({ interaction, content }: WorkspaceShellProps) {
   }, [defaultContentHref, router]);
 
   useEffect(() => {
-    if (!isMobile || hasContentRoute || !defaultContentHref) return;
+    if (!shouldRedirectMobileRoot || !defaultContentHref) return;
     router.replace(defaultContentHref);
-  }, [defaultContentHref, hasContentRoute, isMobile, router]);
+  }, [defaultContentHref, router, shouldRedirectMobileRoot]);
 
-  if (isMobile && !hasContentRoute && defaultContentHref) {
+  if (shouldRedirectMobileRoot) {
     return null;
   }
 

@@ -37,7 +37,7 @@ function DesktopContentPanelToggle({
       aria-expanded={!isContentPanelCollapsed}
       aria-label={buttonLabel}
       data-state={isContentPanelCollapsed ? "closed" : "open"}
-      className="absolute top-1/2 right-0 group h-14 w-[136px] -translate-y-full cursor-pointer z-40 pointer-events-auto"
+      className="absolute top-1/2 right-0 group h-14 w-[136px] -translate-y-full cursor-pointer z-40 pointer-events-auto outline-none"
       onClick={toggleContentPanel}
     >
       <div
@@ -82,7 +82,7 @@ export function ProfilePanel() {
     <div
       className={isMobile
         ? "relative h-full"
-        : "relative z-20 h-full flex flex-col justify-start items-center px-6 py-[120px]"}
+        : "relative z-20 h-full flex flex-col justify-start items-center px-6 py-[132px]"}
     >
       {isOwner && (
         <div className={editButtonClassName}>
