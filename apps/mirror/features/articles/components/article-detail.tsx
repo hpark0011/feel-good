@@ -23,7 +23,7 @@ type ArticleDetailProps = {
 
 export function ArticleDetail({ article }: ArticleDetailProps) {
   return (
-    <div className="py-12 px-4 bg-background min-h-[calc(100vh-40px)]">
+    <div className="py-12 px-4.5 bg-background min-h-[calc(100vh-40px)]">
       <article className="max-w-xl mx-auto flex flex-col">
         <div className="flex flex-col">
           <div className="flex items-center justify-center gap-2 text-sm font-medium">
