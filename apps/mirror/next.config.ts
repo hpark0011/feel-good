@@ -48,7 +48,7 @@ const nextConfig: NextConfig = {
   redirects: async () => [
     {
       source: "/@:username",
-      destination: "/@:username/articles",
+      destination: "/@:username/posts",
       permanent: false,
     },
   ],
