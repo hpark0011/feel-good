@@ -32,7 +32,7 @@ export function ProfilePanel() {
     <div
       className={isMobile
         ? "relative h-full"
-        : "relative z-20 h-full flex flex-col justify-start items-center px-6 pt-[88px]"}
+        : "relative z-20 h-full flex flex-col justify-start items-center px-6 py-[120px]"}
     >
       {isOwner && (
         <div className={editButtonClassName}>
