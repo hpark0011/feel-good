@@ -66,7 +66,7 @@ export function ProfilePanel() {
           aria-expanded={isContentPanelOpen}
           aria-label={recordsButtonLabel}
           data-state={isContentPanelOpen ? "open" : "closed"}
-          className="absolute top-1/2 right-0 group h-10 w-[136px] -translate-y-1/2 cursor-pointer disabled:cursor-default"
+          className="absolute top-1/2 right-0 group h-10 w-[136px] -translate-y-full cursor-pointer disabled:cursor-default"
           disabled={isTransitioning}
           onClick={toggleContentPanel}
         >
@@ -81,9 +81,7 @@ export function ProfilePanel() {
             <div
               className={cn(
                 "text-xs leading-[1.1] text-muted-foreground transition-opacity duration-200 ease-in-out",
-                isTransitioning || !isContentPanelOpen
-                  ? "opacity-100"
-                  : "opacity-0 group-hover:opacity-100",
+                "opacity-0 group-hover:opacity-100",
               )}
             >
               {recordsButtonLabel}
