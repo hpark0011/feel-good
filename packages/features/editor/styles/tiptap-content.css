@@ -37,13 +37,19 @@
   line-height: 1.4;
 
   h2 {
-    margin: 40px 0px 12px 0px;
+    margin: 3rem 0px 1rem 0px;
     font-weight: 540;
     font-size: 22px;
   }
 
+  h3 {
+    margin: 3rem 0px 0.5rem 0px;
+    font-weight: 540;
+    font-size: 20px;
+  }
+
   p {
-    margin: 12px 0px;
+    margin: 1rem 0px;
   }
 }
 
