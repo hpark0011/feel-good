@@ -97,6 +97,7 @@ type ChatMessageListProps = {
   status: "LoadingFirstPage" | "CanLoadMore" | "LoadingMore" | "Exhausted";
   loadMore: (numItems: number) => void;
   onRetry?: () => void;
+  sendAnimationKey: string | null;
 };
 
 function ChatMessageList({
@@ -106,18 +107,20 @@ function ChatMessageList({
   status,
   loadMore,
   onRetry,
+  sendAnimationKey,
 }: ChatMessageListProps) {
   const bottomRef = React.useRef<HTMLDivElement>(null);
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
-  const prevLastKeyRef = React.useRef<string | undefined>(undefined);
 
-  // Auto-scroll only on tail appends (new messages), not history prepends
+  // Derive lastKey outside the effect so it only triggers on new messages,
+  // not on every streaming text update.
   const lastKey = messages.at(-1)?.key;
+
+  // Auto-scroll when new messages appear
   React.useEffect(() => {
-    if (lastKey && lastKey !== prevLastKeyRef.current) {
+    if (lastKey) {
       bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }
-    prevLastKeyRef.current = lastKey;
   }, [lastKey]);
 
   // Load more on scroll to top
@@ -160,6 +163,7 @@ function ChatMessageList({
               avatarUrl={message.role === "assistant" ? avatarUrl : null}
               profileName={profileName}
               onRetry={message.status === "failed" ? onRetry : undefined}
+              animateSend={message.key === sendAnimationKey}
             />
           ))}
       </div>

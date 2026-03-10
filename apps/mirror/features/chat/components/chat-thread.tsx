@@ -1,16 +1,30 @@
 "use client";
 
+import type { UIMessage } from "@convex-dev/agent/react";
+import { useSearchParams } from "next/navigation";
 import { useCallback, useState } from "react";
+import { ArcSphere } from "../../../components/animated-geometries/arc-sphere";
 import { useChatContext } from "../context/chat-context";
 import { useChat } from "../hooks/use-chat";
-import { ArcSphere } from "../../../components/animated-geometries/arc-sphere";
-import { ChatHeader } from "./chat-header";
+import { useMockChat } from "../hooks/use-mock-chat";
 import { ChatConversationListSheet } from "./chat-conversation-list-sheet";
-import { ChatMessageList } from "./chat-message-list";
+import { ChatHeader } from "./chat-header";
 import { ChatInput } from "./chat-input";
-import { cn } from "@feel-good/utils/cn";
+import { ChatMessageList } from "./chat-message-list";
 
 export function ChatThread() {
+  const searchParams = useSearchParams();
+  const isMock = searchParams.get("mockChat") === "1";
+
+  if (isMock) {
+    return <MockChatActiveThread />;
+  }
+
+  return <ChatThreadInner />;
+}
+
+/** Original ChatThread logic — only rendered when not in mock mode. */
+function ChatThreadInner() {
   const {
     routeResolution,
     profileName,
@@ -87,62 +101,48 @@ export function ChatThread() {
   return <ChatActiveThread />;
 }
 
-function ChatActiveThread() {
-  const {
-    profileOwnerId,
-    profileName,
-    avatarUrl,
-    conversationId,
-    conversations,
-    routeResolution,
-    setConversationId,
-    startNewConversation,
-    closeChat,
-    headerAddon,
-  } = useChatContext();
+// ─── Shared layout ────────────────────────────────────────────────────────────
 
-  const [conversationListOpen, setConversationListOpen] = useState(false);
-  const openConversationList = useCallback(
-    () => setConversationListOpen(true),
-    [],
-  );
-  const activeConversationId = routeResolution.status === "ready"
-    ? routeResolution.conversationId
-    : null;
+type ChatActiveThreadLayoutProps = {
+  messages: UIMessage[];
+  sendMessage: (content: string) => void;
+  retryMessage: () => void;
+  isStreaming: boolean;
+  conversationNotFound: boolean;
+  status: "LoadingFirstPage" | "CanLoadMore" | "LoadingMore" | "Exhausted";
+  loadMore: (numItems: number) => void;
+  sendError: string | null;
+  clearSendError: () => void;
+  sendAnimationKey: string | null;
+  // Context values
+  profileName: string;
+  avatarUrl: string | null;
+  closeChat: () => void;
+  startNewConversation: () => void;
+  headerAddon?: React.ReactNode;
+  conversationListSheet: React.ReactNode;
+  openConversationList: () => void;
+};
 
-  const handleConversationCreated = useCallback(
-    (id: Parameters<typeof setConversationId>[0]) => {
-      setConversationId(id);
-    },
-    [setConversationId],
-  );
-
-  const {
-    messages,
-    sendMessage,
-    retryMessage,
-    isStreaming,
-    conversationNotFound,
-    status,
-    loadMore,
-    sendError,
-    clearSendError,
-  } = useChat({
-    profileOwnerId,
-    conversationId,
-    onConversationCreated: handleConversationCreated,
-  });
-
-  const conversationListSheet = (
-    <ChatConversationListSheet
-      open={conversationListOpen}
-      onOpenChange={setConversationListOpen}
-      conversations={conversations}
-      activeConversationId={activeConversationId}
-      onSelect={setConversationId}
-    />
-  );
-
+function ChatActiveThreadLayout({
+  messages,
+  sendMessage,
+  retryMessage,
+  isStreaming,
+  conversationNotFound,
+  status,
+  loadMore,
+  sendError,
+  clearSendError,
+  sendAnimationKey,
+  profileName,
+  avatarUrl,
+  closeChat,
+  startNewConversation,
+  headerAddon,
+  conversationListSheet,
+  openConversationList,
+}: ChatActiveThreadLayoutProps) {
   if (conversationNotFound) {
     return (
       <div className="flex flex-col h-full relative">
@@ -185,13 +185,10 @@ function ChatActiveThread() {
         status={status}
         loadMore={loadMore}
         onRetry={retryMessage}
+        sendAnimationKey={sendAnimationKey}
       />
 
-      <div
-        className={cn(
-          "absolute bottom-0 w-full mx-auto bg-linear-to-t from-background via-30% via-background to-transparent",
-        )}
-      >
+      <div className="absolute bottom-0 w-full mx-auto bg-linear-to-t from-background via-30% via-background to-transparent">
         <ChatInput
           profileName={profileName}
           isStreaming={isStreaming}
@@ -201,5 +198,127 @@ function ChatActiveThread() {
         />
       </div>
     </div>
+  );
+}
+
+// ─── Real chat thread ─────────────────────────────────────────────────────────
+
+function ChatActiveThread() {
+  const {
+    profileOwnerId,
+    profileName,
+    avatarUrl,
+    conversationId,
+    conversations,
+    routeResolution,
+    setConversationId,
+    startNewConversation,
+    closeChat,
+    headerAddon,
+  } = useChatContext();
+
+  const [conversationListOpen, setConversationListOpen] = useState(false);
+  const openConversationList = useCallback(
+    () => setConversationListOpen(true),
+    [],
+  );
+  const activeConversationId = routeResolution.status === "ready"
+    ? routeResolution.conversationId
+    : null;
+
+  const {
+    messages,
+    sendMessage,
+    retryMessage,
+    isStreaming,
+    conversationNotFound,
+    status,
+    loadMore,
+    sendError,
+    clearSendError,
+    sendAnimationKey,
+  } = useChat({
+    profileOwnerId,
+    conversationId,
+    onConversationCreated: setConversationId,
+  });
+
+  return (
+    <ChatActiveThreadLayout
+      messages={messages}
+      sendMessage={sendMessage}
+      retryMessage={retryMessage}
+      isStreaming={isStreaming}
+      conversationNotFound={conversationNotFound}
+      status={status}
+      loadMore={loadMore}
+      sendError={sendError}
+      clearSendError={clearSendError}
+      sendAnimationKey={sendAnimationKey}
+      profileName={profileName}
+      avatarUrl={avatarUrl}
+      closeChat={closeChat}
+      startNewConversation={startNewConversation}
+      headerAddon={headerAddon}
+      conversationListSheet={
+        <ChatConversationListSheet
+          open={conversationListOpen}
+          onOpenChange={setConversationListOpen}
+          conversations={conversations}
+          activeConversationId={activeConversationId}
+          onSelect={setConversationId}
+        />
+      }
+      openConversationList={openConversationList}
+    />
+  );
+}
+
+// ─── Mock chat thread ─────────────────────────────────────────────────────────
+
+function MockChatActiveThread() {
+  const {
+    profileName,
+    avatarUrl,
+    closeChat,
+    startNewConversation,
+    headerAddon,
+  } = useChatContext();
+
+  const {
+    messages,
+    sendMessage,
+    retryMessage,
+    isStreaming,
+    conversationNotFound,
+    status,
+    loadMore,
+    sendError,
+    clearSendError,
+    sendAnimationKey,
+  } = useMockChat();
+
+  const noop = useCallback(() => {}, []);
+
+  return (
+    <ChatActiveThreadLayout
+      messages={messages}
+      sendMessage={sendMessage}
+      retryMessage={retryMessage}
+      isStreaming={isStreaming}
+      conversationNotFound={conversationNotFound}
+      status={status}
+      loadMore={loadMore}
+      sendError={sendError}
+      clearSendError={clearSendError}
+      sendAnimationKey={sendAnimationKey}
+      profileName={profileName}
+      avatarUrl={avatarUrl}
+      closeChat={closeChat}
+      startNewConversation={startNewConversation}
+      headerAddon={headerAddon}
+      conversationListSheet={null}
+      openConversationList={noop}
+    />
   );
 }

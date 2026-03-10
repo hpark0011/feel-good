@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import type { UIMessage } from "@convex-dev/agent/react";
 import { useSmoothText } from "@convex-dev/agent/react";
 import {
@@ -12,16 +13,18 @@ import {
 } from "@feel-good/ui/components/chat-message";
 import { getProfileInitials } from "@/features/profile/lib/get-profile-initials";
 
-export function ChatMessageItem({
+export const ChatMessageItem = memo(function ChatMessageItem({
   message,
   avatarUrl,
   profileName,
   onRetry,
+  animateSend,
 }: {
   message: UIMessage & { role: "user" | "assistant" };
   avatarUrl: string | null;
   profileName: string;
   onRetry?: () => void;
+  animateSend?: boolean;
 }) {
   const isUser = message.role === "user";
   const isStreaming = message.status === "streaming";
@@ -44,7 +47,12 @@ export function ChatMessageItem({
         />
       )}
       <ChatMessageContent>
-        <ChatMessageBubble variant={variant}>
+        <ChatMessageBubble
+          variant={variant}
+          className={animateSend
+            ? "animate-message-send origin-bottom-right"
+            : undefined}
+        >
           {displayText}
           {isStreaming && !displayText && <ChatMessageLoading />}
         </ChatMessageBubble>
@@ -52,4 +60,4 @@ export function ChatMessageItem({
       </ChatMessageContent>
     </ChatMessage>
   );
-}
+});

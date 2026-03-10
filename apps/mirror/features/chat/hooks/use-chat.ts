@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { useUIMessages, type UIMessage } from "@convex-dev/agent/react";
 import { api } from "@feel-good/convex/convex/_generated/api";
@@ -29,6 +29,14 @@ export function useChat({
   const sendMessageMutation = useMutation(api.chat.mutations.sendMessage);
   const retryMessageMutation = useMutation(api.chat.mutations.retryMessage);
   const [sendError, setSendError] = useState<string | null>(null);
+  const [sendAnimationKey, setSendAnimationKey] = useState<string | null>(null);
+  const awaitingSendAnimationRef = useRef<{
+    waiting: boolean;
+    forConversation: Id<"conversations"> | null;
+  }>({
+    waiting: false,
+    forConversation: null,
+  });
 
   const conversation = useQuery(
     api.chat.queries.getConversation,
@@ -65,6 +73,11 @@ export function useChat({
       isSendingRef.current = true;
       setSendError(null);
 
+      awaitingSendAnimationRef.current = {
+        waiting: true,
+        forConversation: conversationId,
+      };
+
       try {
         const result = await sendMessageMutation({
           profileOwnerId,
@@ -77,6 +90,10 @@ export function useChat({
           onConversationCreated?.(result.conversationId);
         }
       } catch (err) {
+        awaitingSendAnimationRef.current = {
+          waiting: false,
+          forConversation: null,
+        };
         const msg =
           err instanceof Error ? err.message : "Failed to send message";
         if (/rate limit/i.test(msg)) {
@@ -96,6 +113,40 @@ export function useChat({
     },
     [sendMessageMutation, profileOwnerId, conversationId, onConversationCreated],
   );
+
+  // Detect newly appended user message before browser paint
+  useLayoutEffect(() => {
+    if (!awaitingSendAnimationRef.current.waiting) return;
+    if (awaitingSendAnimationRef.current.forConversation !== conversationId) {
+      awaitingSendAnimationRef.current = {
+        waiting: false,
+        forConversation: null,
+      };
+      return;
+    }
+
+    const lastMsg = messages.at(-1);
+    if (lastMsg?.role === "user") {
+      setSendAnimationKey(lastMsg.key);
+      awaitingSendAnimationRef.current = {
+        waiting: false,
+        forConversation: null,
+      };
+    }
+  }, [conversationId, messages]);
+
+  // Clear animation key after the CSS animation completes (400ms) to prevent
+  // replays on React reconciliation / Convex re-pagination.
+  useEffect(() => {
+    if (!sendAnimationKey) return;
+    const timer = setTimeout(() => setSendAnimationKey(null), 500);
+    return () => clearTimeout(timer);
+  }, [sendAnimationKey]);
+
+  // Reset on conversation switch.
+  useEffect(() => {
+    setSendAnimationKey(null);
+  }, [conversationId]);
 
   const retryMessage = useCallback(async () => {
     if (!conversationId) return;
@@ -125,5 +176,6 @@ export function useChat({
     loadMore,
     sendError,
     clearSendError,
+    sendAnimationKey,
   };
 }
