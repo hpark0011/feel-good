@@ -61,6 +61,25 @@ function findInsertIndexBeforeNewAssistant(
   return messages.length;
 }
 
+function findFirstNewAssistant(
+  messages: UIMessage[],
+  assistantBaseline: number,
+) {
+  let seenAssistantCount = 0;
+
+  for (let index = 0; index < messages.length; index += 1) {
+    const message = messages[index];
+
+    if (message?.role !== "assistant") continue;
+    if (seenAssistantCount === assistantBaseline) {
+      return { index, message };
+    }
+    seenAssistantCount += 1;
+  }
+
+  return null;
+}
+
 export function useChat({
   profileOwnerId,
   conversationId,
@@ -104,10 +123,31 @@ export function useChat({
   const realAssistantCount = messageCounts.assistant;
   const userBaseline = realUserCountBaselineRef.current ?? 0;
   const assistantBaseline = realAssistantCountBaselineRef.current ?? 0;
+  const firstNewAssistant = useMemo(
+    () => findFirstNewAssistant(messages, assistantBaseline),
+    [messages, assistantBaseline],
+  );
+  const firstNewAssistantMessage = firstNewAssistant?.message ?? null;
+  const firstNewAssistantHasText = firstNewAssistantMessage !== null
+    && firstNewAssistantMessage.text.length > 0;
+  const firstNewAssistantSettledWithoutText = firstNewAssistantMessage !== null
+    && firstNewAssistantMessage.text.length === 0
+    && (
+      firstNewAssistantMessage.status === "success"
+      || firstNewAssistantMessage.status === "failed"
+    );
+  const assistantResponseSettled = firstNewAssistantSettledWithoutText
+    || (hasObservedStreamingRef.current && !isStreaming && !firstNewAssistantHasText);
   const showOptimisticMessages =
     optimisticMessages.length > 0 && realUserCount <= userBaseline;
   const showPendingAssistant =
-    pendingAssistantMessage !== null && realAssistantCount <= assistantBaseline;
+    pendingAssistantMessage !== null
+    && !firstNewAssistantHasText
+    && !assistantResponseSettled;
+  const shouldSuppressEmptyNewAssistant =
+    showPendingAssistant
+    && firstNewAssistantMessage !== null
+    && firstNewAssistantMessage.text.length === 0;
 
   // Merge optimistic + real messages
   const mergedMessages = useMemo(() => {
@@ -130,6 +170,12 @@ export function useChat({
         : [...messages, ...optimisticMessages];
     }
 
+    if (shouldSuppressEmptyNewAssistant && firstNewAssistantMessage) {
+      displayMessages = displayMessages.filter(
+        (message) => message.key !== firstNewAssistantMessage.key,
+      );
+    }
+
     if (showPendingAssistant && pendingAssistantMessage) {
       return [...displayMessages, pendingAssistantMessage];
     }
@@ -141,8 +187,8 @@ export function useChat({
     pendingAssistantMessage,
     showOptimisticMessages,
     showPendingAssistant,
-    realAssistantCount,
-    assistantBaseline,
+    shouldSuppressEmptyNewAssistant,
+    firstNewAssistantMessage,
   ]);
 
   // Clear optimistic messages when real messages arrive.
@@ -165,24 +211,15 @@ export function useChat({
 
   useEffect(() => {
     if (!pendingAssistantMessage) return;
-
-    if (realAssistantCount > assistantBaseline) {
-      setPendingAssistantMessage(null);
-      realAssistantCountBaselineRef.current = null;
-      hasObservedStreamingRef.current = false;
-      return;
-    }
-
-    if (hasObservedStreamingRef.current && !isStreaming) {
+    if (firstNewAssistantHasText || assistantResponseSettled) {
       setPendingAssistantMessage(null);
       realAssistantCountBaselineRef.current = null;
       hasObservedStreamingRef.current = false;
     }
   }, [
     pendingAssistantMessage,
-    realAssistantCount,
-    assistantBaseline,
-    isStreaming,
+    firstNewAssistantHasText,
+    assistantResponseSettled,
   ]);
 
   // Override status to prevent loading spinner flash when optimistic messages

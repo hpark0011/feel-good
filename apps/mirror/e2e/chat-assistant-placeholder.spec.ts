@@ -9,20 +9,52 @@ async function installChatStateTracking(page: Page) {
     const trackedWindow = window as typeof window & {
       __pendingAssistantSeen?: boolean;
       __chatLoadingStateSeen?: boolean;
+      __assistantTextSeen?: boolean;
+      __pendingAssistantDroppedBeforeText?: boolean;
+      __blankAssistantSeen?: boolean;
     };
     const pendingAssistantSelector = '[data-pending-assistant="true"]';
     const loadingStateSelector = '[data-slot="chat-message-loading-state"]';
+    const blankAssistantSelector =
+      '[data-assistant-empty="true"]:not([data-pending-assistant="true"])';
+    const receivedBubbleSelector =
+      '[data-slot="chat-message"][data-variant="received"] [data-slot="chat-message-bubble"]';
 
     trackedWindow.__pendingAssistantSeen = false;
     trackedWindow.__chatLoadingStateSeen = false;
+    trackedWindow.__assistantTextSeen = false;
+    trackedWindow.__pendingAssistantDroppedBeforeText = false;
+    trackedWindow.__blankAssistantSeen = false;
 
     const markFlags = () => {
-      if (document.querySelector(pendingAssistantSelector)) {
+      const hasPendingAssistant = document.querySelector(pendingAssistantSelector)
+        !== null;
+      const hasAssistantText = Array.from(
+        document.querySelectorAll(receivedBubbleSelector),
+      ).some((element) => (element.textContent ?? "").trim().length > 0);
+
+      if (hasPendingAssistant) {
         trackedWindow.__pendingAssistantSeen = true;
+      }
+
+      if (hasAssistantText) {
+        trackedWindow.__assistantTextSeen = true;
+      }
+
+      if (
+        trackedWindow.__pendingAssistantSeen
+        && !trackedWindow.__assistantTextSeen
+        && !hasPendingAssistant
+      ) {
+        trackedWindow.__pendingAssistantDroppedBeforeText = true;
       }
 
       if (document.querySelector(loadingStateSelector)) {
         trackedWindow.__chatLoadingStateSeen = true;
+      }
+
+      if (document.querySelector(blankAssistantSelector)) {
+        trackedWindow.__blankAssistantSeen = true;
       }
     };
 
@@ -37,7 +69,13 @@ async function installChatStateTracking(page: Page) {
         childList: true,
         subtree: true,
         attributes: true,
-        attributeFilter: ["data-pending-assistant", "data-slot"],
+        characterData: true,
+        attributeFilter: [
+          "data-assistant-empty",
+          "data-pending-assistant",
+          "data-slot",
+          "data-variant",
+        ],
       });
     };
 
@@ -56,10 +94,16 @@ async function resetChatStateTracking(page: Page) {
     const trackedWindow = window as typeof window & {
       __pendingAssistantSeen?: boolean;
       __chatLoadingStateSeen?: boolean;
+      __assistantTextSeen?: boolean;
+      __pendingAssistantDroppedBeforeText?: boolean;
+      __blankAssistantSeen?: boolean;
     };
 
     trackedWindow.__pendingAssistantSeen = false;
     trackedWindow.__chatLoadingStateSeen = false;
+    trackedWindow.__assistantTextSeen = false;
+    trackedWindow.__pendingAssistantDroppedBeforeText = false;
+    trackedWindow.__blankAssistantSeen = false;
   });
 }
 
@@ -68,11 +112,18 @@ async function getChatStateTracking(page: Page) {
     const trackedWindow = window as typeof window & {
       __pendingAssistantSeen?: boolean;
       __chatLoadingStateSeen?: boolean;
+      __assistantTextSeen?: boolean;
+      __pendingAssistantDroppedBeforeText?: boolean;
+      __blankAssistantSeen?: boolean;
     };
 
     return {
       pendingAssistantSeen: trackedWindow.__pendingAssistantSeen ?? false,
       chatLoadingStateSeen: trackedWindow.__chatLoadingStateSeen ?? false,
+      assistantTextSeen: trackedWindow.__assistantTextSeen ?? false,
+      pendingAssistantDroppedBeforeText:
+        trackedWindow.__pendingAssistantDroppedBeforeText ?? false,
+      blankAssistantSeen: trackedWindow.__blankAssistantSeen ?? false,
     };
   });
 }
@@ -109,10 +160,14 @@ test.describe("Chat assistant placeholder", () => {
       return tracking.pendingAssistantSeen;
     }, { timeout: 5000 }).toBe(true);
     await expect(page).toHaveURL(new RegExp(`/@${username}.*[?&]conversation=`));
-
-    await page.waitForTimeout(1500);
+    await expect.poll(async () => {
+      const tracking = await getChatStateTracking(page);
+      return tracking.assistantTextSeen;
+    }, { timeout: 30000 }).toBe(true);
     const firstSendTracking = await getChatStateTracking(page);
     expect(firstSendTracking.chatLoadingStateSeen).toBe(false);
+    expect(firstSendTracking.pendingAssistantDroppedBeforeText).toBe(false);
+    expect(firstSendTracking.blankAssistantSeen).toBe(false);
 
     await expect(textarea).toBeEnabled({ timeout: 30000 });
 
@@ -125,9 +180,13 @@ test.describe("Chat assistant placeholder", () => {
       const tracking = await getChatStateTracking(page);
       return tracking.pendingAssistantSeen;
     }, { timeout: 5000 }).toBe(true);
-
-    await page.waitForTimeout(1500);
+    await expect.poll(async () => {
+      const tracking = await getChatStateTracking(page);
+      return tracking.assistantTextSeen;
+    }, { timeout: 30000 }).toBe(true);
     const secondSendTracking = await getChatStateTracking(page);
     expect(secondSendTracking.chatLoadingStateSeen).toBe(false);
+    expect(secondSendTracking.pendingAssistantDroppedBeforeText).toBe(false);
+    expect(secondSendTracking.blankAssistantSeen).toBe(false);
   });
 });
