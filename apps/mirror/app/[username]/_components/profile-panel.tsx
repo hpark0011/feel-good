@@ -13,7 +13,7 @@ import { useProfileRouteData } from "../_providers/profile-route-data-context";
 import {
   useOptionalWorkspaceChrome,
 } from "../_providers/workspace-chrome-context";
-import { BookFlip } from "@/components/animated-geometries/book-flip";
+import { MirrorLogo } from "@/components/mirror-logo";
 
 export function ProfilePanel() {
   const { profile, isOwner, setVideoCallOpen } = useProfileRouteData();
@@ -52,8 +52,8 @@ export function ProfilePanel() {
             : <EditProfileButton onClick={() => setIsEditing(true)} />}
         </div>
       )}
-      <div className="absolute left-3 top-3 bg-gray-6 rounded-t-full">
-        <BookFlip className="size-[32px]" />
+      <div className="absolute left-3 top-3">
+        <MirrorLogo />
       </div>
 
       {workspaceChrome && (
