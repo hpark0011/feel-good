@@ -1,8 +1,19 @@
+:root {
+  --book-flip-duration: 10s;
+  --book-flip-page-from: rgba(255, 255, 255, 0.3);
+  --book-flip-page-to: rgba(255, 255, 255, 0.3);
+}
+
+.dark {
+  --book-flip-page-from: rgba(255, 255, 255, 0.03);
+  --book-flip-page-to: rgba(255, 255, 255, 0.03);
+}
+
 /* The central static circle (book's background) */
 .book-flip-core {
   position: absolute;
   inset: 0;
-  background: var(--gray-7);
+  background: var(--gray-6);
   border-radius: 50%;
   z-index: 0;
 }
@@ -18,8 +29,8 @@
   /* Glassmorphism page design */
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.3),
-    rgba(255, 255, 255, 0.1)
+    var(--book-flip-page-from),
+    var(--book-flip-page-to)
   );
 
   /* Mathematically perfect half-circle */
@@ -27,35 +38,40 @@
 
   /* Anchor to the center line */
   transform-origin: 100% 50%;
+
+  /* Shared animation timing */
+  animation-duration: var(--book-flip-duration);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
 }
 
-/* Page animations with staggered delays for realistic thumb-burst effect */
+/* Page animations — only the name differs per page */
 .book-flip-page-1 {
-  animation: book-flip-p1 6s ease-in-out infinite;
+  animation-name: book-flip-p1;
 }
 .book-flip-page-2 {
-  animation: book-flip-p2 6s ease-in-out infinite;
+  animation-name: book-flip-p2;
 }
 .book-flip-page-3 {
-  animation: book-flip-p3 6s ease-in-out infinite;
+  animation-name: book-flip-p3;
 }
 .book-flip-page-4 {
-  animation: book-flip-p4 6s ease-in-out infinite;
+  animation-name: book-flip-p4;
 }
 .book-flip-page-5 {
-  animation: book-flip-p5 6s ease-in-out infinite;
+  animation-name: book-flip-p5;
 }
 .book-flip-page-6 {
-  animation: book-flip-p6 6s ease-in-out infinite;
+  animation-name: book-flip-p6;
 }
 .book-flip-page-7 {
-  animation: book-flip-p7 6s ease-in-out infinite;
+  animation-name: book-flip-p7;
 }
 .book-flip-page-8 {
-  animation: book-flip-p8 6s ease-in-out infinite;
+  animation-name: book-flip-p8;
 }
 .book-flip-page-9 {
-  animation: book-flip-p9 6s ease-in-out infinite;
+  animation-name: book-flip-p9;
 }
 
 /* Keyframes: z-index inverts at midpoint so pages stack correctly on both sides */
