@@ -1,11 +1,23 @@
 "use client";
 
 import type { UIMessage } from "@convex-dev/agent/react";
+import { Button } from "@feel-good/ui/primitives/button";
 import { cn } from "@feel-good/utils/cn";
+import { ChevronDownIcon } from "lucide-react";
 import * as React from "react";
 import { ChatMessageItem } from "./chat-message-item";
 import { ArcSphere } from "../../../components/animated-geometries/arc-sphere";
 import { WireframeSphere } from "../../../components/animated-geometries/wireframe-sphere";
+
+const AUTO_SCROLL_THRESHOLD_PX = 96;
+
+function getDistanceFromBottom(container: HTMLDivElement) {
+  return container.scrollHeight - container.scrollTop - container.clientHeight;
+}
+
+function isNearBottom(container: HTMLDivElement) {
+  return getDistanceFromBottom(container) <= AUTO_SCROLL_THRESHOLD_PX;
+}
 
 /* Internal building-block components — not exported. */
 
@@ -109,34 +121,92 @@ function ChatMessageList({
   onRetry,
   sendAnimationKey,
 }: ChatMessageListProps) {
-  const bottomRef = React.useRef<HTMLDivElement>(null);
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+  const messageStackRef = React.useRef<HTMLDivElement>(null);
+  const pinnedToBottomRef = React.useRef(true);
+  const resizeFrameRef = React.useRef<number | null>(null);
+  const [isPinnedToBottom, setIsPinnedToBottom] = React.useState(true);
 
-  // Derive lastKey outside the effect so it only triggers on new messages,
-  // not on every streaming text update.
-  const lastKey = messages.at(-1)?.key;
+  const lastKey = messages.at(-1)?.key ?? null;
+
+  const syncPinnedToBottom = React.useCallback((nextPinnedToBottom: boolean) => {
+    pinnedToBottomRef.current = nextPinnedToBottom;
+    setIsPinnedToBottom((currentPinnedToBottom) =>
+      currentPinnedToBottom === nextPinnedToBottom
+        ? currentPinnedToBottom
+        : nextPinnedToBottom
+    );
+  }, []);
+
+  const scrollToBottom = React.useCallback((behavior: ScrollBehavior = "auto") => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior,
+    });
+  }, []);
+
+  React.useEffect(() => {
+    if (messages.length === 0) {
+      syncPinnedToBottom(true);
+    }
+  }, [messages.length, syncPinnedToBottom]);
 
   // Auto-scroll when new messages appear
   React.useEffect(() => {
-    if (lastKey) {
-      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [lastKey]);
+    if (!lastKey || !pinnedToBottomRef.current) return;
+    scrollToBottom("auto");
+  }, [lastKey, scrollToBottom]);
 
-  // Load more on scroll to top
   React.useEffect(() => {
     const container = scrollContainerRef.current;
-    if (!container || status !== "CanLoadMore") return;
+    if (!container) return;
 
     function handleScroll() {
-      if (container!.scrollTop < 100) {
+      syncPinnedToBottom(isNearBottom(container));
+
+      if (status === "CanLoadMore" && container.scrollTop < 100) {
         loadMore(20);
       }
     }
 
+    handleScroll();
     container.addEventListener("scroll", handleScroll, { passive: true });
     return () => container.removeEventListener("scroll", handleScroll);
-  }, [status, loadMore]);
+  }, [messages.length, status, loadMore, syncPinnedToBottom]);
+
+  React.useEffect(() => {
+    const messageStack = messageStackRef.current;
+    if (!messageStack || typeof ResizeObserver === "undefined") return;
+
+    const observer = new ResizeObserver(() => {
+      if (!pinnedToBottomRef.current) return;
+
+      if (resizeFrameRef.current !== null) {
+        cancelAnimationFrame(resizeFrameRef.current);
+      }
+
+      resizeFrameRef.current = requestAnimationFrame(() => {
+        resizeFrameRef.current = null;
+
+        if (!pinnedToBottomRef.current) return;
+        scrollToBottom("auto");
+      });
+    });
+
+    observer.observe(messageStack);
+
+    return () => {
+      observer.disconnect();
+
+      if (resizeFrameRef.current !== null) {
+        cancelAnimationFrame(resizeFrameRef.current);
+        resizeFrameRef.current = null;
+      }
+    };
+  }, [messages.length, scrollToBottom]);
 
   if (status === "LoadingFirstPage") {
     return <ChatMessageLoadingState />;
@@ -147,29 +217,50 @@ function ChatMessageList({
   }
 
   return (
-    <ChatMessageScrollArea ref={scrollContainerRef}>
-      {status === "LoadingMore" && <ChatMessageLoadingMore />}
+    <div className="relative flex flex-1 min-h-0">
+      <ChatMessageScrollArea ref={scrollContainerRef}>
+        {status === "LoadingMore" && <ChatMessageLoadingMore />}
 
-      <div className="flex flex-col gap-3 mx-auto max-w-5xl">
-        {messages
-          .filter(
-            (m): m is typeof m & { role: "user" | "assistant" } =>
-              m.role === "user" || m.role === "assistant",
-          )
-          .map((message) => (
-            <ChatMessageItem
-              key={message.key}
-              message={message}
-              avatarUrl={message.role === "assistant" ? avatarUrl : null}
-              profileName={profileName}
-              onRetry={message.status === "failed" ? onRetry : undefined}
-              animateSend={message.key === sendAnimationKey}
-            />
-          ))}
-      </div>
+        <div
+          ref={messageStackRef}
+          className="flex flex-col gap-3 mx-auto max-w-5xl"
+        >
+          {messages
+            .filter(
+              (m): m is typeof m & { role: "user" | "assistant" } =>
+                m.role === "user" || m.role === "assistant",
+            )
+            .map((message) => (
+              <ChatMessageItem
+                key={message.key}
+                message={message}
+                avatarUrl={message.role === "assistant" ? avatarUrl : null}
+                profileName={profileName}
+                onRetry={message.status === "failed" ? onRetry : undefined}
+                animateSend={message.key === sendAnimationKey}
+              />
+            ))}
+        </div>
 
-      <div ref={bottomRef} />
-    </ChatMessageScrollArea>
+      </ChatMessageScrollArea>
+
+      {!isPinnedToBottom && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-32 flex justify-center px-4">
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            data-slot="chat-message-scroll-to-bottom"
+            aria-label="Scroll to latest message"
+            className="pointer-events-auto rounded-full shadow-xl"
+            onClick={() => scrollToBottom("smooth")}
+          >
+            Latest
+            <ChevronDownIcon className="size-4" />
+          </Button>
+        </div>
+      )}
+    </div>
   );
 }
 

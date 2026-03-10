@@ -3,6 +3,17 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 const username = "rick-rubin";
 const firstMessage = "Reply with exactly: ok";
 const secondMessage = "Reply with exactly: hi";
+const longReplyMessage =
+  "Reply with exactly 80 numbered lines in plain text. Each line must begin with 'stream line' followed by the line number. No intro or outro.";
+const detachedReplyMessage =
+  "Reply with exactly 80 numbered lines in plain text. Each line must begin with 'detached line' followed by the line number. No intro or outro.";
+
+type ScrollMetrics = {
+  clientHeight: number;
+  distanceFromBottom: number;
+  scrollHeight: number;
+  scrollTop: number;
+};
 
 async function installChatStateTracking(page: Page) {
   await page.addInitScript(() => {
@@ -142,6 +153,50 @@ async function sendChatMessage(textarea: Locator, message: string) {
   await textarea.press("Enter");
 }
 
+async function getScrollMetrics(page: Page): Promise<ScrollMetrics> {
+  return page.locator('[data-slot="chat-message-scroll-area"]').evaluate((node) => {
+    const container = node as HTMLDivElement;
+
+    return {
+      clientHeight: container.clientHeight,
+      distanceFromBottom:
+        container.scrollHeight - container.scrollTop - container.clientHeight,
+      scrollHeight: container.scrollHeight,
+      scrollTop: container.scrollTop,
+    };
+  });
+}
+
+async function waitForAssistantText(page: Page) {
+  await expect.poll(async () => {
+    const tracking = await getChatStateTracking(page);
+    return tracking.assistantTextSeen;
+  }, { timeout: 30000 }).toBe(true);
+}
+
+async function waitForScrollGrowth(page: Page, baselineHeight: number) {
+  await expect.poll(async () => {
+    const metrics = await getScrollMetrics(page);
+    return metrics.scrollHeight - baselineHeight;
+  }, { timeout: 30000 }).toBeGreaterThan(200);
+}
+
+async function scrollChatUp(page: Page, distance: number) {
+  await page.locator('[data-slot="chat-message-scroll-area"]').evaluate(
+    (node, offset) => {
+      const container = node as HTMLDivElement;
+      const nextTop = Math.max(
+        0,
+        container.scrollHeight - container.clientHeight - (offset as number),
+      );
+
+      container.scrollTop = nextTop;
+      container.dispatchEvent(new Event("scroll"));
+    },
+    distance,
+  );
+}
+
 test.describe("Chat assistant placeholder", () => {
   test("shows the assistant placeholder immediately on first and subsequent sends", async ({
     page,
@@ -188,5 +243,72 @@ test.describe("Chat assistant placeholder", () => {
     expect(secondSendTracking.chatLoadingStateSeen).toBe(false);
     expect(secondSendTracking.pendingAssistantDroppedBeforeText).toBe(false);
     expect(secondSendTracking.blankAssistantSeen).toBe(false);
+  });
+
+  test("keeps streaming replies pinned to bottom until the user scrolls away", async ({
+    page,
+  }) => {
+    await installChatStateTracking(page);
+
+    const textarea = await openChat(page);
+
+    await resetChatStateTracking(page);
+    await sendChatMessage(textarea, longReplyMessage);
+
+    await expect(textarea).toBeDisabled();
+    await expect(page).toHaveURL(new RegExp(`/@${username}.*[?&]conversation=`));
+    await expect(page.locator('[data-slot="chat-message"][data-variant="sent"]').last())
+      .toContainText("80 numbered lines");
+    await expect.poll(async () => {
+      const tracking = await getChatStateTracking(page);
+      return tracking.pendingAssistantSeen;
+    }, { timeout: 5000 }).toBe(true);
+
+    const pinnedBaseline = await getScrollMetrics(page);
+    await waitForAssistantText(page);
+    await waitForScrollGrowth(page, pinnedBaseline.scrollHeight);
+    await expect.poll(async () => {
+      const metrics = await getScrollMetrics(page);
+      return metrics.distanceFromBottom;
+    }, { timeout: 5000 }).toBeLessThan(24);
+    await expect(textarea).toBeEnabled({ timeout: 30000 });
+
+    await scrollChatUp(page, 400);
+
+    const scrollToBottomButton = page.locator(
+      '[data-slot="chat-message-scroll-to-bottom"]',
+    );
+    await expect(scrollToBottomButton).toBeVisible();
+    await expect.poll(async () => {
+      const metrics = await getScrollMetrics(page);
+      return metrics.distanceFromBottom;
+    }, { timeout: 5000 }).toBeGreaterThan(200);
+
+    await resetChatStateTracking(page);
+    await sendChatMessage(textarea, detachedReplyMessage);
+
+    await expect(textarea).toBeDisabled();
+    await expect(page.locator('[data-slot="chat-message"][data-variant="sent"]').last())
+      .toContainText("detached line");
+    await expect.poll(async () => {
+      const tracking = await getChatStateTracking(page);
+      return tracking.pendingAssistantSeen;
+    }, { timeout: 5000 }).toBe(true);
+
+    const detachedBaseline = await getScrollMetrics(page);
+    await waitForAssistantText(page);
+    await waitForScrollGrowth(page, detachedBaseline.scrollHeight);
+    await expect.poll(async () => {
+      const metrics = await getScrollMetrics(page);
+      return metrics.distanceFromBottom;
+    }, { timeout: 5000 }).toBeGreaterThan(200);
+    await expect(scrollToBottomButton).toBeVisible();
+
+    await scrollToBottomButton.click();
+    await expect.poll(async () => {
+      const metrics = await getScrollMetrics(page);
+      return metrics.distanceFromBottom;
+    }, { timeout: 5000 }).toBeLessThan(24);
+    await expect(textarea).toBeEnabled({ timeout: 30000 });
   });
 });
