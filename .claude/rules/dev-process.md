@@ -29,7 +29,7 @@ Rules for how Claude and the developer work together, and Claude's internal disc
 2. **Claude investigates and states hypothesis** — compare with developer's thinking
 3. **Align on approach** before touching code
 4. **Implement from a plan** — not ad-hoc
-5. **Verify** — browser check, build, or test
+5. **Verify** — follow `.claude/rules/verification.md` protocol. Do not skip.
 
 ## Debugging UI/Visual Bugs
 
