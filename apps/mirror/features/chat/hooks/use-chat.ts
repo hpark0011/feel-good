@@ -29,6 +29,38 @@ const listMessagesQuery = api.chat.queries.listThreadMessages as any;
 
 const EMPTY_MESSAGES: UIMessage[] = [];
 
+function countMessagesByRole(messages: UIMessage[]) {
+  let user = 0;
+  let assistant = 0;
+
+  for (const message of messages) {
+    if (message.role === "user") {
+      user += 1;
+    } else if (message.role === "assistant") {
+      assistant += 1;
+    }
+  }
+
+  return { user, assistant };
+}
+
+function findInsertIndexBeforeNewAssistant(
+  messages: UIMessage[],
+  assistantBaseline: number,
+) {
+  let seenAssistantCount = 0;
+
+  for (let index = 0; index < messages.length; index += 1) {
+    if (messages[index]?.role !== "assistant") continue;
+    if (seenAssistantCount === assistantBaseline) {
+      return index;
+    }
+    seenAssistantCount += 1;
+  }
+
+  return messages.length;
+}
+
 export function useChat({
   profileOwnerId,
   conversationId,
@@ -39,8 +71,12 @@ export function useChat({
   const [sendError, setSendError] = useState<string | null>(null);
   const [sendAnimationKey, setSendAnimationKey] = useState<string | null>(null);
   const [optimisticMessages, setOptimisticMessages] = useState<UIMessage[]>([]);
+  const [pendingAssistantMessage, setPendingAssistantMessage] =
+    useState<UIMessage | null>(null);
   const createdConversationRef = useRef<Id<"conversations"> | null>(null);
   const realUserCountBaselineRef = useRef<number | null>(null);
+  const realAssistantCountBaselineRef = useRef<number | null>(null);
+  const hasObservedStreamingRef = useRef(false);
 
   const conversation = useQuery(
     api.chat.queries.getConversation,
@@ -63,33 +99,97 @@ export function useChat({
   // skipped, and `?? []` would create a new reference every render.
   const messages = (results as UIMessage[] | undefined) ?? EMPTY_MESSAGES;
   const isStreaming = conversation?.streamingInProgress ?? false;
+  const messageCounts = useMemo(() => countMessagesByRole(messages), [messages]);
+  const realUserCount = messageCounts.user;
+  const realAssistantCount = messageCounts.assistant;
+  const userBaseline = realUserCountBaselineRef.current ?? 0;
+  const assistantBaseline = realAssistantCountBaselineRef.current ?? 0;
+  const showOptimisticMessages =
+    optimisticMessages.length > 0 && realUserCount <= userBaseline;
+  const showPendingAssistant =
+    pendingAssistantMessage !== null && realAssistantCount <= assistantBaseline;
 
   // Merge optimistic + real messages
   const mergedMessages = useMemo(() => {
-    if (optimisticMessages.length === 0) return messages;
-    const realUserCount = messages.filter((m) => m.role === "user").length;
-    const baseline = realUserCountBaselineRef.current ?? 0;
-    const pending = realUserCount > baseline ? [] : optimisticMessages;
-    return [...messages, ...pending];
-  }, [messages, optimisticMessages]);
+    if (!showOptimisticMessages && !showPendingAssistant) return messages;
+
+    let displayMessages = messages;
+
+    if (showOptimisticMessages) {
+      const hasNewAssistantMessages = realAssistantCount > assistantBaseline;
+      const insertIndex = hasNewAssistantMessages
+        ? findInsertIndexBeforeNewAssistant(messages, assistantBaseline)
+        : messages.length;
+
+      displayMessages = hasNewAssistantMessages
+        ? [
+          ...messages.slice(0, insertIndex),
+          ...optimisticMessages,
+          ...messages.slice(insertIndex),
+        ]
+        : [...messages, ...optimisticMessages];
+    }
+
+    if (showPendingAssistant && pendingAssistantMessage) {
+      return [...displayMessages, pendingAssistantMessage];
+    }
+
+    return displayMessages;
+  }, [
+    messages,
+    optimisticMessages,
+    pendingAssistantMessage,
+    showOptimisticMessages,
+    showPendingAssistant,
+    realAssistantCount,
+    assistantBaseline,
+  ]);
 
   // Clear optimistic messages when real messages arrive.
   // Count-based: when real user message count exceeds the baseline captured
   // at send time, the server has persisted our message.
   useEffect(() => {
     if (optimisticMessages.length === 0) return;
-    const realUserCount = messages.filter((m) => m.role === "user").length;
-    const baseline = realUserCountBaselineRef.current ?? 0;
-    if (realUserCount > baseline) {
+    if (realUserCount > userBaseline) {
       setOptimisticMessages([]);
       realUserCountBaselineRef.current = null;
     }
-  }, [messages, optimisticMessages.length]);
+  }, [optimisticMessages.length, realUserCount, userBaseline]);
+
+  useEffect(() => {
+    if (!pendingAssistantMessage) return;
+    if (isStreaming) {
+      hasObservedStreamingRef.current = true;
+    }
+  }, [pendingAssistantMessage, isStreaming]);
+
+  useEffect(() => {
+    if (!pendingAssistantMessage) return;
+
+    if (realAssistantCount > assistantBaseline) {
+      setPendingAssistantMessage(null);
+      realAssistantCountBaselineRef.current = null;
+      hasObservedStreamingRef.current = false;
+      return;
+    }
+
+    if (hasObservedStreamingRef.current && !isStreaming) {
+      setPendingAssistantMessage(null);
+      realAssistantCountBaselineRef.current = null;
+      hasObservedStreamingRef.current = false;
+    }
+  }, [
+    pendingAssistantMessage,
+    realAssistantCount,
+    assistantBaseline,
+    isStreaming,
+  ]);
 
   // Override status to prevent loading spinner flash when optimistic messages
   // exist or when no conversation has been created yet.
+  const isResponding = isStreaming || showPendingAssistant;
   const resolvedStatus =
-    optimisticMessages.length > 0
+    showOptimisticMessages || showPendingAssistant
       ? "Exhausted"
       : conversationId === null
         ? "Exhausted"
@@ -103,8 +203,10 @@ export function useChat({
       isSendingRef.current = true;
       setSendError(null);
 
-      // Create optimistic message immediately
-      const optimisticKey = `optimistic-${Date.now()}`;
+      // Create optimistic messages immediately so both the user bubble and
+      // assistant placeholder render before the backend stream arrives.
+      const optimisticTimestamp = Date.now();
+      const optimisticKey = `optimistic-user-${optimisticTimestamp}`;
       const optimisticMsg = {
         key: optimisticKey,
         id: optimisticKey,
@@ -112,17 +214,30 @@ export function useChat({
         text: content,
         status: "pending" as const,
         parts: [{ type: "text" as const, text: content }],
-        order: Date.now(),
+        order: optimisticTimestamp,
         stepOrder: 0,
-        _creationTime: Date.now(),
+        _creationTime: optimisticTimestamp,
       } satisfies UIMessage;
 
-      const currentRealUserCount = messages.filter(
-        (m) => m.role === "user",
-      ).length;
-      realUserCountBaselineRef.current = currentRealUserCount;
+      const optimisticAssistantKey = `optimistic-assistant-${optimisticTimestamp}`;
+      const optimisticAssistantMsg = {
+        key: optimisticAssistantKey,
+        id: optimisticAssistantKey,
+        role: "assistant" as const,
+        text: "",
+        status: "streaming" as const,
+        parts: [],
+        order: optimisticTimestamp + 1,
+        stepOrder: 0,
+        _creationTime: optimisticTimestamp + 1,
+      } satisfies UIMessage;
+
+      realUserCountBaselineRef.current = realUserCount;
+      realAssistantCountBaselineRef.current = realAssistantCount;
+      hasObservedStreamingRef.current = false;
 
       setOptimisticMessages((prev) => [...prev, optimisticMsg]);
+      setPendingAssistantMessage(optimisticAssistantMsg);
       setSendAnimationKey(optimisticKey);
 
       try {
@@ -141,7 +256,10 @@ export function useChat({
         }
       } catch (err) {
         setOptimisticMessages([]);
+        setPendingAssistantMessage(null);
         realUserCountBaselineRef.current = null;
+        realAssistantCountBaselineRef.current = null;
+        hasObservedStreamingRef.current = false;
         const msg =
           err instanceof Error ? err.message : "Failed to send message";
         if (/rate limit/i.test(msg)) {
@@ -159,7 +277,14 @@ export function useChat({
         isSendingRef.current = false;
       }
     },
-    [sendMessageMutation, profileOwnerId, conversationId, onConversationCreated, messages],
+    [
+      sendMessageMutation,
+      profileOwnerId,
+      conversationId,
+      onConversationCreated,
+      realUserCount,
+      realAssistantCount,
+    ],
   );
 
   // Clear animation key after the CSS animation completes (400ms) to prevent
@@ -180,7 +305,10 @@ export function useChat({
       createdConversationRef.current = null;
     } else {
       setOptimisticMessages([]);
+      setPendingAssistantMessage(null);
       realUserCountBaselineRef.current = null;
+      realAssistantCountBaselineRef.current = null;
+      hasObservedStreamingRef.current = false;
     }
   }, [conversationId]);
 
@@ -213,7 +341,7 @@ export function useChat({
     messages: mergedMessages,
     sendMessage,
     retryMessage,
-    isStreaming,
+    isResponding,
     conversation,
     conversationNotFound,
     status: resolvedStatus,

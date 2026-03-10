@@ -81,7 +81,7 @@ function ChatActiveThread() {
     messages,
     sendMessage,
     retryMessage,
-    isStreaming,
+    isResponding,
     conversationNotFound,
     status,
     loadMore,
@@ -155,7 +155,7 @@ function ChatActiveThread() {
       <div className="absolute bottom-0 w-full mx-auto bg-linear-to-t from-background via-30% via-background to-transparent">
         <ChatInput
           profileName={profileName}
-          isStreaming={isStreaming}
+          isResponding={isResponding}
           onSend={sendMessage}
           sendError={sendError}
           onClearError={clearSendError}

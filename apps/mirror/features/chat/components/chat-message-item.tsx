@@ -35,6 +35,7 @@ export const ChatMessageItem = memo(function ChatMessageItem({
     startStreaming: isStreaming,
   });
   const displayText = isStreaming ? smoothText : message.text;
+  const showsPendingAssistant = !isUser && isStreaming && !displayText;
 
   const variant = isUser ? "sent" : "received";
 
@@ -50,13 +51,14 @@ export const ChatMessageItem = memo(function ChatMessageItem({
       <ChatMessageContent>
         <ChatMessageBubble
           variant={variant}
+          data-pending-assistant={showsPendingAssistant ? "true" : undefined}
           className={animateSend
             ? "animate-message-send origin-bottom-right"
             : undefined}
         >
           {displayText}
           {isStreaming && !displayText && isUser && <ChatMessageLoading />}
-          {isStreaming && !displayText && <BookFlip />}
+          {showsPendingAssistant && <BookFlip />}
         </ChatMessageBubble>
         {isFailed && <ChatMessageError onRetry={onRetry} />}
       </ChatMessageContent>
