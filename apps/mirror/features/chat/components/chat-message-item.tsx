@@ -12,6 +12,7 @@ import {
   ChatMessageLoading,
 } from "@feel-good/ui/components/chat-message";
 import { getProfileInitials } from "@/features/profile/lib/get-profile-initials";
+import { BookFlip } from "@/components/animated-geometries/book-flip";
 
 export const ChatMessageItem = memo(function ChatMessageItem({
   message,
@@ -54,7 +55,8 @@ export const ChatMessageItem = memo(function ChatMessageItem({
             : undefined}
         >
           {displayText}
-          {isStreaming && !displayText && <ChatMessageLoading />}
+          {isStreaming && !displayText && isUser && <ChatMessageLoading />}
+          {isStreaming && !displayText && <BookFlip />}
         </ChatMessageBubble>
         {isFailed && <ChatMessageError onRetry={onRetry} />}
       </ChatMessageContent>
