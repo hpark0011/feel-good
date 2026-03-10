@@ -14,7 +14,7 @@ import {
 
 type ChatInputProps = {
   profileName: string;
-  isStreaming: boolean;
+  isResponding: boolean;
   onSend: (message: string) => void;
   sendError?: string | null;
   onClearError?: () => void;
@@ -22,7 +22,7 @@ type ChatInputProps = {
 
 export function ChatInput({
   profileName,
-  isStreaming,
+  isResponding,
   onSend,
   sendError,
   onClearError,
@@ -32,12 +32,12 @@ export function ChatInput({
 
   const handleSend = useCallback(() => {
     const trimmed = message.trim();
-    if (!trimmed || isStreaming) return;
+    if (!trimmed || isResponding) return;
     onClearError?.();
     onSend(trimmed);
     setMessage("");
     reset();
-  }, [message, isStreaming, onSend, onClearError, reset]);
+  }, [message, isResponding, onSend, onClearError, reset]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -78,7 +78,7 @@ export function ChatInput({
           onChange={handleInput}
           onKeyDown={handleKeyDown}
           placeholder={`Message ${profileName}...`}
-          disabled={isStreaming}
+          disabled={isResponding}
           className={cn(
             "min-h-[40px] max-h-[120px]",
             "py-2.5 px-3.5",
@@ -104,7 +104,7 @@ export function ChatInput({
               "size-8 shrink-0",
               "rounded-full [corner-shape:superellipse(1.0)]",
             )}
-            disabled={!message.trim() || isStreaming}
+            disabled={!message.trim() || isResponding}
             onClick={handleSend}
           >
             <Icon name="ArrowUpIcon" className="size-6" />

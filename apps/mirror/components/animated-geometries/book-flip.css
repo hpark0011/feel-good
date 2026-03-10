@@ -1,0 +1,238 @@
+:root {
+  --book-flip-duration: 10s;
+  --book-flip-page-from: rgba(255, 255, 255, 0.3);
+  --book-flip-page-to: rgba(255, 255, 255, 0.3);
+}
+
+.dark {
+  --book-flip-page-from: rgba(255, 255, 255, 0.03);
+  --book-flip-page-to: rgba(255, 255, 255, 0.03);
+}
+
+/* The central static circle (book's background) */
+.book-flip-core {
+  position: absolute;
+  inset: 0;
+  background: var(--gray-6);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+/* Base styles for the 9 book pages */
+.book-flip-page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+
+  /* Glassmorphism page design */
+  background: linear-gradient(
+    90deg,
+    var(--book-flip-page-from),
+    var(--book-flip-page-to)
+  );
+
+  /* Mathematically perfect half-circle */
+  border-radius: 100% 0 0 100% / 50% 0 0 50%;
+
+  /* Anchor to the center line */
+  transform-origin: 100% 50%;
+
+  /* Shared animation timing */
+  animation-duration: var(--book-flip-duration);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* Page animations — only the name differs per page */
+.book-flip-page-1 {
+  animation-name: book-flip-p1;
+}
+.book-flip-page-2 {
+  animation-name: book-flip-p2;
+}
+.book-flip-page-3 {
+  animation-name: book-flip-p3;
+}
+.book-flip-page-4 {
+  animation-name: book-flip-p4;
+}
+.book-flip-page-5 {
+  animation-name: book-flip-p5;
+}
+.book-flip-page-6 {
+  animation-name: book-flip-p6;
+}
+.book-flip-page-7 {
+  animation-name: book-flip-p7;
+}
+.book-flip-page-8 {
+  animation-name: book-flip-p8;
+}
+.book-flip-page-9 {
+  animation-name: book-flip-p9;
+}
+
+/* Keyframes: z-index inverts at midpoint so pages stack correctly on both sides */
+@keyframes book-flip-p1 {
+  0%,
+  10% {
+    transform: rotateY(0deg);
+    z-index: 9;
+  }
+  22%,
+  80% {
+    transform: rotateY(180deg);
+    z-index: 1;
+  }
+  90%,
+  100% {
+    transform: rotateY(0deg);
+    z-index: 9;
+  }
+}
+
+@keyframes book-flip-p2 {
+  0%,
+  15% {
+    transform: rotateY(0deg);
+    z-index: 8;
+  }
+  27%,
+  80% {
+    transform: rotateY(180deg);
+    z-index: 2;
+  }
+  90%,
+  100% {
+    transform: rotateY(0deg);
+    z-index: 8;
+  }
+}
+
+@keyframes book-flip-p3 {
+  0%,
+  19% {
+    transform: rotateY(0deg);
+    z-index: 7;
+  }
+  31%,
+  80% {
+    transform: rotateY(180deg);
+    z-index: 3;
+  }
+  90%,
+  100% {
+    transform: rotateY(0deg);
+    z-index: 7;
+  }
+}
+
+@keyframes book-flip-p4 {
+  0%,
+  22% {
+    transform: rotateY(0deg);
+    z-index: 6;
+  }
+  34%,
+  80% {
+    transform: rotateY(180deg);
+    z-index: 4;
+  }
+  90%,
+  100% {
+    transform: rotateY(0deg);
+    z-index: 6;
+  }
+}
+
+@keyframes book-flip-p5 {
+  0%,
+  24% {
+    transform: rotateY(0deg);
+    z-index: 5;
+  }
+  36%,
+  80% {
+    transform: rotateY(180deg);
+    z-index: 5;
+  }
+  90%,
+  100% {
+    transform: rotateY(0deg);
+    z-index: 5;
+  }
+}
+
+@keyframes book-flip-p6 {
+  0%,
+  26% {
+    transform: rotateY(0deg);
+    z-index: 4;
+  }
+  38%,
+  80% {
+    transform: rotateY(180deg);
+    z-index: 6;
+  }
+  90%,
+  100% {
+    transform: rotateY(0deg);
+    z-index: 4;
+  }
+}
+
+@keyframes book-flip-p7 {
+  0%,
+  29% {
+    transform: rotateY(0deg);
+    z-index: 3;
+  }
+  41%,
+  80% {
+    transform: rotateY(180deg);
+    z-index: 7;
+  }
+  90%,
+  100% {
+    transform: rotateY(0deg);
+    z-index: 3;
+  }
+}
+
+@keyframes book-flip-p8 {
+  0%,
+  33% {
+    transform: rotateY(0deg);
+    z-index: 2;
+  }
+  45%,
+  80% {
+    transform: rotateY(180deg);
+    z-index: 8;
+  }
+  90%,
+  100% {
+    transform: rotateY(0deg);
+    z-index: 2;
+  }
+}
+
+@keyframes book-flip-p9 {
+  0%,
+  38% {
+    transform: rotateY(0deg);
+    z-index: 1;
+  }
+  50%,
+  80% {
+    transform: rotateY(180deg);
+    z-index: 9;
+  }
+  90%,
+  100% {
+    transform: rotateY(0deg);
+    z-index: 1;
+  }
+}

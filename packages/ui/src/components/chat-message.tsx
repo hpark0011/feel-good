@@ -69,7 +69,7 @@ function ChatMessageContent({
 }
 
 const chatMessageBubbleVariants = cva(
-  "rounded-[20px] px-3.5 py-2.5 leading-relaxed whitespace-pre-wrap wrap-break-word [corner-shape:superellipse(1.15)]",
+  "rounded-[20px] px-3.5 py-2.5 leading-relaxed whitespace-pre-wrap wrap-break-word [corner-shape:superellipse(1.15)] relative",
   {
     variants: {
       variant: {

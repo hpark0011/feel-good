@@ -41,7 +41,7 @@ export function ArticleDetail({ article }: ArticleDetailProps) {
               {article.category}
             </span>
           </div>
-          <h1 className="text-4xl font-medium leading-[1.05] tracking-[-0.04em] text-center mt-8 mb-6">
+          <h1 className="text-4xl font-medium leading-[1.05] tracking-[-0.04em] text-center mt-3 mb-14">
             {article.title}
           </h1>
         </div>

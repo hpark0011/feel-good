@@ -13,6 +13,7 @@ import { useProfileRouteData } from "../_providers/profile-route-data-context";
 import {
   useOptionalWorkspaceChrome,
 } from "../_providers/workspace-chrome-context";
+import { MirrorLogo } from "@/components/mirror-logo";
 
 export function ProfilePanel() {
   const { profile, isOwner, setVideoCallOpen } = useProfileRouteData();
@@ -51,6 +52,9 @@ export function ProfilePanel() {
             : <EditProfileButton onClick={() => setIsEditing(true)} />}
         </div>
       )}
+      <div className="absolute left-3 top-3">
+        <MirrorLogo />
+      </div>
 
       {workspaceChrome && (
         <DesktopContentPanelToggle
