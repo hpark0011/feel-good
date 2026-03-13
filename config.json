@@ -3,7 +3,7 @@
   "name": "feel-good",
   "slug": "feel-good",
   "defaults": {
-    "model": "claude-sonnet-4-5-20250929",
+    "model": "claude-sonnet-4-6",
     "permissionMode": "safe",
     "cyclablePermissionModes": [
       "safe",
@@ -17,5 +17,5 @@
     "enabled": true
   },
   "createdAt": 1771396986443,
-  "updatedAt": 1771396986444
+  "updatedAt": 1773361717775
 }

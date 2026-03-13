@@ -165,6 +165,7 @@ function ChatMessageList({
     if (!container) return;
 
     function handleScroll() {
+      if (!container) return;
       syncPinnedToBottom(isNearBottom(container));
 
       if (status === "CanLoadMore" && container.scrollTop < 100) {
