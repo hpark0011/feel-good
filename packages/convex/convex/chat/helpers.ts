@@ -1,5 +1,7 @@
 import { v } from "convex/values";
+import { listMessages } from "@convex-dev/agent";
 import { internalQuery } from "../_generated/server";
+import { components } from "../_generated/api";
 
 const SAFETY_PREFIX = (name: string) =>
   `You are a digital clone of ${name}. You represent their ideas and perspectives based on their writing and profile.
@@ -44,5 +46,37 @@ export const loadStreamingContext = internalQuery({
       threadId: conversation.threadId,
       systemPrompt: parts.join("\n\n"),
     };
+  },
+});
+
+export const getLastUserMessage = internalQuery({
+  args: {
+    threadId: v.string(),
+  },
+  returns: v.union(v.string(), v.null()),
+  handler: async (ctx, { threadId }) => {
+    const result = await listMessages(ctx, components.agent, {
+      threadId,
+      paginationOpts: { numItems: 20, cursor: null },
+      excludeToolMessages: true,
+    });
+
+    // Messages are in ascending order; walk backwards to find last user message
+    for (let i = result.page.length - 1; i >= 0; i--) {
+      const msg = result.page[i]!;
+      if (msg.message?.role === "user") {
+        const content = msg.message.content;
+        if (typeof content === "string") return content;
+        // Handle content parts
+        if (Array.isArray(content)) {
+          const textPart = content.find(
+            (p): p is { type: "text"; text: string } => p.type === "text",
+          );
+          return textPart?.text ?? null;
+        }
+      }
+    }
+
+    return null;
   },
 });

@@ -25,6 +25,7 @@ import type * as crons from "../crons.js";
 import type * as email_actions from "../email/actions.js";
 import type * as embeddings_actions from "../embeddings/actions.js";
 import type * as embeddings_chunker from "../embeddings/chunker.js";
+import type * as embeddings_config from "../embeddings/config.js";
 import type * as embeddings_mutations from "../embeddings/mutations.js";
 import type * as embeddings_queries from "../embeddings/queries.js";
 import type * as embeddings_textExtractor from "../embeddings/textExtractor.js";
@@ -64,6 +65,7 @@ declare const fullApi: ApiFromModules<{
   "email/actions": typeof email_actions;
   "embeddings/actions": typeof embeddings_actions;
   "embeddings/chunker": typeof embeddings_chunker;
+  "embeddings/config": typeof embeddings_config;
   "embeddings/mutations": typeof embeddings_mutations;
   "embeddings/queries": typeof embeddings_queries;
   "embeddings/textExtractor": typeof embeddings_textExtractor;

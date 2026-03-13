@@ -6,10 +6,10 @@ import { google } from "@ai-sdk/google";
 import { internalAction } from "../_generated/server";
 import { internal } from "../_generated/api";
 import { cloneAgent } from "./agent";
+import { EMBEDDING_MODEL, EMBEDDING_DIMENSIONS } from "../embeddings/config";
 
-const EMBEDDING_MODEL = "gemini-embedding-001";
-const EMBEDDING_DIMENSIONS = 768;
 const RAG_RESULT_LIMIT = 5;
+const RAG_SCORE_THRESHOLD = 0.3;
 
 export const streamResponse = internalAction({
   args: {
@@ -28,12 +28,18 @@ export const streamResponse = internalAction({
       );
 
       // RAG: embed user message and retrieve relevant content
+      // For retries, fetch the last user message from the thread
+      const ragQuery = userMessage ?? await ctx.runQuery(
+        internal.chat.helpers.getLastUserMessage,
+        { threadId },
+      );
+
       let ragContext = "";
-      if (userMessage) {
+      if (ragQuery) {
         try {
           const { embedding } = await embed({
             model: google.textEmbeddingModel(EMBEDDING_MODEL),
-            value: userMessage,
+            value: ragQuery,
             providerOptions: {
               google: { outputDimensionality: EMBEDDING_DIMENSIONS },
             },
@@ -49,10 +55,15 @@ export const streamResponse = internalAction({
             },
           );
 
-          if (vectorResults.length > 0) {
+          // Filter by score threshold to avoid injecting irrelevant content
+          const relevantResults = vectorResults.filter(
+            (r) => r._score >= RAG_SCORE_THRESHOLD,
+          );
+
+          if (relevantResults.length > 0) {
             const chunks = await ctx.runQuery(
               internal.embeddings.queries.fetchChunksByIds,
-              { ids: vectorResults.map((r) => r._id) },
+              { ids: relevantResults.map((r) => r._id) },
             );
 
             if (chunks.length > 0) {
