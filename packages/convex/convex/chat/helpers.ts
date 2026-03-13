@@ -55,28 +55,39 @@ export const getLastUserMessage = internalQuery({
   },
   returns: v.union(v.string(), v.null()),
   handler: async (ctx, { threadId }) => {
-    const result = await listMessages(ctx, components.agent, {
-      threadId,
-      paginationOpts: { numItems: 20, cursor: null },
-      excludeToolMessages: true,
-    });
+    // Paginate through all messages to handle long threads
+    let cursor: string | null = null;
+    let lastUserText: string | null = null;
 
-    // Messages are in ascending order; walk backwards to find last user message
-    for (let i = result.page.length - 1; i >= 0; i--) {
-      const msg = result.page[i]!;
-      if (msg.message?.role === "user") {
-        const content = msg.message.content;
-        if (typeof content === "string") return content;
-        // Handle content parts
-        if (Array.isArray(content)) {
-          const textPart = content.find(
-            (p): p is { type: "text"; text: string } => p.type === "text",
-          );
-          return textPart?.text ?? null;
+    while (true) {
+      const result = await listMessages(ctx, components.agent, {
+        threadId,
+        paginationOpts: { numItems: 100, cursor },
+        excludeToolMessages: true,
+      });
+
+      // Messages are in ascending order; track the latest user message
+      for (const msg of result.page) {
+        if (msg.message?.role === "user") {
+          const content = msg.message.content;
+          if (typeof content === "string") {
+            lastUserText = content;
+          } else if (Array.isArray(content)) {
+            const text = content
+              .filter(
+                (p): p is { type: "text"; text: string } => p.type === "text",
+              )
+              .map((p) => p.text)
+              .join("");
+            if (text) lastUserText = text;
+          }
         }
       }
+
+      if (result.isDone) break;
+      cursor = result.continueCursor;
     }
 
-    return null;
+    return lastUserText;
   },
 });

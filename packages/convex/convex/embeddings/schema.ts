@@ -1,5 +1,6 @@
 import { defineTable } from "convex/server";
 import { v } from "convex/values";
+import { EMBEDDING_DIMENSIONS } from "./config";
 
 export const contentEmbeddingsTable = defineTable({
   sourceTable: v.union(v.literal("articles"), v.literal("posts")),
@@ -17,6 +18,6 @@ export const contentEmbeddingsTable = defineTable({
   .index("by_userId", ["userId"])
   .vectorIndex("by_embedding", {
     vectorField: "embedding",
-    dimensions: 768,
+    dimensions: EMBEDDING_DIMENSIONS,
     filterFields: ["userId"],
   });
