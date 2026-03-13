@@ -68,20 +68,23 @@ export const getLastUserMessage = internalQuery({
 
       // Messages are in ascending order; track the latest user message
       for (const msg of result.page) {
-        if (msg.message?.role === "user") {
-          const content = msg.message.content;
-          if (typeof content === "string") {
-            lastUserText = content;
-          } else if (Array.isArray(content)) {
-            const text = content
-              .filter(
-                (p): p is { type: "text"; text: string } => p.type === "text",
-              )
-              .map((p) => p.text)
-              .join("");
-            if (text) lastUserText = text;
-          }
+        if (msg.message?.role !== "user") continue;
+
+        const content = msg.message.content;
+        if (typeof content === "string") {
+          lastUserText = content;
+          continue;
         }
+
+        if (!Array.isArray(content)) continue;
+
+        const text = content
+          .filter(
+            (p): p is { type: "text"; text: string } => p.type === "text",
+          )
+          .map((p) => p.text)
+          .join("");
+        if (text) lastUserText = text;
       }
 
       if (result.isDone) break;
