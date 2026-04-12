@@ -30,6 +30,7 @@
 @import "./toast.css";
 @import "./chat-input.css";
 @import "./resizable.css";
+@import "./context-menu.css";
 
 /* custom variant */
 @custom-variant dark (&:is(.dark *));
