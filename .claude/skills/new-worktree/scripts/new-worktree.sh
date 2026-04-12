@@ -15,21 +15,21 @@ git worktree add -b "$BRANCH_NAME" "$WORKTREE_PATH" main
 cd "$WORKTREE_PATH"
 pnpm install
 
-# Copy .env.local files (gitignored, so not included in worktree)
+# Symlink .env.local files (gitignored, so not included in worktree)
 echo ""
-echo "Copying .env.local files..."
+echo "Symlinking .env.local files..."
 ENV_COUNT=0
 while IFS= read -r env_file; do
   rel_path="${env_file#$GIT_ROOT/}"
   dest="$WORKTREE_PATH/$rel_path"
   mkdir -p "$(dirname "$dest")"
-  cp "$env_file" "$dest"
-  echo "  Copied $rel_path"
+  ln -s "$env_file" "$dest"
+  echo "  Linked $rel_path"
   ENV_COUNT=$((ENV_COUNT + 1))
 done < <(find "$GIT_ROOT" -name '.env.local' -not -path '*/.worktrees/*' -not -path '*/node_modules/*')
 
 if [[ $ENV_COUNT -eq 0 ]]; then
-  echo "  No .env.local files found to copy"
+  echo "  No .env.local files found to symlink"
 fi
 
 echo ""
