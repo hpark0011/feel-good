@@ -62,13 +62,14 @@ feature described below and report what exists vs what needs to be built.
 
 Check `.claude/agents/` for a domain expert agent whose description matches the feature's domain:
 
-| Agent | Domain |
-|-------|--------|
-| `agent-stream-pipeline` | Streaming, chunk processing, token buffering, backpressure |
-| `auth-layer` | OAuth, API keys, token storage, auth state, credential injection |
-| `release` | Packaging, CI, code signing, auto-updater, versioning |
+| Agent                   | Domain                                                           |
+| ----------------------- | ---------------------------------------------------------------- |
+| `agent-stream-pipeline` | Streaming, chunk processing, token buffering, backpressure       |
+| `auth-layer`            | OAuth, API keys, token storage, auth state, credential injection |
+| `release`               | Packaging, CI, code signing, auto-updater, versioning            |
 
 If the feature touches one of these domains, spawn that agent with the user's requirement and ask it to:
+
 1. Review the proposed feature for domain-specific concerns
 2. Identify constraints, gotchas, or patterns that must be followed
 3. Flag risks or conflicts with existing domain architecture
@@ -205,8 +206,8 @@ Re-spawn the same domain expert agent from Phase 2 with the full spec, asking it
 4. Iterate until the adversarial reviewer returns no Critical concerns and no more than 1 Important concern.
 5. Record the critique results in an **Adversarial Review Summary** table at the bottom of the spec:
 
-| Concern | Severity | Resolution |
-|---------|----------|------------|
+| Concern   | Severity   | Resolution                             |
+| --------- | ---------- | -------------------------------------- |
 | {concern} | {severity} | **Accepted** / **Rejected** — {reason} |
 
 ---
