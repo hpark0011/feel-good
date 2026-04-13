@@ -10,7 +10,7 @@ export function ScrollableArticleList() {
   const scrollRoot = useScrollRoot();
 
   if (ctx.hasNoArticles) {
-    return <EmptyMessage showGraphic />;
+    return <EmptyMessage showGraphic graphicBottomLabel="Articles" />;
   }
 
   if (ctx.showEmpty) {
