@@ -1,21 +1,11 @@
-import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { config as loadEnv } from "dotenv";
 import { defineConfig, devices } from "@playwright/test";
 
 // Load .env.local for Playwright's Node process (Next.js loads it automatically
-// for the dev server, but the test runner is separate).
-try {
-  const envFile = readFileSync(resolve(__dirname, ".env.local"), "utf8");
-  for (const line of envFile.split("\n")) {
-    const match = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/i);
-    if (!match) continue;
-    const [, key, rawValue] = match;
-    if (process.env[key]) continue;
-    process.env[key] = rawValue.replace(/^['"]|['"]$/g, "");
-  }
-} catch {
-  // .env.local is optional
-}
+// for the dev server, but the test runner is separate). Existing process.env
+// values win so CI overrides are respected.
+loadEnv({ path: resolve(__dirname, ".env.local"), override: false });
 
 export default defineConfig({
   testDir: "./e2e",

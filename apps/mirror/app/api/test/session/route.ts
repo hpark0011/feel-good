@@ -13,21 +13,39 @@ interface ReadOtpResponse {
   otp: string;
 }
 
+const TEST_EMAIL_SUFFIX = "@mirror.test";
+
+// Constant-time compare so the secret length does not leak via timing.
+function secretsMatch(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let mismatch = 0;
+  for (let i = 0; i < a.length; i++) {
+    mismatch |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return mismatch === 0;
+}
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  // Guard 1: Route only exists when PLAYWRIGHT_TEST_SECRET is configured.
-  // Return 404 (not 403) to avoid leaking that the route exists in production.
+  // Guard 1: Route is permanently disabled in production, even if
+  // PLAYWRIGHT_TEST_SECRET is accidentally set there.
+  if (process.env.NODE_ENV === "production") {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  // Guard 2: Route only exists when PLAYWRIGHT_TEST_SECRET is configured.
+  // Return 404 (not 403) to avoid leaking that the route exists when unset.
   const testSecret = process.env.PLAYWRIGHT_TEST_SECRET;
   if (!testSecret) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  // Guard 2: Caller must present the matching secret header.
+  // Guard 3: Caller must present the matching secret header.
   const incomingSecret = request.headers.get("x-test-secret");
-  if (incomingSecret !== testSecret) {
+  if (!incomingSecret || !secretsMatch(incomingSecret, testSecret)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  // Guard 3: Request body must contain a non-empty email.
+  // Guard 4: Request body must contain a non-empty test email.
   let body: TestSessionRequestBody;
   try {
     body = (await request.json()) as TestSessionRequestBody;
@@ -37,6 +55,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
   if (!body.email || typeof body.email !== "string" || body.email.trim() === "") {
     return NextResponse.json({ error: "Missing or empty email" }, { status: 400 });
+  }
+
+  if (!body.email.endsWith(TEST_EMAIL_SUFFIX)) {
+    return NextResponse.json(
+      { error: `Email must end in ${TEST_EMAIL_SUFFIX}` },
+      { status: 400 },
+    );
   }
 
   const { email } = body;
@@ -59,9 +84,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     },
   );
   if (!sendOtpRes.ok) {
-    const text = await sendOtpRes.text();
     return NextResponse.json(
-      { error: "send-verification-otp failed", detail: text },
+      { error: "send-verification-otp failed" },
       { status: sendOtpRes.status },
     );
   }
@@ -76,9 +100,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     body: JSON.stringify({ email }),
   });
   if (!readOtpRes.ok) {
-    const text = await readOtpRes.text();
     return NextResponse.json(
-      { error: "read-otp failed", detail: text },
+      { error: "read-otp failed" },
       { status: readOtpRes.status },
     );
   }
@@ -91,9 +114,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     body: JSON.stringify({ email, otp }),
   });
   if (!signInRes.ok) {
-    const text = await signInRes.text();
     return NextResponse.json(
-      { error: "sign-in/email-otp failed", detail: text },
+      { error: "sign-in/email-otp failed" },
       { status: signInRes.status },
     );
   }
@@ -111,9 +133,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     body: JSON.stringify({ email, username: "test-user" }),
   });
   if (!ensureUserRes.ok) {
-    const text = await ensureUserRes.text();
     return NextResponse.json(
-      { error: "ensure-user failed", detail: text },
+      { error: "ensure-user failed" },
       { status: ensureUserRes.status },
     );
   }

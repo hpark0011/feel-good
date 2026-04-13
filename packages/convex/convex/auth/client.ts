@@ -124,6 +124,7 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
           // Test mode: when PLAYWRIGHT_TEST_SECRET is set and the email is a test address,
           // store the OTP in Convex for the test-session route to read back instead of emailing.
           if (
+            process.env.NODE_ENV !== "production" &&
             process.env.PLAYWRIGHT_TEST_SECRET &&
             email.endsWith("@mirror.test")
           ) {

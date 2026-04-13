@@ -145,14 +145,20 @@ Body.`;
     expect(result.data.body).toBe("");
   });
 
-  it("throws (propagates error) for ---js frontmatter delimiter (blocked engine)", () => {
+  it("returns a frontmatter error for ---js delimiter (blocked engine)", () => {
     const content = `---js\n{ title: 'injected' }\n---\nBody.`;
-    expect(() => parseMdFrontmatter(content, "file.md")).toThrow();
+    const result = parseMdFrontmatter(content, "file.md");
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error.field).toBe("frontmatter");
   });
 
-  it("throws (propagates error) for ---coffee frontmatter delimiter (blocked engine)", () => {
+  it("returns a frontmatter error for ---coffee delimiter (blocked engine)", () => {
     const content = `---coffee\ntitle: 'injected'\n---\nBody.`;
-    expect(() => parseMdFrontmatter(content, "file.md")).toThrow();
+    const result = parseMdFrontmatter(content, "file.md");
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error.field).toBe("frontmatter");
   });
 
   it("trims leading/trailing whitespace from body content", () => {

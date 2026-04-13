@@ -43,7 +43,9 @@ test.describe("Post markdown upload (authenticated)", () => {
   }) => {
     await page.setViewportSize({ width: 1440, height: 960 });
     await page.goto(`/@${username}/posts`, { waitUntil: "domcontentloaded" });
-    await page.waitForTimeout(2000); // wait for Convex hydration
+    await expect(page.getByTestId("new-post-btn")).toBeVisible({
+      timeout: 10_000,
+    });
     await expect(page.getByTestId("new-post-btn")).toBeVisible();
   });
 
@@ -52,7 +54,9 @@ test.describe("Post markdown upload (authenticated)", () => {
   }) => {
     await page.setViewportSize({ width: 1440, height: 960 });
     await page.goto(`/@${username}/posts`, { waitUntil: "domcontentloaded" });
-    await page.waitForTimeout(2000); // wait for Convex hydration
+    await expect(page.getByTestId("new-post-btn")).toBeVisible({
+      timeout: 10_000,
+    });
 
     const newBtn = page.getByTestId("new-post-btn");
     await newBtn.click();
@@ -99,7 +103,9 @@ test.describe("Post markdown upload (authenticated)", () => {
   }) => {
     await page.setViewportSize({ width: 1440, height: 960 });
     await page.goto(`/@${username}/posts`, { waitUntil: "domcontentloaded" });
-    await page.waitForTimeout(2000); // wait for Convex hydration
+    await expect(page.getByTestId("new-post-btn")).toBeVisible({
+      timeout: 10_000,
+    });
 
     await page.getByTestId("new-post-btn").click();
     const dialog = page.getByRole("dialog");
@@ -127,7 +133,9 @@ test.describe("Post markdown upload (authenticated)", () => {
   test("error shown for non-.md file", async ({ authenticatedPage: page }) => {
     await page.setViewportSize({ width: 1440, height: 960 });
     await page.goto(`/@${username}/posts`, { waitUntil: "domcontentloaded" });
-    await page.waitForTimeout(2000); // wait for Convex hydration
+    await expect(page.getByTestId("new-post-btn")).toBeVisible({
+      timeout: 10_000,
+    });
 
     await page.getByTestId("new-post-btn").click();
     const dialog = page.getByRole("dialog");
@@ -150,7 +158,9 @@ test.describe("Post markdown upload (authenticated)", () => {
   }) => {
     await page.setViewportSize({ width: 1440, height: 960 });
     await page.goto(`/@${username}/posts`, { waitUntil: "domcontentloaded" });
-    await page.waitForTimeout(2000); // wait for Convex hydration
+    await expect(page.getByTestId("new-post-btn")).toBeVisible({
+      timeout: 10_000,
+    });
 
     await page.getByTestId("new-post-btn").click();
     const dialog = page.getByRole("dialog");

@@ -13,7 +13,7 @@ setup("authenticate test user", async ({ request }) => {
     );
   }
 
-  const response = await request.post("/api/auth/test-session", {
+  const response = await request.post("/api/test/session", {
     headers: {
       "x-test-secret": testSecret,
       "content-type": "application/json",

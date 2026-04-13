@@ -6,7 +6,6 @@ export const test = base.extend<{ authenticatedPage: Page }>({
       storageState: "e2e/.auth/user.json",
     });
     const page = await context.newPage();
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(page);
     await context.close();
   },

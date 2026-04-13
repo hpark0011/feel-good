@@ -19,5 +19,7 @@ export default defineSchema({
     email: v.string(),
     otp: v.string(),
     createdAt: v.number(),
-  }).index("by_email", ["email"]),
+  })
+    .index("by_email", ["email"])
+    .index("by_createdAt", ["createdAt"]),
 });

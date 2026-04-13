@@ -40,20 +40,35 @@ export function parseMdFrontmatter(
   fileContent: string,
   fileName: string,
 ): ParseResult {
-  const { data, content } = matter(fileContent, {
-    engines: {
-      javascript: {
-        parse: () => {
-          throw new Error("JavaScript front matter is not supported");
+  let data: Record<string, unknown>;
+  let content: string;
+  try {
+    const parsed = matter(fileContent, {
+      engines: {
+        javascript: {
+          parse: () => {
+            throw new Error("JavaScript front matter is not supported");
+          },
+        },
+        coffee: {
+          parse: () => {
+            throw new Error("CoffeeScript front matter is not supported");
+          },
         },
       },
-      coffee: {
-        parse: () => {
-          throw new Error("CoffeeScript front matter is not supported");
-        },
+    });
+    data = parsed.data;
+    content = parsed.content;
+  } catch (e) {
+    return {
+      success: false,
+      error: {
+        field: "frontmatter",
+        message:
+          e instanceof Error ? e.message : "Failed to parse frontmatter",
       },
-    },
-  });
+    };
+  }
 
   const nameWithoutExt = fileName.replace(/\.md$/i, "");
 

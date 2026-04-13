@@ -62,11 +62,6 @@ export function useMarkdownFileParser(): UseMarkdownFileParserReturn {
           setIsParsing(false);
           return;
         }
-        if (fileContent.length > 500_000) {
-          setError("File content is too large to process");
-          setIsParsing(false);
-          return;
-        }
         const parsed = parseMdFrontmatter(fileContent, file.name);
 
         if (!parsed.success) {
