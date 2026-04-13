@@ -17,7 +17,7 @@ export function PostListItem({ post, username }: PostListItemProps) {
   const href = buildChatAwareHref(getContentHref(username, "posts", post.slug));
 
   return (
-    <article className="border-b border-border-subtle px-4.5 py-8 pb-10 last:border-b-0">
+    <article className="border-b border-border-subtle px-4.5 py-10 pb-10 last:border-b-0">
       <div className="flex items-start justify-between gap-12 w-full">
         <div className="mt-0.5">
           <PostMetadata post={post} capitalizeCategory />
@@ -27,7 +27,9 @@ export function PostListItem({ post, username }: PostListItemProps) {
             <div className="flex flex-col gap-3">
               <h2 className="text-xl leading-tight underline decoration-transparent transition-colors hover:text-blue-11">
                 <Link href={href} scroll={false}>
-                  <span className="underline capitalize">{post.title}</span>
+                  <span className="underline capitalize">
+                    {post.title}
+                  </span>
                 </Link>
               </h2>
             </div>

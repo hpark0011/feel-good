@@ -13,10 +13,9 @@ export function PostMetadata({
   className,
   capitalizeCategory,
 }: PostMetadataProps) {
-  const label =
-    post.status === "draft"
-      ? "Draft"
-      : formatLongDate(post.publishedAt ?? post.createdAt);
+  const label = post.status === "draft"
+    ? "Draft"
+    : formatLongDate(post.publishedAt ?? post.createdAt);
 
   return (
     <div
@@ -30,7 +29,7 @@ export function PostMetadata({
       </span>
       <span
         className={cn(
-          "text-[14px] font-medium leading-[1.2]",
+          "text-[14px] leading-[1.2]",
           capitalizeCategory && "capitalize",
         )}
       >
