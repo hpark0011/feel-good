@@ -1,5 +1,6 @@
 import { describe, expect, it } from "bun:test";
 import { currentProfileReturnValidator } from "../helpers";
+import { TONE_PRESET_VALUES } from "../../chat/tonePresets";
 
 /**
  * UT-10: Verifies that currentProfileReturnValidator includes the three
@@ -12,10 +13,8 @@ import { currentProfileReturnValidator } from "../helpers";
  */
 describe("currentProfileReturnValidator (UT-10)", () => {
   it("includes personaPrompt in the validator schema", () => {
-    // v.object() stores its field definitions in `.fields` (a VObject property map).
     const fields = currentProfileReturnValidator.fields;
-    const serialized = JSON.stringify(Object.keys(fields));
-    expect(serialized).toContain("personaPrompt");
+    expect(Object.keys(fields)).toContain("personaPrompt");
   });
 
   it("includes tonePreset in the validator schema", () => {
@@ -30,15 +29,8 @@ describe("currentProfileReturnValidator (UT-10)", () => {
 
   it("includes all six tone preset literals in tonePreset validator", () => {
     const fields = currentProfileReturnValidator.fields;
-    const serialized = JSON.stringify(fields["tonePreset"]);
-    for (const preset of [
-      "professional",
-      "friendly",
-      "witty",
-      "empathetic",
-      "direct",
-      "curious",
-    ]) {
+    const serialized = JSON.stringify(fields.tonePreset);
+    for (const preset of TONE_PRESET_VALUES) {
       expect(serialized).toContain(preset);
     }
   });

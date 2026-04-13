@@ -1,13 +1,13 @@
 import { z } from "zod";
+import {
+  TONE_PRESETS,
+  type TonePreset,
+} from "@feel-good/convex/chat/tonePresets";
 
-export const TONE_PRESET_VALUES = [
-  "professional",
-  "friendly",
-  "witty",
-  "empathetic",
-  "direct",
-  "curious",
-] as const;
+const TONE_PRESET_VALUES = Object.keys(TONE_PRESETS) as [
+  TonePreset,
+  ...TonePreset[],
+];
 
 export const cloneSettingsSchema = z.object({
   personaPrompt: z

@@ -1,6 +1,7 @@
 import { v } from "convex/values";
 import type { QueryCtx, MutationCtx } from "../_generated/server";
 import type { Id } from "../_generated/dataModel";
+import { tonePresetValidator, type TonePreset } from "../chat/tonePresets";
 
 export const RESERVED_USERNAMES = new Set([
   "api",
@@ -11,7 +12,7 @@ export const RESERVED_USERNAMES = new Set([
   "sign-up",
 ]);
 
-export const profileReturnValidator = v.object({
+const profileReturnFields = {
   _id: v.id("users"),
   authId: v.string(),
   email: v.string(),
@@ -20,34 +21,18 @@ export const profileReturnValidator = v.object({
   bio: v.optional(v.string()),
   avatarUrl: v.union(v.string(), v.null()),
   onboardingComplete: v.boolean(),
-});
+} as const;
+
+export const profileReturnValidator = v.object(profileReturnFields);
 
 /**
- * Return validator for getCurrentProfile — extends profileReturnValidator with
- * the three persona fields that are only readable by the authenticated owner.
- * The pre-existing profileReturnValidator is deliberately left untouched (NFR-05).
+ * Return validator for getCurrentProfile — composes the shared profile fields
+ * with the owner-only persona fields.
  */
 export const currentProfileReturnValidator = v.object({
-  _id: v.id("users"),
-  authId: v.string(),
-  email: v.string(),
-  username: v.optional(v.string()),
-  name: v.optional(v.string()),
-  bio: v.optional(v.string()),
-  avatarUrl: v.union(v.string(), v.null()),
-  onboardingComplete: v.boolean(),
+  ...profileReturnFields,
   personaPrompt: v.optional(v.union(v.string(), v.null())),
-  tonePreset: v.optional(
-    v.union(
-      v.literal("professional"),
-      v.literal("friendly"),
-      v.literal("witty"),
-      v.literal("empathetic"),
-      v.literal("direct"),
-      v.literal("curious"),
-      v.null(),
-    ),
-  ),
+  tonePreset: v.optional(v.union(tonePresetValidator, v.null())),
   topicsToAvoid: v.optional(v.union(v.string(), v.null())),
 });
 
@@ -84,4 +69,26 @@ export async function resolveAvatarUrl(
     return null;
   }
   return await ctx.storage.getUrl(avatarStorageId);
+}
+
+export interface PersonaSettingsArgs {
+  personaPrompt?: string | null;
+  tonePreset?: TonePreset | null;
+  topicsToAvoid?: string | null;
+}
+
+export function buildPersonaPatch(args: PersonaSettingsArgs): Record<string, unknown> {
+  // Length guards — checked BEFORE any DB write.
+  if (typeof args.personaPrompt === "string" && args.personaPrompt.length > 4000) {
+    throw new Error("personaPrompt exceeds 4000 characters");
+  }
+  if (typeof args.topicsToAvoid === "string" && args.topicsToAvoid.length > 500) {
+    throw new Error("topicsToAvoid exceeds 500 characters");
+  }
+
+  const patch: Record<string, unknown> = {};
+  if (args.personaPrompt !== undefined) patch.personaPrompt = args.personaPrompt;
+  if (args.tonePreset !== undefined) patch.tonePreset = args.tonePreset;
+  if (args.topicsToAvoid !== undefined) patch.topicsToAvoid = args.topicsToAvoid;
+  return patch;
 }

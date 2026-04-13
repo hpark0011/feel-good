@@ -1,8 +1,17 @@
-import { describe, expect, it } from "bun:test";
-import { PROFILE_TAB_KINDS, isProfileTabKind } from "../types";
+import { describe, expect, it } from "vitest";
+import {
+  PROFILE_TAB_DEFAULT_KIND,
+  PROFILE_TAB_KINDS,
+  isProfileTabKind,
+} from "../types";
 
 // UT-17: isProfileTabKind returns true for all three kinds; false for unknowns
 describe("isProfileTabKind", () => {
+  it("uses the first profile tab as the default kind", () => {
+    expect(PROFILE_TAB_DEFAULT_KIND).toBe(PROFILE_TAB_KINDS[0]);
+    expect(isProfileTabKind(PROFILE_TAB_DEFAULT_KIND)).toBe(true);
+  });
+
   it("returns true for all three defined kinds", () => {
     for (const kind of PROFILE_TAB_KINDS) {
       expect(isProfileTabKind(kind)).toBe(true);

@@ -12,6 +12,7 @@ type CharCounterTextareaProps = Omit<
   onChange: (value: string | null) => void;
   maxLength: number;
   label?: string;
+  counterTestId?: string;
 };
 
 export function CharCounterTextarea({
@@ -19,6 +20,7 @@ export function CharCounterTextarea({
   onChange,
   maxLength,
   label,
+  counterTestId,
   className,
   ...props
 }: CharCounterTextareaProps) {
@@ -48,6 +50,7 @@ export function CharCounterTextarea({
         {...props}
       />
       <span
+        data-testid={counterTestId}
         data-state={counterState}
         className={cn(
           "text-xs text-right tabular-nums",

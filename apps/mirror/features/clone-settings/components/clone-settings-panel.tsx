@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useMutation } from "convex/react";
@@ -18,10 +18,10 @@ import {
 import {
   cloneSettingsSchema,
   type CloneSettingsFormValues,
-} from "../lib/schemas/clone-settings.schema";
-import { TonePresetSelect } from "./tone-preset-select";
-import { CharCounterTextarea } from "./char-counter-textarea";
-import { ClearAllDialog } from "./clear-all-dialog";
+} from "@/features/clone-settings/lib/schemas/clone-settings.schema";
+import { TonePresetSelect } from "@/features/clone-settings/components/tone-preset-select";
+import { CharCounterTextarea } from "@/features/clone-settings/components/char-counter-textarea";
+import { ClearAllDialog } from "@/features/clone-settings/components/clear-all-dialog";
 
 export function CloneSettingsPanel() {
   const currentProfile = useQuery(api.users.queries.getCurrentProfile);
@@ -45,22 +45,41 @@ export function CloneSettingsPanel() {
       : undefined,
   });
 
-  const { formState } = form;
-  const isPending = formState.isSubmitting;
-  const [isClearing, setIsClearing] = useState(false);
+  const pendingRef = useRef(false);
+  const [isPending, setIsPending] = useState(false);
 
-  async function onSubmit(data: CloneSettingsFormValues) {
-    await updatePersonaSettings({
-      personaPrompt: data.personaPrompt,
-      tonePreset: data.tonePreset,
-      topicsToAvoid: data.topicsToAvoid,
-    });
-    form.reset(data);
-  }
+  const runWithPending = useCallback(async (action: () => Promise<void>) => {
+    if (pendingRef.current) {
+      return;
+    }
+
+    pendingRef.current = true;
+    setIsPending(true);
+
+    try {
+      return await action();
+    } finally {
+      pendingRef.current = false;
+      setIsPending(false);
+    }
+  }, []);
+
+  const onSubmit = useCallback(
+    async (data: CloneSettingsFormValues) => {
+      await runWithPending(async () => {
+        await updatePersonaSettings({
+          personaPrompt: data.personaPrompt,
+          tonePreset: data.tonePreset,
+          topicsToAvoid: data.topicsToAvoid,
+        });
+        form.reset(data);
+      });
+    },
+    [form, runWithPending, updatePersonaSettings],
+  );
 
   const handleClearAll = useCallback(async () => {
-    setIsClearing(true);
-    try {
+    await runWithPending(async () => {
       const cleared: CloneSettingsFormValues = {
         personaPrompt: null,
         tonePreset: null,
@@ -72,10 +91,8 @@ export function CloneSettingsPanel() {
         topicsToAvoid: null,
       });
       form.reset(cleared);
-    } finally {
-      setIsClearing(false);
-    }
-  }, [updatePersonaSettings, form]);
+    });
+  }, [form, runWithPending, updatePersonaSettings]);
 
   return (
     <div data-testid="clone-settings-panel" className="px-4 py-6 max-w-xl">
@@ -113,6 +130,7 @@ export function CloneSettingsPanel() {
                     value={field.value}
                     onChange={field.onChange}
                     maxLength={4000}
+                    counterTestId="persona-prompt-counter"
                     placeholder="Describe how your clone should present itself..."
                     rows={6}
                   />
@@ -133,6 +151,7 @@ export function CloneSettingsPanel() {
                     value={field.value}
                     onChange={field.onChange}
                     maxLength={500}
+                    counterTestId="topics-to-avoid-counter"
                     placeholder="List topics your clone should not discuss..."
                     rows={3}
                   />
@@ -144,8 +163,8 @@ export function CloneSettingsPanel() {
 
           <div className="flex items-center justify-between">
             <ClearAllDialog onConfirm={handleClearAll} />
-            <Button type="submit" disabled={isPending || isClearing}>
-              {isPending || isClearing ? "Saving..." : "Save"}
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Saving..." : "Save"}
             </Button>
           </div>
         </form>

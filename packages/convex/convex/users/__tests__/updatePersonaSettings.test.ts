@@ -1,31 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import type { TonePreset } from "../../chat/tonePresets";
-
-/**
- * Pure re-implementation of the validation + patch-building logic from
- * updatePersonaSettings, isolated from the Convex runtime.
- */
-interface PersonaArgs {
-  personaPrompt?: string | null;
-  tonePreset?: TonePreset | null;
-  topicsToAvoid?: string | null;
-}
-
-function buildPersonaPatch(args: PersonaArgs): Record<string, unknown> {
-  // Length guards — checked BEFORE any DB write
-  if (typeof args.personaPrompt === "string" && args.personaPrompt.length > 4000) {
-    throw new Error("personaPrompt exceeds 4000 characters");
-  }
-  if (typeof args.topicsToAvoid === "string" && args.topicsToAvoid.length > 500) {
-    throw new Error("topicsToAvoid exceeds 500 characters");
-  }
-
-  const patch: Record<string, unknown> = {};
-  if (args.personaPrompt !== undefined) patch.personaPrompt = args.personaPrompt;
-  if (args.tonePreset !== undefined) patch.tonePreset = args.tonePreset;
-  if (args.topicsToAvoid !== undefined) patch.topicsToAvoid = args.topicsToAvoid;
-  return patch;
-}
+import { buildPersonaPatch } from "../helpers";
 
 // UT-06: throws on personaPrompt > 4000 chars before patch
 describe("updatePersonaSettings validation logic", () => {

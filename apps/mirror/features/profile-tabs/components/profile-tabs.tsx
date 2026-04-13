@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger } from "@feel-good/ui/primitives/tabs";
 import { useChatSearchParams } from "@/hooks/use-chat-search-params";
-import { useProfileRouteData } from "@/app/[username]/_providers/profile-route-data-context";
 import {
   PROFILE_TAB_KINDS,
   PROFILE_TAB_LABELS,
@@ -14,11 +13,15 @@ import {
 type ProfileTabsProps = {
   username: string;
   currentKind: ProfileTabKind;
+  isOwner: boolean;
 };
 
-export function ProfileTabs({ username, currentKind }: ProfileTabsProps) {
+export function ProfileTabs({
+  username,
+  currentKind,
+  isOwner,
+}: ProfileTabsProps) {
   const { buildChatAwareHref } = useChatSearchParams();
-  const { isOwner } = useProfileRouteData();
 
   const visibleKinds = PROFILE_TAB_KINDS.filter(
     (kind) => kind !== "clone-settings" || isOwner,

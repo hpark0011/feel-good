@@ -24,18 +24,19 @@ test.describe("Character counter thresholds", () => {
     });
 
     const personaTextarea = page.getByPlaceholder(/describe how your clone/i);
+    const personaCounter = page.getByTestId("persona-prompt-counter");
 
     // Type 3200 chars → warning
     await personaTextarea.fill("a".repeat(3200));
-    const warningCounter = page.locator("[data-state=warning]").first();
-    await expect(warningCounter).toBeVisible();
-    await expect(warningCounter).toContainText("3200/4000");
+    await expect(personaCounter).toBeVisible();
+    await expect(personaCounter).toHaveAttribute("data-state", "warning");
+    await expect(personaCounter).toContainText("3200/4000");
 
     // Type to 4000 → danger
     await personaTextarea.fill("a".repeat(4000));
-    const dangerCounter = page.locator("[data-state=danger]").first();
-    await expect(dangerCounter).toBeVisible();
-    await expect(dangerCounter).toContainText("4000/4000");
+    await expect(personaCounter).toBeVisible();
+    await expect(personaCounter).toHaveAttribute("data-state", "danger");
+    await expect(personaCounter).toContainText("4000/4000");
   });
 
   test("FR-09 + FR-08: topics counter shows warning at 80% (400) and danger at 500", async ({
@@ -47,17 +48,18 @@ test.describe("Character counter thresholds", () => {
     });
 
     const topicsTextarea = page.getByPlaceholder(/list topics your clone/i);
+    const topicsCounter = page.getByTestId("topics-to-avoid-counter");
 
     // Type 400 chars → warning
     await topicsTextarea.fill("a".repeat(400));
-    const warningCounter = page.locator("[data-state=warning]").nth(1);
-    await expect(warningCounter).toBeVisible();
-    await expect(warningCounter).toContainText("400/500");
+    await expect(topicsCounter).toBeVisible();
+    await expect(topicsCounter).toHaveAttribute("data-state", "warning");
+    await expect(topicsCounter).toContainText("400/500");
 
     // Type to 500 → danger
     await topicsTextarea.fill("a".repeat(500));
-    const dangerCounter = page.locator("[data-state=danger]").nth(1);
-    await expect(dangerCounter).toBeVisible();
-    await expect(dangerCounter).toContainText("500/500");
+    await expect(topicsCounter).toBeVisible();
+    await expect(topicsCounter).toHaveAttribute("data-state", "danger");
+    await expect(topicsCounter).toContainText("500/500");
   });
 });

@@ -1,46 +1,26 @@
 import { v } from "convex/values";
 import { authMutation } from "../lib/auth";
-import { RESERVED_USERNAMES, getAppUser } from "./helpers";
+import {
+  RESERVED_USERNAMES,
+  buildPersonaPatch,
+  getAppUser,
+} from "./helpers";
+import { tonePresetValidator } from "../chat/tonePresets";
 
 export const updatePersonaSettings = authMutation({
   args: {
     personaPrompt: v.optional(v.union(v.string(), v.null())),
-    tonePreset: v.optional(
-      v.union(
-        v.literal("professional"),
-        v.literal("friendly"),
-        v.literal("witty"),
-        v.literal("empathetic"),
-        v.literal("direct"),
-        v.literal("curious"),
-        v.null(),
-      ),
-    ),
+    // Keep tone preset literals sourced from chat/tonePresets.ts.
+    tonePreset: v.optional(v.union(tonePresetValidator, v.null())),
     topicsToAvoid: v.optional(v.union(v.string(), v.null())),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
-    // Length guards — checked BEFORE any DB write
-    if (
-      typeof args.personaPrompt === "string" &&
-      args.personaPrompt.length > 4000
-    ) {
-      throw new Error("personaPrompt exceeds 4000 characters");
-    }
-    if (
-      typeof args.topicsToAvoid === "string" &&
-      args.topicsToAvoid.length > 500
-    ) {
-      throw new Error("topicsToAvoid exceeds 500 characters");
-    }
-
     const appUser = await getAppUser(ctx, ctx.user._id);
-
-    // Build patch conditionally: undefined = leave unchanged, null = clear
-    const patch: Record<string, unknown> = {};
-    if (args.personaPrompt !== undefined) patch.personaPrompt = args.personaPrompt;
-    if (args.tonePreset !== undefined) patch.tonePreset = args.tonePreset;
-    if (args.topicsToAvoid !== undefined) patch.topicsToAvoid = args.topicsToAvoid;
+    const patch = buildPersonaPatch(args);
+    if (Object.keys(patch).length === 0) {
+      return null;
+    }
 
     await ctx.db.patch("users", appUser._id, patch);
     return null;

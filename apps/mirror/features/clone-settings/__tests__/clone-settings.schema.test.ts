@@ -1,4 +1,8 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
+import {
+  TONE_PRESETS,
+  type TonePreset,
+} from "@feel-good/convex/chat/tonePresets";
 import { cloneSettingsSchema } from "../lib/schemas/clone-settings.schema";
 
 // UT-19: Zod schema validations
@@ -63,14 +67,7 @@ describe("cloneSettingsSchema", () => {
 
   describe("tonePreset", () => {
     it("accepts all six valid presets", () => {
-      const validPresets = [
-        "professional",
-        "friendly",
-        "witty",
-        "empathetic",
-        "direct",
-        "curious",
-      ];
+      const validPresets = Object.keys(TONE_PRESETS) as TonePreset[];
       for (const preset of validPresets) {
         const result = cloneSettingsSchema.safeParse({
           personaPrompt: null,

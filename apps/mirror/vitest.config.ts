@@ -8,11 +8,18 @@ export default defineConfig({
     exclude: ["e2e/**", "node_modules/**"],
   },
   resolve: {
-    alias: {
-      "@feel-good/convex": path.resolve(
-        __dirname,
-        "../../packages/convex",
-      ),
-    },
+    alias: [
+      {
+        find: "@feel-good/convex/chat",
+        replacement: path.resolve(
+          __dirname,
+          "../../packages/convex/convex/chat",
+        ),
+      },
+      {
+        find: "@feel-good/convex",
+        replacement: path.resolve(__dirname, "../../packages/convex"),
+      },
+    ],
   },
 });
