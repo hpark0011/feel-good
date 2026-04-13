@@ -281,5 +281,5 @@ If the Verification Agent finds failures, fix them in the spec. Re-verify only t
 - **Hard verification only**: Every requirement must have a concrete, automatable check.
 - **Codebase accuracy**: File paths in the spec must be verified against the real codebase. Do not guess.
 - **Spec output**: `.workspace/plans/{feature-name}-spec.md`, kebab-case filename.
-- **Iterate critiques**: The adversarial loop runs until no Critical concerns remain.
+- **Iterate critiques**: The adversarial loop stops when the quality bar is met or after 3 critique rounds, whichever comes first.
 - **User requirements are sovereign**: If the adversarial reviewer argues against something the user explicitly requested, reject it and document why.

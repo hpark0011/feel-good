@@ -53,6 +53,7 @@ const nextConfig: NextConfig = {
     { source: "/@:username/articles/:slug", destination: "/:username/articles/:slug" },
     { source: "/@:username/posts", destination: "/:username/posts" },
     { source: "/@:username/posts/:slug", destination: "/:username/posts/:slug" },
+    { source: "/@:username/clone-settings", destination: "/:username/clone-settings" },
   ],
 };
 

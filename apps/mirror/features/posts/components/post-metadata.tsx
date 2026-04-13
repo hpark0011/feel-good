@@ -24,7 +24,7 @@ export function PostMetadata({
         className,
       )}
     >
-      <span className="text-[13px] leading-[1.2] uppercase font-medium">
+      <span className="text-[13px] leading-[1.2] uppercase font-medium mt-0.5">
         {label}
       </span>
       <span

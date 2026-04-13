@@ -2,7 +2,12 @@
 
 import { ThemeToggleButton } from "@feel-good/features/theme/components";
 import { cn } from "@feel-good/utils/cn";
-import { ContentKindTabs, getContentRouteState } from "@/features/content";
+import { ProfileTabs } from "@/features/profile-tabs/components/profile-tabs";
+import {
+  PROFILE_TAB_DEFAULT_KIND,
+  isProfileTabKind,
+  type ProfileTabKind,
+} from "@/features/profile-tabs/types";
 import { useProfileRouteData } from "@/app/[username]/_providers/profile-route-data-context";
 import { useSelectedLayoutSegments } from "next/navigation";
 
@@ -12,8 +17,10 @@ type WorkspaceNavbarProps = {
 
 export function WorkspaceNavbar({ className }: WorkspaceNavbarProps) {
   const segments = useSelectedLayoutSegments();
-  const { profile } = useProfileRouteData();
-  const routeState = getContentRouteState(segments);
+  const { profile, isOwner } = useProfileRouteData();
+  const currentKind: ProfileTabKind = isProfileTabKind(segments[0])
+    ? segments[0]
+    : PROFILE_TAB_DEFAULT_KIND;
 
   return (
     <nav
@@ -23,9 +30,10 @@ export function WorkspaceNavbar({ className }: WorkspaceNavbarProps) {
       )}
     >
       <div className="flex gap-2 h-full items-end">
-        <ContentKindTabs
+        <ProfileTabs
           username={profile.username}
-          currentKind={routeState.kind}
+          currentKind={currentKind}
+          isOwner={isOwner}
         />
       </div>
 
