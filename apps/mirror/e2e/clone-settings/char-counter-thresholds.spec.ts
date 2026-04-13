@@ -6,17 +6,17 @@
  * BLOCKER: Requires authenticated owner session.
  * Move to ./e2e once auth fixtures are available.
  */
-import { test, expect } from "@playwright/test";
+import { test, expect } from "../fixtures/auth";
 
-const OWNER_USERNAME = process.env.E2E_OWNER_USERNAME ?? "test-owner";
+const OWNER_USERNAME = process.env.E2E_OWNER_USERNAME ?? "test-user";
 
 test.describe("Character counter thresholds", () => {
-  test.beforeEach(async ({ page: _page }) => {
+  test.beforeEach(async ({ authenticatedPage: _page }) => {
     // TODO: authenticate as owner
   });
 
   test("FR-09 + FR-07: persona counter shows warning at 80% (3200) and danger at 4000", async ({
-    page,
+    authenticatedPage: page,
   }) => {
     await page.goto(`/@${OWNER_USERNAME}/clone-settings`);
     await expect(page.getByTestId("clone-settings-panel")).toBeVisible({
@@ -40,7 +40,7 @@ test.describe("Character counter thresholds", () => {
   });
 
   test("FR-09 + FR-08: topics counter shows warning at 80% (400) and danger at 500", async ({
-    page,
+    authenticatedPage: page,
   }) => {
     await page.goto(`/@${OWNER_USERNAME}/clone-settings`);
     await expect(page.getByTestId("clone-settings-panel")).toBeVisible({
