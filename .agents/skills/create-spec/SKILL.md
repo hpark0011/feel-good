@@ -60,13 +60,14 @@ feature described below and report what exists vs what needs to be built.
 
 ### 2c — Consult Domain Expert (When Relevant)
 
-Check `.Codex/agents/` for a domain expert agent whose description matches the feature's domain:
+Check `.agents/agents/` for a specialized agent whose description matches the feature's domain:
 
-| Agent                   | Domain                                                           |
-| ----------------------- | ---------------------------------------------------------------- |
-| `agent-stream-pipeline` | Streaming, chunk processing, token buffering, backpressure       |
-| `auth-layer`            | OAuth, API keys, token storage, auth state, credential injection |
-| `release`               | Packaging, CI, code signing, auto-updater, versioning            |
+| Agent                      | Domain                                                        |
+| -------------------------- | ------------------------------------------------------------- |
+| `code-architect`           | Architecture, package boundaries, abstractions, system design |
+| `design-system-manager`    | Design systems, styling consistency, component library work   |
+| `playwright-browser-agent` | Browser flows, UI verification, screenshots, E2E scenarios    |
+| `context-guardian`         | Developer workflow, docs, automation, repository conventions  |
 
 If the feature touches one of these domains, spawn that agent with the user's requirement and ask it to:
 
@@ -124,14 +125,14 @@ Same table format.
 |-----------|-----------|----------|
 | {path} | {test name} | {FR-XX} |
 
-Use bun:test, test() not it(), .test.ts suffix, __tests__/ directory.
+Use Vitest. Match the owning package's existing patterns: place tests in `__tests__/` with a `.test.ts` suffix, or use `.unit.test.ts` when that package is already configured for it.
 
 ### Playwright E2E Tests
 | Test File | Scenario | Verifies |
 |-----------|----------|----------|
 | {path} | {user flow from user's perspective} | {FR-XX} |
 
-E2E tests go in e2e/ at project root, use .spec.ts suffix.
+E2E tests go in the owning app's Playwright directory (for example `apps/mirror/e2e/`) and use a `.spec.ts` suffix.
 Tests must describe real user flows, not internal state checks.
 
 ### Anti-patterns to Avoid
@@ -139,7 +140,7 @@ Specific things NOT to do, with reasons.
 
 ### Team Orchestration Plan
 Plan which agents execute the implementation work.
-- Check .Codex/agents/ for domain expert agents that can own specific steps.
+- Check `.agents/agents/` for specialized agents that can own specific steps.
 - Prefer existing specialized agents over creating new ones.
 - For small features (< 5 files), a single implementation agent is fine.
 - For larger features, break into steps with clear ownership:
@@ -203,8 +204,9 @@ Re-spawn the same domain expert agent from Phase 2 with the full spec, asking it
 1. Evaluate each concern. Not all feedback is valid — reject concerns that contradict the user's explicit requirements.
 2. For accepted concerns: update the spec.
 3. If significant changes were made (any Critical or 2+ Important concerns accepted), re-run the adversarial reviewer on the updated spec.
-4. Iterate until the adversarial reviewer returns no Critical concerns and no more than 1 Important concern.
-5. Record the critique results in an **Adversarial Review Summary** table at the bottom of the spec:
+4. Iterate until the adversarial reviewer returns no Critical concerns and no more than 1 Important concern, or until 3 critique rounds have completed.
+5. If the iteration limit is reached, carry any unresolved Critical or Important concerns into the spec's open questions or risk notes instead of looping indefinitely.
+6. Record the critique results in an **Adversarial Review Summary** table at the bottom of the spec, including the final stop reason (`quality bar met` or `iteration limit reached`):
 
 | Concern   | Severity   | Resolution                             |
 | --------- | ---------- | -------------------------------------- |
@@ -229,7 +231,7 @@ You are a Verification Agent. Verify the final spec is complete and correct.
 1. Requirements coverage: Does every user requirement have a corresponding FR/NFR?
 2. Test coverage: Does every FR have at least one unit test AND one E2E test?
 3. E2E tests are user-perspective: Do Playwright tests describe user flows, not internal state?
-4. Team orchestration plan exists and references real agents from .Codex/agents/ where applicable
+4. Team orchestration plan exists and references real agents from `.agents/agents/` where applicable
 5. Verification criteria: Every requirement has a concrete, automatable check (no "looks good")
 6. Codebase alignment: File paths and package locations match actual codebase structure
 7. Anti-patterns section exists with specific items

@@ -41,14 +41,14 @@ All branch names must follow these conventions:
 2. Check the name doesn't collide with existing worktrees/branches (regenerate if it does).
 3. Run the creation script:
    ```bash
-   bash .Codex/skills/workspace/new-worktree/scripts/new-worktree.sh scratch-<hex>
+   bash .agents/skills/new-worktree/scripts/new-worktree.sh scratch-<hex>
    ```
 4. Report the temporary worktree is ready.
 5. **Ask the user** what they want to work on in this worktree — the scope, feature, or bug.
 6. Once the user responds, generate a proper branch name following the naming rules above.
 7. Rename the worktree immediately (do not ask for confirmation):
    ```bash
-   bash .Codex/skills/workspace/new-worktree/scripts/rename-worktree.sh scratch-<hex> <new-name>
+   bash .agents/skills/new-worktree/scripts/rename-worktree.sh scratch-<hex> <new-name>
    ```
 8. Report the final name and path.
 
@@ -60,7 +60,8 @@ All branch names must follow these conventions:
 2. **Derive the prefix** from the `type` field:
    - Type is `fix` → `fix-`
    - Type is `refactor` → `refactor-`
-   - Type is `chore` or `docs` → `chore-`
+   - Type is `chore` → `chore-`
+   - Type is `docs` → `docs-`
    - Otherwise → `feature-`
 3. **Slugify the title** into a branch name: lowercase, strip special characters, replace spaces with hyphens, truncate to 2-4 key words.
 4. Proceed to **Shared Steps** below immediately (do not ask for confirmation on the name).
@@ -87,7 +88,7 @@ Run `git worktree list` and check if a worktree for this branch already exists. 
 ### 2. Run the creation script
 
 ```bash
-bash .Codex/skills/workspace/new-worktree/scripts/new-worktree.sh <branch-name>
+bash .agents/skills/new-worktree/scripts/new-worktree.sh <branch-name>
 ```
 
 ### 3. Report result

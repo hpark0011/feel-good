@@ -20,7 +20,7 @@ echo ""
 echo "Symlinking .env.local files..."
 ENV_COUNT=0
 while IFS= read -r env_file; do
-  rel_path="${env_file#$GIT_ROOT/}"
+  rel_path="${env_file#"$GIT_ROOT"/}"
   dest="$WORKTREE_PATH/$rel_path"
   mkdir -p "$(dirname "$dest")"
   ln -s "$env_file" "$dest"
