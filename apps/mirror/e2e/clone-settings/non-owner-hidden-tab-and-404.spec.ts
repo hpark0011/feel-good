@@ -37,7 +37,7 @@ test.describe("Clone tab — non-owner / unauthenticated", () => {
     await expect(notFoundIndicator).toBeVisible({ timeout: 10000 });
   });
 
-  test("FR-02: Clone tab absent for a different authenticated user (non-owner)", async ({
+  test.fixme("FR-02: Clone tab absent for a different authenticated user (non-owner)", async ({
     page,
   }) => {
     // TODO: sign in as a different user (non-owner) when auth fixtures exist
@@ -50,7 +50,7 @@ test.describe("Clone tab — non-owner / unauthenticated", () => {
     await expect(cloneTab).toHaveCount(0);
   });
 
-  test("FR-03: Direct URL returns 404 for non-owner authenticated user", async ({
+  test.fixme("FR-03: Direct URL returns 404 for non-owner authenticated user", async ({
     page,
   }) => {
     // TODO: sign in as a different user when auth fixtures exist

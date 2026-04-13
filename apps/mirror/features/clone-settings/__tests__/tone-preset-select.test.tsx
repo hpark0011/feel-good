@@ -3,7 +3,7 @@ import { describe, expect, it, mock } from "bun:test";
 import { render, screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { TONE_PRESETS } from "@feel-good/convex/chat/tonePresets";
-import { TonePresetSelect } from "../components/tone-preset-select";
+import { TonePresetSelect } from "@/features/clone-settings/components/tone-preset-select";
 
 describe("TonePresetSelect", () => {
   it("renders all six preset labels", async () => {

@@ -43,6 +43,7 @@ export function CharCounterTextarea({
           const newValue = e.target.value;
           onChange(newValue === "" ? null : newValue);
         }}
+        maxLength={maxLength}
         className={cn(className)}
         {...props}
       />

@@ -2,7 +2,7 @@
 // UT-13: Counter data-state="danger" at >= limit (FR-07, FR-08)
 import { describe, expect, it, mock } from "bun:test";
 import { render, screen } from "@testing-library/react";
-import { CharCounterTextarea } from "../components/char-counter-textarea";
+import { CharCounterTextarea } from "@/features/clone-settings/components/char-counter-textarea";
 
 describe("CharCounterTextarea", () => {
   describe("data-state=warning at 80% of limit", () => {

@@ -34,9 +34,7 @@ test.describe("Clone tab — owner session", () => {
     const cloneTab = page.getByTestId("profile-tab-clone-settings");
     await cloneTab.click();
 
-    await expect(page).toHaveURL(
-      new RegExp(`/@${OWNER_USERNAME}/clone-settings`),
-    );
+    expect(page.url()).toContain(`/@${OWNER_USERNAME}/clone-settings`);
     await expect(page.getByTestId("clone-settings-panel")).toBeVisible({
       timeout: 10000,
     });

@@ -18,7 +18,10 @@ export function useProfileNavigationEffects(
   );
 
   useLayoutEffect(() => {
-    if (routeState === null) return;
+    if (routeState === null) {
+      prevRouteState.current = null;
+      return;
+    }
 
     const previousRouteState = prevRouteState.current;
     const routeChanged =

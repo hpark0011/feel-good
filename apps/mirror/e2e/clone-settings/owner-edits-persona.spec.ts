@@ -57,7 +57,7 @@ test.describe("Owner edits persona settings", () => {
     );
   });
 
-  test("FR-24: Clearing persona field sets DB column to null", async ({
+  test.fixme("FR-24: Clearing persona field sets DB column to null", async ({
     page,
   }) => {
     // TODO: seed personaPrompt="initial value" before navigating

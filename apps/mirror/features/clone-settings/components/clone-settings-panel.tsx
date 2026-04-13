@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useMutation } from "convex/react";
@@ -47,6 +47,7 @@ export function CloneSettingsPanel() {
 
   const { formState } = form;
   const isPending = formState.isSubmitting;
+  const [isClearing, setIsClearing] = useState(false);
 
   async function onSubmit(data: CloneSettingsFormValues) {
     await updatePersonaSettings({
@@ -58,17 +59,22 @@ export function CloneSettingsPanel() {
   }
 
   const handleClearAll = useCallback(async () => {
-    const cleared: CloneSettingsFormValues = {
-      personaPrompt: null,
-      tonePreset: null,
-      topicsToAvoid: null,
-    };
-    await updatePersonaSettings({
-      personaPrompt: null,
-      tonePreset: null,
-      topicsToAvoid: null,
-    });
-    form.reset(cleared);
+    setIsClearing(true);
+    try {
+      const cleared: CloneSettingsFormValues = {
+        personaPrompt: null,
+        tonePreset: null,
+        topicsToAvoid: null,
+      };
+      await updatePersonaSettings({
+        personaPrompt: null,
+        tonePreset: null,
+        topicsToAvoid: null,
+      });
+      form.reset(cleared);
+    } finally {
+      setIsClearing(false);
+    }
   }, [updatePersonaSettings, form]);
 
   return (
@@ -138,8 +144,8 @@ export function CloneSettingsPanel() {
 
           <div className="flex items-center justify-between">
             <ClearAllDialog onConfirm={handleClearAll} />
-            <Button type="submit" disabled={isPending}>
-              {isPending ? "Saving..." : "Save"}
+            <Button type="submit" disabled={isPending || isClearing}>
+              {isPending || isClearing ? "Saving..." : "Save"}
             </Button>
           </div>
         </form>

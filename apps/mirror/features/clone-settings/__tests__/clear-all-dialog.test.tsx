@@ -28,7 +28,7 @@ describe("ClearAllDialog", () => {
     await userEvent.click(
       screen.getByRole("button", { name: /clear all customizations/i }),
     );
-    await userEvent.click(screen.getByRole("button", { name: /clear all/i }));
+    await userEvent.click(screen.getByRole("button", { name: /^Clear all$/i }));
 
     expect(onConfirm).toHaveBeenCalledTimes(1);
   });

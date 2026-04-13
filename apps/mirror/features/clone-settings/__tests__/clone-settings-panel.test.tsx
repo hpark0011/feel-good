@@ -22,7 +22,7 @@ mock.module("convex/react", () => ({
 
 // Import component after mock is set up
 const { CloneSettingsPanel } = await import(
-  "../components/clone-settings-panel"
+  "@/features/clone-settings/components/clone-settings-panel"
 );
 
 describe("CloneSettingsPanel", () => {
