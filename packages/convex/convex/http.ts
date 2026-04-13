@@ -1,13 +1,16 @@
 import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
 import { internal } from "./_generated/api";
+import {
+  getPlaywrightTestSecret,
+  isPlaywrightTestMode,
+  TEST_EMAIL_SUFFIX,
+} from "./auth/testMode";
 import { authComponent, createAuth } from "./auth/client";
 
 const http = httpRouter();
 
 authComponent.registerRoutes(http, createAuth);
-
-const TEST_EMAIL_SUFFIX = "@mirror.test";
 
 // Constant-time string compare to avoid leaking secret length via timing.
 function secretsMatch(a: string, b: string): boolean {
@@ -20,10 +23,7 @@ function secretsMatch(a: string, b: string): boolean {
 }
 
 function authorizeTestRequest(req: Request): Response | null {
-  if (process.env.NODE_ENV === "production") {
-    return new Response("Not found", { status: 404 });
-  }
-  const secret = process.env.PLAYWRIGHT_TEST_SECRET;
+  const secret = getPlaywrightTestSecret();
   const header = req.headers.get("x-test-secret");
   if (!secret || !header || !secretsMatch(header, secret)) {
     return new Response("Forbidden", { status: 403 });
@@ -31,9 +31,11 @@ function authorizeTestRequest(req: Request): Response | null {
   return null;
 }
 
-// Test-only routes: registered only outside production. Even if reached,
-// every handler re-checks authorizeTestRequest for defense-in-depth.
-if (process.env.NODE_ENV !== "production") {
+// Test-only routes: registered only when the Playwright secret is configured.
+// Convex cloud dev may still use NODE_ENV=production, so the secret is the
+// explicit opt-in. Each handler re-checks authorizeTestRequest for
+// defense-in-depth.
+if (isPlaywrightTestMode()) {
   http.route({
     path: "/test/read-otp",
     method: "POST",

@@ -6,53 +6,55 @@ import type { GenericActionCtx } from "convex/server";
 import { internal, components } from "../_generated/api";
 import { type DataModel } from "../_generated/dataModel";
 import authConfig from "../auth.config";
+import { isPlaywrightTestEmail, isPlaywrightTestMode } from "./testMode";
 import { env } from "../env";
 
 // The component client has methods needed for integrating Convex with Better Auth,
 // as well as helper methods for general use.
 // Explicit type annotation breaks circular inference between authComponent and
 // the triggersApi exports in auth/triggers.ts (TS2502).
-export const authComponent: ReturnType<typeof createClient<DataModel>> = createClient<DataModel>(components.betterAuth, {
-  triggers: {
-    user: {
-      onCreate: async (ctx, doc) => {
-        await ctx.db.insert("users", {
-          authId: doc._id,
-          email: doc.email,
-          onboardingComplete: false,
-        });
-      },
-      onUpdate: async (ctx, newDoc, oldDoc) => {
-        if (newDoc.email !== oldDoc.email) {
+export const authComponent: ReturnType<typeof createClient<DataModel>> =
+  createClient<DataModel>(components.betterAuth, {
+    triggers: {
+      user: {
+        onCreate: async (ctx, doc) => {
+          await ctx.db.insert("users", {
+            authId: doc._id,
+            email: doc.email,
+            onboardingComplete: false,
+          });
+        },
+        onUpdate: async (ctx, newDoc, oldDoc) => {
+          if (newDoc.email !== oldDoc.email) {
+            const appUser = await ctx.db
+              .query("users")
+              .withIndex("by_authId", (q) => q.eq("authId", newDoc._id))
+              .unique();
+            if (appUser) {
+              await ctx.db.patch("users", appUser._id, { email: newDoc.email });
+            }
+          }
+        },
+        onDelete: async (ctx, doc) => {
           const appUser = await ctx.db
             .query("users")
-            .withIndex("by_authId", (q) => q.eq("authId", newDoc._id))
+            .withIndex("by_authId", (q) => q.eq("authId", doc._id))
             .unique();
           if (appUser) {
-            await ctx.db.patch("users", appUser._id, { email: newDoc.email });
+            if (appUser.avatarStorageId) {
+              await ctx.storage.delete(appUser.avatarStorageId);
+            }
+            await ctx.db.delete("users", appUser._id);
           }
-        }
-      },
-      onDelete: async (ctx, doc) => {
-        const appUser = await ctx.db
-          .query("users")
-          .withIndex("by_authId", (q) => q.eq("authId", doc._id))
-          .unique();
-        if (appUser) {
-          if (appUser.avatarStorageId) {
-            await ctx.storage.delete(appUser.avatarStorageId);
-          }
-          await ctx.db.delete("users", appUser._id);
-        }
+        },
       },
     },
-  },
-  authFunctions: {
-    onCreate: internal.auth.triggers.onCreate,
-    onUpdate: internal.auth.triggers.onUpdate,
-    onDelete: internal.auth.triggers.onDelete,
-  },
-});
+    authFunctions: {
+      onCreate: internal.auth.triggers.onCreate,
+      onUpdate: internal.auth.triggers.onUpdate,
+      onDelete: internal.auth.triggers.onDelete,
+    },
+  });
 
 export const createAuth = (ctx: GenericCtx<DataModel>) => {
   // createAuth is called from HTTP actions, so ctx supports runAction at runtime.
@@ -121,16 +123,15 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
         expiresIn: 300, // 5 minutes
         allowedAttempts: 5,
         sendVerificationOTP: async ({ email, otp, type }) => {
-          // Test mode: when PLAYWRIGHT_TEST_SECRET is set and the email is a test address,
-          // store the OTP in Convex for the test-session route to read back instead of emailing.
-          if (
-            process.env.NODE_ENV !== "production" &&
-            process.env.PLAYWRIGHT_TEST_SECRET &&
-            email.endsWith("@mirror.test")
-          ) {
+          // Convex cloud dev can still report NODE_ENV=production, so the
+          // Playwright secret is the explicit opt-in for test OTP capture.
+          if (isPlaywrightTestMode() && isPlaywrightTestEmail(email)) {
             await actionCtx.runMutation(
               internal.auth.testHelpers.storeTestOtp,
-              { email, otp }
+              {
+                email,
+                otp,
+              },
             );
             return;
           }
