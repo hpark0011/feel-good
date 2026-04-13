@@ -5,7 +5,7 @@ const cspDirectives = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' 'unsafe-eval'", // Next.js requires unsafe-inline/eval for HMR and inline scripts
   "style-src 'self' 'unsafe-inline'", // Tailwind and runtime style injection
-  "img-src 'self' https://images.unsplash.com data:", // data: for Tiptap/ProseMirror inline images
+  "img-src 'self' https://images.unsplash.com https://*.convex.cloud https://*.convex.site data: blob:", // data/blob previews plus Convex-hosted user images
   "font-src 'self'", // next/font self-hosts all fonts
   "connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://*.daily.co wss://*.daily.co https://tavusapi.com", // Convex real-time backend + Sentry telemetry + Daily.co + Tavus API
   "frame-src https://*.daily.co", // Daily.co video iframe
