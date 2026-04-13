@@ -13,8 +13,9 @@ import {
   DEFAULT_PROFILE_CONTENT_KIND,
   getContentHref,
   getContentRouteState,
-  isContentKind,
+  type ContentRouteState,
 } from "@/features/content";
+import { isProfileTabKind } from "@/features/profile-tabs/types";
 import { DesktopWorkspace } from "./desktop-workspace";
 import { MobileWorkspace } from "./mobile-workspace";
 import { ContentPanel } from "./content-panel";
@@ -39,8 +40,11 @@ export function WorkspaceShell({ interaction, content }: WorkspaceShellProps) {
   const searchParams = useSearchParams();
   const segments = useSelectedLayoutSegments();
   const { isChatOpen } = useChatSearchParams();
-  const hasContentRoute = isContentKind(segments[0]);
-  const routeState = getContentRouteState(segments);
+  const hasContentRoute = isProfileTabKind(segments[0]);
+  const routeState: ContentRouteState | null =
+    segments[0] === "clone-settings"
+      ? null
+      : getContentRouteState(segments);
   const username = params.username;
   const defaultContentHref = useMemo(() => {
     if (!username) return null;

@@ -9,7 +9,19 @@ export const userFields = {
   bio: v.optional(v.string()),
   avatarStorageId: v.optional(v.id("_storage")),
   onboardingComplete: v.boolean(),
-  personaPrompt: v.optional(v.string()),
+  personaPrompt: v.optional(v.union(v.string(), v.null())),
+  tonePreset: v.optional(
+    v.union(
+      v.literal("professional"),
+      v.literal("friendly"),
+      v.literal("witty"),
+      v.literal("empathetic"),
+      v.literal("direct"),
+      v.literal("curious"),
+      v.null(),
+    ),
+  ),
+  topicsToAvoid: v.optional(v.union(v.string(), v.null())),
   chatAuthRequired: v.optional(v.boolean()),
 };
 

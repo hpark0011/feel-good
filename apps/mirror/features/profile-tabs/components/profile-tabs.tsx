@@ -3,28 +3,31 @@
 import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger } from "@feel-good/ui/primitives/tabs";
 import { useChatSearchParams } from "@/hooks/use-chat-search-params";
+import { useProfileRouteData } from "@/app/[username]/_providers/profile-route-data-context";
 import {
-  CONTENT_KIND_LABELS,
-  CONTENT_KINDS,
-  type ContentKind,
-  getContentHref,
+  PROFILE_TAB_KINDS,
+  PROFILE_TAB_LABELS,
+  getProfileTabHref,
+  type ProfileTabKind,
 } from "../types";
 
-type ContentKindTabsProps = {
+type ProfileTabsProps = {
   username: string;
-  currentKind: ContentKind;
+  currentKind: ProfileTabKind;
 };
 
-export function ContentKindTabs({
-  username,
-  currentKind,
-}: ContentKindTabsProps) {
+export function ProfileTabs({ username, currentKind }: ProfileTabsProps) {
   const { buildChatAwareHref } = useChatSearchParams();
+  const { isOwner } = useProfileRouteData();
+
+  const visibleKinds = PROFILE_TAB_KINDS.filter(
+    (kind) => kind !== "clone-settings" || isOwner,
+  );
 
   return (
     <Tabs value={currentKind}>
       <TabsList variant="folder">
-        {CONTENT_KINDS.map((kind) => (
+        {visibleKinds.map((kind) => (
           <TabsTrigger
             asChild
             key={kind}
@@ -32,11 +35,14 @@ export function ContentKindTabs({
             className="group-data-[variant=folder]/tabs-list:before:border-border-subtle h-8"
           >
             <Link
-              href={buildChatAwareHref(getContentHref(username, kind))}
+              href={buildChatAwareHref(getProfileTabHref(username, kind))}
               prefetch={false}
               scroll={false}
+              {...(kind === "clone-settings"
+                ? { "data-testid": "profile-tab-clone-settings" }
+                : {})}
             >
-              {CONTENT_KIND_LABELS[kind]}
+              {PROFILE_TAB_LABELS[kind]}
             </Link>
           </TabsTrigger>
         ))}

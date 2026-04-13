@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { listMessages } from "@convex-dev/agent";
 import { internalQuery } from "../_generated/server";
 import { components } from "../_generated/api";
+import { TONE_PRESETS, type TonePreset } from "./tonePresets";
 
 const SAFETY_PREFIX = (name: string) =>
   `You are a digital clone of ${name}. You represent their ideas and perspectives based on their writing and profile.
@@ -36,11 +37,24 @@ export const loadStreamingContext = internalQuery({
     const name = profileOwner.name || "this person";
     const parts = [SAFETY_PREFIX(name)];
 
+    // 2. Tone clause — omit when tonePreset is null/undefined
+    const tonePreset = profileOwner.tonePreset as TonePreset | null | undefined;
+    if (tonePreset && tonePreset in TONE_PRESETS) {
+      parts.push(TONE_PRESETS[tonePreset].clause);
+    }
+
+    // 3. Bio — omit when falsy
     if (profileOwner.bio) {
       parts.push(`Bio: ${profileOwner.bio}`);
     }
 
+    // 4. Persona — fall back to DEFAULT_PERSONA when null or empty string
     parts.push(profileOwner.personaPrompt || DEFAULT_PERSONA);
+
+    // 5. Topics to avoid — omit when null/undefined
+    if (profileOwner.topicsToAvoid) {
+      parts.push(`Avoid discussing: ${profileOwner.topicsToAvoid}`);
+    }
 
     return {
       threadId: conversation.threadId,

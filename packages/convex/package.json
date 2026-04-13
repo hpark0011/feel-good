@@ -8,7 +8,11 @@
     "./convex/_generated/api": "./convex/_generated/api.js",
     "./convex/_generated/dataModel": "./convex/_generated/dataModel.js",
     "./convex/_generated/server": "./convex/_generated/server.js",
-    "./convex/*": "./convex/*"
+    "./convex/*": "./convex/*",
+    "./chat/tonePresets": {
+      "types": "./convex/chat/tonePresets.ts",
+      "default": "./convex/chat/tonePresets.ts"
+    }
   },
   "typesVersions": {
     "*": {
@@ -20,6 +24,9 @@
       ],
       "convex/_generated/server": [
         "./convex/_generated/server.d.ts"
+      ],
+      "chat/tonePresets": [
+        "./convex/chat/tonePresets.ts"
       ]
     }
   },
