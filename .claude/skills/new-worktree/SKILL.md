@@ -46,12 +46,11 @@ All branch names must follow these conventions:
 4. Report the temporary worktree is ready.
 5. **Ask the user** what they want to work on in this worktree — the scope, feature, or bug.
 6. Once the user responds, generate a proper branch name following the naming rules above.
-7. Present the generated name and ask for confirmation.
-8. On confirmation, rename the worktree:
+7. Rename the worktree immediately (do not ask for confirmation):
    ```bash
    bash .claude/skills/workspace/new-worktree/scripts/rename-worktree.sh scratch-<hex> <new-name>
    ```
-9. Report the final name and path.
+8. Report the final name and path.
 
 ## Mode 2: Ticket File
 
@@ -64,8 +63,7 @@ All branch names must follow these conventions:
    - Type is `chore` or `docs` → `chore-`
    - Otherwise → `feature-`
 3. **Slugify the title** into a branch name: lowercase, strip special characters, replace spaces with hyphens, truncate to 2-4 key words.
-4. **Present the generated name** to the user and ask for confirmation. If rejected, ask what they'd prefer.
-5. Once confirmed, proceed to **Shared Steps** below.
+4. Proceed to **Shared Steps** below immediately (do not ask for confirmation on the name).
 
 ## Mode 3: Free-Text Requirement
 
@@ -76,8 +74,7 @@ All branch names must follow these conventions:
    - Describes restructuring existing code → `refactor-`
    - Otherwise → `feature-`
 2. **Generate a concise slug** (2-4 words, kebab-case) that captures the essence of the requirement.
-3. **Present the generated name** to the user and ask for confirmation. If rejected, ask what they'd prefer.
-4. Once confirmed, proceed to **Shared Steps** below.
+3. Proceed to **Shared Steps** below immediately (do not ask for confirmation on the name).
 
 ## Shared Steps (All Modes)
 

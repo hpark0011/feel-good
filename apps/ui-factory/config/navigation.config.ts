@@ -5,6 +5,7 @@ export type NavItem = {
 
 export const COMPONENT_NAV_ITEMS: NavItem[] = [
   { label: "Button", href: "/components/buttons" },
+  { label: "Context Menu", href: "/components/context-menu" },
   { label: "Data Table", href: "/components/data-table" },
   { label: "Dialog", href: "/components/dialog" },
   { label: "Input", href: "/components/input" },
