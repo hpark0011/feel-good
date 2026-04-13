@@ -6,7 +6,6 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -57,7 +56,6 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
     enabled: isChatOpen,
   });
 
-  const newConversationIntentRef = useRef(false);
   const [newConversationIntent, setNewConversationIntent] = useState(false);
 
   const parsed = useMemo(
@@ -70,23 +68,15 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
   const handleConversationIdChange = useCallback(
     (id: Id<"conversations"> | null) => {
       if (!id) {
-        newConversationIntentRef.current = true;
         setNewConversationIntent(true);
         openChat();
       } else {
+        setNewConversationIntent(false);
         setConversation(id);
       }
     },
     [openChat, setConversation],
   );
-
-  // Clear new-conversation intent once the URL reflects the selected conversation.
-  useEffect(() => {
-    if (conversationId) {
-      newConversationIntentRef.current = false;
-      setNewConversationIntent(false);
-    }
-  }, [conversationId]);
 
   // Auto-select latest conversation when chat is open with no conversationId.
   useEffect(() => {
@@ -94,7 +84,7 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
     if (conversationId) return;
     if (conversationInvalid) return;
     if (conversationsLoading) return;
-    if (newConversationIntentRef.current) return;
+    if (newConversationIntent) return;
     if (conversations.length > 0) {
       setConversation(conversations[0]._id);
     }
@@ -103,6 +93,7 @@ export function ChatRouteController({ children }: ChatRouteControllerProps) {
     conversationId,
     conversationInvalid,
     conversationsLoading,
+    newConversationIntent,
     conversations,
     setConversation,
   ]);

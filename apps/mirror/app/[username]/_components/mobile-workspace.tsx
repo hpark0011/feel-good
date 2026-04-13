@@ -11,7 +11,7 @@ import {
 import { useProfileNavigationEffects } from "@/hooks/use-profile-navigation-effects";
 
 type MobileWorkspaceProps = {
-  routeState: ContentRouteState;
+  routeState: ContentRouteState | null;
   isChatOpen: boolean;
   interaction: ReactNode;
   children: ReactNode;

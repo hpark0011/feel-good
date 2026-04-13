@@ -10,7 +10,11 @@
     "./convex/_generated/server": "./convex/_generated/server.js",
     "./convex/content/schema": "./convex/content/schema.ts",
     "./convex/posts/categories": "./convex/posts/categories.ts",
-    "./convex/*": "./convex/*"
+    "./convex/*": "./convex/*",
+    "./chat/tonePresets": {
+      "types": "./convex/chat/tonePresets.ts",
+      "default": "./convex/chat/tonePresets.ts"
+    }
   },
   "typesVersions": {
     "*": {
@@ -28,6 +32,9 @@
       ],
       "convex/posts/categories": [
         "./convex/posts/categories.ts"
+      ],
+      "chat/tonePresets": [
+        "./convex/chat/tonePresets.ts"
       ]
     }
   },

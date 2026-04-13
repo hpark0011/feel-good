@@ -2,14 +2,14 @@ import { query } from "../_generated/server";
 import { v } from "convex/values";
 import { authComponent } from "../auth/client";
 import {
-  profileReturnValidator,
+  currentProfileReturnValidator,
   publicProfileReturnValidator,
   resolveAvatarUrl,
 } from "./helpers";
 
 export const getCurrentProfile = query({
   args: {},
-  returns: v.union(profileReturnValidator, v.null()),
+  returns: v.union(currentProfileReturnValidator, v.null()),
   handler: async (ctx) => {
     const authUser = await authComponent.safeGetAuthUser(ctx);
     if (!authUser) {
@@ -38,6 +38,9 @@ export const getCurrentProfile = query({
       bio: appUser.bio,
       avatarUrl,
       onboardingComplete: appUser.onboardingComplete,
+      personaPrompt: appUser.personaPrompt,
+      tonePreset: appUser.tonePreset,
+      topicsToAvoid: appUser.topicsToAvoid,
     };
   },
 });

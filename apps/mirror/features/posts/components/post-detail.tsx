@@ -31,7 +31,7 @@ export function PostDetail({ post }: PostDetailProps) {
 
         <div className="w-full flex flex-col items-center">
           <div className="max-w-lg flex flex-col gap-2">
-            <h1 className="max-w-xl text-xl font-regular leading-tight tracking-[-0.02em] underline">
+            <h1 className="max-w-xl text-xl font-regular leading-tight tracking-[-0.02em] underline capitalize">
               {post.title}
             </h1>
 

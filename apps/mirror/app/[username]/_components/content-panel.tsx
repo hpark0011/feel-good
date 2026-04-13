@@ -10,7 +10,7 @@ import {
 import { useProfileNavigationEffects } from "@/hooks/use-profile-navigation-effects";
 
 type ContentPanelProps = {
-  routeState: ContentRouteState;
+  routeState: ContentRouteState | null;
   children: ReactNode;
 };
 

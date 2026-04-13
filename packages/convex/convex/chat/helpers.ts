@@ -2,6 +2,7 @@ import { v } from "convex/values";
 import { listMessages } from "@convex-dev/agent";
 import { internalQuery } from "../_generated/server";
 import { components } from "../_generated/api";
+import { TONE_PRESETS, type TonePreset } from "./tonePresets";
 
 const SAFETY_PREFIX = (name: string) =>
   `You are a digital clone of ${name}. You represent their ideas and perspectives based on their writing and profile.
@@ -9,6 +10,37 @@ You must never: claim to be human, share private information not in your context
 
 const DEFAULT_PERSONA =
   "Answer questions helpfully based on your profile information and published articles.";
+
+export function composeSystemPrompt(opts: {
+  name?: string | null;
+  bio?: string | null;
+  personaPrompt?: string | null;
+  tonePreset?: TonePreset | null;
+  topicsToAvoid?: string | null;
+}): string {
+  const name = opts.name || "this person";
+  const parts: string[] = [SAFETY_PREFIX(name)];
+
+  // 2. Tone clause — omit when tonePreset is null/undefined
+  if (opts.tonePreset && opts.tonePreset in TONE_PRESETS) {
+    parts.push(TONE_PRESETS[opts.tonePreset].clause);
+  }
+
+  // 3. Bio — omit when falsy
+  if (opts.bio) {
+    parts.push(`Bio: ${opts.bio}`);
+  }
+
+  // 4. Persona — fall back to DEFAULT_PERSONA when null or empty string
+  parts.push(opts.personaPrompt || DEFAULT_PERSONA);
+
+  // 5. Topics to avoid — omit when null/undefined
+  if (opts.topicsToAvoid) {
+    parts.push(`Avoid discussing: ${opts.topicsToAvoid}`);
+  }
+
+  return parts.join("\n\n");
+}
 
 export const loadStreamingContext = internalQuery({
   args: {
@@ -33,18 +65,15 @@ export const loadStreamingContext = internalQuery({
       throw new Error("Profile owner not found");
     }
 
-    const name = profileOwner.name || "this person";
-    const parts = [SAFETY_PREFIX(name)];
-
-    if (profileOwner.bio) {
-      parts.push(`Bio: ${profileOwner.bio}`);
-    }
-
-    parts.push(profileOwner.personaPrompt || DEFAULT_PERSONA);
-
     return {
       threadId: conversation.threadId,
-      systemPrompt: parts.join("\n\n"),
+      systemPrompt: composeSystemPrompt({
+        name: profileOwner.name,
+        bio: profileOwner.bio,
+        personaPrompt: profileOwner.personaPrompt,
+        tonePreset: profileOwner.tonePreset as TonePreset | null | undefined,
+        topicsToAvoid: profileOwner.topicsToAvoid,
+      }),
     };
   },
 });

@@ -7,7 +7,7 @@ export type RouteMode = "list" | "detail";
 
 export function useProfileNavigationEffects(
   scrollContainer: HTMLElement | null,
-  routeState: ContentRouteState,
+  routeState: ContentRouteState | null,
 ) {
   const prevRouteState = useRef(routeState);
   const savedScrollTopByKind = useRef<Record<ContentRouteState["kind"], number>>(
@@ -18,8 +18,14 @@ export function useProfileNavigationEffects(
   );
 
   useLayoutEffect(() => {
+    if (routeState === null) {
+      prevRouteState.current = null;
+      return;
+    }
+
     const previousRouteState = prevRouteState.current;
     const routeChanged =
+      previousRouteState === null ||
       routeState.kind !== previousRouteState.kind ||
       routeState.view !== previousRouteState.view;
     if (!routeChanged) return;
@@ -28,12 +34,12 @@ export function useProfileNavigationEffects(
 
     if (!scrollContainer) return;
 
-    if (previousRouteState.view === "list") {
+    if (previousRouteState !== null && previousRouteState.view === "list") {
       savedScrollTopByKind.current[previousRouteState.kind] =
         scrollContainer.scrollTop;
     }
 
-    if (routeState.kind !== previousRouteState.kind) {
+    if (previousRouteState === null || routeState.kind !== previousRouteState.kind) {
       if (routeState.view === "detail") {
         scrollContainer.scrollTo(0, 0);
         return;

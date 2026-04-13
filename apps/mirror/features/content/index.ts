@@ -9,7 +9,6 @@ export {
   type ContentRouteState,
   type ContentRouteView,
 } from "./types";
-export { ContentKindTabs } from "./components/content-kind-tabs";
 export {
   ContentListFilterDropdown,
   ContentListSearchInput,
