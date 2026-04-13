@@ -15,6 +15,24 @@ type EditableAvatarProps = {
   onAvatarChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
+function AvatarImageSurface({
+  initial,
+  image,
+}: {
+  initial: string;
+  image: string | null;
+}) {
+  if (image) {
+    return <ProfileMedia image={image} />;
+  }
+
+  return (
+    <div className="flex size-full items-center justify-center bg-muted text-muted-foreground text-4xl">
+      {initial}
+    </div>
+  );
+}
+
 function AvatarWindow({
   children,
   isEditing,
@@ -73,28 +91,24 @@ export function EditableAvatar({
     return (
       <div className="flex flex-col items-center pt-[40px]">
         <AvatarWindow isEditing={isEditing}>
-          <AnimatePresence>
-            {isEditing && (
-              <motion.div
-                key="edit-overlay"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.15, delay: 0.1 }}
-              >
-                <div className="flex flex-col items-center">
+          <div className="relative size-[200px] overflow-hidden">
+            <AvatarImageSurface initial={initial} image={displayAvatar} />
+            <AnimatePresence>
+              {isEditing && (
+                <motion.div
+                  key="edit-overlay"
+                  className="absolute inset-0"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15, delay: 0.1 }}
+                >
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="group relative size-[200px] overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    className="group absolute inset-0 overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     data-test="edit-profile-avatar-button"
                   >
-                    <div className="flex size-full items-center justify-center bg-muted text-muted-foreground text-4xl">
-                      {initial}
-                    </div>
-                    {displayAvatar
-                      ? <ProfileMedia image={displayAvatar} />
-                      : null}
                     <div className="absolute inset-0 flex items-center justify-center bg-gray-12 opacity-0 transition-opacity group-hover:opacity-100">
                       <Icon
                         name="PersonFillIcon"
@@ -102,17 +116,17 @@ export function EditableAvatar({
                       />
                     </div>
                   </button>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={onAvatarChange}
-                    className="hidden"
-                  />
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={onAvatarChange}
+            className="hidden"
+          />
         </AvatarWindow>
       </div>
     );
@@ -137,12 +151,10 @@ export function EditableAvatar({
                   className="group relative size-[200px] rounded-t-full [corner-shape:superellipse(1.2)] overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-muted"
                   data-test="edit-profile-avatar-button"
                 >
-                  <div className="flex size-full items-center justify-center bg-muted text-muted-foreground text-4xl">
-                    {initial}
-                  </div>
-                  {displayAvatar
-                    ? <ProfileMedia image={displayAvatar} />
-                    : null}
+                  <AvatarImageSurface
+                    initial={initial}
+                    image={displayAvatar}
+                  />
                   <div className="absolute inset-0 flex items-center justify-center bg-gray-12 opacity-0 transition-opacity group-hover:opacity-100">
                     <Icon
                       name="PersonFillIcon"
@@ -177,7 +189,14 @@ export function EditableAvatar({
                     />
                   </div>
                 )
-                : null}
+                : (
+                  <div className="relative w-[200px] h-[200px] overflow-hidden rounded-t-full [corner-shape:superellipse(1.2)] bg-muted">
+                    <AvatarImageSurface
+                      initial={initial}
+                      image={displayAvatar}
+                    />
+                  </div>
+                )}
             </motion.div>
           )}
       </AnimatePresence>

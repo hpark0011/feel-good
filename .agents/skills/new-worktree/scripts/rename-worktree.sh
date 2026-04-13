@@ -14,7 +14,7 @@ NEW_PATH="$GIT_ROOT/.worktrees/$NEW_NAME"
 
 git branch -m "$OLD_NAME" "$NEW_NAME"
 mv "$OLD_PATH" "$NEW_PATH"
-git worktree repair
+git -C "$GIT_ROOT" worktree repair "$NEW_PATH"
 
 echo "Renamed: $OLD_NAME → $NEW_NAME"
 echo "Worktree path: $NEW_PATH"
