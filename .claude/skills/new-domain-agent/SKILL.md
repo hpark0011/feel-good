@@ -1,11 +1,27 @@
 ---
 name: new-domain-agent
-description: "Create a new domain expert agent with full memory scaffold. Use when the user asks to create a domain agent, create an agent for X, add a new domain expert, or set up an agent for a subsystem. Invoke with `/new-domain-agent` or `/new-domain-agent <domain-name>`."
+description: "Build self-improving domain expert agents that own a bounded coding layer and get measurably sharper with every task. Each session ends with a log entry that patches the agent's spec or knowledge, so the next session is faster and more accurate. Use when the user asks to create a domain agent, add a new domain expert, or set up an agent for a subsystem. Invoke with `/new-domain-agent` or `/new-domain-agent <domain-name>`."
+disable-model-invocation: true
+argument-hint: "[domain-name]"
 ---
-
 # New Domain Agent
 
-Create a domain expert agent definition and its memory scaffold in one pass.
+Scaffold a **self-improving domain expert agent**. The system has three parts.
+
+1. **Agent spec** (`.claude/agents/<name>.md`) — domain boundary, how to operate, guiding principles, available skills/tools
+2. **Knowledge** (`agent-memory/<name>/knowledge.md`) — architecture, data flow & contracts, gotchas, references
+3. **Logs** (`agent-memory/<name>/logs.md`) — append-only session evals against 4 criteria, bottleneck identification, patches applied
+
+The agent improves itself by ending every session with a log entry that patches either the spec or the knowledge file. No promotion trees, no decision logs, no wikis to maintain.
+
+## Guiding Principles (encoded in every agent)
+
+Non-negotiable order. Lower objectives never compromise higher ones.
+
+1. **Verified correctness** — output meets criteria with concrete evidence
+2. **Regression avoidance** — existing behavior preserved
+3. **Efficiency** — fewer iterations, less time, fewer tokens
+4. **Learning** — every session patches the system to serve 1–3 next time
 
 ## Trigger
 
@@ -16,72 +32,82 @@ Create a domain expert agent definition and its memory scaffold in one pass.
 
 ### 1. Determine the domain
 
-If no argument provided, ask: "What subsystem or domain should this agent own?"
+If no argument provided, ask: "What subsystem should this agent own? What are its boundaries (files/dirs/responsibilities), and what does it explicitly NOT own?"
 
-From the user's answer, derive:
-- **Agent name**: kebab-case, 1-3 words (e.g., `site`, `auth-layer`, `release`)
-- **Domain scope**: what code/files/subsystems it owns
+Derive:
+
+- **Agent name**: kebab-case, 1–3 words
+- **Domain scope**: concrete files/dirs and the boundary where it hands off
 
 ### 2. Research the domain
 
-Explore the codebase to understand the domain before writing anything:
+Quality of the agent is bounded by quality of this step.
 
-1. Read existing agents in `.claude/agents/` for structural reference and to avoid overlap
-2. Read `.claude/domain-agent-template/` for the current memory template structure
-3. Explore the domain's source files — glob for relevant files, read key ones
-4. Identify: key files, architecture patterns, dependencies, build/test commands, common gotchas
-5. Check `.claude/agent-memory/` to see which colors are already taken
+1. Read `.claude/agents/` to detect overlap (two agents must never own the same file) and pick an unused color
+2. Read `domain-agent-template/agent-spec.md` for current structure
+3. Glob the domain's source — read entry points, key abstractions, any local README/docs
+4. Identify: key files, architecture, data flow, contracts, recurring gotchas, build/test commands, relevant skills
 
-### 3. Create the agent definition
+### 3. Write the agent spec
 
-Write `.claude/agents/<name>.md` following the structure in [references/agent-definition-template.md](references/agent-definition-template.md).
+Create `.claude/agents/<name>.md` from `domain-agent-template/agent-spec.md`. Required sections, in order:
 
-Key requirements:
-- Frontmatter must include: `name`, `description`, `model: opus`, `color` (unique), `memory: project`
-- Description starts with "Use this agent when..."
-- Body sections: Your Domain, Architecture, Working Principles, Code Standards, When Pulled Into Adjacent Work, Key Files, Verification Checklist
-- Key Files table must list actual files discovered during research, not placeholders
-- Working Principles should reflect real patterns from the codebase, not generic advice
+- Frontmatter (`name`, `description`, `model: opus`, unique `color`, `memory: project`, `tools:` **allowlist** scoped to the domain, `maxTurns: 40` as a safety ceiling)
+- Domain Boundary (own / do NOT own — both explicit)
+- How to Operate (the 5-step loop: load → plan → execute → verify → log & patch)
+- Guiding Principles (the 4 objectives verbatim, plus domain-specific principles grounded in real code)
+- Available Skills & Tools
+- Verification (correctness checks + regression checks)
+- Knowledge & Logs (pointers to the memory files)
 
-### 4. Bootstrap agent memory
+Keep it short. Long specs are smell — real intelligence belongs in `knowledge.md` and accumulates through `logs.md` patches.
 
-Create `.claude/agent-memory/<name>/` with every file from `.claude/domain-agent-template/`, customized:
+### 4. Bootstrap memory
 
-| Template file | Customization |
-|---|---|
-| `MEMORY.md` | Replace `<Agent Name>` with the agent's display name. Add a one-line scope comment. Leave Operating Principles empty — they accumulate from real work. |
-| `gotchas.md` | Replace `<Agent Name>` with display name. Set date to today. Leave gotchas as commented-out template. |
-| `architecture-summary.md` | Replace `<Agent Name>` with display name. Set date to today. Leave sections as commented-out template. |
-| `decision-log.md` | Replace `<Agent Name>` with display name. Set date to today. Leave decisions as commented-out template. |
-| `wiki.md` | Replace `<Agent Name>` with display name. Set date to today. Leave tables empty. |
+Create `.claude/agent-memory/<name>/` with `knowledge.md` and `logs.md` copied from `domain-agent-template/` (the `agent-spec.md` in that directory is for step 3 only — do NOT copy it into the agent's memory dir):
 
-Do NOT pre-fill memory content. Memory accumulates from real work sessions, not from initial setup.
+| File | Customization |
+| --- | --- |
+| `knowledge.md` | Replace `<Agent Name>`, set date. Leave sections as commented scaffolds — knowledge is patched in through real work, not pre-filled. |
+| `logs.md` | Replace `<Agent Name>`, set date. Leave empty. |
+
+Do NOT pre-fill knowledge. Unverified content pollutes the signal.
 
 ### 5. Verify
 
-Confirm all artifacts exist:
+Confirm the layout exists:
 
 ```
-.claude/agents/<name>.md          ← agent definition
+.claude/agents/<name>.md
 .claude/agent-memory/<name>/
-├── MEMORY.md
-├── gotchas.md
-├── architecture-summary.md
-├── decision-log.md
-└── wiki.md
+├── knowledge.md
+└── logs.md
 ```
+
+Then run the scaffold validator and require exit 0 before proceeding:
+
+```bash
+node .claude/skills/new-domain-agent/scripts/validate-scaffold.mjs <name>
+```
+
+The validator deterministically checks: YAML frontmatter parses, required fields present (`name`, `description`, `model`, `color`, `memory`, `tools`, `maxTurns`), `name` matches filename, `description` starts with "Use this agent when", `color` is unique across existing agents, `tools` is a non-empty subset of the known Claude Code tool allowlist (plus any `mcp__*`), memory files exist, and the spec body contains all 7 required H2 section headings.
+
+If the validator reports errors, fix them and re-run before reporting completion. Do not skip this step.
 
 ### 6. Report
 
 Tell the user:
-- Agent name and file path
-- What domain it covers
-- The memory directory path
-- That memory files are empty templates — they'll populate as the agent works
+
+- Agent name and spec file path
+- Domain boundary (own / not own)
+- Memory directory path
+- That `knowledge.md` is empty by design and grows through session-log patches
 
 ## Anti-patterns
 
-- **Don't pre-fill memory**: Gotchas, decisions, and architecture docs come from real work, not speculation
-- **Don't overlap with existing agents**: Check `.claude/agents/` first — if another agent already owns a file, don't claim it
-- **Don't use placeholder file paths**: Every file in the Key Files table must be a real path confirmed by glob/ls
-- **Don't skip the research step**: The agent definition quality depends on understanding the actual codebase
+- **Don't pre-fill knowledge.** Speculation degrades future sessions. Knowledge grows through patches driven by real session bottlenecks.
+- **Don't add more memory files.** The whole system is `knowledge.md` + `logs.md`. If you want to track something else, you're solving the wrong problem.
+- **Don't paraphrase the 4 objectives or reorder them.** The ordering is load-bearing.
+- **Don't overlap with existing agents.** Two agents owning the same file produces contradictory patches.
+- **Don't write a long agent spec.** If the spec is growing past \~80 lines, the content belongs in `knowledge.md` instead.
+- **Don't skip the log & patch step.** A session that ends without a log entry has broken the self-improvement contract.
