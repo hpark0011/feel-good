@@ -12,7 +12,7 @@ Scaffold a **self-improving domain expert agent**. The system has three parts.
 2. **Knowledge** (`agent-memory/<name>/knowledge.md`) — architecture, data flow & contracts, gotchas, references
 3. **Logs** (`agent-memory/<name>/logs.md`) — append-only session evals against 4 criteria, bottleneck identification, patches applied
 
-The agent improves itself by ending every session with a log entry that patches either the spec or the knowledge file. No promotion trees, no decision logs, no wikis to maintain.
+The agent improves itself by ending every session with a log entry that patches either the spec or the knowledge file. This is enforced mechanically by a `SubagentStop` hook (`scripts/validate-session-log.mjs`) that blocks the subagent from ending until `logs.md` contains a fresh entry with `Bottleneck`, `Counterfactual`, and `Patch`. No promotion trees, no decision logs, no wikis to maintain.
 
 ## Guiding Principles (encoded in every agent)
 
@@ -73,7 +73,25 @@ Create `.claude/agent-memory/<name>/` with `knowledge.md` and `logs.md` copied f
 
 Do NOT pre-fill knowledge. Unverified content pollutes the signal.
 
-### 5. Verify
+### 5. Register the SubagentStop enforcement hook
+
+Step 5 of the agent's operating loop (Log & Patch) is the load-bearing self-improvement step, so it must be enforced mechanically — not left to prompt discipline. Register a `SubagentStop` hook in `.claude/settings.json` that runs `scripts/validate-session-log.mjs`. The validator:
+
+- Identifies whether the stopping subagent is a domain expert (has both `.claude/agents/<name>.md` and `.claude/agent-memory/<name>/`)
+- Scans the subagent's transcript for a `Write` or `Edit` to `agent-memory/<name>/logs.md` during the session
+- Re-reads `logs.md` and requires all three markers: `Bottleneck`, `Counterfactual`, `Patch`
+- Exits 2 with a blocking message if either check fails, forcing the subagent to loop back and actually write the entry before it can end
+- No-ops (exit 0) for non-domain-expert subagents so it does not interfere with general-purpose agents
+
+Run the installer — it is idempotent, preserves other hooks, and creates `settings.json` if missing:
+
+```bash
+node .claude/skills/new-domain-agent/scripts/install-hook.mjs
+```
+
+It prints either `installed …` or `already present …`. Require exit 0. Subsequent agent creations will detect the hook already present and no-op.
+
+### 6. Verify
 
 Confirm the layout exists:
 
@@ -94,7 +112,7 @@ The validator deterministically checks: YAML frontmatter parses, required fields
 
 If the validator reports errors, fix them and re-run before reporting completion. Do not skip this step.
 
-### 6. Report
+### 7. Report
 
 Tell the user:
 
