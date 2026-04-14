@@ -1,9 +1,11 @@
 ---
 name: new-domain-agent
-description: "Build self-improving domain expert agents that own a bounded coding layer and get measurably sharper with every task. Each session ends with a log entry that patches the agent's spec or knowledge, so the next session is faster and more accurate. Use when the user asks to create a domain agent, add a new domain expert, or set up an agent for a subsystem. Invoke with `/new-domain-agent` or `/new-domain-agent <domain-name>`."
+description: "Build self-improving domain expert agents that own a bounded coding layer and get measurably sharper with every task. Each session ends with a log entry that patches the agent's spec or knowledge, so the next session is faster and more accurate. Use when the user asks to create a domain agent, add a new domain expert, scaffold a subsystem agent, set up a self-improving agent, or build an agent that owns a specific area of the codebase. Invoke with `/new-domain-agent` or `/new-domain-agent <domain-name>`."
+when_to_use: "Triggered by phrases like 'create a domain agent', 'new domain agent', 'add a domain expert', 'scaffold an agent for <subsystem>', 'set up an agent that owns <area>', 'build a self-improving agent', 'make an expert agent for this subsystem', 'I need an agent for <feature/module>', or '/new-domain-agent'."
 disable-model-invocation: true
 argument-hint: "[domain-name]"
 ---
+
 # New Domain Agent
 
 Scaffold a **self-improving domain expert agent**. The system has three parts.
@@ -66,10 +68,10 @@ Keep it short. Long specs are smell — real intelligence belongs in `knowledge.
 
 Create `.claude/agent-memory/<name>/` with `knowledge.md` and `logs.md` copied from `domain-agent-template/` (the `agent-spec.md` in that directory is for step 3 only — do NOT copy it into the agent's memory dir):
 
-| File | Customization |
-| --- | --- |
+| File           | Customization                                                                                                                        |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | `knowledge.md` | Replace `<Agent Name>`, set date. Leave sections as commented scaffolds — knowledge is patched in through real work, not pre-filled. |
-| `logs.md` | Replace `<Agent Name>`, set date. Leave empty. |
+| `logs.md`      | Replace `<Agent Name>`, set date. Leave empty.                                                                                       |
 
 Do NOT pre-fill knowledge. Unverified content pollutes the signal.
 
