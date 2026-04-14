@@ -15,6 +15,14 @@ test.describe("Authentication", () => {
       await page.goto("/dashboard?tab=settings");
       await expect(page).toHaveURL(/\/sign-in.*next=/);
     });
+
+    // FR-01, FR-07 — Viewer inbox is authenticated-only
+    test("redirects signed-out visitor from /messages to /sign-in", async ({
+      page,
+    }) => {
+      await page.goto("/messages");
+      await expect(page).toHaveURL(/\/sign-in/);
+    });
   });
 
   test.describe("OTP Login Flow", () => {

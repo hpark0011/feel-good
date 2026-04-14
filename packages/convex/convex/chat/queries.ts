@@ -172,6 +172,85 @@ export const listThreadMessages = query({
   },
 });
 
+export const getViewerConversations = query({
+  args: {
+    paginationOpts: paginationOptsValidator,
+  },
+  returns: v.object({
+    page: v.array(
+      v.object({
+        conversationId: v.id("conversations"),
+        username: v.string(),
+        displayName: v.union(v.string(), v.null()),
+        avatarUrl: v.union(v.string(), v.null()),
+        status: v.union(v.literal("active"), v.literal("archived")),
+        lastMessagePreview: v.union(v.string(), v.null()),
+        lastMessageRole: v.union(
+          v.literal("user"),
+          v.literal("assistant"),
+          v.null(),
+        ),
+        lastActivityAt: v.union(v.number(), v.null()),
+      }),
+    ),
+    isDone: v.boolean(),
+    continueCursor: v.string(),
+  }),
+  handler: async (ctx, args) => {
+    const authUser = await authComponent.safeGetAuthUser(ctx);
+    if (!authUser) {
+      return { page: [], isDone: true, continueCursor: "" };
+    }
+
+    const appUser = await ctx.db
+      .query("users")
+      .withIndex("by_authId", (q) => q.eq("authId", authUser._id))
+      .unique();
+    if (!appUser) {
+      return { page: [], isDone: true, continueCursor: "" };
+    }
+
+    // Read conversations via the viewer/activity index in descending order
+    const paginatedResult = await ctx.db
+      .query("conversations")
+      .withIndex("by_viewerId_and_lastActivitySortKey", (q) =>
+        q.eq("viewerId", appUser._id),
+      )
+      .order("desc")
+      .paginate(args.paginationOpts);
+
+    // Join each profileOwnerId to the author user for username/displayName/avatarUrl
+    const page = await Promise.all(
+      paginatedResult.page.map(async (conversation) => {
+        const author = await ctx.db.get(conversation.profileOwnerId);
+
+        // Resolve avatar URL from storage if present
+        let avatarUrl: string | null = null;
+        if (author?.avatarStorageId) {
+          avatarUrl = await ctx.storage.getUrl(author.avatarStorageId);
+        }
+
+        return {
+          conversationId: conversation._id,
+          username: author?.username ?? "",
+          displayName: author?.name ?? null,
+          avatarUrl,
+          status: conversation.status,
+          lastMessagePreview: conversation.lastMessagePreview ?? null,
+          lastMessageRole: conversation.lastMessageRole ?? null,
+          lastActivityAt: conversation.lastActivityAt ?? null,
+        };
+      }),
+    );
+
+    return {
+      page,
+      isDone: paginatedResult.isDone,
+      continueCursor: paginatedResult.continueCursor,
+    };
+  },
+});
+
 export const internalGetConversation = internalQuery({
   args: {
     conversationId: v.id("conversations"),

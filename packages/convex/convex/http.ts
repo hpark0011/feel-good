@@ -20,9 +20,6 @@ function secretsMatch(a: string, b: string): boolean {
 }
 
 function authorizeTestRequest(req: Request): Response | null {
-  if (process.env.NODE_ENV === "production") {
-    return new Response("Not found", { status: 404 });
-  }
   const secret = process.env.PLAYWRIGHT_TEST_SECRET;
   const header = req.headers.get("x-test-secret");
   if (!secret || !header || !secretsMatch(header, secret)) {
@@ -31,9 +28,9 @@ function authorizeTestRequest(req: Request): Response | null {
   return null;
 }
 
-// Test-only routes: registered only outside production. Even if reached,
-// every handler re-checks authorizeTestRequest for defense-in-depth.
-if (process.env.NODE_ENV !== "production") {
+// Test-only routes: registered only when PLAYWRIGHT_TEST_SECRET is configured.
+// Even if reached, every handler re-checks authorizeTestRequest for defense-in-depth.
+if (process.env.PLAYWRIGHT_TEST_SECRET) {
   http.route({
     path: "/test/read-otp",
     method: "POST",

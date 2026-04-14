@@ -9,6 +9,13 @@ export const conversationsTable = defineTable({
   title: v.string(),
   streamingInProgress: v.optional(v.boolean()),
   streamingStartedAt: v.optional(v.number()),
+  // Inbox summary fields (populated by write-path maintenance and backfill)
+  lastActivityAt: v.optional(v.number()),
+  lastActivitySortKey: v.optional(v.string()),
+  lastMessagePreview: v.optional(v.string()),
+  lastMessageRole: v.optional(
+    v.union(v.literal("user"), v.literal("assistant")),
+  ),
 })
   .index("by_profileOwnerId_and_viewerId", ["profileOwnerId", "viewerId"])
   .index("by_viewerId", ["viewerId"])
@@ -16,4 +23,8 @@ export const conversationsTable = defineTable({
   .index("by_streamingInProgress_and_streamingStartedAt", [
     "streamingInProgress",
     "streamingStartedAt",
+  ])
+  .index("by_viewerId_and_lastActivitySortKey", [
+    "viewerId",
+    "lastActivitySortKey",
   ]);

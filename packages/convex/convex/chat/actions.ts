@@ -11,6 +11,10 @@ import { EMBEDDING_MODEL, EMBEDDING_DIMENSIONS } from "../embeddings/config";
 const RAG_RESULT_LIMIT = 5;
 const RAG_SCORE_THRESHOLD = 0.3;
 
+// ── Summary rebuild retry constants ─────────────────────────────────
+const MAX_SUMMARY_RETRIES = 3;
+const SUMMARY_RETRY_BACKOFF_MS = [500, 1500, 4000] as const;
+
 export const streamResponse = internalAction({
   args: {
     conversationId: v.id("conversations"),
@@ -92,10 +96,61 @@ export const streamResponse = internalAction({
         streamArgs,
         { saveStreamDeltas: { throttleMs: 100 } },
       );
+
+      // After streaming completes, rebuild the canonical summary from thread history.
+      // On retryable status, schedule bounded retries with short backoff.
+      const rebuildResult: { status: "ok" | "retryable"; reason?: string } =
+        await ctx.runMutation(
+          internal.chat.helpers.rebuildConversationSummaryMutation,
+          { conversationId, attempt: 0 },
+        );
+
+      if (rebuildResult.status === "retryable") {
+        await ctx.scheduler.runAfter(
+          SUMMARY_RETRY_BACKOFF_MS[0],
+          internal.chat.actions.retrySummaryRebuild,
+          { conversationId, attempt: 1 },
+        );
+      }
+    } catch (streamError) {
+      // On streaming failure, preserve the latest successful user summary —
+      // do not overwrite it. Just re-throw so the finally block clears the lock.
+      throw streamError;
     } finally {
       await ctx.runMutation(
         internal.chat.mutations.clearStreamingLock,
         { conversationId, expectedStartedAt: lockStartedAt },
+      );
+    }
+
+    return null;
+  },
+});
+
+// ── Bounded retry for summary rebuild ────────────────────────────────
+
+export const retrySummaryRebuild = internalAction({
+  args: {
+    conversationId: v.id("conversations"),
+    attempt: v.number(),
+  },
+  returns: v.null(),
+  handler: async (ctx, { conversationId, attempt }) => {
+    const result: { status: "ok" | "retryable"; reason?: string } =
+      await ctx.runMutation(
+        internal.chat.helpers.rebuildConversationSummaryMutation,
+        { conversationId, attempt },
+      );
+
+    if (result.status === "retryable" && attempt < MAX_SUMMARY_RETRIES) {
+      const backoffMs =
+        SUMMARY_RETRY_BACKOFF_MS[
+          Math.min(attempt, SUMMARY_RETRY_BACKOFF_MS.length - 1)
+        ];
+      await ctx.scheduler.runAfter(
+        backoffMs,
+        internal.chat.actions.retrySummaryRebuild,
+        { conversationId, attempt: attempt + 1 },
       );
     }
 

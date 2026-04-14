@@ -4,8 +4,31 @@ import { mutation, internalMutation } from "../_generated/server";
 import { internal, components } from "../_generated/api";
 import { authComponent } from "../auth/client";
 import { chatRateLimiter } from "./rateLimits";
+import { buildSortKey } from "./helpers";
 
 const MAX_MESSAGE_LENGTH = 4000;
+
+function normalizeSummaryText(text: string): string {
+  return text.replace(/\s+/g, " ").trim().slice(0, 140);
+}
+
+function patchUserSendSummary(
+  content: string,
+  conversationId: string,
+): {
+  lastActivityAt: number;
+  lastActivitySortKey: string;
+  lastMessagePreview: string;
+  lastMessageRole: "user";
+} {
+  const lastActivityAt = Date.now();
+  return {
+    lastActivityAt,
+    lastActivitySortKey: buildSortKey(lastActivityAt, conversationId),
+    lastMessagePreview: normalizeSummaryText(content),
+    lastMessageRole: "user",
+  };
+}
 
 export const sendMessage = mutation({
   args: {
@@ -90,6 +113,7 @@ export const sendMessage = mutation({
         userId: appUser?._id,
       });
 
+      // Insert without sort key first, then patch with the real id
       conversationId = await ctx.db.insert("conversations", {
         profileOwnerId: args.profileOwnerId,
         viewerId: appUser?._id,
@@ -97,6 +121,9 @@ export const sendMessage = mutation({
         status: "active",
         title: content.slice(0, 100),
       });
+
+      // Patch summary now that we have the real conversationId
+      await ctx.db.patch(conversationId, patchUserSendSummary(content, conversationId));
     }
 
     // Refetch for threadId (needed for saveMessage)
@@ -112,11 +139,12 @@ export const sendMessage = mutation({
       userId: appUser?._id,
     });
 
-    // 9. Set streaming lock
+    // 9. Set streaming lock; also update summary for subsequent user sends
     const lockStartedAt = Date.now();
     await ctx.db.patch(conversationId, {
       streamingInProgress: true,
       streamingStartedAt: lockStartedAt,
+      ...patchUserSendSummary(content, conversationId),
     });
 
     // 10. Schedule action

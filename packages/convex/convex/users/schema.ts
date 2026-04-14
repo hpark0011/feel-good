@@ -11,6 +11,8 @@ export const userFields = {
   onboardingComplete: v.boolean(),
   personaPrompt: v.optional(v.string()),
   chatAuthRequired: v.optional(v.boolean()),
+  tonePreset: v.optional(v.union(v.string(), v.null())),
+  topicsToAvoid: v.optional(v.union(v.array(v.string()), v.null())),
 };
 
 export const usersTable = defineTable(userFields)

@@ -5,6 +5,7 @@ import { createThread, saveMessage } from "@convex-dev/agent";
 import { components } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { getPostCategoryForSlug } from "./posts/categories";
+import { buildSortKey } from "./chat/helpers";
 
 // ── Seed data ───────────────────────────────────────────────────────
 
@@ -277,14 +278,21 @@ async function ensureRickRubinConversations(
   for (const convo of SEED_CONVERSATIONS) {
     const threadId = await createThread(ctx, components.agent, {});
 
-    await ctx.db.insert("conversations", {
+    const conversationId = await ctx.db.insert("conversations", {
       profileOwnerId: userId,
       threadId,
       status: "active",
       title: convo.title,
     });
 
+    // Track last message details to build summary fields
+    let lastText: string | null = null;
+    let lastRole: "user" | "assistant" | null = null;
+
     for (const msg of convo.messages) {
+      lastText = msg.text;
+      lastRole = msg.role;
+
       if (msg.role === "user") {
         await saveMessage(ctx, components.agent, {
           threadId,
@@ -299,6 +307,167 @@ async function ensureRickRubinConversations(
           },
         });
       }
+    }
+
+    // Populate summary fields with denormalized data from the last message
+    if (lastText && lastRole) {
+      const lastActivityAt = Date.now();
+      const lastMessagePreview = lastText.replace(/\s+/g, " ").trim().slice(0, 140);
+      await ctx.db.patch(conversationId, {
+        lastActivityAt,
+        lastActivitySortKey: buildSortKey(lastActivityAt, conversationId),
+        lastMessagePreview,
+        lastMessageRole: lastRole,
+      });
+    }
+  }
+}
+
+// ── Viewer-owned seed conversations (for Playwright test user) ──────────
+
+const SEED_VIEWER_CONVERSATIONS: Array<{
+  profileUsername: "rick-rubin" | "brian-eno";
+  title: string;
+  messages: Array<{ role: "user" | "assistant"; text: string }>;
+  // Relative offset in ms from now to set lastActivityAt (older = larger positive offset)
+  activityOffsetMs: number;
+}> = [
+  {
+    profileUsername: "rick-rubin",
+    title: "Thoughts on silence in music",
+    messages: [
+      {
+        role: "user",
+        text: "How do you use silence as a creative tool in your productions?",
+      },
+      {
+        role: "assistant",
+        text: "Silence is not the absence of music. It is the space that gives the music meaning. Every pause, every breath between notes, every moment of stillness is as intentional as the sounds themselves. I learned early that the ear needs rest to truly hear.",
+      },
+    ],
+    activityOffsetMs: 5 * 60 * 1000, // 5 minutes ago (newer)
+  },
+  {
+    profileUsername: "brian-eno",
+    title: "Ambient music and environment",
+    messages: [
+      {
+        role: "user",
+        text: "What role does the environment play when you create ambient music?",
+      },
+      {
+        role: "assistant",
+        text: "The environment is not background to the music — it is part of the composition. Ambient music should be able to accommodate many levels of listening attention without enforcing one. It should be as ignorable as it is interesting.",
+      },
+    ],
+    activityOffsetMs: 60 * 60 * 1000, // 1 hour ago (older)
+  },
+];
+
+async function ensureBrianEnoUser(ctx: MutationCtx): Promise<Id<"users">> {
+  const existing = await ctx.db
+    .query("users")
+    .withIndex("by_username", (q: any) => q.eq("username", "brian-eno"))
+    .unique();
+
+  if (existing) {
+    return existing._id;
+  }
+
+  return await ctx.db.insert("users", {
+    authId: "seed_brian_eno",
+    email: "brian@example.com",
+    username: "brian-eno",
+    name: "Brian Eno",
+    bio: "Brian Eno is a musician, record producer, and visual artist known for pioneering ambient music and his influential work as a producer with artists including David Bowie, U2, and Coldplay.",
+    onboardingComplete: true,
+  });
+}
+
+async function ensureTestViewerConversations(
+  ctx: MutationCtx,
+  testEmail: string,
+): Promise<void> {
+  const viewerUser = await ctx.db
+    .query("users")
+    .withIndex("by_email", (q: any) => q.eq("email", testEmail))
+    .unique();
+
+  if (!viewerUser) {
+    // Test user not yet created — seed cannot proceed. The auth setup creates
+    // the user on first Playwright run; call this mutation after auth.setup.ts runs.
+    return;
+  }
+
+  const viewerId = viewerUser._id;
+
+  // Guard: skip if viewer-owned conversations already exist for this user.
+  const existingViewerConvo = await ctx.db
+    .query("conversations")
+    .withIndex("by_viewerId", (q: any) => q.eq("viewerId", viewerId))
+    .first();
+  if (existingViewerConvo) {
+    return;
+  }
+
+  // Resolve profile owner IDs by username.
+  const rickRubinUser = await ctx.db
+    .query("users")
+    .withIndex("by_username", (q: any) => q.eq("username", "rick-rubin"))
+    .unique();
+  const brianEnoUser = await ensureBrianEnoUser(ctx);
+
+  const profileOwnerMap: Record<string, Id<"users">> = {
+    "rick-rubin": rickRubinUser?._id ?? (await ensureRickRubinUser(ctx)),
+    "brian-eno": brianEnoUser,
+  };
+
+  const now = Date.now();
+
+  for (const convo of SEED_VIEWER_CONVERSATIONS) {
+    const profileOwnerId = profileOwnerMap[convo.profileUsername];
+    const threadId = await createThread(ctx, components.agent, {});
+
+    const conversationId = await ctx.db.insert("conversations", {
+      profileOwnerId,
+      viewerId,
+      threadId,
+      status: "active",
+      title: convo.title,
+    });
+
+    let lastText: string | null = null;
+    let lastRole: "user" | "assistant" | null = null;
+
+    for (const msg of convo.messages) {
+      lastText = msg.text;
+      lastRole = msg.role;
+
+      if (msg.role === "user") {
+        await saveMessage(ctx, components.agent, {
+          threadId,
+          prompt: msg.text,
+        });
+      } else {
+        await saveMessage(ctx, components.agent, {
+          threadId,
+          message: {
+            role: "assistant",
+            content: [{ type: "text", text: msg.text }],
+          },
+        });
+      }
+    }
+
+    if (lastText && lastRole) {
+      const lastActivityAt = now - convo.activityOffsetMs;
+      const lastMessagePreview = lastText.replace(/\s+/g, " ").trim().slice(0, 140);
+      await ctx.db.patch(conversationId, {
+        lastActivityAt,
+        lastActivitySortKey: buildSortKey(lastActivityAt, conversationId),
+        lastMessagePreview,
+        lastMessageRole: lastRole,
+      });
     }
   }
 }
@@ -351,6 +520,27 @@ export const seedRickRubinDemo = internalMutation({
     await ensureRickRubinArticles(ctx, userId);
     await ensureRickRubinPosts(ctx, userId);
     await ensureRickRubinConversations(ctx, userId);
+    return null;
+  },
+});
+
+/**
+ * Seeds viewer-owned conversations for the Playwright test user
+ * (playwright-test@mirror.test / username: test-user).
+ *
+ * Creates 2 conversations across 2 different profile authors (rick-rubin, brian-eno)
+ * with distinct lastActivityAt values so ordering assertions in FR-05 are reliable.
+ *
+ * Safe to call multiple times — idempotent via the by_viewerId guard.
+ *
+ * NOTE: Must be called AFTER the auth setup step has created the test user row
+ * (i.e., after auth.setup.ts has run `POST /test/ensure-user`).
+ */
+export const seedTestViewerConversations = internalMutation({
+  args: {},
+  returns: v.null(),
+  handler: async (ctx) => {
+    await ensureTestViewerConversations(ctx, "playwright-test@mirror.test");
     return null;
   },
 });
