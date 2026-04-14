@@ -5,13 +5,15 @@ description: >
   adversarial critique, and iterative refinement. Spawns PM, Adversarial Reviewer,
   domain expert (when relevant), and Verification agents in separate context windows.
   Outputs a spec with Playwright E2E tests and team orchestration plan to
-  .workspace/plans/. Use when the user wants to create a spec, write requirements,
+  workspace/spec/. Use when the user wants to create a spec, write requirements,
   plan a feature, or says "create spec", "spec this", "write a spec".
 ---
 
 # Create Spec
 
-Five-phase workflow: gather requirements, gather materials, create spec, adversarial critique loop, final verification. Produces a spec in `.workspace/plans/{feature-name}-spec.md`.
+Five-phase workflow: gather requirements, gather materials, create spec, adversarial critique loop, final verification. Produces a spec in `workspace/spec/{feature-name}-spec.md`.
+
+**Canonical source**: this file is a mirror. The canonical skill lives at `.claude/skills/create-spec/SKILL.md` and the canonical spec template lives at `.claude/skills/create-spec/spec-template/spec.md`. Keep this mirror in sync — do not fork behavior. The skill does not name its executor; whichever agent invokes it is responsible for Phase 3.
 
 ---
 
@@ -247,13 +249,13 @@ If the Verification Agent finds failures, fix them in the spec. Re-verify only t
 
 ## Final Output
 
-1. Write the spec to `.workspace/plans/{feature-name}-spec.md`
+1. Write the spec to `workspace/spec/{feature-name}-spec.md`
 2. Present a summary:
 
 ```
 ## Spec Complete
 
-**Location:** .workspace/plans/{feature-name}-spec.md
+**Location:** workspace/spec/{feature-name}-spec.md
 
 ### Requirements
 - {N} functional + {N} non-functional requirements
@@ -280,6 +282,6 @@ If the Verification Agent finds failures, fix them in the spec. Re-verify only t
 - **Domain expert is additive**: When a domain expert is consulted, it adds a 4th agent (used in Phase 2 and Phase 4).
 - **Hard verification only**: Every requirement must have a concrete, automatable check.
 - **Codebase accuracy**: File paths in the spec must be verified against the real codebase. Do not guess.
-- **Spec output**: `.workspace/plans/{feature-name}-spec.md`, kebab-case filename.
+- **Spec output**: `workspace/spec/{feature-name}-spec.md`, kebab-case filename.
 - **Iterate critiques**: The adversarial loop stops when the quality bar is met or after 3 critique rounds, whichever comes first.
 - **User requirements are sovereign**: If the adversarial reviewer argues against something the user explicitly requested, reject it and document why.

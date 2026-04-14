@@ -16,6 +16,30 @@ Scaffold a **self-improving domain expert agent**. The system has three parts.
 
 The agent improves itself by ending every session with a log entry that patches either the spec or the knowledge file. This is enforced mechanically by a `SubagentStop` hook (`scripts/validate-session-log.mjs`) that blocks the subagent from ending until `logs.md` contains a fresh entry with `Bottleneck`, `Counterfactual`, and `Patch`. No promotion trees, no decision logs, no wikis to maintain.
 
+## Artifact Hierarchy Principle (applies to every skill + agent in this repo)
+
+Any artifact a skill or agent consumes — spec templates, prompt templates, scaffolds, checklists — MUST live in its own file under a `{artifact-type}-template/` directory **inside the owning skill**, not inlined in `SKILL.md` or an agent spec. The dependency graph is strictly one-directional:
+
+```
+{artifact-type}-template/<file>    ← raw artifacts (no references out)
+          ↑ referenced by
+    skills/<skill>/SKILL.md         ← the workflow that uses them
+          ↑ referenced by
+    agents/<agent>.md               ← the agent that invokes the skill
+```
+
+Rules:
+
+1. **Artifacts are leaves.** A file under `{artifact-type}-template/` never references a SKILL.md or an agent spec. It is pure content.
+2. **Skills reference artifacts by path.** `SKILL.md` points to the template file(s) it owns; it does not paste the template body inline.
+3. **Agents reference skills, not artifacts.** An agent spec says "use skill X" and lets the skill resolve the artifact. Agents must not reach around the skill to load a template directly.
+4. **No circular dependencies.** If two files would reference each other, one of them is misplaced. Move structure down the hierarchy until the cycle breaks.
+5. **One canonical copy.** A template lives in exactly one place. Parallel copies across `.claude/` and `.agents/` trees are a bug — pick one and have the other reference it.
+
+This skill is itself the reference implementation: `domain-agent-template/{agent-spec.md,knowledge.md,logs.md}` are the artifacts, this `SKILL.md` references them by path, and generated domain-expert agents reference this skill (not the template files).
+
+When you create or audit a skill/agent pair, verify the hierarchy and reject inlined artifacts. If you find a skill that inlines its templates, the first patch is to extract them into a `{artifact-type}-template/` folder before anything else changes.
+
 ## Guiding Principles (encoded in every agent)
 
 Non-negotiable order. Lower objectives never compromise higher ones.

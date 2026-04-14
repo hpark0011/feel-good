@@ -5,13 +5,13 @@ description: >
   adversarial critique, and iterative refinement. Spawns PM, Adversarial Reviewer,
   domain expert (when relevant), and Verification agents in separate context windows.
   Outputs a spec with Playwright E2E tests and team orchestration plan to
-  .workspace/plans/. Use when the user wants to create a spec, write requirements,
+  workspace/spec/. Use when the user wants to create a spec, write requirements,
   plan a feature, or says "create spec", "spec this", "write a spec".
 ---
 
 # Create Spec
 
-Five-phase workflow: gather requirements, gather materials, create spec, adversarial critique loop, final verification. Produces a spec in `.workspace/plans/{feature-name}-spec.md`.
+Five-phase workflow: gather requirements, gather materials, create spec, adversarial critique loop, final verification. Produces a spec in `workspace/spec/{feature-name}-spec.md`.
 
 ---
 
@@ -80,77 +80,21 @@ If no domain expert applies, skip this step.
 
 ## Phase 3: Create Spec
 
-Spawn a **PM Agent**:
+Instantiate the spec template at:
 
-```
-You are a PM Agent. Create a product spec based on the user's requirement,
-codebase analysis, and domain expert input (if any).
+- **Template**: `.claude/skills/create-spec/spec-template/spec.md`
 
-## User's Requirement
-{paste requirement}
+The template is the single source of truth for spec structure — Overview, Requirements (FR/NFR tables with hard verification columns), Architecture, Unit Tests table, Playwright E2E Tests table, Anti-patterns, Team Orchestration Plan, Open Questions, and the Adversarial Review Summary placeholder.
 
-## Codebase Analysis
-{paste codebase analyst output}
+Rules for Phase 3:
 
-## Domain Expert Input (if any)
-{paste domain expert output, or "N/A"}
+1. Read `spec-template/spec.md` and instantiate it; do not invent additional top-level sections.
+2. Every requirement row MUST have a concrete, automatable `Verification` value — no subjective criteria.
+3. Every requirement must be referenced by at least one row in Unit Tests or Playwright E2E Tests (ideally both where user-visible).
+4. Test file paths must match real package/app conventions (Vitest in `__tests__/` with `.test.ts`; Playwright in the owning app's e2e dir with `.spec.ts`). Verify against the codebase, don't guess.
+5. Team Orchestration Plan must name real agents from `.claude/agents/` or explicitly recommend `/new-domain-agent` for missing owners.
 
-## Instructions
-Write the spec as markdown. Every requirement MUST have a hard, automatable
-verification criterion — no subjective criteria.
-
-## Required Sections
-
-### Overview
-What the feature does, why it matters (2-3 sentences).
-
-### Requirements
-#### Functional Requirements
-| ID | Requirement | Priority | Verification |
-|----|-------------|----------|--------------|
-| FR-01 | {requirement} | {p0-p3} | {exact check} |
-
-#### Non-functional Requirements (if any)
-Same table format.
-
-### Architecture
-- Component design: where each piece lives, data flow, key interfaces
-- Files to create (table: file | purpose)
-- Files to modify (table: file | change)
-- Dependencies to add (if any)
-
-### Unit Tests
-| Test File | Test Case | Verifies |
-|-----------|-----------|----------|
-| {path} | {test name} | {FR-XX} |
-
-Use bun:test, test() not it(), .test.ts suffix, __tests__/ directory.
-
-### Playwright E2E Tests
-| Test File | Scenario | Verifies |
-|-----------|----------|----------|
-| {path} | {user flow from user's perspective} | {FR-XX} |
-
-E2E tests go in e2e/ at project root, use .spec.ts suffix.
-Tests must describe real user flows, not internal state checks.
-
-### Anti-patterns to Avoid
-Specific things NOT to do, with reasons.
-
-### Team Orchestration Plan
-Plan which agents execute the implementation work.
-- Check .claude/agents/ for domain expert agents that can own specific steps.
-- Prefer existing specialized agents over creating new ones.
-- For small features (< 5 files), a single implementation agent is fine.
-- For larger features, break into steps with clear ownership:
-  Step N — {description}
-  Agent: {agent name or "general"}
-  Tasks: {numbered list}
-  Verification: {what to check before moving on}
-
-### Open Questions (if any)
-Anything that needs user input before implementation.
-```
+**Who runs Phase 3**: the skill does not name an executor. Whichever agent invokes this skill is responsible for Phase 3 — that routing decision belongs to the caller (or the agent's own spec), not to the skill. This keeps the dependency arrow one-directional (template ← skill ← agent) and avoids a cycle where the skill names an agent that names the skill.
 
 ---
 
@@ -245,13 +189,13 @@ If the Verification Agent finds failures, fix them in the spec. Re-verify only t
 
 ## Final Output
 
-1. Write the spec to `.workspace/plans/{feature-name}-spec.md`
+1. Write the spec to `workspace/spec/{feature-name}-spec.md`
 2. Present a summary:
 
 ```
 ## Spec Complete
 
-**Location:** .workspace/plans/{feature-name}-spec.md
+**Location:** workspace/spec/{feature-name}-spec.md
 
 ### Requirements
 - {N} functional + {N} non-functional requirements
@@ -278,6 +222,7 @@ If the Verification Agent finds failures, fix them in the spec. Re-verify only t
 - **Domain expert is additive**: When a domain expert is consulted, it adds a 4th agent (used in Phase 2 and Phase 4).
 - **Hard verification only**: Every requirement must have a concrete, automatable check.
 - **Codebase accuracy**: File paths in the spec must be verified against the real codebase. Do not guess.
-- **Spec output**: `.workspace/plans/{feature-name}-spec.md`, kebab-case filename.
+- **Spec output**: `workspace/spec/{feature-name}-spec.md`, kebab-case filename.
+- **Artifact hierarchy** (per `.claude/skills/new-domain-agent/SKILL.md#artifact-hierarchy-principle`): the spec template lives at `spec-template/spec.md` and is referenced — not inlined — by this SKILL.md. This skill does not name its executor; agents that invoke it reach down, never the other way around. One-directional dependency: `spec-template/` ← `SKILL.md` ← agent.
 - **Iterate critiques**: The adversarial loop runs until no Critical concerns remain.
 - **User requirements are sovereign**: If the adversarial reviewer argues against something the user explicitly requested, reject it and document why.
