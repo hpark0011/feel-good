@@ -83,6 +83,7 @@ Do NOT skip to a theoretical fix.
 - **Simplicity First** — Make every change as simple as possible. Impact minimal code.
 - **No Laziness** — Find root causes. No temporary fixes. Senior developer standards.
 - **Minimal Impact** — Changes should only touch what is necessary. Avoid introducing bugs.
+- **Always Choose the Compounding Option** — You should ALWAYS choose the option that compounds, that architecturally makes the codebase less prone for error and never choose the quick wins. When a bug or feedback reveals a gap in a skill, rule, convention, or template, patch the upstream artifact before (or alongside) fixing the downstream instance.
 
 ## Git Workflow
 

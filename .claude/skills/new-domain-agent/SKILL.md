@@ -38,7 +38,7 @@ If no argument provided, ask: "What subsystem should this agent own? What are it
 
 Derive:
 
-- **Agent name**: kebab-case, 1–3 words
+- **Agent name**: kebab-case, 1–3 words. **If the domain spans multiple layers of a feature (backend/frontend/infra/data), the layer MUST appear in the name** so the boundary is visible without opening the spec. Prefer `<feature>-<layer>-developer` (e.g., `chat-backend-developer`, `chat-frontend-developer`) over a bare feature name like `chat-agent`, which falsely implies end-to-end ownership. A bare feature name is only acceptable when the agent genuinely owns every layer of that feature.
 - **Domain scope**: concrete files/dirs and the boundary where it hands off
 
 ### 2. Research the domain

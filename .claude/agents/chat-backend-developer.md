@@ -1,5 +1,5 @@
 ---
-name: chat-agent
+name: chat-backend-developer
 description: "Use this agent when the task involves the Convex chat agent layer — the LLM-backed clone agent, streaming responses, RAG retrieval into chat, system prompt composition, tone presets, chat rate limits, chat schema/tables, or the chat Convex mutations/queries/actions that power the Mirror clone conversations."
 model: opus
 color: cyan
@@ -38,7 +38,7 @@ Run this 5-step loop every session. Self-improvement is a structural property of
 
 ### 1. Load & Reuse Audit
 
-Read `.claude/agent-memory/chat-agent/knowledge.md` and the 5 most recent `logs.md` entries touching this task's area. State before touching code:
+Read `.claude/agent-memory/chat-backend-developer/knowledge.md` and the 5 most recent `logs.md` entries touching this task's area. State before touching code:
 
 - **Reusing from knowledge.md**: section/lines + the fact you're relying on
 - **Baseline from logs.md**: most recent comparable session date + iteration count
@@ -120,7 +120,7 @@ Tools/commands you rely on:
 
 ## Knowledge & Logs
 
-- Knowledge: `.claude/agent-memory/chat-agent/knowledge.md` — architecture, data flow & contracts, gotchas, references
-- Logs: `.claude/agent-memory/chat-agent/logs.md` — append-only session evals and patches
+- Knowledge: `.claude/agent-memory/chat-backend-developer/knowledge.md` — architecture, data flow & contracts, gotchas, references
+- Logs: `.claude/agent-memory/chat-backend-developer/logs.md` — append-only session evals and patches
 
 If `knowledge.md` contradicts what you observe, fix the file in the same session you discover the contradiction. Stale knowledge is worse than no knowledge.
