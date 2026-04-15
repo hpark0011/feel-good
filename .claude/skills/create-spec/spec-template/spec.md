@@ -64,15 +64,30 @@ E2E tests go in the owning app's Playwright directory (e.g., `apps/mirror/e2e/`)
 
 Plan which agents execute the implementation work. Check `.claude/agents/` for specialized agents that can own specific steps. Prefer existing specialized agents over creating new ones.
 
-- For small features (< 5 files), a single implementation agent is fine.
-- For larger features, break into steps with clear ownership:
+**Every step MUST pair an Executor with a Critique agent.** The critique agent runs in a separate context window on the executor's diff — never self-review. Self-evaluation is systematically biased toward praise; an independent, skeptical evaluator is the load-bearing mechanism that catches last-mile issues. See https://www.anthropic.com/engineering/harness-design-long-running-apps. This applies even for one-file changes.
 
 ```
 Step N — {description}
-Agent: {agent name or "general"}
+Executor: {agent name} — produces the artifact
+Critique: {one or more agents from .claude/agents/code-review-*} — independent review on the executor's diff
 Tasks: {numbered list}
+Handoff: critique runs on the executor's diff; executor addresses findings before the step is considered done
 Verification: {what to check before moving on}
 ```
+
+### Critique routing table
+
+Pick the critique agent(s) that match the work type. Stack multiple when a step spans categories.
+
+| Work type                                      | Default critique                                     |
+| ---------------------------------------------- | ---------------------------------------------------- |
+| Backend logic, mutations, state machines       | `code-review-correctness` + `code-review-tests`      |
+| Schema / migrations / Convex validators        | `code-review-data-integrity`                         |
+| Auth, permissions, input boundaries, secrets   | `code-review-security`                               |
+| Streaming, locks, retries, cancellation, async | `code-review-concurrency`                            |
+| File organization, naming, public API contract | `code-review-convention`                             |
+| Hot paths, large lists, Convex reads, rendering| `code-review-performance`                            |
+| Test suites themselves                         | `code-review-tests`                                  |
 
 ## Open Questions (if any)
 

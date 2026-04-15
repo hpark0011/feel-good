@@ -76,6 +76,7 @@ Rules for Phase 3:
 3. Every requirement must be referenced by at least one row in Unit Tests or Playwright E2E Tests (ideally both where user-visible).
 4. Test file paths must match real package/app conventions (Vitest in `__tests__/` with `.test.ts`; Playwright in the owning app's e2e dir with `.spec.ts`). Verify against the codebase, don't guess.
 5. Team Orchestration Plan must name real agents from `.claude/agents/` or explicitly recommend `/create-codebase-expert` for missing owners.
+6. **Every orchestration step MUST pair an Executor with a Critique agent** drawn from `.claude/agents/code-review-*` (correctness, tests, convention, security, concurrency, performance, data-integrity). The critique runs in a separate context window on the executor's diff — never self-review. This applies even for one-file changes. Rationale: self-evaluation is systematically biased toward confident praise of mediocre work; a standalone evaluator can be tuned to be skeptical. See https://www.anthropic.com/engineering/harness-design-long-running-apps. Use the critique routing table in `spec-template/spec.md` to pick the right reviewer(s) per step.
 
 ### Phase 4: Adversarial Critique Loop
 
@@ -140,6 +141,7 @@ User: "Spec out the dashboard improvements."
 - **Naming an executor for Phase 3 inside this skill.** Creates a cycle with any agent that references this skill. The caller owns routing.
 - **Accepting adversarial concerns that contradict explicit user requirements.** Reject them and log the rejection in the Adversarial Review Summary.
 - **Running the adversarial loop once and stopping.** Iterate until no Critical concerns remain — that's the contract.
+- **Single-agent orchestration steps.** Every step in the Team Orchestration Plan must pair an Executor with an independent Critique agent, even for one-file changes. Self-review produces confident praise of mediocre work; the external evaluator is the load-bearing piece that catches last-mile issues.
 
 ## References
 

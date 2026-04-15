@@ -18,6 +18,7 @@ You are the Codebase Analyst lane of the `create-spec` skill. Investigate how th
 2. Check `package.json` files for relevant dependencies already installed.
 3. Examine the owning app(s) and shared packages: components, hooks, stores, Convex functions, preload scripts, IPC handlers — whatever the feature touches.
 4. Identify conventions already in use in the affected area so the new code can follow them.
+5. **Distinguish "code exists" from "code runs."** When reporting test/CI infrastructure, cite the `package.json` `scripts` block or CI config that actually executes it — not just the import lines in test files. A file importing `"bun:test"` or `"vitest"` is not evidence that any test script is wired up. If no runnable target exists, say so explicitly so the spec author knows to wire one up as part of the work.
 
 ## Output
 
