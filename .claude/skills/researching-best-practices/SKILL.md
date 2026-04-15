@@ -18,7 +18,7 @@ Produces a verified research synthesis and codebase gap analysis for a named fea
 ## Quick start
 
 1. Confirm the feature/topic and scope with the user if ambiguous.
-2. Spawn four research sub-agents + the codebase analyst in parallel (single message, five Agent calls) using the prompts in [`agents/`](agents/).
+2. Spawn four research sub-agents + the codebase analyst in parallel (single message, five `Agent` calls) using the registered subagents in `.claude/agents/research/`.
 3. Spawn the verification agent once all five return — it critiques each research agent and produces the final synthesis + gap analysis.
 4. Write the report to `workspace/research/{topic-kebab}.md` and return the path.
 
@@ -44,23 +44,23 @@ If any of these are missing and can't be inferred, ask before proceeding. Spawni
 
 ### Phase 2 — Parallel research + codebase scan
 
-Spawn all five agents in a **single message** with multiple Agent tool calls:
+Spawn all five agents in a **single message** with multiple parallel `Agent` tool calls. Pass `Topic`, `Context`, and `Scope` verbatim in each prompt — the agent's system prompt handles the rest.
 
-| # | Agent | Prompt | Purpose |
-|---|---|---|---|
-| 1 | Open source research | [`agents/open-source-research.md`](agents/open-source-research.md) | How popular OSS projects implement the feature |
-| 2 | Official docs research | [`agents/official-docs-research.md`](agents/official-docs-research.md) | Canonical guidance from framework/library docs |
-| 3 | Social media research | [`agents/social-research.md`](agents/social-research.md) | Blogs, YouTube, X, LinkedIn, Reddit, HN |
-| 4 | Research paper review | [`agents/research-paper-review.md`](agents/research-paper-review.md) | Peer-reviewed + preprint academic literature (conferences, journals, arXiv) |
-| 5 | Codebase analyst | [`agents/codebase-analyst.md`](agents/codebase-analyst.md) | Current implementation (or absence) in this repo |
+| # | `subagent_type`             | Purpose |
+|---|-----------------------------|---------|
+| 1 | `research-open-source`      | How popular OSS projects implement the feature |
+| 2 | `research-official-docs`    | Canonical guidance from framework/library docs |
+| 3 | `research-social`           | Blogs, YouTube, X, LinkedIn, Reddit, HN |
+| 4 | `research-paper-review`     | Peer-reviewed + preprint academic literature (conferences, journals, arXiv) |
+| 5 | `research-codebase-analyst` | Current implementation (or absence) in this repo |
 
-Each research agent must return: key patterns, concrete examples with citations/links, trade-offs, and anti-patterns. The research-paper agent additionally returns problem framings, empirical claims, and author-stated limitations per paper. The codebase analyst must return: relevant files with line numbers, current patterns in use, and any obvious gaps versus the user's stated topic.
+Each research agent returns: key patterns, concrete examples with citations/links, trade-offs, and anti-patterns. The research-paper agent additionally returns problem framings, empirical claims, and author-stated limitations per paper. The codebase analyst returns: relevant files with line numbers, current patterns in use, and any obvious gaps versus the user's stated topic.
 
 If the topic has no plausible academic literature (e.g. "which React form library should we use"), the research-paper agent returns an empty findings section with a one-line note — do not skip spawning it, so the verification agent has a complete record.
 
 ### Phase 3 — Verification + synthesis
 
-Spawn the **verification agent** ([`agents/verification.md`](agents/verification.md)) with all five prior outputs as input. It must:
+Spawn the **`research-verification`** agent with all five prior outputs as input. It must:
 
 1. Critique each research agent's work — flag unsupported claims, missing trade-offs, stale sources, or off-topic findings.
 2. Ask each researcher to patch gaps if the critique surfaces blockers (**at most one round-trip per researcher** to avoid runaway loops).
@@ -111,11 +111,16 @@ User: "Research our auth."
 
 ## References
 
-- [`agents/open-source-research.md`](agents/open-source-research.md) — Phase 2 researcher prompt.
-- [`agents/official-docs-research.md`](agents/official-docs-research.md) — Phase 2 researcher prompt.
-- [`agents/social-research.md`](agents/social-research.md) — Phase 2 researcher prompt.
-- [`agents/research-paper-review.md`](agents/research-paper-review.md) — Phase 2 academic literature prompt.
-- [`agents/codebase-analyst.md`](agents/codebase-analyst.md) — Phase 2 codebase inspection prompt.
-- [`agents/verification.md`](agents/verification.md) — Phase 3 verification + synthesis prompt.
+Registered subagent definitions (invoked via `subagent_type`):
+
+- `research-open-source` — `.claude/agents/research/open-source.md`
+- `research-official-docs` — `.claude/agents/research/official-docs.md`
+- `research-social` — `.claude/agents/research/social.md`
+- `research-paper-review` — `.claude/agents/research/paper-review.md`
+- `research-codebase-analyst` — `.claude/agents/research/codebase-analyst.md`
+- `research-verification` — `.claude/agents/research/verification.md`
+
+Other:
+
 - [`research-template/research.md`](research-template/research.md) — output schema.
 - [`../create-spec/SKILL.md`](../create-spec/SKILL.md) — downstream skill for turning the synthesis into a product spec.
