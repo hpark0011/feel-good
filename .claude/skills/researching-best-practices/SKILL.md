@@ -6,7 +6,7 @@ argument-hint: "[feature-or-topic]"
 
 # Researching Best Practices
 
-Produces a verified research synthesis and codebase gap analysis for a named feature. Runs three external research sub-agents in parallel, a codebase analyst, and a verification agent that both critiques each researcher and reconciles findings into the final synthesis. Output is a single markdown report in `workspace/research/` — no spec, no implementation plan.
+Produces a verified research synthesis and codebase gap analysis for a named feature. Runs four external research sub-agents in parallel (open source, official docs, social, academic research papers), a codebase analyst, and a verification agent that both critiques each researcher and reconciles findings into the final synthesis. Output is a single markdown report in `workspace/research/` — no spec, no implementation plan.
 
 ## Scope & non-goals
 
@@ -18,17 +18,17 @@ Produces a verified research synthesis and codebase gap analysis for a named fea
 ## Quick start
 
 1. Confirm the feature/topic and scope with the user if ambiguous.
-2. Spawn three research sub-agents + the codebase analyst in parallel (single message, four Agent calls) using the prompts in [`agents/`](agents/).
-3. Spawn the verification agent once all four return — it critiques each research agent and produces the final synthesis + gap analysis.
+2. Spawn four research sub-agents + the codebase analyst in parallel (single message, five Agent calls) using the prompts in [`agents/`](agents/).
+3. Spawn the verification agent once all five return — it critiques each research agent and produces the final synthesis + gap analysis.
 4. Write the report to `workspace/research/{topic-kebab}.md` and return the path.
 
 ## Workflow
 
 Invariants:
 
-- **Exactly 5 sub-agents**, each with its own context window via the Agent tool: three researchers, one codebase analyst, one verification agent.
+- **Exactly 6 sub-agents**, each with its own context window via the Agent tool: four researchers (open source, official docs, social, research paper review), one codebase analyst, one verification agent.
 - **Researchers + analyst run in parallel** — single message, multiple Agent calls. Never sequential.
-- **Verification is sequential** — it needs all four prior outputs as input.
+- **Verification is sequential** — it needs all five prior outputs as input.
 - **Output directory is `workspace/research/`** — not `workspace/spec/` (that's owned by `create-spec`).
 - **No spec artifacts.** No FR/NFR tables, no test plans, no orchestration. Just research + gap.
 
@@ -44,24 +44,27 @@ If any of these are missing and can't be inferred, ask before proceeding. Spawni
 
 ### Phase 2 — Parallel research + codebase scan
 
-Spawn all four agents in a **single message** with multiple Agent tool calls:
+Spawn all five agents in a **single message** with multiple Agent tool calls:
 
 | # | Agent | Prompt | Purpose |
 |---|---|---|---|
 | 1 | Open source research | [`agents/open-source-research.md`](agents/open-source-research.md) | How popular OSS projects implement the feature |
 | 2 | Official docs research | [`agents/official-docs-research.md`](agents/official-docs-research.md) | Canonical guidance from framework/library docs |
 | 3 | Social media research | [`agents/social-research.md`](agents/social-research.md) | Blogs, YouTube, X, LinkedIn, Reddit, HN |
-| 4 | Codebase analyst | [`agents/codebase-analyst.md`](agents/codebase-analyst.md) | Current implementation (or absence) in this repo |
+| 4 | Research paper review | [`agents/research-paper-review.md`](agents/research-paper-review.md) | Peer-reviewed + preprint academic literature (conferences, journals, arXiv) |
+| 5 | Codebase analyst | [`agents/codebase-analyst.md`](agents/codebase-analyst.md) | Current implementation (or absence) in this repo |
 
-Each research agent must return: key patterns, concrete examples with citations/links, trade-offs, and anti-patterns. The codebase analyst must return: relevant files with line numbers, current patterns in use, and any obvious gaps versus the user's stated topic.
+Each research agent must return: key patterns, concrete examples with citations/links, trade-offs, and anti-patterns. The research-paper agent additionally returns problem framings, empirical claims, and author-stated limitations per paper. The codebase analyst must return: relevant files with line numbers, current patterns in use, and any obvious gaps versus the user's stated topic.
+
+If the topic has no plausible academic literature (e.g. "which React form library should we use"), the research-paper agent returns an empty findings section with a one-line note — do not skip spawning it, so the verification agent has a complete record.
 
 ### Phase 3 — Verification + synthesis
 
-Spawn the **verification agent** ([`agents/verification.md`](agents/verification.md)) with all four prior outputs as input. It must:
+Spawn the **verification agent** ([`agents/verification.md`](agents/verification.md)) with all five prior outputs as input. It must:
 
 1. Critique each research agent's work — flag unsupported claims, missing trade-offs, stale sources, or off-topic findings.
 2. Ask each researcher to patch gaps if the critique surfaces blockers (**at most one round-trip per researcher** to avoid runaway loops).
-3. Produce a final polished synthesis that merges the three research streams, de-duplicates, and ranks patterns by evidence strength.
+3. Produce a final polished synthesis that merges the four research streams, de-duplicates, and ranks patterns by evidence strength. Academic findings should elevate or contradict practitioner patterns — note both.
 4. Produce a gap analysis that compares the synthesis to the codebase analyst's findings: what exists, what's missing, what diverges from best practice and why that matters.
 
 ### Phase 4 — Write the report
@@ -79,9 +82,10 @@ User: "Research best practices for streaming LLM responses with backpressure —
       compare against what our mirror chat does today."
 
 → Phase 1 passes (topic + context + implicit scope: mirror chat).
-→ Phase 2 spawns 3 researchers + codebase analyst in one message (4 parallel Agent calls).
+→ Phase 2 spawns 4 researchers + codebase analyst in one message (5 parallel Agent calls).
 → Phase 3 verification flags that the social agent's Medium post has no code reference,
-  asks for a replacement source, produces synthesis + gap.
+  asks for a replacement source, weighs the research-paper findings on backpressure
+  against the OSS patterns, and produces synthesis + gap.
 → Phase 4 writes workspace/research/streaming-llm-backpressure.md.
 ```
 
@@ -110,6 +114,7 @@ User: "Research our auth."
 - [`agents/open-source-research.md`](agents/open-source-research.md) — Phase 2 researcher prompt.
 - [`agents/official-docs-research.md`](agents/official-docs-research.md) — Phase 2 researcher prompt.
 - [`agents/social-research.md`](agents/social-research.md) — Phase 2 researcher prompt.
+- [`agents/research-paper-review.md`](agents/research-paper-review.md) — Phase 2 academic literature prompt.
 - [`agents/codebase-analyst.md`](agents/codebase-analyst.md) — Phase 2 codebase inspection prompt.
 - [`agents/verification.md`](agents/verification.md) — Phase 3 verification + synthesis prompt.
 - [`research-template/research.md`](research-template/research.md) — output schema.

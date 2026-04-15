@@ -6,7 +6,7 @@ description: Reviews pending code changes in this monorepo against AGENTS.md and
 
 # Reviewing Code
 
-Senior-engineer code review tuned to this repo's conventions. Instead of one flat pass, the skill runs a **pipeline of judgment**: understand intent, route to narrow lenses, collect candidate findings, critique them ruthlessly, then compose only what matters.
+Senior-engineer code review tuned to this repo's conventions. Instead of one flat pass, the skill runs a **pipeline of judgment**: understand intent, route to narrow reviewers, collect candidate findings, critique them ruthlessly, then compose only what matters.
 
 The core rule: **every finding must name a concrete failure mode or broken invariant.** Style preferences without a risk story get dropped by the Critic phase.
 
@@ -15,12 +15,12 @@ The core rule: **every finding must name a concrete failure mode or broken invar
 - **Not for GitHub PR comments** — use [`review-pr`](../review-pr/SKILL.md).
 - **Not a rewrite pass** — propose changes, don't silently apply them. Only edit if the user says "fix it" after the report.
 - **Not a substitute for `pnpm build` / `pnpm lint`** — run those too; this skill catches what linters can't.
-- **Not a swarm of sub-agents.** The pipeline runs inside one skill execution. Phases are cognitive boundaries, not process boundaries.
+- **Orchestrator + specialists, not a swarm.** Phase 4 fans out to parallel specialist sub-agents (one per reviewer), but Intent, Normalize, Critique, and Compose all run in the orchestrator so the critic has one consistent voice. Cap the routed subset at ~5 agents — more coordination, diminishing returns.
 
 ## Quick start
 
 1. Identify the change set (arg, `--staged`, or `main...HEAD`).
-2. Run the 7-phase pipeline: Ingest → Intent → Route → Lens pass → Normalize → Critique → Compose.
+2. Run the 7-phase pipeline: Ingest → Intent → Route → Reviewer pass → Normalize → Critique → Compose.
 3. Emit a report with an Intent block up top, findings written as **Observation → Risk → Suggestion**, and a "Filtered by critic" footer.
 4. Capture blockers and should-fix items as tickets via [`generate-issue-tickets`](../generate-issue-tickets/SKILL.md).
 5. Ask if the user wants fixes applied.
@@ -30,8 +30,8 @@ The core rule: **every finding must name a concrete failure mode or broken invar
 ```
 - [ ] 1. Ingest    — scope, changed files, read each file fully, build packet
 - [ ] 2. Intent    — infer change type, goal, expected behavior, invariants, risk surface
-- [ ] 3. Route     — pick lenses based on the risk map (correctness/convention/tests always)
-- [ ] 4. Lens pass — each selected lens emits candidate findings in the shared schema
+- [ ] 3. Route     — pick reviewers based on the risk map (correctness/convention/tests always)
+- [ ] 4. Reviewer pass — each selected reviewer emits candidate findings in the shared schema
 - [ ] 5. Normalize — dedupe and merge overlapping findings; preserve provenance
 - [ ] 6. Critique  — reject speculative/stylistic/misread findings; log reasons
 - [ ] 7. Compose   — rank by severity × confidence × blast radius; write the report
@@ -84,74 +84,53 @@ If the PR description contradicts the diff, stop and surface that in the report 
 
 ### Phase 3 — Risk route
 
-Pick which lenses to run. **Always on:** Correctness, Convention/Architecture fit, Test adequacy. **Routed lenses:**
+Pick which specialist reviewer agents to spawn. Seven specialists live in `.claude/agents/code-review/` — three run on every review, four are routed by the risk map from Phase 2.
 
-| Trigger                                                        | Lens            |
-| -------------------------------------------------------------- | --------------- |
-| locks, async state, streaming, queues, retries, cancellation   | Concurrency     |
-| auth, permissions, trust boundaries, user input, secrets       | Security        |
-| hot paths, render loops, N+1 access, large lists, Convex reads | Performance     |
-| schema, migrations, data shape changes, Convex validators      | Data integrity  |
-| exported props, public utilities, cross-package APIs           | API contract    |
+| When                                                           | Agent                          |
+| -------------------------------------------------------------- | ------------------------------ |
+| **Always**                                                     | `code-review-correctness`      |
+| **Always**                                                     | `code-review-convention`       |
+| **Always**                                                     | `code-review-tests`            |
+| locks, async state, streaming, queues, retries, cancellation   | `code-review-concurrency`      |
+| auth, permissions, trust boundaries, user input, secrets       | `code-review-security`         |
+| hot paths, render loops, N+1 access, large lists, Convex reads | `code-review-performance`      |
+| schema, migrations, data shape changes, Convex validators      | `code-review-data-integrity`   |
 
-A CSS-only diff collapses to Correctness + Convention + Tests. Don't run lenses that don't apply.
+A CSS-only diff collapses to the three always-on reviewers. Don't spawn routed reviewers that don't apply — every agent spawn is tokens and wall-clock time. Typical subset on a real PR: 3–5 agents total, cap at 5.
 
-### Phase 4 — Lens pass
+### Phase 4 — Parallel reviewer pass
 
-Each selected lens walks the changed files with a **narrow failure-mode checklist**, not a style rulebook. Lenses produce candidate findings in the shared schema below. Lenses do not publish — they propose.
+Each reviewer runs as a **separate specialist sub-agent** with a narrow system prompt, so each reviewer holds full attention on one dimension. Reviewer agents produce candidate findings in the shared schema — they do not publish, they propose.
 
-**Correctness** — _Can this fail to do what the PR intends?_
-- Does the logic match the stated goal and invariants?
-- Off-by-one, null/undefined, unhandled rejection, missing cleanup on early return?
-- Boundary inputs handled (empty array, zero, error path)?
-- Any accidental breaking change to an exported API?
+**Spawn all selected reviewer agents in a single message with multiple parallel `Agent` tool calls.** Do not spawn them sequentially — the whole point is fan-out.
 
-**Convention / Architecture fit** — _Does this belong where it is?_
-- File placement matches `file-organization.md` (`components/` not `views/` in apps).
-- `-connector.tsx` only for context-reading shims with no markup.
-- Imports use `@feel-good/*`, not deep relative traversal.
-- No re-introduction of removed patterns (`useMountedRef`, `views/` in apps, `setTimeout` for visual timing).
-- No speculative abstraction, feature flags, or backwards-compat shims for hypothetical needs (AGENTS.md core principles).
-- No unrequested refactors bundled with a bug fix.
+Each prompt must include:
 
-**Test adequacy** — _Do the tests prove the risky behavior?_
-- Is there a test for the failure mode the PR claims to fix?
-- Do tests cover the invariants named in Phase 2, not just the happy path?
-- E2E uses Playwright CLI, not MCP (`.claude/rules/testing.md`).
-- Verification tier matches the change type (`.claude/rules/verification.md`).
+1. **Scope** — the diff range, branch name, or path being reviewed.
+2. **Changed files** — paths and line ranges. Tell the agent to read each file end-to-end, not just the hunks.
+3. **Intent packet** from Phase 2 verbatim: `change_type`, `goal`, `expected_behavior[]`, `invariants[]`, `risk_surface[]`.
+4. **Instruction to return findings as a JSON array** in the shared finding schema (below). Clean diffs return `[]` plus a one-line summary — do not invent findings.
 
-**Concurrency** (routed) — _Can timing or ordering break this?_
-- Can an early return skip cleanup? Is release in a `finally`?
-- Is the lock/state guarded by a started-at or generation token so stale callbacks can't clobber an active owner?
-- Retry-safe? Double-execution safe? Any state transition that can land partial?
+Example orchestration (one message, parallel tool calls):
 
-**Security** (routed) — _Does this introduce privilege or exposure risk?_
-- Auth check present on every write path?
-- User input sanitized at the boundary, not mid-pipeline?
-- Secrets/keys not logged, not bundled client-side?
+```
+Agent(subagent_type: "code-review-correctness", prompt: <scope + files + intent + schema reminder>)
+Agent(subagent_type: "code-review-convention",  prompt: <same>)
+Agent(subagent_type: "code-review-tests",       prompt: <same>)
+Agent(subagent_type: "code-review-concurrency", prompt: <same>)   // only if routed
+```
 
-**Performance** (routed) — _Does this create avoidable cost?_
-- Repeated expensive calls inside a loop or render?
-- N+1 on Convex queries; missing index; unbounded list read?
-- Render loop from `useEffect` syncing props into state?
+Collect all agent results before moving to Phase 5. If an agent times out or errors, note it in the report's "Filtered by critic" footer and proceed — don't block on a single specialist.
 
-**Data integrity** (routed) — _Can data end up wrong or stuck?_
-- Migration reversible? Backfill plan?
-- Convex validator matches schema; no silent type widening.
-- `pnpm exec convex codegen` ran after schema changes.
-- Convex filenames have no hyphens; triggers wired via BOTH `triggers` and `authFunctions` in `createClient`.
-
-**API contract** (routed) — _Does this break callers?_
-- Exported prop/type changes semver-compatible within the package?
-- Default behavior preserved when a new option is added?
+**Reviewer agent definitions live in `.claude/agents/code-review/`** (one file per reviewer) — each has its own failure-mode checklist. Update those files when a reviewer needs to evolve, not this SKILL.md.
 
 ### Shared finding schema
 
-Every candidate finding, regardless of lens, fills:
+Every candidate finding, regardless of reviewer, fills:
 
 ```
 id:          short slug
-lens:        correctness | convention | tests | concurrency | security | performance | data | api
+reviewer:        correctness | convention | tests | concurrency | security | performance | data | api
 title:       one-line
 location:    file:startLine-endLine
 severity:    low | medium | high | critical
@@ -166,7 +145,7 @@ suggestedFix: one sentence
 
 ### Phase 5 — Normalize
 
-Merge overlapping findings from different lenses into one canonical finding. Example: Correctness says "cleanup skipped on early return" and Concurrency says "lock may remain stuck" — these become one high-confidence finding with both lenses as supporting provenance.
+Merge overlapping findings from different reviewers into one canonical finding. Example: Correctness says "cleanup skipped on early return" and Concurrency says "lock may remain stuck" — these become one high-confidence finding with both reviewers as supporting provenance.
 
 Dedupe by `location` + `risk` similarity. Sum confidence conservatively (cap at 0.98).
 
@@ -300,7 +279,7 @@ Want me to apply the blockers and should-fix items?
 
 ## Anti-patterns
 
-- **Running every lens on every diff.** Route by risk map. A CSS tweak doesn't need the security lens.
+- **Running every reviewer on every diff.** Route by risk map. A CSS tweak doesn't need the security reviewer.
 - **Findings without a `risk` field.** If you can't name a failure mode or broken invariant, it's a preference — drop it.
 - **Critic that rubber-stamps.** Zero rejects on a non-trivial diff means the phase didn't run.
 - **Style preferences dressed as blockers.** Severity must match blast radius, not conviction.

@@ -29,9 +29,9 @@ status: draft | final
 
 ### Cross-lane disagreements
 
-| Topic | Official docs say | OSS projects do | Practitioners report | Interpretation |
-| ----- | ----------------- | --------------- | -------------------- | -------------- |
-|       |                   |                 |                      |                |
+| Topic | Official docs say | OSS projects do | Practitioners report | Research papers say | Interpretation |
+| ----- | ----------------- | --------------- | -------------------- | ------------------- | -------------- |
+|       |                   |                 |                      |                     |                |
 
 ### Anti-patterns to avoid
 
@@ -87,7 +87,7 @@ One sentence. Usually:
 
 | # | Source | Lane | Date | Link |
 | - | ------ | ---- | ---- | ---- |
-| 1 |        | OSS / Official / Social | YYYY-MM-DD | url |
+| 1 |        | OSS / Official / Social / Paper (peer-reviewed / preprint) | YYYY-MM-DD | url |
 
 ### Out of scope but interesting
 
