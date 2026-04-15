@@ -62,34 +62,17 @@ E2E tests go in the owning app's Playwright directory (e.g., `apps/mirror/e2e/`)
 
 ## Team Orchestration Plan
 
-Plan which agents execute the implementation work. Check `.claude/agents/` for specialized agents that can own specific steps. Prefer existing specialized agents over creating new ones.
+Reviewer selection and wave packaging happen at execution time — see `.claude/skills/orchestrate-implementation/SKILL.md`. This plan lists logical work chunks with hard gates; it does not pre-assign critics. The spec describes *what must be true*; orchestration decides *who reviews*.
 
-**Every step MUST pair an Executor with a Critique agent.** The critique agent runs in a separate context window on the executor's diff — never self-review. Self-evaluation is systematically biased toward praise; an independent, skeptical evaluator is the load-bearing mechanism that catches last-mile issues. This applies even for one-file changes.
+Plan which agents execute the implementation work. Check `.claude/agents/` for specialized agents that can own specific steps. Prefer existing specialized agents over creating new ones.
 
 ```
 Step N — {description}
-Executor: {agent name} — produces the artifact
-Critique: {one or more agents from .claude/agents/code-review-*} — independent review on the executor's diff
-Tasks: {numbered list}
-Handoff: critique runs on the executor's diff; executor addresses findings before the step is considered done
-Verification: {what to check before moving on}
+Suggested executor: {agent name from .claude/agents/, or "general"}
+Scope: {files touched, what changes}
+Hard gate: {exact shell command(s) that must exit 0 before this step is done}
+Verifies: {FR-XX, FR-YY}
 ```
-
-### Critique routing table
-
-**Pick 1-2 reviewers per step.** More reviewers ≠ better review. Each one costs 30-50k tokens. Add a 3rd only when the work spans correctness AND a specialist axis you can name. Never add a reviewer "for completeness."
-
-**Important exception**: for features whose threat model IS the spec (rate limiting, auth flows, input validation), do NOT dispatch a separate `code-review-security` agent — the FR table already encodes the threats and `code-review-correctness` will catch the same issues. Stacking security on top is pure overhead.
-
-| Work type                                                    | Default critique (pick 1-2)                     |
-| ------------------------------------------------------------ | ----------------------------------------------- |
-| Backend logic, mutations, state machines                     | `code-review-correctness` + `code-review-tests` |
-| Schema / migrations / Convex validators                      | `code-review-data-integrity`                    |
-| Auth/permissions/input WHEN the threat model is NOT the spec | `code-review-security`                          |
-| Streaming, locks, retries, cancellation, async               | `code-review-concurrency`                       |
-| File organization, naming, public API contract               | `code-review-convention`                        |
-| Hot paths, large lists, Convex reads, rendering              | `code-review-performance`                       |
-| Test suites themselves                                       | `code-review-tests`                             |
 
 ## Open Questions (if any)
 

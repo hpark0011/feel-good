@@ -76,7 +76,7 @@ Rules for Phase 3:
 3. Every requirement must be referenced by at least one row in Unit Tests or Playwright E2E Tests (ideally both where user-visible).
 4. Test file paths must match real package/app conventions (Vitest in `__tests__/` with `.test.ts`; Playwright in the owning app's e2e dir with `.spec.ts`). Verify against the codebase, don't guess.
 5. Team Orchestration Plan must name real agents from `.claude/agents/` or explicitly recommend `/create-codebase-expert` for missing owners.
-6. **Every orchestration step MUST pair an Executor with a Critique agent** drawn from `.claude/agents/code-review-*` (correctness, tests, convention, security, concurrency, performance, data-integrity). The critique runs in a separate context window on the executor's diff — never self-review. This applies even for one-file changes. Rationale: self-evaluation is systematically biased toward confident praise of mediocre work; a standalone evaluator can be tuned to be skeptical. See https://www.anthropic.com/engineering/harness-design-long-running-apps. Use the critique routing table in `spec-template/spec.md` to pick the right reviewer(s) per step.
+6. **Every orchestration step MUST name (a) a suggested executor, (b) a hard gate shell command that proves the step is done, and (c) the FR/NFR IDs it verifies.** Reviewer pairing is NOT decided in the spec — `.claude/skills/orchestrate-implementation/SKILL.md` owns the critique routing table and selects reviewers per wave at execution time. Rationale: keeping one source of truth for the `code-review-*` roster prevents drift; the spec describes *what must be true*, orchestration decides *who reviews*. The executor/critic separation itself is still load-bearing (see https://www.anthropic.com/engineering/harness-design-long-running-apps) — it's just enforced downstream, not here.
 
 ### Phase 4: Adversarial Critique Loop
 
@@ -145,7 +145,7 @@ User: "Spec out the dashboard improvements."
 - **Naming an executor for Phase 3 inside this skill.** Creates a cycle with any agent that references this skill. The caller owns routing.
 - **Accepting adversarial concerns that contradict explicit user requirements.** Reject them and log the rejection in the Adversarial Review Summary.
 - **Running the adversarial loop once and stopping.** Iterate until no Critical concerns remain — that's the contract.
-- **Single-agent orchestration steps.** Every step in the Team Orchestration Plan must pair an Executor with an independent Critique agent, even for one-file changes. Self-review produces confident praise of mediocre work; the external evaluator is the load-bearing piece that catches last-mile issues.
+- **Orchestration steps without hard gates.** Every step needs a concrete shell command that proves it's done — no "run tests" hand-waving. Reviewer pairing is not the spec's job; gate commands and verified FR IDs are. Duplicating the `code-review-*` roster in the spec creates drift with `orchestrate-implementation`, which owns it.
 
 ## References
 
@@ -154,3 +154,4 @@ User: "Spec out the dashboard improvements."
 - `.claude/agents/create-spec/adversarial-reviewer.md` — Phase 4 agent (`create-spec-adversarial-reviewer`).
 - `.claude/agents/create-spec/verification.md` — Phase 5 agent (`create-spec-verification`).
 - `.claude/skills/create-codebase-expert/SKILL.md#artifact-hierarchy-principle` — why templates and workflow-only agents live under this skill, not inlined.
+- `.claude/skills/orchestrate-implementation/SKILL.md` — downstream skill that owns the critique routing table and wave execution model. The spec feeds into it; it does not duplicate its reviewer-selection logic.

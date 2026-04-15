@@ -40,7 +40,9 @@ The architecture is sound. The cost is in execution efficiency. Every rule in th
 
 ### Phase 1 — Plan waves (orchestrator only)
 
-Read the spec end-to-end. Then plan waves before spawning anything.
+Read the spec end-to-end. The spec's Team Orchestration Plan lists logical steps with suggested executors, hard gates, and verified FRs — but it does NOT pre-assign reviewers. Your job here is to **regroup those steps into waves** (a wave bundles steps that share a gate) and, in Phase 3c, pick reviewers from the critique routing table below. That table is the single source of truth for the `code-review-*` roster; the spec template intentionally does not duplicate it.
+
+Plan waves before spawning anything.
 
 **Wave scoping rule**: a wave is *one set of changes that pass one set of gates*. Not one file. Not one agent. One verification gate.
 
@@ -88,7 +90,7 @@ Trust direct reads over a subagent's summary for any small, verifiable claim. *"
 
 #### 3c. Verifier dispatch (with budget discipline)
 
-After the executor returns a diff, spawn verifiers on the diff. Critique agents come from `.claude/agents/code-review-*`. **Pick the minimum** needed.
+After the executor returns a diff, spawn verifiers on the diff. Critique agents come from `.claude/agents/code-review-*`. **Pick the minimum** needed. This table is the canonical reviewer roster — the spec template intentionally does not duplicate it, so this is the only place in the pipeline where reviewer selection is decided.
 
 **Critique-minimization rule**:
 - Default 1-2 reviewers per wave. Add a 3rd only when the work spans correctness AND a specialist axis (concurrency, security, data-integrity).
