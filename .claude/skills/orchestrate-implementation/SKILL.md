@@ -38,6 +38,8 @@ The architecture is sound. The cost is in execution efficiency. Every rule in th
 
 ## Workflow
 
+> **Tool discipline (enforced for this skill and every executor/verifier it spawns).** Use `Read` for file contents (never `Bash cat`/`head`/`tail`), `Grep` for content search (never `Bash grep`/`rg`), `Glob` for path search (never `Bash find`/`ls`). `Bash` is reserved for build/test/git/codegen commands only. This rule lives in `.claude/rules/dev-process.md` but is repeated here because spawned agents inherit skill context, not the rules directory. Executor and verifier prompts must carry this rule forward when spawning sub-agents.
+
 ### Phase 1 — Plan waves (orchestrator only)
 
 Read the spec end-to-end. The spec's Team Orchestration Plan lists logical steps with suggested executors, hard gates, and verified FRs — but it does NOT pre-assign reviewers. Your job here is to **regroup those steps into waves** (a wave bundles steps that share a gate) and, in Phase 3c, pick reviewers from the critique routing table below. That table is the single source of truth for the `code-review-*` roster; the spec template intentionally does not duplicate it.

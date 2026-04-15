@@ -23,6 +23,8 @@ description: Create a product spec from user requirements through multi-agent re
 
 ## Workflow
 
+> **Tool discipline (enforced for this skill and every agent it spawns).** Use `Read` for file contents (never `Bash cat`/`head`/`tail`), `Grep` for content search (never `Bash grep`/`rg`), `Glob` for path search (never `Bash find`/`ls`). `Bash` is reserved for build/test/git/codegen commands only. This rule lives in `.claude/rules/dev-process.md` but is repeated here because spawned agents inherit skill context, not the rules directory.
+
 Invariants that apply across all phases:
 
 - **Minimum 3 sub-agents**: PM Agent, Adversarial Spec Reviewer, Verification Agent. Each gets its own context window via the Agent tool.
@@ -105,10 +107,23 @@ Spawn the `create-spec-verification` agent (defined at `.claude/agents/create-sp
 
 1. Write the spec to `workspace/spec/{feature-name}-spec.md` (kebab-case filename).
 2. Present a summary including: spec location, FR/NFR counts, unit + E2E test counts, orchestration summary, adversarial review tallies (raised / accepted / rejected, no unresolved Critical), and verification result.
+3. **End the response with a handoff block.** This is mandatory — not optional prose. The last thing the user sees must be a fenced markdown block in this exact shape:
+
+   ```markdown
+   ## Next step
+
+   Spec saved: `workspace/spec/{feature-name}-spec.md`
+
+   **Start a NEW session** (do not continue in this thread — the current context is loaded with spec-authoring artifacts that degrade executor prompt quality). In the fresh session, run:
+
+   `/orchestrate-implementation workspace/spec/{feature-name}-spec.md`
+   ```
+
+   The "start a new session" instruction is load-bearing: retro data shows spec-authoring sessions that roll straight into implementation hit 300+ turns and produce degraded executor output. A fresh session is cheap; a bloated one is expensive.
 
 ### Implementation handoff
 
-This skill ends when the spec is verified. The downstream half of the pipeline is `.claude/skills/orchestrate-implementation/SKILL.md` — it consumes the spec and runs the Team Orchestration Plan with disciplined wave execution (executor/verifier separation, feedback loops, critique-budgeting). When the user wants to start building, hand off to that skill rather than orchestrating ad-hoc.
+This skill ends when the spec is verified AND the handoff block has been presented. The downstream half of the pipeline is `.claude/skills/orchestrate-implementation/SKILL.md` — it consumes the spec and runs the Team Orchestration Plan with disciplined wave execution (executor/verifier separation, feedback loops, critique-budgeting). Do not start orchestration in the same session — emit the handoff block and stop.
 
 ## Examples
 
