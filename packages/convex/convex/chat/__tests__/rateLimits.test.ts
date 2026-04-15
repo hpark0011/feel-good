@@ -163,8 +163,11 @@ function normalizeConvexGlob(
 
 const rawChatModules = import.meta.glob("../../**/*.{ts,js}");
 const modules = normalizeConvexGlob(rawChatModules);
+// Glob the rate-limiter component source via the workspace symlink (same
+// import path style as `rateLimiterSchema` above). Avoids pinning the
+// content-addressed `.pnpm/` path, which rotates on lockfile refreshes.
 const rateLimiterModules = import.meta.glob(
-  "../../../../../node_modules/.pnpm/@convex-dev+rate-limiter@0.3.2_convex@1.32.0_react@19.2.3__react@19.2.3/node_modules/@convex-dev/rate-limiter/src/component/**/*.ts",
+  "../../../node_modules/@convex-dev/rate-limiter/src/component/**/*.ts",
 );
 
 /**

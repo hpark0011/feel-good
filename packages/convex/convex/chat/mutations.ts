@@ -110,6 +110,15 @@ export const sendMessage = mutation({
         }
       }
 
+      // Concurrency guard runs BEFORE rate-limit so a double-click / retry
+      // against an already-streaming conversation is rejected without
+      // spending minute or daily budget.
+      if (existingConversation.streamingInProgress) {
+        throw new Error(
+          "A response is already being generated. Please wait for it to complete.",
+        );
+      }
+
       // 5a. Per-minute burst limit (existing conversation).
       await enforceLimit(
         ctx,
@@ -144,15 +153,6 @@ export const sendMessage = mutation({
         "sendMessageDailyAnon",
         args.profileOwnerId,
         "RATE_LIMIT_DAILY",
-      );
-    }
-
-    // 6. Concurrency guard (existing conversation only). Reuses the
-    //    snapshot from step 4 — rate-limit writes do not touch the
-    //    `conversations` row, so a refetch would return the same value.
-    if (existingConversation?.streamingInProgress) {
-      throw new Error(
-        "A response is already being generated. Please wait for it to complete.",
       );
     }
 
@@ -240,6 +240,14 @@ export const retryMessage = mutation({
       }
     }
 
+    // Concurrency guard runs BEFORE rate-limit so a retry against an
+    // already-streaming conversation is rejected without spending budget.
+    if (conversation.streamingInProgress) {
+      throw new Error(
+        "A response is already being generated. Please wait for it to complete.",
+      );
+    }
+
     // 2a. Per-minute burst limit. Re-keyed to profileOwnerId (anon) /
     //     appUser._id (auth) — matching sendMessage — so retries on a
     //     fresh conversation cannot bypass daily caps via key-switching
@@ -265,13 +273,6 @@ export const retryMessage = mutation({
         "sendMessageDailyAnon",
         conversation.profileOwnerId,
         "RATE_LIMIT_DAILY",
-      );
-    }
-
-    // 3. Guard: reject if streaming already in progress
-    if (conversation.streamingInProgress) {
-      throw new Error(
-        "A response is already being generated. Please wait for it to complete.",
       );
     }
 

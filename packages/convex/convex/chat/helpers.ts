@@ -13,6 +13,11 @@ const DEFAULT_PERSONA =
 
 export const SYSTEM_PROMPT_MAX_CHARS = 6000;
 
+// Bound on the variable `name` substituted into SAFETY_PREFIX. Keeps the
+// fixed section small enough that truncateToBudget never has to cut into
+// safety content, which is the invariant composeSystemPrompt relies on.
+const MAX_NAME_CHARS = 200;
+
 const SEPARATOR = "\n\n";
 
 /**
@@ -81,7 +86,11 @@ export function composeSystemPrompt(opts: {
   tonePreset?: TonePreset | null;
   topicsToAvoid?: string | null;
 }): string {
-  const name = opts.name || "this person";
+  // Bound name up front so a pathologically long value cannot force the
+  // final backstop slice to cut into SAFETY_PREFIX or the tone clause.
+  const rawName = opts.name || "this person";
+  const name =
+    rawName.length > MAX_NAME_CHARS ? rawName.slice(0, MAX_NAME_CHARS) : rawName;
 
   // Fixed (non-truncatable) sections — always preserved verbatim.
   const fixed: Array<string> = [SAFETY_PREFIX(name)];

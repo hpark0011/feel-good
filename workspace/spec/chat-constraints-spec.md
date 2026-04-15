@@ -58,7 +58,7 @@ Harden the Mirror chat layer against uncapped Anthropic API spend. Today `packag
 
 | File | Change |
 | ---- | ------ |
-| `packages/convex/convex/chat/rateLimits.ts` | Add `sendMessageDailyAnon` (200/day fixed window) and `sendMessageDailyAuth` (500/day fixed window). |
+| `packages/convex/convex/chat/rateLimits.ts` | Add `sendMessageDailyAnon` (token bucket, 200/day rate, capacity 50) and `sendMessageDailyAuth` (token bucket, 500/day rate, capacity 100). |
 | `packages/convex/convex/chat/mutations.ts` | Set `MAX_MESSAGE_LENGTH = 3000`; add daily-bucket calls (anon → `profileOwnerId`, auth → `appUser._id`) with `throws: false`, and translate both per-minute AND daily rejections into `ConvexError({ code, retryAfterMs })`. Apply daily bucket in BOTH the new-conversation and existing-conversation branches of `sendMessage`. Apply the same pattern in `retryMessage` AND re-key `retryMessage`'s existing per-minute limit to `profileOwnerId`/`appUser._id` (currently `conversationId` for anon — see mutations.ts:173). |
 | `packages/convex/convex/chat/actions.ts` | Add `RAG_CHUNK_MAX_CHARS`, `RAG_CONTEXT_MAX_CHARS`; factor RAG string assembly into `buildRagContext(chunks)` helper (exported for tests); pass `maxOutputTokens: 1024` as a field on the first arg object to `thread.streamText`. |
 | `packages/convex/convex/chat/helpers.ts` | Add `SYSTEM_PROMPT_MAX_CHARS = 6000` and truncate persona/bio/topics in `composeSystemPrompt` when over budget, preserving safety prefix + tone clause (FR-09). |
@@ -113,7 +113,7 @@ Rationale for Vitest over Bun: `convex-test` runs natively in Vitest and support
 | `apps/mirror/e2e/chat-rate-limit.spec.ts` | Anon visitor sends messages until daily cap exhausted via a test-only Convex mutation that pre-fills the bucket; next send shows "You've hit today's chat limit" copy in the chat input error region. | FR-10 |
 | `apps/mirror/e2e/chat-rate-limit.spec.ts` | Message longer than 3000 chars surfaces "Message exceeds 3000 character limit" in the error region; 3000-char message sends successfully. | FR-02 |
 
-E2E uses Playwright CLI (`.claude/rules/testing.md`). The test-only "pre-fill bucket" helper lives in `packages/convex/convex/chat/testHelpers.ts` and is registered as an **`internalMutation`** — it cannot be called from the browser and does not rely on a runtime env-var check. The Playwright test invokes it through a server-side route under `apps/mirror/app/api/__test__/` that is itself gated by a shared secret (`E2E_TEST_SECRET`), so the helper is unreachable from the production frontend.
+E2E uses Playwright CLI (`.claude/rules/testing.md`). The test-only "pre-fill bucket" helper lives in `packages/convex/convex/chat/testHelpers.ts` and is registered as an **`internalMutation`** — it cannot be called from the browser and does not rely on a runtime env-var check. The Playwright test invokes it through a server-side route under `apps/mirror/app/api/test/exhaust-chat-daily/` that is itself gated by a shared secret (`PLAYWRIGHT_TEST_SECRET`), so the helper is unreachable from the production frontend.
 
 ## Anti-patterns to Avoid
 
@@ -142,7 +142,7 @@ Tasks:
   4. Add RAG_CHUNK_MAX_CHARS + RAG_CONTEXT_MAX_CHARS, buildRagContext helper (exported), maxOutputTokens: 1024 on streamText (actions.ts)
   5. Add SYSTEM_PROMPT_MAX_CHARS=6000 truncation in helpers.ts (preserve safety prefix + tone)
   6. Write __tests__/rateLimits.integration.test.ts (convex-test) and __tests__/ragContext.test.ts; extend helpers.test.ts with FR-09 cases
-  7. Run `pnpm exec convex codegen` then `pnpm build --filter=@feel-good/convex` then `pnpm --filter=@feel-good/convex test`
+  7. Run `pnpm exec convex codegen` then `pnpm --filter=@feel-good/convex check-types` then `pnpm --filter=@feel-good/convex test` (NFR-05: `@feel-good/convex` has no `build` script; `check-types` is the real type-verification step)
 Handoff: critique agents review the executor's diff; executor addresses all Critical findings before Step 2 begins.
 Verification: all tests pass (migrated + new); build exit 0; streaming-lock regression check (NFR-03) green; diff of `helpers.test.ts` / `tonePresets.test.ts` shows only the import line changed (NFR-07); critique findings resolved.
 

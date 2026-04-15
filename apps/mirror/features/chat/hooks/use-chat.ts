@@ -20,10 +20,23 @@ type RateLimitErrorData = {
 
 function getRateLimitCode(err: unknown): RateLimitErrorData["code"] | null {
   if (!(err instanceof ConvexError)) return null;
-  const data = (err as ConvexError<RateLimitErrorData>).data;
+  // ConvexError.data can arrive either as the structured object we threw
+  // or as a JSON-serialized string depending on the transport boundary
+  // (the convex-test harness surfaces the string form — see
+  // packages/convex/convex/chat/__tests__/rateLimits.test.ts#getErrorData).
+  const raw: unknown = (err as ConvexError<string>).data;
+  let data: unknown = raw;
+  if (typeof raw === "string") {
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  }
   if (data && typeof data === "object" && "code" in data) {
-    if (data.code === "RATE_LIMIT_DAILY" || data.code === "RATE_LIMIT_MINUTE") {
-      return data.code;
+    const code = (data as { code: unknown }).code;
+    if (code === "RATE_LIMIT_DAILY" || code === "RATE_LIMIT_MINUTE") {
+      return code;
     }
   }
   return null;
