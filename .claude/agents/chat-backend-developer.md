@@ -4,7 +4,7 @@ description: "Use this agent when the task involves the Convex chat agent layer 
 model: opus
 color: cyan
 memory: project
-maxTurns: 40
+maxTurns: 80
 tools:
   - Read
   - Write

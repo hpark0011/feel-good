@@ -106,6 +106,10 @@ Spawn the `create-spec-verification` agent (defined at `.claude/agents/create-sp
 1. Write the spec to `workspace/spec/{feature-name}-spec.md` (kebab-case filename).
 2. Present a summary including: spec location, FR/NFR counts, unit + E2E test counts, orchestration summary, adversarial review tallies (raised / accepted / rejected, no unresolved Critical), and verification result.
 
+### Implementation handoff
+
+This skill ends when the spec is verified. The downstream half of the pipeline is `.claude/skills/orchestrate-implementation/SKILL.md` — it consumes the spec and runs the Team Orchestration Plan with disciplined wave execution (executor/verifier separation, feedback loops, critique-budgeting). When the user wants to start building, hand off to that skill rather than orchestrating ad-hoc.
+
 ## Examples
 
 ✓ Good invocation:

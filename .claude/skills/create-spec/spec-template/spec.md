@@ -77,13 +77,15 @@ Verification: {what to check before moving on}
 
 ### Critique routing table
 
-Pick the critique agent(s) that match the work type. Stack multiple when a step spans categories.
+**Pick 1-2 reviewers per step.** More reviewers ≠ better review. Each one costs 30-50k tokens. Add a 3rd only when the work spans correctness AND a specialist axis you can name. Never add a reviewer "for completeness."
 
-| Work type                                      | Default critique                                     |
+**Important exception**: for features whose threat model IS the spec (rate limiting, auth flows, input validation), do NOT dispatch a separate `code-review-security` agent — the FR table already encodes the threats and `code-review-correctness` will catch the same issues. Stacking security on top is pure overhead.
+
+| Work type                                      | Default critique (pick 1-2)                          |
 | ---------------------------------------------- | ---------------------------------------------------- |
 | Backend logic, mutations, state machines       | `code-review-correctness` + `code-review-tests`      |
 | Schema / migrations / Convex validators        | `code-review-data-integrity`                         |
-| Auth, permissions, input boundaries, secrets   | `code-review-security`                               |
+| Auth/permissions/input WHEN the threat model is NOT the spec | `code-review-security`                  |
 | Streaming, locks, retries, cancellation, async | `code-review-concurrency`                            |
 | File organization, naming, public API contract | `code-review-convention`                             |
 | Hot paths, large lists, Convex reads, rendering| `code-review-performance`                            |
