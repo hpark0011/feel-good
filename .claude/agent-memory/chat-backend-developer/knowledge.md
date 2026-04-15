@@ -1,6 +1,6 @@
 # chat-backend-developer — Knowledge
 
-*Last updated: 2026-04-14*
+*Last updated: 2026-04-15*
 
 ## Architecture
 
@@ -31,17 +31,20 @@ streamingStartedAt?: number       // lock fencing token
 
 Indexes: `by_profileOwnerId_and_viewerId`, `by_viewerId`, `by_threadId`, `by_streamingInProgress_and_streamingStartedAt`.
 
-### sendMessage pipeline (mutations.ts:10)
+### sendMessage pipeline (mutations.ts, Wave 1)
 
-1. Validate content (non-empty, ≤ 4000 chars).
+Order is load-bearing — both rate-limit checks MUST run before any `ctx.db.patch({ streamingInProgress: true })` (NFR-03) so a daily-cap rejection never leaves a stale lock.
+
+1. Validate content (non-empty, ≤ **3000 chars**, Wave 1).
 2. `authComponent.safeGetAuthUser` → optional `appUser` via `users.by_authId`.
 3. Load `profileOwner`; enforce `chatAuthRequired` gate.
-4. If `conversationId` given: verify ownership + viewer match, apply `sendMessage` rate limit keyed by user or conversation, reject if `streamingInProgress`.
-5. Else: apply `createConversation` rate limit keyed by user or profileOwner.
-6. If new conversation: `createThread(ctx, components.agent, { userId: appUser?._id })` then insert row.
-7. `saveMessage(ctx, components.agent, { threadId, prompt, userId })` → persists user turn, returns `messageId`.
-8. Patch `streamingInProgress: true, streamingStartedAt: Date.now()` (the lock).
-9. `ctx.scheduler.runAfter(0, internal.chat.actions.streamResponse, { conversationId, profileOwnerId, promptMessageId, lockStartedAt, userMessage })`.
+4. If `conversationId` given: verify ownership + viewer match; apply `sendMessage` per-minute limit. Else: apply `createConversation` per-minute limit.
+5. **Daily ceiling** (Wave 1): apply `sendMessageDailyAuth` (keyed by `appUser._id`) OR `sendMessageDailyAnon` (keyed by `profileOwnerId`). Same pattern in both branches.
+6. Concurrency guard: reject if `streamingInProgress` (existing-conversation branch only).
+7. If new conversation: `createThread(ctx, components.agent, { userId: appUser?._id })` then insert row.
+8. `saveMessage(ctx, components.agent, { threadId, prompt, userId })` → persists user turn, returns `messageId`.
+9. Patch `streamingInProgress: true, streamingStartedAt: Date.now()` (the lock).
+10. `ctx.scheduler.runAfter(0, internal.chat.actions.streamResponse, { conversationId, profileOwnerId, promptMessageId, lockStartedAt, userMessage })`.
 
 ### retryMessage (mutations.ts:139)
 
@@ -73,7 +76,20 @@ RAG context is appended outside this function, in `actions.ts:82`. Order changes
 
 ### Rate limits (rateLimits.ts)
 
-Fixed window, all per-minute: `sendMessage` 10, `createConversation` 3, `retryMessage` 5. Key: authed `appUser._id` if present, else fall back (`conversationId` / `profileOwnerId`). All enforced inside mutations with `throws: true`. Do NOT inline throttles elsewhere.
+**Per-minute burst** (fixed window, unchanged Wave 1):
+- `sendMessage` 10/min — key: `appUser._id` (auth) / `conversationId` (anon existing) / `profileOwnerId` (anon new).
+- `createConversation` 3/min — key: `appUser._id` / `profileOwnerId`.
+- `retryMessage` 5/min — **Wave 1 re-keying**: now `appUser._id` / `profileOwnerId` (was `conversationId` for anon). Matches `sendMessage` so retries can't bypass daily caps by switching conversations.
+
+**Daily output-spend ceiling** (token bucket, added in Wave 1):
+- `sendMessageDailyAnon` — rate 200/day, capacity 50, keyed by `profileOwnerId`.
+- `sendMessageDailyAuth` — rate 500/day, capacity 100, keyed by `appUser._id`.
+
+Applied in BOTH branches of `sendMessage` (new + existing conversation) AND in `retryMessage`. The daily bucket runs AFTER the per-minute bucket and BEFORE the streaming-lock patch (NFR-03).
+
+**Rejection contract** (Wave 1): both per-minute and daily rejections are wrapped in `ConvexError({ code: "RATE_LIMIT_MINUTE" | "RATE_LIMIT_DAILY", retryAfterMs: number })`. The `retryAfter` field from `@convex-dev/rate-limiter` is **already in milliseconds** — pass through directly, do NOT convert. Use `throws: false` on `.limit()`, inspect `.ok`, construct the `ConvexError` on rejection. See `enforceLimit` helper in `mutations.ts`.
+
+Do NOT inline throttles elsewhere.
 
 ### Access control (queries.ts)
 
@@ -85,6 +101,14 @@ Rules reused across `getConversation`, `getConversations`, `listThreadMessages`:
 
 `listThreadMessages` returns `v.any()` because of the `useUIMessages` streaming union type; consumer (`apps/mirror/features/chat/hooks/use-chat.ts`) uses an `as any` to reconcile.
 
+## Wave 1 Constants (do not silently tune)
+
+- `MAX_MESSAGE_LENGTH = 3000` — `mutations.ts`. Rejected with plain `Error` (not `ConvexError`) before any rate-limit call so oversize messages don't consume daily budget.
+- `RAG_CHUNK_MAX_CHARS = 800` / `RAG_CONTEXT_MAX_CHARS = 4000` — `actions.ts`, exported. `buildRagContext()` is the only assembly path; preserves input order, truncates each chunk then caps total.
+- `RAG_RESULT_LIMIT = 5`, `RAG_SCORE_THRESHOLD = 0.3` — unchanged from pre-Wave 1.
+- `SYSTEM_PROMPT_MAX_CHARS = 6000` — `helpers.ts`. `composeSystemPrompt` proportionally shrinks the bio/persona/topics sections when over budget. Safety prefix + tone clause are never truncated; section order (safety → tone → bio → persona → topics) is preserved.
+- `maxOutputTokens: 1024` — passed on BOTH branches of the `streamArgs` ternary in `actions.ts` → `thread.streamText`. Caps Anthropic output per turn.
+
 ## Gotchas & Edge Cases
 
 - **Streaming lock is load-bearing.** The `finally` in `streamResponse` must always run. `clearStreamingLock` uses `expectedStartedAt` as a fencing token — do not remove that check or a late finally will stomp a newer stream.
@@ -95,6 +119,18 @@ Rules reused across `getConversation`, `getConversations`, `listThreadMessages`:
 - **`getConversation` public shape omits `streamingStartedAt`** (present only on `internalGetConversation`). Public clients cannot distinguish stuck from active.
 - **`agent.ts` instructions is `""`.** System prompt is injected per call. Any future `generateText` without an explicit `system:` will run un-prompted.
 - **Convex rules:** new function syntax, validators on args+returns, `withIndex` not `filter`, `"use node"` on `agent.ts` and `actions.ts` (both use Node modules), run `pnpm exec convex codegen` (not `npx`) after signature/schema changes.
+
+## convex-test harness gotchas (learned Wave 1)
+
+Writing integration tests for `chat/mutations.ts` via `convex-test` has several traps that cost iterations if not known up front:
+
+1. **Vite glob prefix normalization.** From a nested `convex/chat/__tests__/` test file, `import.meta.glob("../../**/*.ts")` returns *mixed* relative prefixes: files inside `chat/` come back as `../actions.ts`, while other dirs come back as `../../articles/...`. `convex-test`'s `findModulesRoot` infers a single prefix from the first `_generated/*` entry and uses it for ALL lookups, so the `../`-prefixed files are unresolvable. **Fix**: normalize every glob key to start with `../../chat/...` (or re-root to `../../chat/__tests__/...` for `./` entries) before passing the modules map into `convexTest(schema, modules)`. See `rateLimits.test.ts` `normalizeConvexGlob` helper.
+2. **`ConvexError.data` is a JSON string across the test harness boundary.** `throw new ConvexError({ code, retryAfterMs })` inside a mutation handler surfaces in test code with `err.data` as a **JSON-encoded string**, not the structured object. Assertions on `.data.code` silently yield `undefined`. **Fix**: `JSON.parse(err.data)` in a `getErrorData` helper.
+3. **Mocking `@convex-dev/agent`.** `chat/agent.ts` does `new Agent(components.agent, ...)` at module load, so a `vi.mock("@convex-dev/agent", ...)` factory MUST export `Agent` as a **class** (not a function), and stub `createThread`, `saveMessage`, and `listMessages` as async functions. Otherwise module-load fails with `Agent is not a constructor`.
+4. **Mocking `../auth/client`.** `mutations.ts` imports `authComponent` from `../auth/client` which in turn pulls in Better Auth. Stub with `vi.mock("../auth/client", () => ({ authComponent: { safeGetAuthUser: async () => null } }))`. Note: the Vite hoisted spec-string must be the **exact import path mutations.ts uses**, not the test-file-relative path.
+5. **Clearing the streaming lock between successive sends.** Back-to-back `sendMessage` calls on the same `conversationId` will hit the concurrency guard (`"A response is already being generated"`), which throws a plain `Error` BEFORE the rate limiter runs. For per-minute burst tests, manually `ctx.db.patch(conversationId, { streamingInProgress: false, streamingStartedAt: undefined })` after each call.
+6. **Mounting the rate-limiter component.** `t.registerComponent("rateLimiter", schema, glob)` — the schema and module glob must come from the pnpm-resolved path `node_modules/.pnpm/@convex-dev+rate-limiter@.../node_modules/@convex-dev/rate-limiter/src/component/`. The version in the path needs updating when the dep bumps.
+7. **Source-level assertions are fair game.** For `actions.ts` (`"use node"`) behavior that's too deep to execute through the harness (e.g. confirming `maxOutputTokens: 1024` is passed to `thread.streamText`), a `readFileSync`-based grep assertion catches regressions without needing to run the action. Use sparingly and only when the runtime path requires a full agent-component mount.
 
 ## Test runner
 

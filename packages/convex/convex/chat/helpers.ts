@@ -11,6 +11,69 @@ You must never: claim to be human, share private information not in your context
 const DEFAULT_PERSONA =
   "Answer questions helpfully based on your profile information and published articles.";
 
+export const SYSTEM_PROMPT_MAX_CHARS = 6000;
+
+const SEPARATOR = "\n\n";
+
+/**
+ * Proportionally truncates the truncatable sections so the final joined
+ * system prompt fits within `SYSTEM_PROMPT_MAX_CHARS` (FR-09).
+ *
+ * Safety prefix and tone clause are never touched in the *normal* case —
+ * they are load-bearing safety content. Only the persona/bio/topics
+ * sections are proportionally shrunk.
+ *
+ * There is ONE pathological case: if the fixed sections alone (a very long
+ * `name` producing an enormous safety prefix) already exceed the budget,
+ * truncating the truncatable parts to zero isn't sufficient. The caller
+ * applies a final `.slice(0, SYSTEM_PROMPT_MAX_CHARS)` hard-cap backstop so
+ * the model contract (≤ 6000 chars) always holds, at the cost of cutting
+ * into the safety prefix. That is the lesser evil vs. blowing the cap.
+ *
+ * Section ORDER is preserved: safety → tone → bio → persona → topics.
+ */
+function truncateToBudget(
+  fixedParts: Array<string>,
+  truncatableParts: Array<string>,
+): Array<string> {
+  const joinCharsCount = (n: number) => (n > 1 ? (n - 1) * SEPARATOR.length : 0);
+  const total = (fixed: Array<string>, trunc: Array<string>): number => {
+    const all = [...fixed, ...trunc];
+    return all.reduce((s, p) => s + p.length, 0) + joinCharsCount(all.length);
+  };
+
+  if (total(fixedParts, truncatableParts) <= SYSTEM_PROMPT_MAX_CHARS) {
+    return [...fixedParts, ...truncatableParts];
+  }
+
+  const fixedChars = fixedParts.reduce((s, p) => s + p.length, 0);
+  const totalParts = fixedParts.length + truncatableParts.length;
+  const separatorOverhead = joinCharsCount(totalParts);
+
+  // Budget left for truncatable sections combined.
+  let budget =
+    SYSTEM_PROMPT_MAX_CHARS - fixedChars - separatorOverhead;
+  if (budget < 0) budget = 0;
+
+  const truncatableTotal = truncatableParts.reduce((s, p) => s + p.length, 0);
+
+  // Proportional allocation. If there's no truncatable content, leave an
+  // empty array (fixed parts alone will be passed to the final backstop).
+  const shrunk: Array<string> =
+    truncatableTotal === 0
+      ? []
+      : truncatableParts.map((p) => {
+          const share = Math.floor((p.length / truncatableTotal) * budget);
+          return p.slice(0, share);
+        });
+
+  // Filter out zero-length truncatable parts so they don't contribute phantom
+  // separator chars when the caller joins with `\n\n`.
+  const nonEmptyShrunk = shrunk.filter((p) => p.length > 0);
+
+  return [...fixedParts, ...nonEmptyShrunk];
+}
+
 export function composeSystemPrompt(opts: {
   name?: string | null;
   bio?: string | null;
@@ -19,27 +82,36 @@ export function composeSystemPrompt(opts: {
   topicsToAvoid?: string | null;
 }): string {
   const name = opts.name || "this person";
-  const parts: string[] = [SAFETY_PREFIX(name)];
 
-  // 2. Tone clause — omit when tonePreset is null/undefined
+  // Fixed (non-truncatable) sections — always preserved verbatim.
+  const fixed: Array<string> = [SAFETY_PREFIX(name)];
   if (opts.tonePreset && opts.tonePreset in TONE_PRESETS) {
-    parts.push(TONE_PRESETS[opts.tonePreset].clause);
+    fixed.push(TONE_PRESETS[opts.tonePreset].clause);
   }
 
-  // 3. Bio — omit when falsy
+  // Truncatable sections — bio, persona, topics. Order matches existing
+  // section order (safety → tone → bio → persona → topics).
+  const truncatable: Array<string> = [];
   if (opts.bio) {
-    parts.push(`Bio: ${opts.bio}`);
+    truncatable.push(`Bio: ${opts.bio}`);
   }
-
-  // 4. Persona — fall back to DEFAULT_PERSONA when null or empty string
-  parts.push(opts.personaPrompt || DEFAULT_PERSONA);
-
-  // 5. Topics to avoid — omit when null/undefined
+  truncatable.push(opts.personaPrompt || DEFAULT_PERSONA);
   if (opts.topicsToAvoid) {
-    parts.push(`Avoid discussing: ${opts.topicsToAvoid}`);
+    truncatable.push(`Avoid discussing: ${opts.topicsToAvoid}`);
   }
 
-  return parts.join("\n\n");
+  // Track which truncatable slots correspond to bio/persona/topics so we can
+  // reassemble in order after truncation.
+  const assembled = truncateToBudget(fixed, truncatable);
+  const joined = assembled.join(SEPARATOR);
+
+  // Hard backstop. Covers the pathological case where the fixed sections
+  // alone (e.g. a name long enough to make the safety prefix huge) would
+  // push us over budget. Under normal inputs `truncateToBudget` already
+  // keeps us strictly inside the cap and this slice is a no-op.
+  return joined.length > SYSTEM_PROMPT_MAX_CHARS
+    ? joined.slice(0, SYSTEM_PROMPT_MAX_CHARS)
+    : joined;
 }
 
 export const loadStreamingContext = internalQuery({

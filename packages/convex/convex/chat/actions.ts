@@ -10,6 +10,53 @@ import { EMBEDDING_MODEL, EMBEDDING_DIMENSIONS } from "../embeddings/config";
 
 const RAG_RESULT_LIMIT = 5;
 const RAG_SCORE_THRESHOLD = 0.3;
+export const RAG_CHUNK_MAX_CHARS = 800;
+export const RAG_CONTEXT_MAX_CHARS = 4000;
+
+const RAG_CONTEXT_HEADER = "\n\n## Relevant Content from Your Writing\n\n";
+
+/**
+ * Assembles the RAG context string that gets appended to the system prompt.
+ *
+ * Bounds the output per FR-08:
+ *  - each chunk's text is truncated to `RAG_CHUNK_MAX_CHARS`
+ *  - total concatenated string (including header) is capped at
+ *    `RAG_CONTEXT_MAX_CHARS`
+ *  - input order is preserved (deterministic)
+ *
+ * Exported so it can be unit tested without the Convex harness.
+ */
+export function buildRagContext(
+  chunks: Array<{ title: string; chunkText: string }>,
+): string {
+  if (chunks.length === 0) {
+    return "";
+  }
+
+  const parts: string[] = [];
+  let total = RAG_CONTEXT_HEADER.length;
+
+  for (const chunk of chunks) {
+    const truncatedText = chunk.chunkText.slice(0, RAG_CHUNK_MAX_CHARS);
+    const part = `### ${chunk.title}\n${truncatedText}`;
+    // Account for "\n\n" separator between parts (absent before the first).
+    const added = parts.length === 0 ? part.length : part.length + 2;
+
+    if (total + added > RAG_CONTEXT_MAX_CHARS) {
+      // Fit as much of this part as we can, then stop.
+      const remaining = RAG_CONTEXT_MAX_CHARS - total - (parts.length === 0 ? 0 : 2);
+      if (remaining > 0) {
+        parts.push(part.slice(0, remaining));
+      }
+      break;
+    }
+
+    parts.push(part);
+    total += added;
+  }
+
+  return RAG_CONTEXT_HEADER + parts.join("\n\n");
+}
 
 export const streamResponse = internalAction({
   args: {
@@ -67,11 +114,9 @@ export const streamResponse = internalAction({
             );
 
             if (chunks.length > 0) {
-              const contextParts = chunks.map(
-                (c: { title: string; chunkText: string }) =>
-                  `### ${c.title}\n${c.chunkText}`,
+              ragContext = buildRagContext(
+                chunks as Array<{ title: string; chunkText: string }>,
               );
-              ragContext = `\n\n## Relevant Content from Your Writing\n\n${contextParts.join("\n\n")}`;
             }
           }
         } catch (error) {
@@ -83,10 +128,18 @@ export const streamResponse = internalAction({
 
       const { thread } = await cloneAgent.continueThread(ctx, { threadId });
 
-      // Empty or undefined promptMessageId = retry: respond to latest user message
+      // Empty or undefined promptMessageId = retry: respond to latest user message.
+      // `maxOutputTokens: 1024` caps Anthropic output spend per turn (FR-01).
       const streamArgs = promptMessageId
-        ? { promptMessageId, system: fullSystemPrompt }
-        : { system: fullSystemPrompt };
+        ? {
+            promptMessageId,
+            system: fullSystemPrompt,
+            maxOutputTokens: 1024,
+          }
+        : {
+            system: fullSystemPrompt,
+            maxOutputTokens: 1024,
+          };
 
       await thread.streamText(
         streamArgs,
