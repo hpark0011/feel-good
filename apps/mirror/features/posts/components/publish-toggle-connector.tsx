@@ -52,6 +52,11 @@ export function PublishToggleConnector({ post }: PublishToggleConnectorProps) {
     setDialogOpen(false);
   }, []);
 
+  const handleOpenChange = useCallback((open: boolean) => {
+    if (!open && isSubmittingRef.current) return;
+    setDialogOpen(open);
+  }, []);
+
   if (!isOwner) return null;
 
   return (
@@ -59,7 +64,7 @@ export function PublishToggleConnector({ post }: PublishToggleConnectorProps) {
       status={post.status}
       isPending={isPending}
       dialogOpen={dialogOpen}
-      onOpenChange={setDialogOpen}
+      onOpenChange={handleOpenChange}
       onConfirm={handleConfirm}
       onCancel={handleCancel}
     />

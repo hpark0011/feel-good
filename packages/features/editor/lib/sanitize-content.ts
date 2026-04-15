@@ -130,10 +130,11 @@ function sanitizeMarks(
  */
 export function sanitizeContent(
   content: JSONContent | null | undefined,
+  isRoot = true,
 ): JSONContent {
   // Guard against null/undefined body (e.g. posts created without body content)
   if (content == null) {
-    return { type: "doc", content: [] };
+    return isRoot ? { type: "doc", content: [] } : { type: "paragraph" };
   }
   // Reject unknown node types — return an empty paragraph as a safe fallback
   if (content.type && !ALLOWED_NODE_TYPES.has(content.type)) {
@@ -171,7 +172,9 @@ export function sanitizeContent(
 
   // Recurse into children
   if (Array.isArray(content.content)) {
-    result.content = content.content.map(sanitizeContent);
+    result.content = content.content.map((child) =>
+      sanitizeContent(child as JSONContent | null | undefined, false),
+    );
   }
 
   return result;

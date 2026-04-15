@@ -174,6 +174,7 @@ export const ensureTestPostFixtures = internalMutation({
       await ctx.db.patch(existingDraft._id, {
         status: "draft",
         title: "Test Draft Post",
+        publishedAt: undefined,
         body: existingDraft.body ?? { type: "doc", content: [{ type: "paragraph" }] },
       });
     } else {
