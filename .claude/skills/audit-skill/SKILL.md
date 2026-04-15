@@ -4,13 +4,9 @@ argument-hint: "[skill-name or .claude/skills/<skill-name>]"
 description: Audits an existing skill in .claude/skills/ against the conventions enforced by create-skill — frontmatter shape, naming, section hygiene, artifact placement, and validator compliance. Use when the user says "audit this skill", "review the X skill", "check if this skill follows conventions", "maintain skill", or wants to verify an existing SKILL.md before merging changes. Produces a findings report with concrete fixes, then optionally applies them.
 ---
 
-# Audit Skill
-
-Assess an existing skill against the authoring rules in [create-skill](../create-skill/SKILL.md). The goal is to catch drift — stale triggers, bloated bodies, nested refs, empty sections — before it degrades discovery or execution.
-
 ## Scope & non-goals
 
-**Do NOT use for**: creating new skills (use `create-skill`), editing CLAUDE.md rules, or mass-renaming existing skills (explicitly disallowed by `create-skill` authoring rules). Trigger phrases live in the frontmatter `description`.
+**Do NOT use for**: creating new skills (use `create-skill`), editing CLAUDE.md rules, or mass-renaming existing skills (explicitly disallowed by `create-skill` authoring rules).
 
 ## Quick start
 
@@ -39,7 +35,7 @@ Run each item against the target skill. Every failure becomes a finding.
 ### Body (blockers)
 
 - [ ] ≤500 lines total.
-- [ ] Required H2 sections present, matching `create-skill/skill-template/SKILL.md`: `Scope & non-goals`, `Quick start`, `Workflow`, `Examples`, `Anti-patterns`. `References` is optional. Renaming sections (e.g. `Workflow` → `Process`, or legacy `When to use`) counts as a blocker — the template vocabulary is load-bearing for discoverability.
+- [ ] Required H2 sections present, matching `create-skill/skill-template/SKILL.md`: `Quick start`, `Workflow`, `Examples`, `Anti-patterns`. Optional: `Scope & non-goals` (only when sibling skills could misfire — e.g. `reviewing-code` vs `review-pr`) and `References` (only when the skill ≥150 lines and genuinely needs progressive disclosure). Renaming a required section (e.g. `Workflow` → `Process`, or legacy `When to use`) counts as a blocker — the template vocabulary is load-bearing for discoverability. An H1 title or purpose paragraph above the first H2 is also a blocker — frontmatter already carries that signal.
 - [ ] No section is empty or a placeholder ("N/A", "TBD", "REPLACE").
 - [ ] No inline code/config block >20 lines — must be extracted into `{artifact}-template/`.
 - [ ] No nested references (`SKILL.md → a.md → b.md`). All links one level deep.

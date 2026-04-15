@@ -90,21 +90,22 @@ export const sendMessage = mutation({
 
     // 4. Existing conversation ownership validation
     let conversationId = args.conversationId;
+    let existingConversation = null;
     if (conversationId) {
-      const conversation = await ctx.db.get(conversationId);
-      if (!conversation) {
+      existingConversation = await ctx.db.get(conversationId);
+      if (!existingConversation) {
         throw new Error("Conversation not found");
       }
-      if (conversation.profileOwnerId !== args.profileOwnerId) {
+      if (existingConversation.profileOwnerId !== args.profileOwnerId) {
         throw new Error("Conversation does not belong to this profile");
       }
       // Viewer must match
       if (appUser) {
-        if (conversation.viewerId !== appUser._id) {
+        if (existingConversation.viewerId !== appUser._id) {
           throw new Error("Not authorized to send to this conversation");
         }
       } else {
-        if (conversation.viewerId !== undefined) {
+        if (existingConversation.viewerId !== undefined) {
           throw new Error("Not authorized to send to this conversation");
         }
       }
@@ -146,14 +147,13 @@ export const sendMessage = mutation({
       );
     }
 
-    // 6. Concurrency guard (existing conversation only)
-    if (conversationId) {
-      const conversation = await ctx.db.get(conversationId);
-      if (conversation?.streamingInProgress) {
-        throw new Error(
-          "A response is already being generated. Please wait for it to complete.",
-        );
-      }
+    // 6. Concurrency guard (existing conversation only). Reuses the
+    //    snapshot from step 4 — rate-limit writes do not touch the
+    //    `conversations` row, so a refetch would return the same value.
+    if (existingConversation?.streamingInProgress) {
+      throw new Error(
+        "A response is already being generated. Please wait for it to complete.",
+      );
     }
 
     // 7. Create conversation + thread if first message

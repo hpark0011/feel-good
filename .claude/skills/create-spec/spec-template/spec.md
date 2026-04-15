@@ -1,7 +1,7 @@
 # <Feature Name> — Spec
 
-*Template artifact. Consumed by `.claude/skills/create-spec/SKILL.md` (Phase 3).
-Do NOT reference this file directly from an agent — go through the skill.*
+_Template artifact. Consumed by `.claude/skills/create-spec/SKILL.md` (Phase 3).
+Do NOT reference this file directly from an agent — go through the skill._
 
 ---
 
@@ -13,15 +13,15 @@ Do NOT reference this file directly from an agent — go through the skill.*
 
 ### Functional Requirements
 
-| ID    | Requirement      | Priority | Verification            |
-| ----- | ---------------- | -------- | ----------------------- |
-| FR-01 | {requirement}    | {p0-p3}  | {concrete, automatable} |
+| ID    | Requirement   | Priority | Verification            |
+| ----- | ------------- | -------- | ----------------------- |
+| FR-01 | {requirement} | {p0-p3}  | {concrete, automatable} |
 
 ### Non-functional Requirements (if any)
 
-| ID     | Requirement      | Priority | Verification            |
-| ------ | ---------------- | -------- | ----------------------- |
-| NFR-01 | {requirement}    | {p0-p3}  | {concrete, automatable} |
+| ID     | Requirement   | Priority | Verification            |
+| ------ | ------------- | -------- | ----------------------- |
+| NFR-01 | {requirement} | {p0-p3}  | {concrete, automatable} |
 
 ## Architecture
 
@@ -50,9 +50,9 @@ Use Vitest. Match the owning package's existing patterns: tests in `__tests__/` 
 
 ## Playwright E2E Tests
 
-| Test File | Scenario                             | Verifies |
-| --------- | ------------------------------------ | -------- |
-| {path}    | {user flow from user's perspective}  | {FR-XX}  |
+| Test File | Scenario                            | Verifies |
+| --------- | ----------------------------------- | -------- |
+| {path}    | {user flow from user's perspective} | {FR-XX}  |
 
 E2E tests go in the owning app's Playwright directory (e.g., `apps/mirror/e2e/`) with a `.spec.ts` suffix. Use the Playwright CLI only (`.claude/rules/testing.md`). Tests must describe real user flows, not internal state checks.
 
@@ -64,7 +64,7 @@ E2E tests go in the owning app's Playwright directory (e.g., `apps/mirror/e2e/`)
 
 Plan which agents execute the implementation work. Check `.claude/agents/` for specialized agents that can own specific steps. Prefer existing specialized agents over creating new ones.
 
-**Every step MUST pair an Executor with a Critique agent.** The critique agent runs in a separate context window on the executor's diff — never self-review. Self-evaluation is systematically biased toward praise; an independent, skeptical evaluator is the load-bearing mechanism that catches last-mile issues. See https://www.anthropic.com/engineering/harness-design-long-running-apps. This applies even for one-file changes.
+**Every step MUST pair an Executor with a Critique agent.** The critique agent runs in a separate context window on the executor's diff — never self-review. Self-evaluation is systematically biased toward praise; an independent, skeptical evaluator is the load-bearing mechanism that catches last-mile issues. This applies even for one-file changes.
 
 ```
 Step N — {description}
@@ -81,15 +81,15 @@ Verification: {what to check before moving on}
 
 **Important exception**: for features whose threat model IS the spec (rate limiting, auth flows, input validation), do NOT dispatch a separate `code-review-security` agent — the FR table already encodes the threats and `code-review-correctness` will catch the same issues. Stacking security on top is pure overhead.
 
-| Work type                                      | Default critique (pick 1-2)                          |
-| ---------------------------------------------- | ---------------------------------------------------- |
-| Backend logic, mutations, state machines       | `code-review-correctness` + `code-review-tests`      |
-| Schema / migrations / Convex validators        | `code-review-data-integrity`                         |
-| Auth/permissions/input WHEN the threat model is NOT the spec | `code-review-security`                  |
-| Streaming, locks, retries, cancellation, async | `code-review-concurrency`                            |
-| File organization, naming, public API contract | `code-review-convention`                             |
-| Hot paths, large lists, Convex reads, rendering| `code-review-performance`                            |
-| Test suites themselves                         | `code-review-tests`                                  |
+| Work type                                                    | Default critique (pick 1-2)                     |
+| ------------------------------------------------------------ | ----------------------------------------------- |
+| Backend logic, mutations, state machines                     | `code-review-correctness` + `code-review-tests` |
+| Schema / migrations / Convex validators                      | `code-review-data-integrity`                    |
+| Auth/permissions/input WHEN the threat model is NOT the spec | `code-review-security`                          |
+| Streaming, locks, retries, cancellation, async               | `code-review-concurrency`                       |
+| File organization, naming, public API contract               | `code-review-convention`                        |
+| Hot paths, large lists, Convex reads, rendering              | `code-review-performance`                       |
+| Test suites themselves                                       | `code-review-tests`                             |
 
 ## Open Questions (if any)
 

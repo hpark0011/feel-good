@@ -12,6 +12,9 @@ const RAG_RESULT_LIMIT = 5;
 const RAG_SCORE_THRESHOLD = 0.3;
 export const RAG_CHUNK_MAX_CHARS = 800;
 export const RAG_CONTEXT_MAX_CHARS = 4000;
+// FR-01: per-turn Anthropic output cap. Single source so retry and
+// first-send paths can't drift.
+const CHAT_MAX_OUTPUT_TOKENS = 1024;
 
 const RAG_CONTEXT_HEADER = "\n\n## Relevant Content from Your Writing\n\n";
 
@@ -129,17 +132,13 @@ export const streamResponse = internalAction({
       const { thread } = await cloneAgent.continueThread(ctx, { threadId });
 
       // Empty or undefined promptMessageId = retry: respond to latest user message.
-      // `maxOutputTokens: 1024` caps Anthropic output spend per turn (FR-01).
-      const streamArgs = promptMessageId
-        ? {
-            promptMessageId,
-            system: fullSystemPrompt,
-            maxOutputTokens: 1024,
-          }
-        : {
-            system: fullSystemPrompt,
-            maxOutputTokens: 1024,
-          };
+      // `maxOutputTokens` comes from `CHAT_MAX_OUTPUT_TOKENS` so both paths
+      // stay pinned to the same per-turn Anthropic cap (FR-01).
+      const streamArgs = {
+        system: fullSystemPrompt,
+        maxOutputTokens: CHAT_MAX_OUTPUT_TOKENS,
+        ...(promptMessageId ? { promptMessageId } : {}),
+      };
 
       await thread.streamText(
         streamArgs,

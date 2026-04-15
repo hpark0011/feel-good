@@ -15,7 +15,10 @@ process.env.GOOGLE_CLIENT_SECRET =
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ConvexError } from "convex/values";
 import { convexTest } from "convex-test";
-import rateLimiterSchema from "../../../../../node_modules/.pnpm/@convex-dev+rate-limiter@0.3.2_convex@1.32.0_react@19.2.3__react@19.2.3/node_modules/@convex-dev/rate-limiter/src/component/schema";
+// Imported via the package's workspace symlink (NOT a content-addressed
+// pnpm path) so a bump of rate-limiter / convex / react doesn't rotate
+// the directory name out from under this import.
+import rateLimiterSchema from "../../../node_modules/@convex-dev/rate-limiter/src/component/schema";
 import schema from "../../schema";
 
 // -- Shared mock state -----------------------------------------------------

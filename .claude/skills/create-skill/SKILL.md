@@ -1,15 +1,11 @@
 ---
 name: create-skill
-description: Scaffolds new project skills in .claude/skills/ using the repo's standard SKILL.md template (frontmatter + Scope & non-goals, Quick start, Workflow, Examples, References, Anti-patterns). Use when the user asks to create, scaffold, author, or add a new skill, says "new skill", "make a skill", or wants to turn a repeated workflow into a reusable skill. Also use when auditing an existing skill against the template.
+description: Scaffolds new project skills in .claude/skills/ using the repo's standard SKILL.md template. Use when the user asks to create, scaffold, author, or add a new skill, says "new skill", "make a skill", or wants to turn a repeated workflow into a reusable skill. Also use when auditing an existing skill against the template.
 ---
-
-# Skill Creator
-
-Author new skills for this repo that follow Anthropic's skill-authoring best practices and this project's conventions. The goal is skills Claude can reliably discover, load cheaply, and execute without drift.
 
 ## Scope & non-goals
 
-**Do NOT use for**: one-off prompts, personal memory entries (use auto-memory), automation that requires hooks (use `update-config`), or CLAUDE.md edits.
+**Do NOT use for**: one-off prompts, personal memory entries (use auto-memory), automation that requires hooks (use `update-config`), or CLAUDE.md edits. For auditing an existing skill against conventions, hand off to [`audit-skill`](../audit-skill/SKILL.md).
 
 ## Quick start
 
@@ -57,7 +53,7 @@ Canonical scaffold lives at [skill-template/SKILL.md](skill-template/SKILL.md). 
 
    > **Meta-skill exception.** Skills whose primary surface _is_ a tool or artifact concept (`create-skill`, `audit-skill`, `create-spec`) may use `<action>-<noun>` or `<noun>-<action>` form — the tool name carries stronger trigger signal than a forced gerund. This skill (`create-skill`) is itself an instance of the exception.
 
-3. **Omit empty sections.** The template is a ceiling, not a floor. A 40-line skill should be 40 lines.
+3. **Omit empty sections.** The template is a ceiling, not a floor. Required H2s: `Quick start`, `Workflow`, `Examples`, `Anti-patterns`. `Scope & non-goals` is optional — add it only when sibling skills could misfire (e.g. `reviewing-code` vs `review-pr`). Don't fabricate an H1 title or purpose paragraph — the frontmatter already carries that signal.
 4. **No progressive disclosure under ~150 lines.** Splitting small skills into multiple files adds navigation cost without token savings.
 5. **References stay one level deep from SKILL.md.** Claude partially-reads nested files and loses info.
 6. **Match freedom to fragility.** High freedom (heuristics) for open-ended tasks, low freedom (exact commands) for fragile ones like migrations.
