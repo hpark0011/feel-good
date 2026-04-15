@@ -92,7 +92,7 @@ Rules for Phase 3:
 2. Every requirement row MUST have a concrete, automatable `Verification` value — no subjective criteria.
 3. Every requirement must be referenced by at least one row in Unit Tests or Playwright E2E Tests (ideally both where user-visible).
 4. Test file paths must match real package/app conventions (Vitest in `__tests__/` with `.test.ts`; Playwright in the owning app's e2e dir with `.spec.ts`). Verify against the codebase, don't guess.
-5. Team Orchestration Plan must name real agents from `.claude/agents/` or explicitly recommend `/new-domain-agent` for missing owners.
+5. Team Orchestration Plan must name real agents from `.claude/agents/` or explicitly recommend `/new-codebase-expert` for missing owners.
 
 **Who runs Phase 3**: the skill does not name an executor. Whichever agent invokes this skill is responsible for Phase 3 — that routing decision belongs to the caller (or the agent's own spec), not to the skill. This keeps the dependency arrow one-directional (template ← skill ← agent) and avoids a cycle where the skill names an agent that names the skill.
 
@@ -223,6 +223,6 @@ If the Verification Agent finds failures, fix them in the spec. Re-verify only t
 - **Hard verification only**: Every requirement must have a concrete, automatable check.
 - **Codebase accuracy**: File paths in the spec must be verified against the real codebase. Do not guess.
 - **Spec output**: `workspace/spec/{feature-name}-spec.md`, kebab-case filename.
-- **Artifact hierarchy** (per `.claude/skills/new-domain-agent/SKILL.md#artifact-hierarchy-principle`): the spec template lives at `spec-template/spec.md` and is referenced — not inlined — by this SKILL.md. This skill does not name its executor; agents that invoke it reach down, never the other way around. One-directional dependency: `spec-template/` ← `SKILL.md` ← agent.
+- **Artifact hierarchy** (per `.claude/skills/new-codebase-expert/SKILL.md#artifact-hierarchy-principle`): the spec template lives at `spec-template/spec.md` and is referenced — not inlined — by this SKILL.md. This skill does not name its executor; agents that invoke it reach down, never the other way around. One-directional dependency: `spec-template/` ← `SKILL.md` ← agent.
 - **Iterate critiques**: The adversarial loop runs until no Critical concerns remain.
 - **User requirements are sovereign**: If the adversarial reviewer argues against something the user explicitly requested, reject it and document why.

@@ -1,44 +1,34 @@
 ---
-name: new-domain-agent
-description: "Build self-improving domain expert agents that own a bounded coding layer and get measurably sharper with every task. Each session ends with a log entry that patches the agent's spec or knowledge, so the next session is faster and more accurate. Use when the user asks to create a domain agent, add a new domain expert, scaffold a subsystem agent, set up a self-improving agent, or build an agent that owns a specific area of the codebase. Invoke with `/new-domain-agent` or `/new-domain-agent <domain-name>`."
-when_to_use: "Triggered by phrases like 'create a domain agent', 'new domain agent', 'add a domain expert', 'scaffold an agent for <subsystem>', 'set up an agent that owns <area>', 'build a self-improving agent', 'make an expert agent for this subsystem', 'I need an agent for <feature/module>', or '/new-domain-agent'."
+name: new-codebase-expert
+description: "Scaffold a self-improving codebase expert agent that owns a bounded coding layer and gets measurably sharper with every task. Each session ends with a log entry that patches the agent's spec or knowledge, so the next session is faster and more accurate. Use when the user asks to create a codebase expert, add a new subsystem expert, scaffold an agent that owns a coding area, set up a self-improving agent, or build an agent that owns a specific part of the codebase. Invoke with `/new-codebase-expert` or `/new-codebase-expert <domain-name>`."
+when_to_use: "Triggered by phrases like 'create a codebase expert', 'new codebase expert', 'add a subsystem expert', 'scaffold an agent for <subsystem>', 'set up an agent that owns <area of the code>', 'build a self-improving coding agent', 'make an expert agent for this subsystem', 'I need an agent for <feature/module>', or '/new-codebase-expert'."
 disable-model-invocation: true
 argument-hint: "[domain-name]"
 ---
 
-# New Domain Agent
+# New Codebase Expert
 
-Scaffold a **self-improving domain expert agent**. The system has three parts.
+Scaffold a **self-improving codebase expert agent** — a domain agent that owns a bounded coding layer. The system has three parts.
 
 1. **Agent spec** (`.claude/agents/<name>.md`) — domain boundary, how to operate, guiding principles, available skills/tools
 2. **Knowledge** (`agent-memory/<name>/knowledge.md`) — architecture, data flow & contracts, gotchas, references
 3. **Logs** (`agent-memory/<name>/logs.md`) — append-only session evals against 4 criteria, bottleneck identification, patches applied
 
-The agent improves itself by ending every session with a log entry that patches either the spec or the knowledge file. This is enforced mechanically by a `SubagentStop` hook (`scripts/validate-session-log.mjs`) that blocks the subagent from ending until `logs.md` contains a fresh entry with `Bottleneck`, `Counterfactual`, and `Patch`. No promotion trees, no decision logs, no wikis to maintain.
+The agent improves itself by ending every session with a log entry that patches either the spec or the knowledge file. This is enforced mechanically by a `SubagentStop` hook (`scripts/validate-session-log.mjs`) that blocks the subagent from ending until `logs.md` contains a fresh entry with `Bottleneck`, `Counterfactual`, and `Patch`.
 
 ## Artifact Hierarchy Principle (applies to every skill + agent in this repo)
 
-Any artifact a skill or agent consumes — spec templates, prompt templates, scaffolds, checklists — MUST live in its own file under a `{artifact-type}-template/` directory **inside the owning skill**, not inlined in `SKILL.md` or an agent spec. The dependency graph is strictly one-directional:
+Dependencies point strictly upward. No file references anything above it.
 
 ```
-{artifact-type}-template/<file>    ← raw artifacts (no references out)
+{artifact-type}-template/<file>    ← pure content, references nothing
           ↑ referenced by
-    skills/<skill>/SKILL.md         ← the workflow that uses them
+    skills/<skill>/SKILL.md         ← references templates by path, never inlines them
           ↑ referenced by
-    agents/<agent>.md               ← the agent that invokes the skill
+    agents/<agent>.md               ← references skills, never artifacts directly
 ```
 
-Rules:
-
-1. **Artifacts are leaves.** A file under `{artifact-type}-template/` never references a SKILL.md or an agent spec. It is pure content.
-2. **Skills reference artifacts by path.** `SKILL.md` points to the template file(s) it owns; it does not paste the template body inline.
-3. **Agents reference skills, not artifacts.** An agent spec says "use skill X" and lets the skill resolve the artifact. Agents must not reach around the skill to load a template directly.
-4. **No circular dependencies.** If two files would reference each other, one of them is misplaced. Move structure down the hierarchy until the cycle breaks.
-5. **One canonical copy.** A template lives in exactly one place. Parallel copies across `.claude/` and `.agents/` trees are a bug — pick one and have the other reference it.
-
-This skill is itself the reference implementation: `domain-agent-template/{agent-spec.md,knowledge.md,logs.md}` are the artifacts, this `SKILL.md` references them by path, and generated domain-expert agents reference this skill (not the template files).
-
-When you create or audit a skill/agent pair, verify the hierarchy and reject inlined artifacts. If you find a skill that inlines its templates, the first patch is to extract them into a `{artifact-type}-template/` folder before anything else changes.
+Templates live in exactly one place, under `{artifact-type}-template/` inside the owning skill. If two files reference each other, remove the **downward** reference — skills describe _what work happens_, not _who does it_. This skill is the reference implementation (`codebase-expert-template/` → this `SKILL.md` → generated agents).
 
 ## Guiding Principles (encoded in every agent)
 
@@ -51,8 +41,8 @@ Non-negotiable order. Lower objectives never compromise higher ones.
 
 ## Trigger
 
-- `/new-domain-agent` — interactive: ask what domain to create an agent for
-- `/new-domain-agent <domain-name>` — create agent for the named domain
+- `/new-codebase-expert` — interactive: ask what domain to create an agent for
+- `/new-codebase-expert <domain-name>` — create agent for the named domain
 
 ## Process
 
@@ -70,13 +60,13 @@ Derive:
 Quality of the agent is bounded by quality of this step.
 
 1. Read `.claude/agents/` to detect overlap (two agents must never own the same file) and pick an unused color
-2. Read `domain-agent-template/agent-spec.md` for current structure
+2. Read `codebase-expert-template/agent-spec.md` for current structure
 3. Glob the domain's source — read entry points, key abstractions, any local README/docs
 4. Identify: key files, architecture, data flow, contracts, recurring gotchas, build/test commands, relevant skills
 
 ### 3. Write the agent spec
 
-Create `.claude/agents/<name>.md` from `domain-agent-template/agent-spec.md`. Required sections, in order:
+Create `.claude/agents/<name>.md` from `codebase-expert-template/agent-spec.md`. Required sections, in order:
 
 - Frontmatter (`name`, `description`, `model: opus`, unique `color`, `memory: project`, `tools:` **allowlist** scoped to the domain, `maxTurns: 40` as a safety ceiling)
 - Domain Boundary (own / do NOT own — both explicit)
@@ -90,7 +80,7 @@ Keep it short. Long specs are smell — real intelligence belongs in `knowledge.
 
 ### 4. Bootstrap memory
 
-Create `.claude/agent-memory/<name>/` with `knowledge.md` and `logs.md` copied from `domain-agent-template/` (the `agent-spec.md` in that directory is for step 3 only — do NOT copy it into the agent's memory dir):
+Create `.claude/agent-memory/<name>/` with `knowledge.md` and `logs.md` copied from `codebase-expert-template/` (the `agent-spec.md` in that directory is for step 3 only — do NOT copy it into the agent's memory dir):
 
 | File           | Customization                                                                                                                        |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
@@ -112,7 +102,7 @@ Step 5 of the agent's operating loop (Log & Patch) is the load-bearing self-impr
 Run the installer — it is idempotent, preserves other hooks, and creates `settings.json` if missing:
 
 ```bash
-node .claude/skills/new-domain-agent/scripts/install-hook.mjs
+node .claude/skills/new-codebase-expert/scripts/install-hook.mjs
 ```
 
 It prints either `installed …` or `already present …`. Require exit 0. Subsequent agent creations will detect the hook already present and no-op.
@@ -131,7 +121,7 @@ Confirm the layout exists:
 Then run the scaffold validator and require exit 0 before proceeding:
 
 ```bash
-node .claude/skills/new-domain-agent/scripts/validate-scaffold.mjs <name>
+node .claude/skills/new-codebase-expert/scripts/validate-scaffold.mjs <name>
 ```
 
 The validator deterministically checks: YAML frontmatter parses, required fields present (`name`, `description`, `model`, `color`, `memory`, `tools`, `maxTurns`), `name` matches filename, `description` starts with "Use this agent when", `color` is unique across existing agents, `tools` is a non-empty subset of the known Claude Code tool allowlist (plus any `mcp__*`), memory files exist, and the spec body contains all 7 required H2 section headings.
@@ -145,7 +135,6 @@ Tell the user:
 - Agent name and spec file path
 - Domain boundary (own / not own)
 - Memory directory path
-- That `knowledge.md` is empty by design and grows through session-log patches
 
 ## Anti-patterns
 

@@ -4,7 +4,7 @@
  * .claude/settings.json.
  *
  * Usage:
- *   node .claude/skills/new-domain-agent/scripts/install-hook.mjs [--repo-root PATH]
+ *   node .claude/skills/new-codebase-expert/scripts/install-hook.mjs [--repo-root PATH]
  *
  * Behavior:
  *   - Locates .claude/ from cwd (or --repo-root if given).
@@ -22,7 +22,7 @@ import { join, resolve, dirname } from "node:path";
 import { argv, cwd, exit, stderr, stdout } from "node:process";
 
 const HOOK_COMMAND =
-  "node .claude/skills/new-domain-agent/scripts/validate-session-log.mjs";
+  "node .claude/skills/new-codebase-expert/scripts/validate-session-log.mjs";
 const HOOK_MARKER = "validate-session-log.mjs";
 
 function parseArgs() {
