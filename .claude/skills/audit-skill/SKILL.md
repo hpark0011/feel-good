@@ -58,6 +58,7 @@ Run each item against the target skill. Every failure becomes a finding.
 ### Artifacts (blocker)
 
 - [ ] Any bundled template/script lives in a `{name}-template/` or `scripts/` subdirectory and is referenced from `SKILL.md`.
+- [ ] Prompts for sub-agents that only exist to run this skill's workflow live in `agents/<role>.md`. Sub-agents already registered in `.claude/agents/` must be referenced by name, never copied into the skill.
 
 ### Validator (blocker)
 

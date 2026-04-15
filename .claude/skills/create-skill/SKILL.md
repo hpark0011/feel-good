@@ -43,6 +43,8 @@ Canonical scaffold lives at [skill-template/SKILL.md](skill-template/SKILL.md). 
 
 **Artifact convention:** Any bundled artifact (template, script, example file) goes in a `{artifact-name}-template/` or similarly-named subdirectory of the skill and is referenced from `SKILL.md`. Never inline artifacts larger than ~20 lines.
 
+**Sub-agent convention:** Prompts for sub-agents that exist only to run this skill's workflow live in `agents/<role>.md` inside the skill directory. Sub-agents already registered in `.claude/agents/` are referenced by name instead — never copied. Rule of thumb: if deleting the skill would orphan the prompt, it belongs in the skill's `agents/`; otherwise it belongs in `.claude/agents/`.
+
 ## Authoring rules
 
 1. **Frontmatter is the discovery surface.** `name` + `description` are the only tokens pre-loaded. Description must be third-person, include _what_ and _when_, and name concrete trigger phrases. Max 1024 chars — every token competes with every other skill's metadata. Include an `argument-hint` field when the skill accepts input (e.g. `"[skill-name]"`, `"[ticket-id]"`); delete the line if the skill takes no arguments.

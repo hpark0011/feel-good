@@ -1,12 +1,6 @@
 ---
 name: create-spec
-description: >
-  Create a product spec from user requirements through multi-agent research,
-  adversarial critique, and iterative refinement. Spawns PM, Adversarial Reviewer,
-  domain expert (when relevant), and Verification agents in separate context windows.
-  Outputs a spec with Playwright E2E tests and team orchestration plan to
-  workspace/spec/. Use when the user wants to create a spec, write requirements,
-  plan a feature, or says "create spec", "spec this", "write a spec".
+description: Create a product spec from user requirements through multi-agent research, adversarial critique, and iterative refinement. Spawns PM, Adversarial Reviewer, domain expert (when relevant), and Verification agents in separate context windows. Outputs a spec with Playwright E2E tests and team orchestration plan to workspace/spec/. Use when the user wants to create a spec, write requirements, plan a feature, or says "create spec", "spec this", "write a spec".
 ---
 
 # Create Spec
@@ -36,27 +30,7 @@ If the user provided or referenced research material (links, docs, prior specs),
 
 ### 2b — Investigate Codebase
 
-Spawn a **Codebase Analyst** agent:
-
-```
-You are a Codebase Analyst. Investigate how the current codebase relates to the
-feature described below and report what exists vs what needs to be built.
-
-## Feature
-{user's requirement}
-
-## Instructions
-1. Use Grep and Glob to find related files. Read key files to understand existing patterns.
-2. Check package.json files for relevant dependencies.
-3. Examine store slices, components, IPC handlers, and preload scripts as relevant.
-4. Report:
-   - Feature status: exists | partial | missing
-   - Related files with brief descriptions
-   - Existing architectural patterns for similar features
-   - Where new code should live (packages, directories)
-   - Integration points with existing code
-   - Files to create and files to modify
-```
+Spawn a **Codebase Analyst** agent using the prompt at `agents/codebase-analyst.md`.
 
 ### 2c — Consult Domain Expert (When Relevant)
 
@@ -104,39 +78,7 @@ After the PM Agent produces the spec, spawn **two agents in parallel** (three if
 
 ### Agent 1: Adversarial Spec Reviewer
 
-```
-You are an Adversarial Spec Reviewer. You challenge plans by trying to falsify
-them. Where other reviewers evaluate whether a document is clear or feasible,
-you ask whether it's RIGHT — whether the premises hold, the assumptions are
-warranted, and the decisions would survive contact with reality.
-
-You construct counterarguments, not checklists.
-
-If you spot any part of the spec that is a band-aid solution over a solution
-that makes the wrong thing structurally hard to do, call it out. The
-architecture should prevent mistakes, not just handle them.
-
-## User's Requirement
-{paste requirement}
-
-## Spec
-{paste spec content}
-
-## Instructions
-For each concern, provide:
-- Severity: Critical | Important | Minor
-- The specific problem
-- Why it matters (what breaks, what's fragile, what's wrong)
-- Your proposed fix
-
-Focus on:
-1. Assumptions that might not hold
-2. Edge cases the spec doesn't address
-3. Architectural decisions that will cause pain later
-4. Requirements that are undertested or have weak verification
-5. Band-aid solutions where structural prevention is possible
-6. Missing failure modes
-```
+Spawn with the prompt at `agents/adversarial-reviewer.md`.
 
 ### Agent 2: Domain Expert (if consulted in Phase 2)
 
@@ -158,30 +100,7 @@ Re-spawn the same domain expert agent from Phase 2 with the full spec, asking it
 
 ## Phase 5: Final Verification
 
-Spawn a **Verification Agent**:
-
-```
-You are a Verification Agent. Verify the final spec is complete and correct.
-
-## User's Original Requirement
-{paste requirement}
-
-## Final Spec
-{paste spec content}
-
-## Checklist — report PASS or FAIL for each:
-1. Requirements coverage: Does every user requirement have a corresponding FR/NFR?
-2. Test coverage: Does every FR have at least one unit test AND one E2E test?
-3. E2E tests are user-perspective: Do Playwright tests describe user flows, not internal state?
-4. Team orchestration plan exists and references real agents from .claude/agents/ where applicable
-5. Verification criteria: Every requirement has a concrete, automatable check (no "looks good")
-6. Codebase alignment: File paths and package locations match actual codebase structure
-7. Anti-patterns section exists with specific items
-
-## Output
-For each item: PASS/FAIL with details.
-If any FAIL: list the specific fix needed.
-```
+Spawn a **Verification Agent** with the prompt at `agents/verification.md`.
 
 If the Verification Agent finds failures, fix them in the spec. Re-verify only the failed items.
 
@@ -190,29 +109,7 @@ If the Verification Agent finds failures, fix them in the spec. Re-verify only t
 ## Final Output
 
 1. Write the spec to `workspace/spec/{feature-name}-spec.md`
-2. Present a summary:
-
-```
-## Spec Complete
-
-**Location:** workspace/spec/{feature-name}-spec.md
-
-### Requirements
-- {N} functional + {N} non-functional requirements
-
-### Test Plan
-- {N} unit tests + {N} E2E tests
-
-### Orchestration
-- {summary of who does what}
-
-### Adversarial Review
-- {N} concerns raised, {N} accepted, {N} rejected
-- No unresolved Critical concerns
-
-### Verification
-- All checks PASS
-```
+2. Present a summary including: spec location, FR/NFR counts, unit + E2E test counts, orchestration summary, adversarial review tallies (raised / accepted / rejected, no unresolved Critical), and verification result.
 
 ---
 
@@ -223,6 +120,6 @@ If the Verification Agent finds failures, fix them in the spec. Re-verify only t
 - **Hard verification only**: Every requirement must have a concrete, automatable check.
 - **Codebase accuracy**: File paths in the spec must be verified against the real codebase. Do not guess.
 - **Spec output**: `workspace/spec/{feature-name}-spec.md`, kebab-case filename.
-- **Artifact hierarchy** (per `.claude/skills/new-codebase-expert/SKILL.md#artifact-hierarchy-principle`): the spec template lives at `spec-template/spec.md` and is referenced — not inlined — by this SKILL.md. This skill does not name its executor; agents that invoke it reach down, never the other way around. One-directional dependency: `spec-template/` ← `SKILL.md` ← agent.
+- **Artifact hierarchy** (per `.claude/skills/new-codebase-expert/SKILL.md#artifact-hierarchy-principle`): the output template lives at `spec-template/spec.md` and the prompts for workflow-only sub-agents live at `agents/*.md` — both are referenced, never inlined, by this SKILL.md. This skill does not name its executor; agents that invoke it reach down, never the other way around. One-directional dependency: `spec-template/` + `agents/` ← `SKILL.md` ← caller.
 - **Iterate critiques**: The adversarial loop runs until no Critical concerns remain.
 - **User requirements are sovereign**: If the adversarial reviewer argues against something the user explicitly requested, reject it and document why.
