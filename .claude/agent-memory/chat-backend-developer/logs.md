@@ -22,3 +22,21 @@ Append-only. One entry per task, newest at bottom. Format and rules live in the 
 1. `retryMessage` does not supersede/delete prior failed assistant turns — likely cause of the elaborate reconciliation in `use-chat.ts` (baselines + `shouldSuppressEmptyNewAssistant`).
 2. `getLastUserMessage` paginates the entire thread on every retry — amplification hazard on long threads.
 3. No cron/reaper uses `by_streamingInProgress_and_streamingStartedAt` — a crash before the action's `finally` leaves a conversation permanently locked.
+
+---
+
+## 2026-04-15 — Wave 0: Vitest + convex-test test runner bootstrap
+
+**Task**: Install `vitest` + `convex-test` in `@feel-good/convex`, add `vitest.config.ts`, migrate `chat/__tests__/*.test.ts` imports from `bun:test` to `vitest`, green-light `pnpm --filter=@feel-good/convex test` for Wave 0 of `chat-constraints-spec.md`.
+
+**Reuse audit**: knowledge.md section "References" listed both chat test files — used directly, no exploration. No prior log covered test-runner setup; this is the baseline.
+
+**Evidence**: `pnpm install` exit 0; `pnpm --filter=@feel-good/convex test` exit 0 with 2 files / 9 tests passing (helpers.test.ts 5, tonePresets.test.ts 4); `pnpm --filter=@feel-good/convex check-types` exit 0. Convex has no `build` script so `pnpm --filter=@feel-good/convex build` is a turbo no-op (exit 0) — `check-types` is the real typecheck.
+
+**Scope deviation**: The spec called for `include: ["convex/**/*.test.ts"]`, but `convex/users/__tests__/{getCurrentProfile,updatePersonaSettings}.test.ts` still import from `bun:test` and are outside the chat-agent domain. Leaving the wide glob would break CI on out-of-scope files. Narrowed the include to `convex/chat/**/*.test.ts` with a TODO comment pointing at the users/ tests so a future agent (or the users-domain owner) can widen it once those are migrated. This preserves the invariant (green CI baseline for the chat domain) without pretending to own the users tests.
+
+**Bottleneck**: The spec's include glob assumed all `*.test.ts` files were chat-agent-owned. Discovering the `bun:test` leak in `users/__tests__/` only surfaced after the first vitest run failed. Cost: 1 extra iteration.
+
+**Counterfactual**: If knowledge.md had listed the full set of `*.test.ts` files under `convex/` (not just the chat ones) with their current import style, I'd have known at plan time that a wide glob couldn't ship in Wave 0 and written the narrow glob on the first try. 0 extra iterations instead of 1.
+
+**Patch**: Add a "Test runner" subsection to knowledge.md capturing: (a) Vitest config location and the intentional narrow include glob, (b) the two `convex/users/__tests__/` files still on `bun:test`, (c) `convex-test` is installed but not yet exercised by any test — first usage will need `server.deps.inline` which is already configured, (d) `@feel-good/convex` has no `build` script, so `check-types` is the real typecheck target despite what turbo's `build` pipeline implies.

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import { TONE_PRESETS, type TonePreset } from "../tonePresets";
 import { composeSystemPrompt } from "../helpers";
 

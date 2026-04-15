@@ -96,6 +96,14 @@ Rules reused across `getConversation`, `getConversations`, `listThreadMessages`:
 - **`agent.ts` instructions is `""`.** System prompt is injected per call. Any future `generateText` without an explicit `system:` will run un-prompted.
 - **Convex rules:** new function syntax, validators on args+returns, `withIndex` not `filter`, `"use node"` on `agent.ts` and `actions.ts` (both use Node modules), run `pnpm exec convex codegen` (not `npx`) after signature/schema changes.
 
+## Test runner
+
+- Vitest config: `packages/convex/vitest.config.ts`. Environment `node`. `server.deps.inline: ["convex-test"]` is set (required under pnpm's isolated layout; leave it even before the first `convex-test` call site exists).
+- **Include glob is intentionally narrow**: `convex/chat/**/*.test.ts`. Widening to `convex/**/*.test.ts` will break CI because `convex/users/__tests__/{getCurrentProfile,updatePersonaSettings}.test.ts` still import from `bun:test`. Widen only after those two files have been migrated to `vitest` by the users-domain owner.
+- `convex-test@^0.0.48` is installed but not yet exercised by any test in `chat/__tests__/`. First usage just needs `convexTest(schema, import.meta.glob("./**/*.ts"))`.
+- `@feel-good/convex` has **no `build` script**. `pnpm --filter=@feel-good/convex build` is a turbo no-op and is not a real typecheck. The actual typecheck command is `pnpm --filter=@feel-good/convex check-types` (runs `tsc --noEmit -p convex/tsconfig.json`). Use that in verification, not `build`.
+- Run tests via `pnpm --filter=@feel-good/convex test` (script: `vitest run`).
+
 ## References
 
 | Type | Resource | Why it matters |
