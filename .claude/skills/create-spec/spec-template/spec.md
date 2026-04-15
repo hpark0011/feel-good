@@ -1,7 +1,7 @@
 # <Feature Name> — Spec
 
-*Template artifact. Consumed by `.claude/skills/create-spec/SKILL.md` (Phase 3).
-Do NOT reference this file directly from an agent — go through the skill.*
+_Template artifact. Consumed by `.claude/skills/create-spec/SKILL.md` (Phase 3).
+Do NOT reference this file directly from an agent — go through the skill._
 
 ---
 
@@ -13,15 +13,15 @@ Do NOT reference this file directly from an agent — go through the skill.*
 
 ### Functional Requirements
 
-| ID    | Requirement      | Priority | Verification            |
-| ----- | ---------------- | -------- | ----------------------- |
-| FR-01 | {requirement}    | {p0-p3}  | {concrete, automatable} |
+| ID    | Requirement   | Priority | Verification            |
+| ----- | ------------- | -------- | ----------------------- |
+| FR-01 | {requirement} | {p0-p3}  | {concrete, automatable} |
 
 ### Non-functional Requirements (if any)
 
-| ID     | Requirement      | Priority | Verification            |
-| ------ | ---------------- | -------- | ----------------------- |
-| NFR-01 | {requirement}    | {p0-p3}  | {concrete, automatable} |
+| ID     | Requirement   | Priority | Verification            |
+| ------ | ------------- | -------- | ----------------------- |
+| NFR-01 | {requirement} | {p0-p3}  | {concrete, automatable} |
 
 ## Architecture
 
@@ -50,9 +50,9 @@ Use Vitest. Match the owning package's existing patterns: tests in `__tests__/` 
 
 ## Playwright E2E Tests
 
-| Test File | Scenario                             | Verifies |
-| --------- | ------------------------------------ | -------- |
-| {path}    | {user flow from user's perspective}  | {FR-XX}  |
+| Test File | Scenario                            | Verifies |
+| --------- | ----------------------------------- | -------- |
+| {path}    | {user flow from user's perspective} | {FR-XX}  |
 
 E2E tests go in the owning app's Playwright directory (e.g., `apps/mirror/e2e/`) with a `.spec.ts` suffix. Use the Playwright CLI only (`.claude/rules/testing.md`). Tests must describe real user flows, not internal state checks.
 
@@ -62,16 +62,16 @@ E2E tests go in the owning app's Playwright directory (e.g., `apps/mirror/e2e/`)
 
 ## Team Orchestration Plan
 
-Plan which agents execute the implementation work. Check `.claude/agents/` for specialized agents that can own specific steps. Prefer existing specialized agents over creating new ones.
+Reviewer selection and wave packaging happen at execution time — see `.claude/skills/orchestrate-implementation/SKILL.md`. This plan lists logical work chunks with hard gates; it does not pre-assign critics. The spec describes *what must be true*; orchestration decides *who reviews*.
 
-- For small features (< 5 files), a single implementation agent is fine.
-- For larger features, break into steps with clear ownership:
+Plan which agents execute the implementation work. Check `.claude/agents/` for specialized agents that can own specific steps. Prefer existing specialized agents over creating new ones.
 
 ```
 Step N — {description}
-Agent: {agent name or "general"}
-Tasks: {numbered list}
-Verification: {what to check before moving on}
+Suggested executor: {agent name from .claude/agents/, or "general"}
+Scope: {files touched, what changes}
+Hard gate: {exact shell command(s) that must exit 0 before this step is done}
+Verifies: {FR-XX, FR-YY}
 ```
 
 ## Open Questions (if any)

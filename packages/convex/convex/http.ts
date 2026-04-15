@@ -124,6 +124,26 @@ if (isPlaywrightTestMode()) {
       });
     }),
   });
+
+  http.route({
+    path: "/test/exhaust-chat-daily",
+    method: "POST",
+    handler: httpAction(async (ctx, req) => {
+      const deny = authorizeTestRequest(req);
+      if (deny) return deny;
+      const { username } = (await req.json()) as { username: string };
+      if (!username) {
+        return new Response("Bad Request: username required", { status: 400 });
+      }
+      await ctx.runMutation(internal.chat.testHelpers.exhaustAnonDailyBucket, {
+        username,
+      });
+      return new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }),
+  });
 }
 
 export default http;

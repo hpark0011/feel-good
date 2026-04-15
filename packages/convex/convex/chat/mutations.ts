@@ -1,11 +1,55 @@
-import { v } from "convex/values";
+import { ConvexError, v } from "convex/values";
 import { createThread, saveMessage } from "@convex-dev/agent";
 import { mutation, internalMutation } from "../_generated/server";
 import { internal, components } from "../_generated/api";
 import { authComponent } from "../auth/client";
 import { chatRateLimiter } from "./rateLimits";
 
-const MAX_MESSAGE_LENGTH = 4000;
+const MAX_MESSAGE_LENGTH = 3000;
+
+type LimitName =
+  | "sendMessage"
+  | "retryMessage"
+  | "createConversation"
+  | "sendMessageDailyAnon"
+  | "sendMessageDailyAuth";
+
+type LimitCode = "RATE_LIMIT_MINUTE" | "RATE_LIMIT_DAILY";
+
+/**
+ * Narrow wrapper around `chatRateLimiter.limit` that converts a rejection into
+ * a structured `ConvexError` the frontend can discriminate on (per FR-07).
+ *
+ * `retryAfter` from `@convex-dev/rate-limiter` is already in milliseconds, so
+ * we pass it through unchanged as `retryAfterMs`.
+ *
+ * Ordering note (Wave 1 Finding B verification, 2026-04-15): callers check
+ * the per-minute bucket BEFORE the daily bucket. This is safe because
+ * `@convex-dev/rate-limiter@0.3.2` does NOT consume a token on rejection —
+ * `checkRateLimitSharded` in the component's `internal.ts` returns
+ * `updates: []` when `!status.ok`, and the component's `rateLimit` mutation
+ * in `lib.ts` only patches/inserts entries in `updates`. So a failed
+ * per-minute check leaves ALL buckets untouched, and the downstream daily
+ * check only runs when the per-minute check already passed. Swapping the
+ * order would not improve correctness; the reviewer's concern was a false
+ * positive after source verification.
+ */
+async function enforceLimit(
+  // The rate limiter accepts any query/mutation/action context. Using a loose
+  // type here avoids fighting the generic component-client parameter type.
+  ctx: Parameters<typeof chatRateLimiter.limit>[0],
+  name: LimitName,
+  key: string,
+  code: LimitCode,
+): Promise<void> {
+  const result = await chatRateLimiter.limit(ctx, name, { key, throws: false });
+  if (!result.ok) {
+    throw new ConvexError({
+      code,
+      retryAfterMs: result.retryAfter,
+    });
+  }
+}
 
 export const sendMessage = mutation({
   args: {
@@ -15,7 +59,8 @@ export const sendMessage = mutation({
   },
   returns: v.object({ conversationId: v.id("conversations") }),
   handler: async (ctx, args) => {
-    // 1. Input validation
+    // 1. Input validation — must precede any rate-limit work so oversize
+    //    messages are rejected without consuming daily budget (FR-02).
     const content = args.content.trim();
     if (content.length === 0) {
       throw new Error("Message cannot be empty");
@@ -45,43 +90,70 @@ export const sendMessage = mutation({
 
     // 4. Existing conversation ownership validation
     let conversationId = args.conversationId;
+    let existingConversation = null;
     if (conversationId) {
-      const conversation = await ctx.db.get(conversationId);
-      if (!conversation) {
+      existingConversation = await ctx.db.get(conversationId);
+      if (!existingConversation) {
         throw new Error("Conversation not found");
       }
-      if (conversation.profileOwnerId !== args.profileOwnerId) {
+      if (existingConversation.profileOwnerId !== args.profileOwnerId) {
         throw new Error("Conversation does not belong to this profile");
       }
       // Viewer must match
       if (appUser) {
-        if (conversation.viewerId !== appUser._id) {
+        if (existingConversation.viewerId !== appUser._id) {
           throw new Error("Not authorized to send to this conversation");
         }
       } else {
-        if (conversation.viewerId !== undefined) {
+        if (existingConversation.viewerId !== undefined) {
           throw new Error("Not authorized to send to this conversation");
         }
       }
 
-      // 5. Rate limit (existing conversation)
-      await chatRateLimiter.limit(ctx, "sendMessage", {
-        key: appUser ? appUser._id : conversationId,
-        throws: true,
-      });
-
-      // 6. Concurrency guard
-      if (conversation.streamingInProgress) {
+      // Concurrency guard runs BEFORE rate-limit so a double-click / retry
+      // against an already-streaming conversation is rejected without
+      // spending minute or daily budget.
+      if (existingConversation.streamingInProgress) {
         throw new Error(
           "A response is already being generated. Please wait for it to complete.",
         );
       }
+
+      // 5a. Per-minute burst limit (existing conversation).
+      await enforceLimit(
+        ctx,
+        "sendMessage",
+        appUser ? appUser._id : conversationId,
+        "RATE_LIMIT_MINUTE",
+      );
     } else {
-      // 5. Rate limit (new conversation)
-      await chatRateLimiter.limit(ctx, "createConversation", {
-        key: appUser ? appUser._id : args.profileOwnerId,
-        throws: true,
-      });
+      // 5a. Per-minute burst limit (new conversation path).
+      await enforceLimit(
+        ctx,
+        "createConversation",
+        appUser ? appUser._id : args.profileOwnerId,
+        "RATE_LIMIT_MINUTE",
+      );
+    }
+
+    // 5b. Daily spend ceiling (FR-03/FR-04/FR-06). Keyed by user (auth) or
+    //     profileOwnerId (anon) in BOTH branches so new-conversation churn
+    //     cannot bypass the daily cap. MUST run strictly before we patch
+    //     streamingInProgress (NFR-03).
+    if (appUser) {
+      await enforceLimit(
+        ctx,
+        "sendMessageDailyAuth",
+        appUser._id,
+        "RATE_LIMIT_DAILY",
+      );
+    } else {
+      await enforceLimit(
+        ctx,
+        "sendMessageDailyAnon",
+        args.profileOwnerId,
+        "RATE_LIMIT_DAILY",
+      );
     }
 
     // 7. Create conversation + thread if first message
@@ -168,16 +240,39 @@ export const retryMessage = mutation({
       }
     }
 
-    // 2. Rate limit
-    await chatRateLimiter.limit(ctx, "retryMessage", {
-      key: appUser ? appUser._id : args.conversationId,
-      throws: true,
-    });
-
-    // 3. Guard: reject if streaming already in progress
+    // Concurrency guard runs BEFORE rate-limit so a retry against an
+    // already-streaming conversation is rejected without spending budget.
     if (conversation.streamingInProgress) {
       throw new Error(
         "A response is already being generated. Please wait for it to complete.",
+      );
+    }
+
+    // 2a. Per-minute burst limit. Re-keyed to profileOwnerId (anon) /
+    //     appUser._id (auth) — matching sendMessage — so retries on a
+    //     fresh conversation cannot bypass daily caps via key-switching
+    //     (FR-05).
+    await enforceLimit(
+      ctx,
+      "retryMessage",
+      appUser ? appUser._id : conversation.profileOwnerId,
+      "RATE_LIMIT_MINUTE",
+    );
+
+    // 2b. Daily spend ceiling (FR-03/FR-04).
+    if (appUser) {
+      await enforceLimit(
+        ctx,
+        "sendMessageDailyAuth",
+        appUser._id,
+        "RATE_LIMIT_DAILY",
+      );
+    } else {
+      await enforceLimit(
+        ctx,
+        "sendMessageDailyAnon",
+        conversation.profileOwnerId,
+        "RATE_LIMIT_DAILY",
       );
     }
 

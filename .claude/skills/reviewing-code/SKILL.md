@@ -91,7 +91,7 @@ Pick which specialist reviewer agents to spawn. Seven specialists live in `.clau
 | **Always**                                                     | `code-review-correctness`      |
 | **Always**                                                     | `code-review-convention`       |
 | **Always**                                                     | `code-review-tests`            |
-| locks, async state, streaming, queues, retries, cancellation   | `code-review-concurrency`      |
+| locks, async state, streaming, queues, retries, cancellation, shared mutable state (module vars, refs, caches, Convex docs read-then-written), check-then-act shapes, idempotency surfaces (webhooks, form submits, optimistic updates), effect ordering assumptions | `code-review-concurrency`      |
 | auth, permissions, trust boundaries, user input, secrets       | `code-review-security`         |
 | hot paths, render loops, N+1 access, large lists, Convex reads | `code-review-performance`      |
 | schema, migrations, data shape changes, Convex validators      | `code-review-data-integrity`   |
