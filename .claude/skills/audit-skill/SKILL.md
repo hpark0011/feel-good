@@ -8,13 +8,9 @@ description: Audits an existing skill in .claude/skills/ against the conventions
 
 Assess an existing skill against the authoring rules in [create-skill](../create-skill/SKILL.md). The goal is to catch drift — stale triggers, bloated bodies, nested refs, empty sections — before it degrades discovery or execution.
 
-## When to use
+## Scope & non-goals
 
-- User asks to audit, review, lint, or maintain an existing skill.
-- A skill was edited and needs a conformance check before commit.
-- Onboarding a skill authored outside this repo's conventions.
-
-**Do NOT use for**: creating new skills (use `create-skill`), editing CLAUDE.md rules, or mass-renaming existing skills (explicitly disallowed by `create-skill` authoring rules).
+**Do NOT use for**: creating new skills (use `create-skill`), editing CLAUDE.md rules, or mass-renaming existing skills (explicitly disallowed by `create-skill` authoring rules). Trigger phrases live in the frontmatter `description`.
 
 ## Quick start
 
@@ -36,14 +32,14 @@ Run each item against the target skill. Every failure becomes a finding.
 
 ### Naming (warnings)
 
-- [ ] Gerund form (`verb-ing`) OR qualifies for the meta-skill exception (tool/artifact concept like `create-skill`, `claude-md-maintainer`).
+- [ ] Gerund form (`verb-ing`) OR qualifies for the meta-skill exception (tool/artifact concept like `create-skill`, `audit-skill`, `maintain-agents-md`).
 - [ ] No `helper`, `utils`, `tools`, version suffixes, CamelCase, or filler verbs.
 - [ ] Not a near-duplicate of an existing skill — grep `.claude/skills/*/SKILL.md` for the trigger phrases.
 
 ### Body (blockers)
 
 - [ ] ≤500 lines total.
-- [ ] Required H2 sections present, matching `create-skill/skill-template/SKILL.md`: `When to use`, `Quick start`, `Workflow`, `Examples`, `Anti-patterns`. `References` is optional. Renaming `Workflow` → `Process` (or similar) counts as a blocker — the template vocabulary is load-bearing for discoverability.
+- [ ] Required H2 sections present, matching `create-skill/skill-template/SKILL.md`: `Scope & non-goals`, `Quick start`, `Workflow`, `Examples`, `Anti-patterns`. `References` is optional. Renaming sections (e.g. `Workflow` → `Process`, or legacy `When to use`) counts as a blocker — the template vocabulary is load-bearing for discoverability.
 - [ ] No section is empty or a placeholder ("N/A", "TBD", "REPLACE").
 - [ ] No inline code/config block >20 lines — must be extracted into `{artifact}-template/`.
 - [ ] No nested references (`SKILL.md → a.md → b.md`). All links one level deep.

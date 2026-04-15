@@ -1,11 +1,11 @@
 ---
-name: new-codebase-expert
-description: "Scaffold a self-improving codebase expert agent that owns a bounded coding layer and gets measurably sharper with every task. Each session ends with a log entry that patches the agent's spec or knowledge, so the next session is faster and more accurate. Use when the user asks to create a codebase expert, add a new subsystem expert, scaffold an agent that owns a coding area, set up a self-improving agent, or build an agent that owns a specific part of the codebase. Invoke with `/new-codebase-expert` or `/new-codebase-expert [domain-name]`."
+name: create-codebase-expert
+description: "Scaffold a self-improving codebase expert agent that owns a bounded coding layer and gets measurably sharper with every task. Each session ends with a log entry that patches the agent's spec or knowledge, so the next session is faster and more accurate. Use when the user asks to create a codebase expert, add a new subsystem expert, scaffold an agent that owns a coding area, set up a self-improving agent, or build an agent that owns a specific part of the codebase. Invoke with `/create-codebase-expert` or `/create-codebase-expert [domain-name]`."
 disable-model-invocation: true
 argument-hint: "[domain-name]"
 ---
 
-# New Codebase Expert
+# Create Codebase Expert
 
 Scaffold a **self-improving codebase expert agent** — a domain agent that owns a bounded coding layer. The system has three parts.
 
@@ -15,18 +15,14 @@ Scaffold a **self-improving codebase expert agent** — a domain agent that owns
 
 The agent improves itself by ending every session with a log entry that patches either the spec or the knowledge file. This is enforced mechanically by a `SubagentStop` hook (`scripts/validate-session-log.mjs`) that blocks the subagent from ending until `logs.md` contains a fresh entry with `Bottleneck`, `Counterfactual`, and `Patch`.
 
-## When to use
+## Scope & non-goals
 
-- User asks to create a codebase expert, scaffold a subsystem agent, or "set up a self-improving agent" for a bounded area of the repo.
-- A recurring coding domain (a package, a backend layer, a specific feature's frontend) is large enough that a general-purpose agent repeatedly re-learns the same context.
-- You want the agent's spec and knowledge to compound across sessions via enforced session logs.
-
-**Do NOT use for**: one-off research agents, workflow-only sub-agents (those live under `agents/` in the owning skill), or agents that span the whole codebase without a clear boundary.
+**Do NOT use for**: one-off research agents, workflow-only sub-agents (those live under `agents/` in the owning skill), or agents that span the whole codebase without a clear boundary. Trigger phrases live in the frontmatter `description`.
 
 ## Quick start
 
 ```bash
-/new-codebase-expert chat-backend-developer
+/create-codebase-expert chat-backend-developer
 ```
 
 Answer the boundary question when prompted (files/dirs owned, what it does NOT own). The skill writes `.claude/agents/<name>.md` + `.claude/agent-memory/<name>/{knowledge.md,logs.md}`, installs the `SubagentStop` hook, and runs `validate-scaffold.mjs`. Done when the validator exits 0.
@@ -98,7 +94,7 @@ Step 5 of the agent's operating loop (Log & Patch) is the load-bearing self-impr
 Run the installer — it is idempotent, preserves other hooks, and creates `settings.json` if missing:
 
 ```bash
-node .claude/skills/new-codebase-expert/scripts/install-hook.mjs
+node .claude/skills/create-codebase-expert/scripts/install-hook.mjs
 ```
 
 It prints either `installed …` or `already present …`. Require exit 0. Subsequent agent creations will detect the hook already present and no-op.
@@ -117,7 +113,7 @@ Confirm the layout exists:
 Then run the scaffold validator and require exit 0 before proceeding:
 
 ```bash
-node .claude/skills/new-codebase-expert/scripts/validate-scaffold.mjs <name>
+node .claude/skills/create-codebase-expert/scripts/validate-scaffold.mjs <name>
 ```
 
 The validator deterministically checks: YAML frontmatter parses, required fields present (`name`, `description`, `model`, `color`, `memory`, `tools`, `maxTurns`), `name` matches filename, `description` starts with "Use this agent when", `color` is unique across existing agents, `tools` is a non-empty subset of the known Claude Code tool allowlist (plus any `mcp__*`), memory files exist, and the spec body contains all 7 required H2 section headings.
@@ -137,7 +133,7 @@ Tell the user:
 ✓ Good boundary (layer appears in name):
 
 ```
-/new-codebase-expert chat-backend-developer
+/create-codebase-expert chat-backend-developer
 Owns: packages/convex/chat/*, convex schema for messages/threads
 Does NOT own: apps/mirror/src/chat/** (frontend), Tavus integration
 ```
@@ -145,7 +141,7 @@ Does NOT own: apps/mirror/src/chat/** (frontend), Tavus integration
 ✗ Bad boundary (ambiguous — implies end-to-end ownership it doesn't have):
 
 ```
-/new-codebase-expert chat-agent
+/create-codebase-expert chat-agent
 Owns: "chat stuff"
 ```
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Validate a scaffolded codebase expert agent against the new-codebase-expert contract.
+ * Validate a scaffolded codebase expert agent against the create-codebase-expert contract.
  *
  * Usage:
  *   node validate-scaffold.mjs <agent-name> [--repo-root PATH]

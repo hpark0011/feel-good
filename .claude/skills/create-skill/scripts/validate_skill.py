@@ -94,13 +94,23 @@ def validate(skill_path: Path):
     if re.search(r"\b(as of|in) 20\d{2}\b", body, re.I):
         warnings.append("body contains time-stamped language — rots quickly")
 
-    required_sections = ["When to use", "Quick start", "Workflow", "Examples", "Anti-patterns"]
+    # Each entry is either a single required heading, or a tuple of acceptable aliases.
+    # "Scope & non-goals" is the canonical name 
+    required_sections = [
+        ("Scope & non-goals"),
+        "Quick start",
+        "Workflow",
+        "Examples",
+        "Anti-patterns",
+    ]
     headings = re.findall(r"^##\s+(.+?)\s*$", body, re.M)
     heading_set = {h.strip() for h in headings}
     for section in required_sections:
-        if section not in heading_set:
+        aliases = section if isinstance(section, tuple) else (section,)
+        if not any(a in heading_set for a in aliases):
+            label = " / ".join(f"'{a}'" for a in aliases)
             errors.append(
-                f"missing required H2 section '{section}' — see create-skill/skill-template/SKILL.md"
+                f"missing required H2 section {label} — see create-skill/skill-template/SKILL.md"
             )
 
     for ref in skill_path.glob("*/SKILL.md"):

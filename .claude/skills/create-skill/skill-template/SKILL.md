@@ -8,8 +8,9 @@ description: REPLACE — what it does AND when to use it. Third person. Include 
 
 One-paragraph purpose statement. Assume Claude is smart — don't explain domain basics.
 
-## When to use
-Concrete triggers. What it is NOT for. Scope boundaries.
+## Scope & non-goals
+What this skill is NOT for. Sibling skills to prefer in adjacent cases. Edge cases where it shouldn't fire.
+(Trigger phrases live in the frontmatter `description` — don't duplicate them here.)
 
 ## Quick start
 The 80% case in ≤10 lines. Minimum viable invocation.

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * SubagentStop hook: enforce step 5 (Log & Patch) of the new-codebase-expert loop.
+ * SubagentStop hook: enforce step 5 (Log & Patch) of the create-codebase-expert loop.
  *
  * Reads the standard SubagentStop hook payload from stdin:
  *   { session_id, transcript_path, stop_hook_active, ... }

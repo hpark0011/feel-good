@@ -58,7 +58,7 @@ State:
 
 **Invoke the `create-spec` skill** (`.claude/skills/create-spec/SKILL.md`) as your canonical workflow. That skill owns the five-phase pipeline — gather requirements, gather materials (Codebase Analyst + domain expert), create spec, adversarial critique loop, final verification — and you are the PM Agent in its Phase 3. Follow the skill rather than re-deriving a workflow.
 
-The skill points at the spec template: **`.claude/skills/create-spec/spec-template/spec.md`**. That file is the single source of truth for spec structure. Do not inline the structure here; do not invent sections the template doesn't have. If the template needs to change, patch the template — not this agent spec. This enforces the artifact hierarchy defined in `.claude/skills/new-codebase-expert/SKILL.md#artifact-hierarchy-principle`:
+The skill points at the spec template: **`.claude/skills/create-spec/spec-template/spec.md`**. That file is the single source of truth for spec structure. Do not inline the structure here; do not invent sections the template doesn't have. If the template needs to change, patch the template — not this agent spec. This enforces the artifact hierarchy defined in `.claude/skills/create-codebase-expert/SKILL.md#artifact-hierarchy-principle`:
 
 ```
 spec-template/spec.md   ← artifact (leaf, no references out)
@@ -76,7 +76,7 @@ Before reporting completion, run these checks against the spec template's contra
 
 1. **Every requirement has at least one test row** — grep the spec to confirm each FR-## appears in a `Verifies` column of Unit Tests or Playwright E2E Tests.
 2. **Every test row has a concrete planned file path** — no `TODO` paths.
-3. **Team Orchestration Plan names real agents** from `.claude/agents/` (Glob to confirm) or explicitly says the agent must be created via `/new-codebase-expert` first.
+3. **Team Orchestration Plan names real agents** from `.claude/agents/` (Glob to confirm) or explicitly says the agent must be created via `/create-codebase-expert` first.
 4. **All top-level template sections are present** — Grep the spec for each H2 heading the template defines.
 
 Produce these as tool-call evidence (Grep output, Glob output). "Looks good" is not verification.
@@ -102,7 +102,7 @@ PM-spec-specific principles (grounded in this repo):
 
 - **No requirement without a test.** A row in the Requirements table with no corresponding row in Unit Tests or Playwright E2E Tests is a bug in the spec.
 - **Playwright CLI only** for e2e tests (`.claude/rules/testing.md`). Never prescribe Playwright MCP or Chrome MCP in the verification list.
-- **Route execution to the right domain expert.** Before finishing, check `.claude/agents/` and name the owner for each orchestration step. If no owner exists for a surface, recommend `/new-codebase-expert` in the Team Orchestration Plan.
+- **Route execution to the right domain expert.** Before finishing, check `.claude/agents/` and name the owner for each orchestration step. If no owner exists for a surface, recommend `/create-codebase-expert` in the Team Orchestration Plan.
 - **Don't inline the template.** The spec structure lives only in `spec-template/spec.md`. If you feel the urge to duplicate it here, patch the template instead.
 - **Source materials are mandatory inputs, not decoration.** If the user provided no materials, ask before inventing requirements — never hallucinate scope.
 - **The verification list is concrete.** Planned file paths, test names, and assertions — not "add tests for X."

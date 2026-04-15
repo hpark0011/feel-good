@@ -1,17 +1,13 @@
 ---
 name: create-skill
-description: Scaffolds new project skills in .claude/skills/ using the repo's standard SKILL.md template (frontmatter + When to use, Quick start, Workflow, Examples, References, Anti-patterns). Use when the user asks to create, scaffold, author, or add a new skill, says "new skill", "make a skill", or wants to turn a repeated workflow into a reusable skill. Also use when auditing an existing skill against the template.
+description: Scaffolds new project skills in .claude/skills/ using the repo's standard SKILL.md template (frontmatter + Scope & non-goals, Quick start, Workflow, Examples, References, Anti-patterns). Use when the user asks to create, scaffold, author, or add a new skill, says "new skill", "make a skill", or wants to turn a repeated workflow into a reusable skill. Also use when auditing an existing skill against the template.
 ---
 
 # Skill Creator
 
 Author new skills for this repo that follow Anthropic's skill-authoring best practices and this project's conventions. The goal is skills Claude can reliably discover, load cheaply, and execute without drift.
 
-## When to use
-
-- User says "create a skill", "new skill", "scaffold a skill", "turn this into a skill".
-- A repeated workflow in this repo is being rediscovered each session and should be captured once.
-- Auditing or refactoring an existing skill in `.claude/skills/` against the template.
+## Scope & non-goals
 
 **Do NOT use for**: one-off prompts, personal memory entries (use auto-memory), automation that requires hooks (use `update-config`), or CLAUDE.md edits.
 
@@ -20,7 +16,8 @@ Author new skills for this repo that follow Anthropic's skill-authoring best pra
 1. Clarify the brief (purpose, triggers, 80% workflow) **and grep `.claude/skills/` for overlap** — stop if an existing skill already covers it.
 2. `python3 .claude/skills/create-skill/scripts/init_skill.py <skill-name>` — scaffolds from the template, enforces naming rules.
 3. Fill frontmatter + body; delete any section without real content. Extract artifacts >20 lines into `{name}-template/`.
-4. `python3 .claude/skills/create-skill/scripts/validate_skill.py .claude/skills/<skill-name>` — must exit 0 before reporting done.
+4. `python3 .claude/skills/create-skill/scripts/validate_skill.py .claude/skills/<skill-name>` — must exit 0.
+5. Run [`audit-skill`](../audit-skill/SKILL.md) against the new skill — the validator only catches mechanics, audit-skill catches semantic drift (vague description, empty-in-prose sections, name-intent mismatch). Must return zero blockers before reporting done.
 
 Full expanded procedure in [Workflow](#workflow). Package for distribution (optional): `scripts/package_skill.py <skill-dir>`.
 
@@ -58,7 +55,7 @@ Canonical scaffold lives at [skill-template/SKILL.md](skill-template/SKILL.md). 
    - **Avoid**: `helper`, `utils`, `tools`, version suffixes (`v2-...`), filler verbs (`do-stuff-with-...`), CamelCase.
    - **Do not mass-rename existing skills.** Apply this to new skills and rename opportunistically — churn costs more than inconsistency.
 
-   > **Meta-skill exception.** Skills whose primary surface _is_ a tool or artifact concept (`create-skill`, `claude-md-maintainer`, `create-spec`) may use `<action>-<noun>` or `<noun>-<action>` form — the tool name carries stronger trigger signal than a forced gerund. This skill (`create-skill`) is itself an instance of the exception.
+   > **Meta-skill exception.** Skills whose primary surface _is_ a tool or artifact concept (`create-skill`, `audit-skill`, `create-spec`) may use `<action>-<noun>` or `<noun>-<action>` form — the tool name carries stronger trigger signal than a forced gerund. This skill (`create-skill`) is itself an instance of the exception.
 
 3. **Omit empty sections.** The template is a ceiling, not a floor. A 40-line skill should be 40 lines.
 4. **No progressive disclosure under ~150 lines.** Splitting small skills into multiple files adds navigation cost without token savings.
@@ -77,7 +74,8 @@ Canonical scaffold lives at [skill-template/SKILL.md](skill-template/SKILL.md). 
 - [ ] 4. Scaffold via init_skill.py
 - [ ] 5. Write frontmatter + draft body
 - [ ] 6. Run validate_skill.py — fix every error
-- [ ] 7. Report to the user (one sentence)
+- [ ] 7. Run audit-skill — resolve every blocker
+- [ ] 8. Report to the user (one sentence)
 ```
 
 Steps 1-4 are summarized in [Quick start](#quick-start). Detail below covers the steps where skills most commonly fail.
@@ -93,7 +91,7 @@ Grep `.claude/skills/*/SKILL.md` for every trigger phrase from step 1. If an exi
 ### Step 3 — Name examples
 
 ✓ Good: `creating-tickets`, `reviewing-prs`, `scaffolding-components`, `processing-pdfs`
-✓ Meta-skill exception: `create-skill`, `claude-md-maintainer`, `create-spec`
+✓ Meta-skill exception: `create-skill`, `audit-skill`, `create-spec`, `maintain-agents-md`
 ✗ Bad: `helper`, `utils`, `claude-tools`, `tickets-v2`, `TicketCreator`
 
 ### Step 4 — Frontmatter examples
@@ -128,14 +126,37 @@ description: I help you with git stuff
 **Process:** Run `scripts/validate_skill.py <skill-dir>`. It checks frontmatter delimiters, `name` vs directory, description length + trigger phrase hint, body ≤500 lines, inline blocks ≤20 lines, nested-reference depth, and time-stamped prose. Fix every error before proceeding. Warnings are advisory but should be read.
 **Output:** Exit 0 required to continue. On fail, fix and re-run — don't skip.
 
-### Step 7 — Report
+### Step 7 — Audit pass
+
+**Input:** The validated skill directory.
+**Process:** Invoke [`audit-skill`](../audit-skill/SKILL.md) against the new skill. The validator is mechanical (frontmatter, line counts, nested refs); the audit is semantic (description vagueness, name-intent mismatch, empty-in-prose sections, artifact placement). Address every blocker. Warnings are advisory.
+**Output:** Zero blockers. If audit surfaces a recurring gap, patch the upstream rule in this SKILL.md _before_ fixing the downstream skill — compound the improvement.
+
+### Step 8 — Report
 
 **Input:** The verified file path.
 **Process:** Write a single sentence to the user.
 **Output:** Path + one-line description of what the skill does and how to invoke it. No file summary, no contents dump.
 
 ✓ Good: `Created .claude/skills/generating-commit-messages/SKILL.md — triggers on "commit this" and drafts Conventional Commit messages from staged diffs.`
-✗ Bad: `I've created a new skill for you! It has the following sections: When to use, Quick start, Workflow, Examples...`
+✗ Bad: `I've created a new skill for you! It has the following sections: Scope & non-goals, Quick start, Workflow, Examples...`
+
+## Examples
+
+Names — ✓ good: `creating-tickets`, `reviewing-prs`, `scaffolding-components`. ✓ meta-skill exception: `create-skill`, `create-spec`. ✗ bad: `helper`, `utils`, `tickets-v2`, `TicketCreator`.
+
+Frontmatter — ✓ good:
+
+```yaml
+---
+name: generating-commit-messages
+description: Generates Conventional Commit messages from staged git diffs. Use when the user asks to commit, says "commit this", or wants a PR-ready message.
+---
+```
+
+✗ bad: `name: commit-helper`, `description: I help you with git stuff` (vague, first-person, no triggers).
+
+See [Workflow](#workflow) step 3–4 for the reasoning behind each.
 
 ## Anti-patterns
 
