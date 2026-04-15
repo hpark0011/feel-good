@@ -6,35 +6,43 @@ description: Reviews pending code changes in this monorepo against AGENTS.md and
 
 # Reviewing Code
 
-Senior-engineer code review tuned to this repo's conventions. Reads the change set, checks it against the rules that already live in `AGENTS.md` and `.claude/rules/`, and returns a prioritized findings list — not a rewrite.
+Senior-engineer code review tuned to this repo's conventions. Instead of one flat pass, the skill runs a **pipeline of judgment**: understand intent, route to narrow lenses, collect candidate findings, critique them ruthlessly, then compose only what matters.
+
+The core rule: **every finding must name a concrete failure mode or broken invariant.** Style preferences without a risk story get dropped by the Critic phase.
 
 ## Scope & non-goals
 
 - **Not for GitHub PR comments** — use [`review-pr`](../review-pr/SKILL.md).
 - **Not a rewrite pass** — propose changes, don't silently apply them. Only edit if the user says "fix it" after the report.
 - **Not a substitute for `pnpm build` / `pnpm lint`** — run those too; this skill catches what linters can't.
+- **Not a swarm of sub-agents.** The pipeline runs inside one skill execution. Phases are cognitive boundaries, not process boundaries.
 
 ## Quick start
 
-1. Determine the change set: `git diff main...HEAD` by default, or the path/branch the user named.
-2. Read every changed file end-to-end (not just the diff) to understand context.
-3. Load only the `.claude/rules/` files that match touched paths (see [Rule mapping](#step-2--rule-mapping)).
-4. Produce a findings report grouped by severity (see [Report format](#step-4--report-format)).
+1. Identify the change set (arg, `--staged`, or `main...HEAD`).
+2. Run the 7-phase pipeline: Ingest → Intent → Route → Lens pass → Normalize → Critique → Compose.
+3. Emit a report with an Intent block up top, findings written as **Observation → Risk → Suggestion**, and a "Filtered by critic" footer.
+4. Capture blockers and should-fix items as tickets via [`generate-issue-tickets`](../generate-issue-tickets/SKILL.md).
+5. Ask if the user wants fixes applied.
 
 ## Workflow
 
 ```
-- [ ] 1. Identify scope — arg, staged diff, or main...HEAD
-- [ ] 2. List changed files (git diff --stat) and map to rule files
-- [ ] 3. Read each changed file fully
-- [ ] 4. Run the checklist against each file
-- [ ] 5. Run pnpm build + lint for the affected app (per verification.md)
-- [ ] 6. Write findings report — severity-grouped, file:line anchored
-- [ ] 7. Capture findings as tickets via the [`generate-issue-tickets`](../generate-issue-tickets/SKILL.md) skill
-- [ ] 8. Ask if the user wants fixes applied
+- [ ] 1. Ingest    — scope, changed files, read each file fully, build packet
+- [ ] 2. Intent    — infer change type, goal, expected behavior, invariants, risk surface
+- [ ] 3. Route     — pick lenses based on the risk map (correctness/convention/tests always)
+- [ ] 4. Lens pass — each selected lens emits candidate findings in the shared schema
+- [ ] 5. Normalize — dedupe and merge overlapping findings; preserve provenance
+- [ ] 6. Critique  — reject speculative/stylistic/misread findings; log reasons
+- [ ] 7. Compose   — rank by severity × confidence × blast radius; write the report
+- [ ] 8. Verify    — pnpm build + lint per .claude/rules/verification.md
+- [ ] 9. Tickets   — file blockers/should-fix via generate-issue-tickets
+- [ ] 10. Offer fixes
 ```
 
-### Step 1 — Identify scope
+### Phase 1 — Ingest
+
+Determine scope and build the review packet. Read files in full; context lives outside the hunks.
 
 | Input       | Command                    |
 | ----------- | -------------------------- |
@@ -45,9 +53,7 @@ Senior-engineer code review tuned to this repo's conventions. Reads the change s
 
 If the working tree is clean and no arg given, ask the user what to review instead of guessing.
 
-### Step 2 — Rule mapping
-
-Only load rules that apply to touched paths. Every loaded rule costs tokens.
+**Rule mapping** — load only `.claude/rules/` files that match touched paths. Every loaded rule costs tokens.
 
 | If the diff touches…                     | Load                                    |
 | ---------------------------------------- | --------------------------------------- |
@@ -62,48 +68,151 @@ Only load rules that apply to touched paths. Every loaded rule costs tokens.
 | `apps/mirror/**`                         | `.claude/rules/apps/mirror/**`          |
 | Anything                                 | `.claude/rules/dev-process.md` (always) |
 
-### Step 3 — Review checklist
+### Phase 2 — Intent map
 
-Walk each changed file against these. Skip categories that don't apply.
+Reconstruct what the author is trying to do **before** looking for bugs. Misread intent is the #1 source of noisy reviews.
 
-**Correctness**
+Fill internally (will surface in the report header):
 
-- Logic matches the stated intent; no off-by-one, null-deref, unhandled rejection.
-- Boundary inputs (empty array, undefined, zero, error path) are handled.
-- No accidental breaking changes to exported APIs.
+- **change_type**: fix | feature | refactor | migration | perf | chore
+- **goal**: one sentence, author-perspective
+- **expected_behavior**: 1–3 bullets of the user-visible outcome
+- **invariants**: properties that must hold (e.g. "lock always released in finally", "auth required on write")
+- **risk_surface**: which boundaries this touches (state, concurrency, auth, schema, rendering, public API)
 
-**Convention compliance**
+If the PR description contradicts the diff, stop and surface that in the report instead of producing line-level findings on a misread goal.
 
+### Phase 3 — Risk route
+
+Pick which lenses to run. **Always on:** Correctness, Convention/Architecture fit, Test adequacy. **Routed lenses:**
+
+| Trigger                                                        | Lens            |
+| -------------------------------------------------------------- | --------------- |
+| locks, async state, streaming, queues, retries, cancellation   | Concurrency     |
+| auth, permissions, trust boundaries, user input, secrets       | Security        |
+| hot paths, render loops, N+1 access, large lists, Convex reads | Performance     |
+| schema, migrations, data shape changes, Convex validators      | Data integrity  |
+| exported props, public utilities, cross-package APIs           | API contract    |
+
+A CSS-only diff collapses to Correctness + Convention + Tests. Don't run lenses that don't apply.
+
+### Phase 4 — Lens pass
+
+Each selected lens walks the changed files with a **narrow failure-mode checklist**, not a style rulebook. Lenses produce candidate findings in the shared schema below. Lenses do not publish — they propose.
+
+**Correctness** — _Can this fail to do what the PR intends?_
+- Does the logic match the stated goal and invariants?
+- Off-by-one, null/undefined, unhandled rejection, missing cleanup on early return?
+- Boundary inputs handled (empty array, zero, error path)?
+- Any accidental breaking change to an exported API?
+
+**Convention / Architecture fit** — _Does this belong where it is?_
 - File placement matches `file-organization.md` (`components/` not `views/` in apps).
-- Naming: `-connector.tsx` only for context-reading shims with no markup.
-- Imports use `@feel-good/*` paths, not deep relative traversal.
+- `-connector.tsx` only for context-reading shims with no markup.
+- Imports use `@feel-good/*`, not deep relative traversal.
 - No re-introduction of removed patterns (`useMountedRef`, `views/` in apps, `setTimeout` for visual timing).
-
-**Simplicity (AGENTS.md core principles)**
-
-- No speculative abstraction, feature flags, or backwards-compat shims for hypothetical needs.
-- No error handling for impossible states; validation only at system boundaries.
-- No comments explaining _what_; only _why_ when non-obvious.
+- No speculative abstraction, feature flags, or backwards-compat shims for hypothetical needs (AGENTS.md core principles).
 - No unrequested refactors bundled with a bug fix.
 
-**React / Next**
+**Test adequacy** — _Do the tests prove the risky behavior?_
+- Is there a test for the failure mode the PR claims to fix?
+- Do tests cover the invariants named in Phase 2, not just the happy path?
+- E2E uses Playwright CLI, not MCP (`.claude/rules/testing.md`).
+- Verification tier matches the change type (`.claude/rules/verification.md`).
 
-- Client components marked `"use client"` only when needed.
-- `useEffect` has a real dependency; not used for derived state.
-- No prop drilling where context or composition would be clearer.
+**Concurrency** (routed) — _Can timing or ordering break this?_
+- Can an early return skip cleanup? Is release in a `finally`?
+- Is the lock/state guarded by a started-at or generation token so stale callbacks can't clobber an active owner?
+- Retry-safe? Double-execution safe? Any state transition that can land partial?
 
-**Convex** (if touched)
+**Security** (routed) — _Does this introduce privilege or exposure risk?_
+- Auth check present on every write path?
+- User input sanitized at the boundary, not mid-pipeline?
+- Secrets/keys not logged, not bundled client-side?
 
-- Triggers wired via BOTH `triggers` and `authFunctions` in `createClient`.
-- No hyphens in Convex filenames.
+**Performance** (routed) — _Does this create avoidable cost?_
+- Repeated expensive calls inside a loop or render?
+- N+1 on Convex queries; missing index; unbounded list read?
+- Render loop from `useEffect` syncing props into state?
+
+**Data integrity** (routed) — _Can data end up wrong or stuck?_
+- Migration reversible? Backfill plan?
+- Convex validator matches schema; no silent type widening.
 - `pnpm exec convex codegen` ran after schema changes.
+- Convex filenames have no hyphens; triggers wired via BOTH `triggers` and `authFunctions` in `createClient`.
 
-**Tests / verification**
+**API contract** (routed) — _Does this break callers?_
+- Exported prop/type changes semver-compatible within the package?
+- Default behavior preserved when a new option is added?
 
-- Matches the verification tier in `.claude/rules/verification.md` for the change type.
-- E2E uses Playwright CLI, not MCP.
+### Shared finding schema
 
-### Step 4 — Report format
+Every candidate finding, regardless of lens, fills:
+
+```
+id:          short slug
+lens:        correctness | convention | tests | concurrency | security | performance | data | api
+title:       one-line
+location:    file:startLine-endLine
+severity:    low | medium | high | critical
+confidence:  0.0–1.0
+observation: what the code actually does (1–2 sentences)
+risk:        the concrete failure mode or broken invariant (REQUIRED)
+evidence:    quoted lines, rule reference, or prior incident
+suggestedFix: one sentence
+```
+
+**Hard rule:** a finding with no `risk` is dropped by the Critic. No exceptions. Nits can skip `suggestedFix` but still need `risk` (even if the risk is "small but real readability hazard in a hot file").
+
+### Phase 5 — Normalize
+
+Merge overlapping findings from different lenses into one canonical finding. Example: Correctness says "cleanup skipped on early return" and Concurrency says "lock may remain stuck" — these become one high-confidence finding with both lenses as supporting provenance.
+
+Dedupe by `location` + `risk` similarity. Sum confidence conservatively (cap at 0.98).
+
+### Phase 6 — Critique (mandatory quality gate)
+
+This is the single biggest lever on review quality. Do not skip it.
+
+For each normalized finding, answer:
+
+1. Is it grounded in the diff and the surrounding code I actually read? (Not speculation.)
+2. Does it name a real invariant or failure mode, not a preference?
+3. Is severity proportional to blast radius?
+4. Would a senior engineer on this repo actually say this?
+5. Does it contradict the PR's stated intent — i.e., did I misread the goal?
+6. Does `.claude/rules/dev-process.md` apply — am I about to ship a bandaid fix or rubber-stamp?
+
+Reject findings that fail any check. **Log each rejection with a one-line reason** — this becomes the "Filtered by critic" footer in the report and is how the user can challenge the filter.
+
+**Self-check:** if the Critic rejects zero findings on a non-trivial diff, the phase didn't actually run. Go back and re-apply it honestly.
+
+### Phase 7 — Rank + compose
+
+Rank surviving findings by `severity × confidence × blast_radius`. Priority order when in doubt:
+
+1. Correctness / data loss / auth / concurrency
+2. Architecture violations with long-term cost
+3. Missing tests on risky behavior
+4. Performance with real impact
+5. Maintainability
+6. Nits
+
+Write the report (see format below). Every blocker and should-fix item is a short paragraph structured as **Observation → Risk → Suggestion**, not a one-liner. Nits stay one-liners.
+
+### Phase 8 — Verify
+
+Run `pnpm build` + `pnpm lint` for the affected app per `.claude/rules/verification.md`. Record pass/fail in the report header. If lint catches something, point at lint output instead of re-listing it as a finding.
+
+### Phase 9 — Tickets
+
+Invoke [`generate-issue-tickets`](../generate-issue-tickets/SKILL.md) for every blocker and should-fix finding. One ticket per finding. Preserve the `file:line` anchor and the `risk` sentence in the ticket body. Do this **before** offering fixes so tickets exist even if the user defers the work.
+
+### Phase 10 — Offer fixes
+
+End with: _"Want me to apply the blockers / should-fix items?"_ Do not fix preemptively. If the user says yes, apply edits and re-run build + lint per `verification.md`.
+
+## Report format
 
 ```text
 ## Code Review — <scope>
@@ -111,43 +220,46 @@ Walk each changed file against these. Skip categories that don't apply.
 **Files changed:** N  |  **Lines:** +X / -Y
 **Verified:** build ✓/✗  lint ✓/✗
 
+### Intent
+- **Goal:** <one sentence — what the author is trying to do>
+- **Invariants:** <1–3 bullets that must hold>
+- **Risk surface:** <touched boundaries>
+
 ### 🔴 Blockers (fix before merge)
-- **path/to/file.tsx:42** — <one-line problem>. <one-line fix direction>.
+
+**path/to/file.tsx:42** — <title>
+_Observation._ <what the code does.>
+_Risk._ <concrete failure mode or broken invariant.>
+_Suggestion._ <one-sentence fix direction.>
 
 ### 🟡 Should fix
-- **path/to/file.ts:17** — <…>
 
-### 🟢 Nits / style
-- **path/to/file.css:8** — <…>
+**path/to/file.ts:17** — <title>
+_Observation._ …
+_Risk._ …
+_Suggestion._ …
+
+### 🟢 Nits
+- **path/to/file.css:8** — <one-liner with risk, even if small>
 
 ### ✅ Looks good
 - <one-line positive callout, if any>
+
+### Filtered by critic (N)
+- <finding title> — <rejection reason>
 ```
 
 Report rules:
 
 - Every finding has a `file:line` anchor. No vague "in the auth module".
-- One line per finding unless a snippet is genuinely needed.
 - **Blockers** = correctness, security, convention violations with known past incidents.
-- **Should fix** = design smells, missed simplifications, minor convention drift.
-- **Nits** = style a linter would catch.
-- If the whole change is clean, say so in one sentence — don't invent findings.
-
-### Step 5 — Capture findings as tickets
-
-After the report is written, invoke the [`generate-issue-tickets`](../generate-issue-tickets/SKILL.md) skill to turn every 🔴 Blocker and 🟡 Should-fix finding into a tracked ticket in `workspace/tickets/to-do/`. Nits are optional — only file them if the user asks.
-
-- Pass the report findings as input; one ticket per finding.
-- Preserve the `file:line` anchor in the ticket body so the fix is traceable.
-- Do this **before** offering fixes — tickets exist even if the user defers the work.
-
-### Step 6 — Offer fixes
-
-End with: _"Want me to apply the blockers / should-fix items?"_ Do not fix preemptively. If the user says yes, apply edits and re-run build + lint per `verification.md`.
+- **Should fix** = design smells, missed simplifications, test gaps on risky behavior.
+- **Nits** = small issues a linter would catch or near-miss readability.
+- If the whole change is clean, say so in one sentence — don't invent findings. The "Filtered by critic" footer can still show what you considered.
 
 ## Examples
 
-**Input:** user says "review my changes" on a branch that adds a chat input component.
+**Input:** user says "review my changes" on a branch that fixes a chat streaming race.
 
 **Output (abridged):**
 
@@ -157,23 +269,45 @@ End with: _"Want me to apply the blockers / should-fix items?"_ Do not fix preem
 **Files changed:** 3  |  **Lines:** +87 / -4
 **Verified:** build ✓  lint ✓
 
+### Intent
+- **Goal:** Prevent the streaming lock from remaining stuck when a request is cancelled mid-stream.
+- **Invariants:** lock always released via clearStreamingLock(expectedStartedAt); stale callbacks cannot clear an active lock.
+- **Risk surface:** concurrency, state cleanup.
+
 ### 🔴 Blockers
-- **apps/mirror/app/(chat)/chat-input.tsx:34** — useEffect syncs `value` prop into local state, causing a render loop when parent re-renders. Derive via useMemo or lift state.
+
+**packages/convex/chat/stream.ts:118-131** — Cleanup skipped on early return
+_Observation._ When `shouldAbort` is true the function returns before reaching `clearStreamingLock`, which only runs on the success path.
+_Risk._ `streamingInProgress` stays set after cancellation, blocking every subsequent stream for that conversation — this is the exact invariant the PR claims to fix.
+_Suggestion._ Move the lock release into a `finally` block guarded by `expectedStartedAt` so both branches run it.
 
 ### 🟡 Should fix
-- **packages/features/chat/views/message-bubble.tsx:12** — file lives in `views/` but is app-level per file-organization.md. Move to `apps/mirror/app/(chat)/_components/`.
+
+**packages/convex/chat/stream.test.ts** — No test for the interrupted-stream path
+_Observation._ Tests cover the happy path and the error path but not the cancellation path that the fix targets.
+_Risk._ No regression protection — the same bug can return silently.
+_Suggestion._ Add a test that cancels mid-stream and asserts `streamingInProgress` is cleared.
 
 ### 🟢 Nits
-- **apps/mirror/app/(chat)/chat-input.tsx:5** — unused `cn` import.
+- **apps/mirror/app/(chat)/chat-input.tsx:5** — unused `cn` import (trivial, but it lives in a hot file).
+
+### Filtered by critic (2)
+- "Rename `expectedStartedAt` to `streamToken`" — style preference, no risk named.
+- "Extract cleanup into a helper" — speculative refactor, not requested by the PR intent.
 
 Want me to apply the blockers and should-fix items?
 ```
 
 ## Anti-patterns
 
+- **Running every lens on every diff.** Route by risk map. A CSS tweak doesn't need the security lens.
+- **Findings without a `risk` field.** If you can't name a failure mode or broken invariant, it's a preference — drop it.
+- **Critic that rubber-stamps.** Zero rejects on a non-trivial diff means the phase didn't run.
+- **Style preferences dressed as blockers.** Severity must match blast radius, not conviction.
+- **Skipping the Intent block** because "the diff is obvious." The diff is never obvious — write it.
 - **Reviewing the diff without reading the whole file.** Context lives outside the hunks.
 - **Inventing findings to justify the review.** A clean diff deserves "looks good" in one line.
 - **Rewriting the code in the report.** Point at the problem; let the author write the fix.
-- **Loading every rule file regardless of scope.** Token cost compounds — map paths to rules.
+- **Loading every rule file regardless of scope.** Map paths to rules.
 - **Mixing review with fixes in the same pass.** Report first, ask, then fix.
-- **Duplicating `pnpm lint`.** If ESLint catches it, point at lint output instead of re-listing.
+- **Duplicating `pnpm lint`.** If ESLint catches it, cite lint output instead of re-listing.
