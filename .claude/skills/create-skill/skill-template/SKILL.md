@@ -1,5 +1,6 @@
 ---
 name: REPLACE-lowercase-hyphen-name
+argument-hint: "[REPLACE — short slot label, e.g. <skill-name> or <ticket-id>. Delete this line if the skill takes no arguments.]"
 description: REPLACE — what it does AND when to use it. Third person. Include concrete trigger phrases (e.g. "Use when the user says X"). ≤1024 chars. No angle brackets.
 ---
 
