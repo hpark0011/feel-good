@@ -15,7 +15,23 @@ Scaffold a **self-improving codebase expert agent** — a domain agent that owns
 
 The agent improves itself by ending every session with a log entry that patches either the spec or the knowledge file. This is enforced mechanically by a `SubagentStop` hook (`scripts/validate-session-log.mjs`) that blocks the subagent from ending until `logs.md` contains a fresh entry with `Bottleneck`, `Counterfactual`, and `Patch`.
 
-## Guiding Principles (encoded in every agent)
+## When to use
+
+- User asks to create a codebase expert, scaffold a subsystem agent, or "set up a self-improving agent" for a bounded area of the repo.
+- A recurring coding domain (a package, a backend layer, a specific feature's frontend) is large enough that a general-purpose agent repeatedly re-learns the same context.
+- You want the agent's spec and knowledge to compound across sessions via enforced session logs.
+
+**Do NOT use for**: one-off research agents, workflow-only sub-agents (those live under `agents/` in the owning skill), or agents that span the whole codebase without a clear boundary.
+
+## Quick start
+
+```bash
+/new-codebase-expert chat-backend-developer
+```
+
+Answer the boundary question when prompted (files/dirs owned, what it does NOT own). The skill writes `.claude/agents/<name>.md` + `.claude/agent-memory/<name>/{knowledge.md,logs.md}`, installs the `SubagentStop` hook, and runs `validate-scaffold.mjs`. Done when the validator exits 0.
+
+## Guiding principles (encoded in every agent)
 
 Non-negotiable order. Lower objectives never compromise higher ones.
 
@@ -24,12 +40,7 @@ Non-negotiable order. Lower objectives never compromise higher ones.
 3. **Efficiency** — fewer iterations, less time, fewer tokens
 4. **Learning** — every session patches the system to serve 1–3 next time
 
-## Trigger
-
-- `/new-codebase-expert` — interactive: ask what domain to create an agent for
-- `/new-codebase-expert <domain-name>` — create agent for the named domain
-
-## Process
+## Workflow
 
 ### 1. Determine the domain
 
@@ -120,6 +131,23 @@ Tell the user:
 - Agent name and spec file path
 - Domain boundary (own / not own)
 - Memory directory path
+
+## Examples
+
+✓ Good boundary (layer appears in name):
+
+```
+/new-codebase-expert chat-backend-developer
+Owns: packages/convex/chat/*, convex schema for messages/threads
+Does NOT own: apps/mirror/src/chat/** (frontend), Tavus integration
+```
+
+✗ Bad boundary (ambiguous — implies end-to-end ownership it doesn't have):
+
+```
+/new-codebase-expert chat-agent
+Owns: "chat stuff"
+```
 
 ## Anti-patterns
 

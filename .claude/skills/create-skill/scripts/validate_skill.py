@@ -94,6 +94,15 @@ def validate(skill_path: Path):
     if re.search(r"\b(as of|in) 20\d{2}\b", body, re.I):
         warnings.append("body contains time-stamped language — rots quickly")
 
+    required_sections = ["When to use", "Quick start", "Workflow", "Examples", "Anti-patterns"]
+    headings = re.findall(r"^##\s+(.+?)\s*$", body, re.M)
+    heading_set = {h.strip() for h in headings}
+    for section in required_sections:
+        if section not in heading_set:
+            errors.append(
+                f"missing required H2 section '{section}' — see create-skill/skill-template/SKILL.md"
+            )
+
     for ref in skill_path.glob("*/SKILL.md"):
         continue
     for md in skill_path.rglob("*.md"):

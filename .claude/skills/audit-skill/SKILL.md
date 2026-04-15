@@ -43,6 +43,7 @@ Run each item against the target skill. Every failure becomes a finding.
 ### Body (blockers)
 
 - [ ] ≤500 lines total.
+- [ ] Required H2 sections present, matching `create-skill/skill-template/SKILL.md`: `When to use`, `Quick start`, `Workflow`, `Examples`, `Anti-patterns`. `References` is optional. Renaming `Workflow` → `Process` (or similar) counts as a blocker — the template vocabulary is load-bearing for discoverability.
 - [ ] No section is empty or a placeholder ("N/A", "TBD", "REPLACE").
 - [ ] No inline code/config block >20 lines — must be extracted into `{artifact}-template/`.
 - [ ] No nested references (`SKILL.md → a.md → b.md`). All links one level deep.
