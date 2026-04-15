@@ -43,6 +43,8 @@ Canonical scaffold lives at [skill-template/SKILL.md](skill-template/SKILL.md). 
 
 **Artifact convention:** Any bundled artifact (template, script, example file) goes in a `{artifact-name}-template/` or similarly-named subdirectory of the skill and is referenced from `SKILL.md`. Never inline artifacts larger than ~20 lines.
 
+**Dependency direction is strictly upward.** Templates reference nothing; skills reference templates; agents reference skills. No file references anything "above" it. If two files reference each other, remove the downward link — skills describe _what work happens_, not _who does it_. Templates live in exactly one place, under `{artifact-type}-template/` inside the owning skill.
+
 **Sub-agent convention:** Prompts for sub-agents that exist only to run this skill's workflow live in `agents/<role>.md` inside the skill directory. Sub-agents already registered in `.claude/agents/` are referenced by name instead — never copied. Rule of thumb: if deleting the skill would orphan the prompt, it belongs in the skill's `agents/`; otherwise it belongs in `.claude/agents/`.
 
 ## Authoring rules

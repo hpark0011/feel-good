@@ -1,7 +1,6 @@
 ---
 name: new-codebase-expert
-description: "Scaffold a self-improving codebase expert agent that owns a bounded coding layer and gets measurably sharper with every task. Each session ends with a log entry that patches the agent's spec or knowledge, so the next session is faster and more accurate. Use when the user asks to create a codebase expert, add a new subsystem expert, scaffold an agent that owns a coding area, set up a self-improving agent, or build an agent that owns a specific part of the codebase. Invoke with `/new-codebase-expert` or `/new-codebase-expert <domain-name>`."
-when_to_use: "Triggered by phrases like 'create a codebase expert', 'new codebase expert', 'add a subsystem expert', 'scaffold an agent for <subsystem>', 'set up an agent that owns <area of the code>', 'build a self-improving coding agent', 'make an expert agent for this subsystem', 'I need an agent for <feature/module>', or '/new-codebase-expert'."
+description: "Scaffold a self-improving codebase expert agent that owns a bounded coding layer and gets measurably sharper with every task. Each session ends with a log entry that patches the agent's spec or knowledge, so the next session is faster and more accurate. Use when the user asks to create a codebase expert, add a new subsystem expert, scaffold an agent that owns a coding area, set up a self-improving agent, or build an agent that owns a specific part of the codebase. Invoke with `/new-codebase-expert` or `/new-codebase-expert [domain-name]`."
 disable-model-invocation: true
 argument-hint: "[domain-name]"
 ---
@@ -15,20 +14,6 @@ Scaffold a **self-improving codebase expert agent** — a domain agent that owns
 3. **Logs** (`agent-memory/<name>/logs.md`) — append-only session evals against 4 criteria, bottleneck identification, patches applied
 
 The agent improves itself by ending every session with a log entry that patches either the spec or the knowledge file. This is enforced mechanically by a `SubagentStop` hook (`scripts/validate-session-log.mjs`) that blocks the subagent from ending until `logs.md` contains a fresh entry with `Bottleneck`, `Counterfactual`, and `Patch`.
-
-## Artifact Hierarchy Principle (applies to every skill + agent in this repo)
-
-Dependencies point strictly upward. No file references anything above it.
-
-```
-{artifact-type}-template/<file>    ← pure content, references nothing
-          ↑ referenced by
-    skills/<skill>/SKILL.md         ← references templates by path, never inlines them
-          ↑ referenced by
-    agents/<agent>.md               ← references skills, never artifacts directly
-```
-
-Templates live in exactly one place, under `{artifact-type}-template/` inside the owning skill. If two files reference each other, remove the **downward** reference — skills describe _what work happens_, not _who does it_. This skill is the reference implementation (`codebase-expert-template/` → this `SKILL.md` → generated agents).
 
 ## Guiding Principles (encoded in every agent)
 
