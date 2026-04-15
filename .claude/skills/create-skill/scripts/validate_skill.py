@@ -95,9 +95,8 @@ def validate(skill_path: Path):
         warnings.append("body contains time-stamped language — rots quickly")
 
     # Each entry is either a single required heading, or a tuple of acceptable aliases.
-    # "Scope & non-goals" is the canonical name 
+    # "Scope & non-goals" is optional — include it only when sibling skills risk misfiring.
     required_sections = [
-        ("Scope & non-goals"),
         "Quick start",
         "Workflow",
         "Examples",

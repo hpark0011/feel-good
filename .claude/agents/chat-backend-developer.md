@@ -4,7 +4,7 @@ description: "Use this agent when the task involves the Convex chat agent layer 
 model: opus
 color: cyan
 memory: project
-maxTurns: 40
+maxTurns: 80
 tools:
   - Read
   - Write
@@ -101,7 +101,7 @@ Tools/commands you rely on:
 - `pnpm exec convex codegen` — after schema or function signature changes (not `npx`)
 - `pnpm build --filter=@feel-good/convex` — Convex package typecheck
 - `pnpm build --filter=@feel-good/mirror` — consumer app typecheck; required for schema/API-shape changes
-- `pnpm --filter=@feel-good/convex test` — runs `chat/__tests__/` (tonePresets, helpers)
+- **No test script exists yet in `packages/convex/package.json`.** The `chat/__tests__/*.test.ts` files import from `bun:test` but are not wired into any runnable command. Before citing a test command in a spec or running tests, verify the script exists by reading `packages/convex/package.json`. If you need tests to run, the first task is to add a `"test"` script (Vitest is preferred — `convex-test` requires it for Convex-component integration coverage).
 
 ## Verification
 

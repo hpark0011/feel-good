@@ -11,7 +11,7 @@ description: Create a product spec from user requirements through multi-agent re
 - A feature is large enough that it needs FR/NFR tables, test plans, and an orchestration plan before implementation starts.
 - A brainstorm or ticket is ready to be hardened into a verifiable, testable spec.
 
-**Do NOT use for**: ad-hoc notes, one-file bug fixes, quick refactors, or exploratory brainstorms (use `compound-engineering:ce-brainstorm` instead). Do not use to edit an existing spec's prose — only to author or rewrite one from requirements.
+**Do NOT use for**: ad-hoc notes, one-file bug fixes, quick refactors, or exploratory brainstorms. Do not use to edit an existing spec's prose — only to author or rewrite one from requirements.
 
 ## Quick start
 
@@ -30,7 +30,7 @@ Invariants that apply across all phases:
 - **Hard verification only**: every requirement row must have a concrete, automatable check.
 - **Codebase accuracy**: every file path in the spec must be verified against the real codebase.
 - **User requirements are sovereign**: if the adversarial reviewer argues against something the user explicitly requested, reject it and document why.
-- **One-directional dependency**: `spec-template/` + `agents/` ← `SKILL.md` ← caller. This skill does not name its executor — the invoking agent owns Phase 3 routing.
+- **One-directional dependency**: `spec-template/` (local) + `.claude/agents/create-spec/` (shared) ← `SKILL.md` ← caller. This skill does not name its executor — the invoking agent owns Phase 3 routing.
 
 ### Phase 1: Gather Requirements
 
@@ -47,7 +47,7 @@ Run these in parallel where possible.
 
 **2a — Read research material.** If the user provided or referenced research material (links, docs, prior specs), read it in full. Summarize key findings that affect design decisions.
 
-**2b — Investigate codebase.** Spawn a **Codebase Analyst** agent using the prompt at `agents/codebase-analyst.md`.
+**2b — Investigate codebase.** Spawn the `create-spec-codebase-analyst` agent (defined at `.claude/agents/create-spec/codebase-analyst.md`).
 
 **2c — Consult domain expert (when relevant).** Check `.claude/agents/` for a domain expert agent whose description matches the feature's domain:
 
@@ -76,12 +76,13 @@ Rules for Phase 3:
 3. Every requirement must be referenced by at least one row in Unit Tests or Playwright E2E Tests (ideally both where user-visible).
 4. Test file paths must match real package/app conventions (Vitest in `__tests__/` with `.test.ts`; Playwright in the owning app's e2e dir with `.spec.ts`). Verify against the codebase, don't guess.
 5. Team Orchestration Plan must name real agents from `.claude/agents/` or explicitly recommend `/create-codebase-expert` for missing owners.
+6. **Every orchestration step MUST name (a) a suggested executor, (b) a hard gate shell command that proves the step is done, and (c) the FR/NFR IDs it verifies.** Reviewer pairing is NOT decided in the spec — `.claude/skills/orchestrate-implementation/SKILL.md` owns the critique routing table and selects reviewers per wave at execution time. Rationale: keeping one source of truth for the `code-review-*` roster prevents drift; the spec describes *what must be true*, orchestration decides *who reviews*. The executor/critic separation itself is still load-bearing (see https://www.anthropic.com/engineering/harness-design-long-running-apps) — it's just enforced downstream, not here.
 
 ### Phase 4: Adversarial Critique Loop
 
 After the spec is drafted, spawn **two agents in parallel** (three if a domain expert was consulted in Phase 2):
 
-- **Adversarial Spec Reviewer** — spawn with the prompt at `agents/adversarial-reviewer.md`.
+- **`create-spec-adversarial-reviewer`** — defined at `.claude/agents/create-spec/adversarial-reviewer.md`.
 - **Domain Expert** (if consulted in Phase 2) — re-spawn with the full spec, asking it to review for domain-specific correctness, missed constraints, and compatibility with existing domain architecture.
 
 After critique completes:
@@ -98,12 +99,16 @@ After critique completes:
 
 ### Phase 5: Final Verification
 
-Spawn a **Verification Agent** with the prompt at `agents/verification.md`. If it finds failures, fix them in the spec and re-verify only the failed items.
+Spawn the `create-spec-verification` agent (defined at `.claude/agents/create-spec/verification.md`). If it finds failures, fix them in the spec and re-verify only the failed items.
 
 ### Final Output
 
 1. Write the spec to `workspace/spec/{feature-name}-spec.md` (kebab-case filename).
 2. Present a summary including: spec location, FR/NFR counts, unit + E2E test counts, orchestration summary, adversarial review tallies (raised / accepted / rejected, no unresolved Critical), and verification result.
+
+### Implementation handoff
+
+This skill ends when the spec is verified. The downstream half of the pipeline is `.claude/skills/orchestrate-implementation/SKILL.md` — it consumes the spec and runs the Team Orchestration Plan with disciplined wave execution (executor/verifier separation, feedback loops, critique-budgeting). When the user wants to start building, hand off to that skill rather than orchestrating ad-hoc.
 
 ## Examples
 
@@ -140,11 +145,13 @@ User: "Spec out the dashboard improvements."
 - **Naming an executor for Phase 3 inside this skill.** Creates a cycle with any agent that references this skill. The caller owns routing.
 - **Accepting adversarial concerns that contradict explicit user requirements.** Reject them and log the rejection in the Adversarial Review Summary.
 - **Running the adversarial loop once and stopping.** Iterate until no Critical concerns remain — that's the contract.
+- **Orchestration steps without hard gates.** Every step needs a concrete shell command that proves it's done — no "run tests" hand-waving. Reviewer pairing is not the spec's job; gate commands and verified FR IDs are. Duplicating the `code-review-*` roster in the spec creates drift with `orchestrate-implementation`, which owns it.
 
 ## References
 
 - `spec-template/spec.md` — spec schema (single source of truth for structure).
-- `agents/codebase-analyst.md` — Phase 2b prompt.
-- `agents/adversarial-reviewer.md` — Phase 4 prompt.
-- `agents/verification.md` — Phase 5 prompt.
+- `.claude/agents/create-spec/codebase-analyst.md` — Phase 2b agent (`create-spec-codebase-analyst`).
+- `.claude/agents/create-spec/adversarial-reviewer.md` — Phase 4 agent (`create-spec-adversarial-reviewer`).
+- `.claude/agents/create-spec/verification.md` — Phase 5 agent (`create-spec-verification`).
 - `.claude/skills/create-codebase-expert/SKILL.md#artifact-hierarchy-principle` — why templates and workflow-only agents live under this skill, not inlined.
+- `.claude/skills/orchestrate-implementation/SKILL.md` — downstream skill that owns the critique routing table and wave execution model. The spec feeds into it; it does not duplicate its reviewer-selection logic.

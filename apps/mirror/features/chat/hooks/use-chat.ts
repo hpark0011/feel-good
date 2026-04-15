@@ -9,8 +9,38 @@ import {
 } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { useUIMessages, type UIMessage } from "@convex-dev/agent/react";
+import { ConvexError } from "convex/values";
 import { api } from "@feel-good/convex/convex/_generated/api";
 import type { Id } from "@feel-good/convex/convex/_generated/dataModel";
+
+type RateLimitErrorData = {
+  code: "RATE_LIMIT_MINUTE" | "RATE_LIMIT_DAILY";
+  retryAfterMs: number;
+};
+
+function getRateLimitCode(err: unknown): RateLimitErrorData["code"] | null {
+  if (!(err instanceof ConvexError)) return null;
+  // ConvexError.data can arrive either as the structured object we threw
+  // or as a JSON-serialized string depending on the transport boundary
+  // (the convex-test harness surfaces the string form — see
+  // packages/convex/convex/chat/__tests__/rateLimits.test.ts#getErrorData).
+  const raw: unknown = (err as ConvexError<string>).data;
+  let data: unknown = raw;
+  if (typeof raw === "string") {
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  }
+  if (data && typeof data === "object" && "code" in data) {
+    const code = (data as { code: unknown }).code;
+    if (code === "RATE_LIMIT_DAILY" || code === "RATE_LIMIT_MINUTE") {
+      return code;
+    }
+  }
+  return null;
+}
 
 type UseChatOptions = {
   profileOwnerId: Id<"users">;
@@ -299,7 +329,12 @@ export function useChat({
         hasObservedStreamingRef.current = false;
         const msg =
           err instanceof Error ? err.message : "Failed to send message";
-        if (/rate limit/i.test(msg)) {
+        const rateLimitCode = getRateLimitCode(err);
+        if (rateLimitCode === "RATE_LIMIT_DAILY") {
+          setSendError(
+            "You've hit today's chat limit. Try again tomorrow.",
+          );
+        } else if (rateLimitCode === "RATE_LIMIT_MINUTE" || /rate limit/i.test(msg)) {
           setSendError(
             "You're sending messages too quickly. Please wait a moment.",
           );
@@ -364,9 +399,16 @@ export function useChat({
     try {
       await retryMessageMutation({ conversationId });
     } catch (err) {
-      const msg =
-        err instanceof Error ? err.message : "Failed to retry";
-      setSendError(msg);
+      const rateLimitCode = getRateLimitCode(err);
+      if (rateLimitCode === "RATE_LIMIT_DAILY") {
+        setSendError("You've hit today's chat limit. Try again tomorrow.");
+      } else if (rateLimitCode === "RATE_LIMIT_MINUTE") {
+        setSendError(
+          "You're sending messages too quickly. Please wait a moment.",
+        );
+      } else {
+        setSendError(err instanceof Error ? err.message : "Failed to retry");
+      }
     }
   }, [retryMessageMutation, conversationId]);
 
