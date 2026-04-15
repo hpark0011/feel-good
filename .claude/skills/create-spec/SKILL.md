@@ -11,7 +11,7 @@ description: Create a product spec from user requirements through multi-agent re
 - A feature is large enough that it needs FR/NFR tables, test plans, and an orchestration plan before implementation starts.
 - A brainstorm or ticket is ready to be hardened into a verifiable, testable spec.
 
-**Do NOT use for**: ad-hoc notes, one-file bug fixes, quick refactors, or exploratory brainstorms (use `compound-engineering:ce-brainstorm` instead). Do not use to edit an existing spec's prose — only to author or rewrite one from requirements.
+**Do NOT use for**: ad-hoc notes, one-file bug fixes, quick refactors, or exploratory brainstorms. Do not use to edit an existing spec's prose — only to author or rewrite one from requirements.
 
 ## Quick start
 
@@ -30,7 +30,7 @@ Invariants that apply across all phases:
 - **Hard verification only**: every requirement row must have a concrete, automatable check.
 - **Codebase accuracy**: every file path in the spec must be verified against the real codebase.
 - **User requirements are sovereign**: if the adversarial reviewer argues against something the user explicitly requested, reject it and document why.
-- **One-directional dependency**: `spec-template/` + `agents/` ← `SKILL.md` ← caller. This skill does not name its executor — the invoking agent owns Phase 3 routing.
+- **One-directional dependency**: `spec-template/` (local) + `.claude/agents/create-spec/` (shared) ← `SKILL.md` ← caller. This skill does not name its executor — the invoking agent owns Phase 3 routing.
 
 ### Phase 1: Gather Requirements
 
@@ -47,7 +47,7 @@ Run these in parallel where possible.
 
 **2a — Read research material.** If the user provided or referenced research material (links, docs, prior specs), read it in full. Summarize key findings that affect design decisions.
 
-**2b — Investigate codebase.** Spawn a **Codebase Analyst** agent using the prompt at `agents/codebase-analyst.md`.
+**2b — Investigate codebase.** Spawn the `create-spec-codebase-analyst` agent (defined at `.claude/agents/create-spec/codebase-analyst.md`).
 
 **2c — Consult domain expert (when relevant).** Check `.claude/agents/` for a domain expert agent whose description matches the feature's domain:
 
@@ -81,7 +81,7 @@ Rules for Phase 3:
 
 After the spec is drafted, spawn **two agents in parallel** (three if a domain expert was consulted in Phase 2):
 
-- **Adversarial Spec Reviewer** — spawn with the prompt at `agents/adversarial-reviewer.md`.
+- **`create-spec-adversarial-reviewer`** — defined at `.claude/agents/create-spec/adversarial-reviewer.md`.
 - **Domain Expert** (if consulted in Phase 2) — re-spawn with the full spec, asking it to review for domain-specific correctness, missed constraints, and compatibility with existing domain architecture.
 
 After critique completes:
@@ -98,7 +98,7 @@ After critique completes:
 
 ### Phase 5: Final Verification
 
-Spawn a **Verification Agent** with the prompt at `agents/verification.md`. If it finds failures, fix them in the spec and re-verify only the failed items.
+Spawn the `create-spec-verification` agent (defined at `.claude/agents/create-spec/verification.md`). If it finds failures, fix them in the spec and re-verify only the failed items.
 
 ### Final Output
 
@@ -144,7 +144,7 @@ User: "Spec out the dashboard improvements."
 ## References
 
 - `spec-template/spec.md` — spec schema (single source of truth for structure).
-- `agents/codebase-analyst.md` — Phase 2b prompt.
-- `agents/adversarial-reviewer.md` — Phase 4 prompt.
-- `agents/verification.md` — Phase 5 prompt.
+- `.claude/agents/create-spec/codebase-analyst.md` — Phase 2b agent (`create-spec-codebase-analyst`).
+- `.claude/agents/create-spec/adversarial-reviewer.md` — Phase 4 agent (`create-spec-adversarial-reviewer`).
+- `.claude/agents/create-spec/verification.md` — Phase 5 agent (`create-spec-verification`).
 - `.claude/skills/create-codebase-expert/SKILL.md#artifact-hierarchy-principle` — why templates and workflow-only agents live under this skill, not inlined.
