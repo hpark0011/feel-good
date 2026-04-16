@@ -130,10 +130,10 @@ Every candidate finding, regardless of reviewer, fills:
 
 ```
 id:          short slug
-reviewer:        correctness | convention | tests | concurrency | security | performance | data | api
-title:       one-line
+reviewer:    correctness | convention | tests | concurrency | security | performance | data | api
+title:       one-line (must name the concrete failure mode or risk)
 location:    file:startLine-endLine
-severity:    low | medium | high | critical
+priority:    P0 | P1 | P2 | P3
 confidence:  0.0–1.0
 observation: what the code actually does (1–2 sentences)
 risk:        the concrete failure mode or broken invariant (REQUIRED)
@@ -168,16 +168,16 @@ Reject findings that fail any check. **Log each rejection with a one-line reason
 
 ### Phase 7 — Rank + compose
 
-Rank surviving findings by `severity × confidence × blast_radius`. Priority order when in doubt:
+Rank surviving findings by `severity × confidence × blast_radius` into four priority tiers:
 
-1. Correctness / data loss / auth / concurrency
-2. Architecture violations with long-term cost
-3. Missing tests on risky behavior
-4. Performance with real impact
-5. Maintainability
-6. Nits
+| Tier | Label | Maps to |
+|------|-------|---------|
+| **P0** | Critical | Correctness, data loss, auth bypass, concurrency — must fix before merge |
+| **P1** | High | Architecture violations, performance with real impact, missing tests on risky behavior |
+| **P2** | Moderate | Design smells, missed simplifications, minor test gaps |
+| **P3** | Low | Nits, style, readability — advisory only |
 
-Write the report (see format below). Every blocker and should-fix item is a short paragraph structured as **Observation → Risk → Suggestion**, not a one-liner. Nits stay one-liners.
+Write the report (see format below). Use pipe-delimited markdown tables for findings. Do NOT use ASCII box-drawing characters.
 
 ### Phase 8 — Verify
 
@@ -193,48 +193,73 @@ End with: _"Want me to apply the blockers / should-fix items?"_ Do not fix preem
 
 ## Report format
 
-```text
-## Code Review — <scope>
+```markdown
+## Code Review Results
 
-**Files changed:** N  |  **Lines:** +X / -Y
+**Scope:** <merge-base description> (<N files, M lines>)
+**Intent:** <one sentence — what the author is trying to do>
 **Verified:** build ✓/✗  lint ✓/✗
 
-### Intent
-- **Goal:** <one sentence — what the author is trying to do>
-- **Invariants:** <1–3 bullets that must hold>
-- **Risk surface:** <touched boundaries>
+**Reviewers:** <comma-separated list of active reviewers>
+- <routed reviewer> -- <one-line reason it was routed>
 
-### 🔴 Blockers (fix before merge)
+### P0 — Critical (<count>)
 
-**path/to/file.tsx:42** — <title>
-_Observation._ <what the code does.>
-_Risk._ <concrete failure mode or broken invariant.>
-_Suggestion._ <one-sentence fix direction.>
+| # | File | Issue | Reviewer | Confidence |
+|---|------|-------|----------|------------|
+| 1 | `path/to/file.tsx:42` | <title — concrete failure mode> | <reviewer> | 0.XX |
 
-### 🟡 Should fix
+### P1 — High (<count>)
 
-**path/to/file.ts:17** — <title>
-_Observation._ …
-_Risk._ …
-_Suggestion._ …
+| # | File | Issue | Reviewer | Confidence |
+|---|------|-------|----------|------------|
+| 2 | `path/to/file.ts:17` | <title — concrete risk> | <reviewer> | 0.XX |
 
-### 🟢 Nits
-- **path/to/file.css:8** — <one-liner with risk, even if small>
+### P2 — Moderate (<count>)
 
-### ✅ Looks good
+| # | File | Issue | Reviewer | Confidence |
+|---|------|-------|----------|------------|
+| 3 | `path/to/file.ts:55` | <title — concrete risk> | <reviewer> | 0.XX |
+
+### P3 — Low (<count>)
+
+| # | File | Issue | Reviewer | Confidence |
+|---|------|-------|----------|------------|
+| 4 | `path/to/file.css:8` | <title — risk, even if small> | <reviewer> | 0.XX |
+
+### Looks good
 - <one-line positive callout, if any>
 
-### Filtered by critic (N)
+### Filtered by critic (<count>)
 - <finding title> — <rejection reason>
+
+### Summary
+
+| Priority | Count |
+|----------|-------|
+| P0 Critical | N |
+| P1 High | N |
+| P2 Moderate | N |
+| P3 Low | N |
+| **Total** | **N** |
+
+### Recommended next step
+<one sentence: what to do first — e.g., "Fix P0 #1 before merge, then address P1 items." or "Clean diff — ready to merge.">
+
+Want me to apply fixes for the P0/P1 items?
 ```
 
 Report rules:
 
-- Every finding has a `file:line` anchor. No vague "in the auth module".
-- **Blockers** = correctness, security, convention violations with known past incidents.
-- **Should fix** = design smells, missed simplifications, test gaps on risky behavior.
-- **Nits** = small issues a linter would catch or near-miss readability.
+- Every finding has a `file:line` anchor in backticks. No vague "in the auth module".
+- Use pipe-delimited markdown tables. Do NOT use ASCII box-drawing characters.
+- **P0 Critical** = correctness, security, data loss, auth bypass, concurrency bugs.
+- **P1 High** = architecture violations, performance with real impact, missing tests on risky behavior.
+- **P2 Moderate** = design smells, missed simplifications, minor test gaps.
+- **P3 Low** = nits, style, readability — advisory only.
+- Omit empty priority sections (if no P0 findings, skip the P0 section).
 - If the whole change is clean, say so in one sentence — don't invent findings. The "Filtered by critic" footer can still show what you considered.
+- Always end with the Summary table and Recommended next step.
 
 ## Examples
 
@@ -242,39 +267,55 @@ Report rules:
 
 **Output (abridged):**
 
-```text
-## Code Review — fix-chat-message-system
+```markdown
+## Code Review Results
 
-**Files changed:** 3  |  **Lines:** +87 / -4
+**Scope:** main...fix-chat-message-system (3 files, 91 lines)
+**Intent:** Prevent the streaming lock from remaining stuck when a request is cancelled mid-stream
 **Verified:** build ✓  lint ✓
 
-### Intent
-- **Goal:** Prevent the streaming lock from remaining stuck when a request is cancelled mid-stream.
-- **Invariants:** lock always released via clearStreamingLock(expectedStartedAt); stale callbacks cannot clear an active lock.
-- **Risk surface:** concurrency, state cleanup.
+**Reviewers:** correctness, convention, tests, concurrency
+- concurrency -- lock lifecycle and cleanup paths in streaming code
 
-### 🔴 Blockers
+### P0 — Critical (1)
 
-**packages/convex/chat/stream.ts:118-131** — Cleanup skipped on early return
-_Observation._ When `shouldAbort` is true the function returns before reaching `clearStreamingLock`, which only runs on the success path.
-_Risk._ `streamingInProgress` stays set after cancellation, blocking every subsequent stream for that conversation — this is the exact invariant the PR claims to fix.
-_Suggestion._ Move the lock release into a `finally` block guarded by `expectedStartedAt` so both branches run it.
+| # | File | Issue | Reviewer | Confidence |
+|---|------|-------|----------|------------|
+| 1 | `packages/convex/chat/stream.ts:118-131` | Cleanup skipped on early return — `streamingInProgress` stays set after cancellation, blocking all subsequent streams | concurrency, correctness | 0.95 |
 
-### 🟡 Should fix
+### P1 — High (1)
 
-**packages/convex/chat/stream.test.ts** — No test for the interrupted-stream path
-_Observation._ Tests cover the happy path and the error path but not the cancellation path that the fix targets.
-_Risk._ No regression protection — the same bug can return silently.
-_Suggestion._ Add a test that cancels mid-stream and asserts `streamingInProgress` is cleared.
+| # | File | Issue | Reviewer | Confidence |
+|---|------|-------|----------|------------|
+| 2 | `packages/convex/chat/stream.test.ts` | No test for the interrupted-stream path — no regression protection for the exact bug this PR fixes | tests | 0.85 |
 
-### 🟢 Nits
-- **apps/mirror/app/(chat)/chat-input.tsx:5** — unused `cn` import (trivial, but it lives in a hot file).
+### P3 — Low (1)
+
+| # | File | Issue | Reviewer | Confidence |
+|---|------|-------|----------|------------|
+| 3 | `apps/mirror/app/(chat)/chat-input.tsx:5` | Unused `cn` import in a hot file | convention | 0.70 |
+
+### Looks good
+- Lock guard pattern with `expectedStartedAt` is a solid approach for stale-callback protection.
 
 ### Filtered by critic (2)
 - "Rename `expectedStartedAt` to `streamToken`" — style preference, no risk named.
 - "Extract cleanup into a helper" — speculative refactor, not requested by the PR intent.
 
-Want me to apply the blockers and should-fix items?
+### Summary
+
+| Priority | Count |
+|----------|-------|
+| P0 Critical | 1 |
+| P1 High | 1 |
+| P2 Moderate | 0 |
+| P3 Low | 1 |
+| **Total** | **3** |
+
+### Recommended next step
+Fix P0 #1 (move lock release into a `finally` block) before merge, then add regression test for P1 #2.
+
+Want me to apply fixes for the P0/P1 items?
 ```
 
 ## Anti-patterns
