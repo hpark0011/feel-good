@@ -1,6 +1,6 @@
 import { test, expect } from "./fixtures/auth";
 
-const username = "test-user";
+const username = "test-user"; // matches ensureTestUser's username
 
 test.describe("Logout via logo menu", () => {
   test("owner can open the logo menu and see the logout option", async ({
@@ -36,5 +36,22 @@ test.describe("Logout via logo menu", () => {
     await page.getByTestId("logout-menu-item").click();
 
     await expect(page).toHaveURL(/\/sign-in/, { timeout: 10_000 });
+  });
+
+  test("visitor does not see the logo menu", async ({ browser }) => {
+    // Clear storageState so the browser has no session
+    const ctx = await browser.newContext({
+      storageState: { cookies: [], origins: [] },
+    });
+    const page = await ctx.newPage();
+
+    await page.goto(`/@${username}`, { waitUntil: "domcontentloaded" });
+
+    // The dropdown trigger must NOT be present for visitors
+    await expect(
+      page.getByTestId("mirror-logo-menu-trigger"),
+    ).not.toBeVisible({ timeout: 5_000 });
+
+    await ctx.close();
   });
 });
