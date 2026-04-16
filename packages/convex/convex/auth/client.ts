@@ -10,6 +10,48 @@ import authConfig from "../auth.config";
 import { isPlaywrightTestEmail, isPlaywrightTestMode } from "./testMode";
 import { env } from "../env";
 
+/**
+ * Tier 2 — early-rejection UX gate helper. Extracted from the inline
+ * `sendVerificationOTP` callback so Vitest can exercise the exact branch
+ * behavior (existing-user bypass, allowlist pass, BETA_CLOSED throw,
+ * query-count accounting) without needing a full Better Auth HTTP runtime
+ * under convex-test. The callback below delegates to this helper; the
+ * helper contains no logic that isn't in the callback. Returns a discriminator
+ * describing which branch was taken so tests can assert it, or throws an
+ * `APIError` with `code: "BETA_CLOSED"` when the email is blocked.
+ */
+export type SendOtpGateCtx = {
+  runQuery: GenericActionCtx<DataModel>["runQuery"];
+};
+
+export type SendOtpGateOutcome = "existing-user" | "allowlisted";
+
+export async function runSendVerificationOtpGate(
+  ctx: SendOtpGateCtx,
+  email: string,
+): Promise<SendOtpGateOutcome> {
+  const normalized = email.toLowerCase();
+  const existing = await ctx.runQuery(components.betterAuth.adapter.findOne, {
+    model: "user",
+    where: [{ field: "email", value: normalized }],
+  });
+  if (existing) {
+    return "existing-user";
+  }
+  const allowed = await ctx.runQuery(
+    internal.betaAllowlist.queries.isEmailAllowed,
+    { email: normalized },
+  );
+  if (!allowed) {
+    throw new APIError("FORBIDDEN", {
+      code: "BETA_CLOSED",
+      message:
+        "Sign-ups are currently invite-only. Contact us if you'd like access.",
+    });
+  }
+  return "allowlisted";
+}
+
 // The component client has methods needed for integrating Convex with Better Auth,
 // as well as helper methods for general use.
 // Explicit type annotation breaks circular inference between authComponent and
@@ -151,29 +193,9 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
           }
           // Tier 2 — early-rejection UX gate. Existing-user check first so the
           // common sign-in path only issues one query (NFR-01). Existing users
-          // sign in even when off-allowlist (FR-08).
-          const existing = await actionCtx.runQuery(
-            components.betterAuth.adapter.findOne,
-            {
-              model: "user",
-              where: [
-                { field: "email", value: email.toLowerCase() },
-              ],
-            },
-          );
-          if (!existing) {
-            const allowed = await actionCtx.runQuery(
-              internal.betaAllowlist.queries.isEmailAllowed,
-              { email: email.toLowerCase() },
-            );
-            if (!allowed) {
-              throw new APIError("FORBIDDEN", {
-                code: "BETA_CLOSED",
-                message:
-                  "Sign-ups are currently invite-only. Contact us if you'd like access.",
-              });
-            }
-          }
+          // sign in even when off-allowlist (FR-08). Logic lives in
+          // `runSendVerificationOtpGate` so it's unit-testable in isolation.
+          await runSendVerificationOtpGate(actionCtx, email);
           // Fire-and-forget: don't block auth response waiting for email
           void actionCtx.runAction(internal.email.actions.sendOTP, {
             to: email,
