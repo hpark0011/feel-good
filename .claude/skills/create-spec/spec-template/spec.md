@@ -12,6 +12,17 @@ This is the alignment checkpoint — if these bullets are wrong, everything belo
 Example: "When I sign up with a blocked email, I see a friendly waitlist message
 instead of landing in a broken account.">
 
+## How we'll know it works
+
+List the user-flow scenarios that prove the feature works, in plain language.
+No file paths, no test framework details — those come later in `## Playwright E2E Tests`.
+Each scenario should read like a story a non-engineer could follow and each should
+map to at least one FR below.
+
+| Scenario (user-flow language)                     | Expected outcome                              | Verifies |
+| ------------------------------------------------- | --------------------------------------------- | -------- |
+| {e.g. "User submits signup with a blocked email"} | {e.g. "Sees waitlist screen, no account created"} | {FR-XX}  |
+
 ## Requirements
 
 ### Functional Requirements
