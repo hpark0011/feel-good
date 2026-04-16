@@ -1,6 +1,7 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import { articlesTable } from "./articles/schema";
+import { betaAllowlistTable } from "./betaAllowlist/schema";
 import { conversationsTable } from "./chat/schema";
 import { contentEmbeddingsTable } from "./embeddings/schema";
 import { postsTable } from "./posts/schema";
@@ -12,6 +13,7 @@ export default defineSchema({
   posts: postsTable,
   conversations: conversationsTable,
   contentEmbeddings: contentEmbeddingsTable,
+  betaAllowlist: betaAllowlistTable,
 
   // Test-only table: stores OTPs for @mirror.test emails during Playwright auth setup.
   // Only populated when PLAYWRIGHT_TEST_SECRET env var is set.
