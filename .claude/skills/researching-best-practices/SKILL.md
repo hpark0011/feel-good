@@ -11,7 +11,7 @@ Produces a verified research synthesis and codebase gap analysis for a named fea
 ## Scope & non-goals
 
 - **Not a spec generator.** The output is research + gap analysis. For FR/NFR tables, test plans, and orchestration, pass the report to [`create-spec`](../create-spec/SKILL.md).
-- **Not a debugging tool.** For root-cause investigation of a specific bug, use [`debug`](../debug/SKILL.md).
+- **Not a debugging tool.** For root-cause investigation of a specific bug, use [`project-debug`](../project-debug/SKILL.md).
 - **Not for trivial lookups.** One-file questions ("how does React.memo work") don't justify five sub-agents — answer directly.
 - **Stops at the gap report.** Implementation and spec authoring happen in downstream skills.
 
