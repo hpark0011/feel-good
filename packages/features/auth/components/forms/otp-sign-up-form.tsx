@@ -45,7 +45,7 @@ export function OTPSignUpForm({
   } = useOTPAuth(authClient, {
     onSuccess: handleSuccess,
     onError,
-    type: "email-verification",
+    type: "sign-in",
   });
 
   return (

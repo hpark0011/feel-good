@@ -1,6 +1,7 @@
 import { createClient, type GenericCtx } from "@convex-dev/better-auth";
 import { convex } from "@convex-dev/better-auth/plugins";
 import { betterAuth } from "better-auth";
+import { APIError } from "better-auth/api";
 import { emailOTP, magicLink } from "better-auth/plugins";
 import type { GenericActionCtx } from "convex/server";
 import { internal, components } from "../_generated/api";
@@ -18,6 +19,19 @@ export const authComponent: ReturnType<typeof createClient<DataModel>> =
     triggers: {
       user: {
         onCreate: async (ctx, doc) => {
+          // Tier 1 — authoritative allowlist gate. Runs inside the component's
+          // create mutation; an uncaught throw atomically rolls back the
+          // component user row across every provider path (email-OTP, Google
+          // OAuth, future providers).
+          if (!isPlaywrightTestEmail(doc.email)) {
+            const allowed = await ctx.runQuery(
+              internal.betaAllowlist.queries.isEmailAllowed,
+              { email: doc.email.toLowerCase() },
+            );
+            if (!allowed) {
+              throw new Error("BETA_CLOSED: " + doc.email);
+            }
+          }
           await ctx.db.insert("users", {
             authId: doc._id,
             email: doc.email,
@@ -134,6 +148,31 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
               },
             );
             return;
+          }
+          // Tier 2 — early-rejection UX gate. Existing-user check first so the
+          // common sign-in path only issues one query (NFR-01). Existing users
+          // sign in even when off-allowlist (FR-08).
+          const existing = await actionCtx.runQuery(
+            components.betterAuth.adapter.findOne,
+            {
+              model: "user",
+              where: [
+                { field: "email", value: email.toLowerCase() },
+              ],
+            },
+          );
+          if (!existing) {
+            const allowed = await actionCtx.runQuery(
+              internal.betaAllowlist.queries.isEmailAllowed,
+              { email: email.toLowerCase() },
+            );
+            if (!allowed) {
+              throw new APIError("FORBIDDEN", {
+                code: "BETA_CLOSED",
+                message:
+                  "Sign-ups are currently invite-only. Contact us if you'd like access.",
+              });
+            }
           }
           // Fire-and-forget: don't block auth response waiting for email
           void actionCtx.runAction(internal.email.actions.sendOTP, {
