@@ -15,7 +15,8 @@ export function MirrorLogoMenu() {
   const router = useRouter();
 
   async function handleLogout() {
-    await signOut();
+    const { error } = await signOut();
+    if (error) return;
     router.push("/sign-in");
   }
 
