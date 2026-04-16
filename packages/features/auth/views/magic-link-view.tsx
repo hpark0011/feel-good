@@ -54,7 +54,7 @@ export const MagicLinkView = memo(function MagicLinkView({
 
   if (isSuccess) {
     return (
-      <Card className="w-full max-w-md rounded-4xl border-transparent p-0">
+      <Card className="w-full max-w-md rounded-4xl border-transparent bg-transparent p-0">
         <CardContent className="pt-6">
           <div className="space-y-4 text-center">
             <FormSuccess title="Check your email" message={successMessage} />
@@ -75,7 +75,7 @@ export const MagicLinkView = memo(function MagicLinkView({
   }
 
   return (
-    <Card className="w-full max-w-md rounded-4xl border-transparent p-0">
+    <Card className="w-full max-w-md rounded-4xl border-transparent bg-transparent p-0">
       <CardHeader>
         <CardTitle className="text-center text-2xl font-medium">
           {title}
