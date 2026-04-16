@@ -1,25 +1,11 @@
-import { test, expect } from "@playwright/test";
-
-/**
- * Better Auth error wire format for BETA_CLOSED:
- *   HTTP 403
- *   Body: { "code": "BETA_CLOSED", "message": "..." }
- *
- * The client-side `@better-fetch/fetch` parses the JSON body and spreads it
- * into `ctx.error` alongside `status` and `statusText`:
- *   ctx.error = { code: "BETA_CLOSED", message: "...", status: 403, statusText: "Forbidden" }
- *
- * `handleAuthError` in `use-otp-auth.ts` reads `ctx.error.code` and maps it
- * via `getAuthErrorMessage` to the user-facing copy.
- */
+import { test, expect, type Page } from "@playwright/test";
 
 const BETA_CLOSED_COPY =
   "Sign-ups are currently invite-only. Contact us if you'd like access.";
 
 const SEND_OTP_ROUTE = "**/api/auth/email-otp/send-verification-otp";
 
-/** Mock route to return a BETA_CLOSED error (matches Better Auth wire format). */
-function mockBetaClosedError(page: import("@playwright/test").Page) {
+function mockBetaClosedError(page: Page) {
   return page.route(SEND_OTP_ROUTE, (route) =>
     route.fulfill({
       status: 403,
@@ -32,8 +18,7 @@ function mockBetaClosedError(page: import("@playwright/test").Page) {
   );
 }
 
-/** Mock route to return a successful OTP send response. */
-function mockOtpSuccess(page: import("@playwright/test").Page) {
+function mockOtpSuccess(page: Page) {
   return page.route(SEND_OTP_ROUTE, (route) =>
     route.fulfill({
       status: 200,
