@@ -40,7 +40,7 @@ Or from monorepo root: `pnpm dev --filter=@feel-good/mirror`
 
 ## Project Structure
 
-```
+```text
 features/
   articles/             # Article list, pagination, filtering, search, sort
   posts/                # Blog post authoring, markdown import, publish/unpublish
@@ -117,7 +117,7 @@ The `[username]` route uses a **panel-based workspace** with parallel routes:
 | `/@username/posts` | `[username]/posts/page.tsx` | Public | Post list |
 | `/@username/posts/:slug` | `[username]/posts/[slug]/page.tsx` | Public | Post detail |
 | `/@username/chat` | `[username]/chat/page.tsx` | Public | Chat with clone |
-| `/@username/chat/:id` | `[username]/chat/[conversationId]/page.tsx` | Public | Specific conversation |
+| `/@username/chat/:conversationId` | `[username]/chat/[conversationId]/page.tsx` | Public | Specific conversation |
 | `/@username/clone-settings` | `[username]/clone-settings/page.tsx` | Owner | Clone persona config |
 | `/onboarding` | `(protected)/onboarding/page.tsx` | Required | New user wizard |
 | `/dashboard` | `(protected)/dashboard/page.tsx` | Required | Insights |
@@ -129,7 +129,7 @@ The `[username]` route uses a **panel-based workspace** with parallel routes:
 ## Key Patterns
 
 - Server components by default; `"use client"` only when needed
-- Better Auth for session management (magic-link login)
+- Better Auth for session management (OTP login)
 - Convex for real-time data synchronization
 - Workspace layout: navbar / toolbar slot / content panel separation
 - Feature contexts split by concern (toolbar vs list vs workspace)
@@ -138,11 +138,11 @@ The `[username]` route uses a **panel-based workspace** with parallel routes:
 
 ## Auth Flow
 
-Authentication uses the shared `@feel-good/features` package (magic-link only):
+Authentication uses the shared `@feel-good/features` package (OTP-based):
 
 ```typescript
 import { LoginBlock, SignUpBlock } from "@feel-good/features/auth/blocks";
-import { useMagicLinkRequest, createUseSession } from "@feel-good/features/auth/hooks";
+import { useOTPAuth, createUseSession } from "@feel-good/features/auth/hooks";
 ```
 
 ## Topic Rules
