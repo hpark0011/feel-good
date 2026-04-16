@@ -16,6 +16,8 @@ import type * as auth_queries from "../auth/queries.js";
 import type * as auth_testHelpers from "../auth/testHelpers.js";
 import type * as auth_testMode from "../auth/testMode.js";
 import type * as auth_triggers from "../auth/triggers.js";
+import type * as betaAllowlist_mutations from "../betaAllowlist/mutations.js";
+import type * as betaAllowlist_queries from "../betaAllowlist/queries.js";
 import type * as chat_actions from "../chat/actions.js";
 import type * as chat_agent from "../chat/agent.js";
 import type * as chat_helpers from "../chat/helpers.js";
@@ -60,6 +62,8 @@ declare const fullApi: ApiFromModules<{
   "auth/testHelpers": typeof auth_testHelpers;
   "auth/testMode": typeof auth_testMode;
   "auth/triggers": typeof auth_triggers;
+  "betaAllowlist/mutations": typeof betaAllowlist_mutations;
+  "betaAllowlist/queries": typeof betaAllowlist_queries;
   "chat/actions": typeof chat_actions;
   "chat/agent": typeof chat_agent;
   "chat/helpers": typeof chat_helpers;

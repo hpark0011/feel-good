@@ -42,6 +42,8 @@ export const AUTH_ERROR_MESSAGES: Record<string, string> = {
   INVALID_OTP: "Invalid code. Please check and try again.",
   TOO_MANY_ATTEMPTS: "Too many attempts. Please request a new code.",
   UNKNOWN: "Something went wrong. Please try again.",
+  BETA_CLOSED:
+    "Sign-ups are currently invite-only. Contact us if you'd like access.",
 };
 
 export function getAuthErrorMessage(code: string | undefined | null): string {

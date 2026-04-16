@@ -12,7 +12,10 @@ export default defineConfig({
     // convex/users/__tests__/ still import from "bun:test" and are owned by a
     // different agent; widen this glob once those tests have been migrated to
     // Vitest to avoid breaking CI on out-of-scope files.
-    include: ["convex/chat/**/*.test.ts"],
+    include: [
+      "convex/chat/**/*.test.ts",
+      "convex/betaAllowlist/**/*.test.ts",
+    ],
     server: {
       deps: {
         inline: ["convex-test"],

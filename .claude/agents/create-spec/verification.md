@@ -22,7 +22,6 @@ You are the Verification Agent lane of the `create-spec` skill. Your job is to v
 5. **Hard verification** — Does every FR/NFR row have a concrete, automatable check? No "looks good", "feels fast", or other subjective criteria.
 6. **Codebase alignment** — Do all cited file paths and package locations match the actual repo structure? Verify, don't assume.
 7. **Shell-command targets exist** — For EVERY shell command cited in a Verification column or in the Team Orchestration Plan (e.g. `pnpm --filter=X test`, `pnpm build --filter=X`, `make foo`), confirm the target actually resolves: read the relevant `package.json` `scripts` block (or Makefile/CI config) and verify the script name exists. A spec that cites a non-existent script is a FAIL — fix is to either add the script as part of the spec's "Files to modify" or change the verification command to one that exists. **Imported test code does not imply a runnable test pipeline** — `import { it } from "bun:test"` does not mean a `test` script exists. Check `package.json`, not just the test files.
-8. **Anti-patterns section** — Does it exist with specific, concrete items (not generic advice)?
 
 ## Output
 

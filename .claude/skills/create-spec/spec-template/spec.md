@@ -5,9 +5,23 @@ Do NOT reference this file directly from an agent — go through the skill._
 
 ---
 
-## Overview
+## What the user gets
 
-<What the feature does, why it matters. 2–3 sentences.>
+<2–5 bullets describing the feature from the user's perspective. No tech jargon.
+This is the alignment checkpoint — if these bullets are wrong, everything below is wrong.
+Example: "When I sign up with a blocked email, I see a friendly waitlist message
+instead of landing in a broken account.">
+
+## How we'll know it works
+
+List the user-flow scenarios that prove the feature works, in plain language.
+No file paths, no test framework details — those come later in `## Playwright E2E Tests`.
+Each scenario should read like a story a non-engineer could follow and each should
+map to at least one FR below.
+
+| Scenario (user-flow language)                     | Expected outcome                              | Verifies |
+| ------------------------------------------------- | --------------------------------------------- | -------- |
+| {e.g. "User submits signup with a blocked email"} | {e.g. "Sees waitlist screen, no account created"} | {FR-XX}  |
 
 ## Requirements
 
@@ -25,7 +39,14 @@ Do NOT reference this file directly from an agent — go through the skill._
 
 ## Architecture
 
-- Component design: where each piece lives, data flow, key interfaces
+Break the architecture down into the four sections below. Do not collapse them —
+each answers a different question and together they prove the design is sound.
+
+### 1. Components and structure
+
+Where each piece lives, what it owns, and how the pieces are wired together.
+Name the files, the modules, the key interfaces, and the boundaries between them.
+
 - Files to create:
 
 | File   | Purpose |
@@ -39,6 +60,33 @@ Do NOT reference this file directly from an agent — go through the skill._
 | {path} | {what} |
 
 - Dependencies to add (if any)
+
+### 2. How data flows
+
+The underlying mechanism. Trace a request or event end-to-end: what triggers it,
+what state it reads, what state it writes, what it returns, and where the
+boundaries are (client ↔ server, sync ↔ async, trusted ↔ untrusted). A sequence
+or numbered walkthrough is usually clearer than prose.
+
+### 3. Why this works
+
+Why this design improves the system without introducing regressions, and why it
+makes the codebase *less* prone to failure. Address:
+
+- What invariants does it preserve or strengthen?
+- What classes of bugs does it make impossible (or much harder)?
+- What existing behavior is guaranteed unchanged, and how do we know?
+- Why this approach over the obvious alternatives?
+
+### 4. Edge cases and gotchas
+
+Where this architecture is fragile or surprising. Call out:
+
+- Concurrency, race conditions, ordering assumptions
+- Failure modes (network, DB, third-party) and how they degrade
+- Inputs at the edge of the domain (empty, max, unicode, null, unauthorized)
+- Migration / backfill / rollout risks
+- Anything a future reader would curse us for not warning them about
 
 ## Unit Tests
 
@@ -55,10 +103,6 @@ Use Vitest. Match the owning package's existing patterns: tests in `__tests__/` 
 | {path}    | {user flow from user's perspective} | {FR-XX}  |
 
 E2E tests go in the owning app's Playwright directory (e.g., `apps/mirror/e2e/`) with a `.spec.ts` suffix. Use the Playwright CLI only (`.claude/rules/testing.md`). Tests must describe real user flows, not internal state checks.
-
-## Anti-patterns to Avoid
-
-- <Specific thing NOT to do, with reason.>
 
 ## Team Orchestration Plan
 
