@@ -139,7 +139,6 @@ The current peer dependency `"eslint-config-next": ">=15.0.0"` already supports 
 
 ```diff
   const nextConfig = {
-    output: process.env.ELECTRON_BUILD === "true" ? "standalone" : undefined,
     transpilePackages: ["@feel-good/icons", "@feel-good/ui", "@feel-good/utils"],
 -   eslint: { ignoreDuringBuilds: true },
     typescript: { ignoreBuildErrors: true },
