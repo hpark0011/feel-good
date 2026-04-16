@@ -66,16 +66,21 @@ function normalizeTheme(value: unknown): "light" | "dark" | null {
   return null;
 }
 
+function normalizeSnapshotSource(value: unknown): SnapshotSource {
+  return value === "web" ? "web" : "unknown";
+}
+
 function normalizeMetadata(
   value: unknown,
   fallbackSource: SnapshotSource,
 ): SnapshotMetadata {
   const now = new Date().toISOString();
+  const safeFallback = normalizeSnapshotSource(fallbackSource);
 
   if (!isRecord(value)) {
     return {
       exportedAt: now,
-      source: fallbackSource,
+      source: safeFallback,
     };
   }
 
@@ -87,7 +92,7 @@ function normalizeMetadata(
   const source: SnapshotSource =
     value.source === "web" || value.source === "unknown"
       ? value.source
-      : fallbackSource;
+      : safeFallback;
 
   return {
     exportedAt,
@@ -168,7 +173,16 @@ export function createSnapshotFromBoard(
   };
 }
 
-function isSnapshotV2(value: unknown): value is GreyboardSnapshotV2 {
+interface SnapshotV2Candidate {
+  version: 2;
+  board: unknown;
+  projects?: unknown;
+  timer?: unknown;
+  ui?: unknown;
+  metadata?: unknown;
+}
+
+function isSnapshotV2Candidate(value: unknown): value is SnapshotV2Candidate {
   if (!isRecord(value)) {
     return false;
   }
@@ -206,8 +220,8 @@ export function migrateLegacyBoard(legacyInput: unknown): GreyboardSnapshotV2 {
 export function deserializeSnapshot(input: string | unknown): GreyboardSnapshotV2 {
   const parsed = typeof input === "string" ? JSON.parse(input) : input;
 
-  if (isSnapshotV2(parsed)) {
-    return normalizeSnapshotShape(parsed, parsed.metadata.source);
+  if (isSnapshotV2Candidate(parsed)) {
+    return normalizeSnapshotShape(parsed, "unknown");
   }
 
   return migrateLegacyBoard(parsed);
