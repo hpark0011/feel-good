@@ -73,7 +73,7 @@ export const OTPView = memo(function OTPView({
   // Step 1: Email input
   if (step === "email") {
     return (
-      <Card className="w-full max-w-md rounded-4xl border-transparent p-0">
+      <Card className="w-full max-w-md rounded-4xl border-transparent bg-transparent p-0">
         <CardHeader>
           <CardTitle className="text-center text-2xl font-medium">
             {title}
@@ -134,7 +134,7 @@ export const OTPView = memo(function OTPView({
 
   // Step 2: OTP verification
   return (
-    <Card className="w-full max-w-md rounded-4xl border-transparent p-0">
+    <Card className="w-full max-w-md rounded-4xl border-transparent bg-transparent p-0">
       <CardHeader>
         <CardTitle className="text-center text-2xl font-medium">
           Enter verification code
