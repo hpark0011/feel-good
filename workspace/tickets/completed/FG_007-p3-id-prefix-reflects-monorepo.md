@@ -5,7 +5,7 @@ date: 2026-02-20
 type: improvement
 status: completed
 priority: p3
-description: "The FG_ prefix in ticket IDs presumably stands for GreyBoard, one of four apps. The ticket system serves the entire monorepo including mirror, ui-factory, and greyboard-desktop. The prefix should reflect the monorepo identity like FG_ for feel-good, matching the @feel-good/* package namespace."
+description: "The FG_ prefix in ticket IDs presumably stands for GreyBoard, one of the apps. The ticket system serves the entire monorepo including mirror and ui-factory. The prefix should reflect the monorepo identity like FG_ for feel-good, matching the @feel-good/* package namespace."
 dependencies:
   - FG_001
 parent_plan_id:
@@ -22,7 +22,7 @@ owner_agent: "Naming Convention Agent"
 
 ## Context
 
-The ticket ID format is `FG_NNN` where `GB` presumably stands for "GreyBoard," one of the four apps in the monorepo. However, the ticket system is monorepo-wide — tickets can target `mirror`, `ui-factory`, `greyboard-desktop`, or shared packages. The existing `@feel-good/*` package namespace uses "feel-good" as the identity.
+The ticket ID format is `FG_NNN` where `GB` presumably stands for "GreyBoard," one of the apps in the monorepo. However, the ticket system is monorepo-wide — tickets can target `mirror`, `ui-factory`, or shared packages. The existing `@feel-good/*` package namespace uses "feel-good" as the identity.
 
 - **Source:** Code review of PR #154 (Architecture Strategist)
 - **Location:** `.claude/skills/generate-issue-tickets/SKILL.md:45`, `.claude/skills/generate-issue-tickets/scripts/validate.mjs:44-46`
