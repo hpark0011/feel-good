@@ -83,6 +83,17 @@ Do NOT skip to a theoretical fix.
 
 - **Always Choose the Compounding Option** — You should ALWAYS choose the option that compounds, that architecturally makes the codebase less prone for error and never choose the quick wins. When a bug or feedback reveals a gap in a skill, rule, convention, or template, patch the upstream artifact before (or alongside) fixing the downstream instance.
 
+## Communication
+
+Explain technical problems in plain language. The reader is smart but may not know the codebase or the jargon.
+
+- **Lead with the problem in one plain sentence.** What is actually broken, in user-visible terms. Not type-system vocabulary, not file mechanics — the real-world consequence.
+- **Then the root cause in one plain sentence.** Why it's broken. No jargon unless you define it on the spot.
+- **When presenting options, state the tradeoff for each.** What you gain, what you give up, and which one you'd pick and why. Don't dump options as a neutral menu.
+- **Only add technical detail after the plain-language version has landed.** File paths, line numbers, and type details are supporting evidence, not the headline.
+- **Ban-list:** "defeats the intended schema collapse", "violates the declared union", "honest predicate", and similar pedantic phrasing. If a sentence reads like a compiler error, rewrite it.
+- **Save depth for when it's asked for.** A one-line answer with the right headline beats a thorough one the reader has to decode.
+
 ## Git Workflow
 
 Never commit directly to main. Always use feature branches. When a merge conflict or branch divergence occurs, stop and ask the user before force-pushing or resetting.
