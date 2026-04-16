@@ -1,5 +1,5 @@
 ---
-name: forms-builder
+name: react-form-builder
 description: Create or modify client-side forms in React applications following best practices for react-hook-form, @feel-good/ui/primitives/form components, and server actions integration. Use when building forms with validation, error handling, loading states, and TypeScript typing. Invoke with /react-form-builder or when user mentions creating forms, form validation, or react-hook-form.
 ---
 

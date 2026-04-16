@@ -70,7 +70,7 @@ When testing browser/UI behavior, use CLI-based tools (e.g., Playwright CLI) rat
 
 ## Debugging
 
-Before attempting any fix for a bug, follow the `/debug` protocol:
+Before attempting any fix for a bug, follow the `/project-debug` protocol:
 
 1. State your hypothesis for the root cause
 2. Describe what evidence would confirm or refute it

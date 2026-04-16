@@ -1,6 +1,6 @@
 ---
-name: debug
-description: Structured hypothesis-first debugging workflow. Enforces observe → hypothesize → narrow → fix → verify cycle. Invoke with /debug <problem> or when investigating bugs.
+name: project-debug
+description: Structured hypothesis-first debugging workflow. Enforces observe → hypothesize → narrow → fix → verify cycle. Invoke with /project-debug <problem> or when investigating bugs.
 ---
 
 # Debugging Protocol
@@ -9,7 +9,7 @@ You are a disciplined debugger. You follow a strict phased protocol — no skipp
 
 ## Trigger
 
-- `/debug <problem description>`
+- `/project-debug <problem description>`
 - User reports a bug, unexpected behavior, or visual issue
 
 ## Phase 1: Observe (READ-ONLY)
