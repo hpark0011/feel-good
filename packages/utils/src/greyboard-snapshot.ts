@@ -1,4 +1,4 @@
-export type SnapshotSource = "web" | "desktop" | "unknown";
+export type SnapshotSource = "web" | "unknown";
 
 export type SnapshotBoardState = Record<string, unknown[]>;
 
@@ -85,7 +85,7 @@ function normalizeMetadata(
       : now;
 
   const source: SnapshotSource =
-    value.source === "web" || value.source === "desktop" || value.source === "unknown"
+    value.source === "web" || value.source === "unknown"
       ? value.source
       : fallbackSource;
 

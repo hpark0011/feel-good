@@ -197,7 +197,7 @@ dock/
 
 ## Editor Feature
 
-Rich text viewer components powered by Tiptap. Used by Mirror for article rendering and Greyboard Desktop for document viewing.
+Rich text viewer components powered by Tiptap. Used by Mirror for article rendering.
 
 ### Imports
 
