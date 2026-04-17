@@ -102,7 +102,7 @@ Use Vitest. Match the owning package's existing patterns: tests in `__tests__/` 
 | --------- | ----------------------------------- | -------- |
 | {path}    | {user flow from user's perspective} | {FR-XX}  |
 
-E2E tests go in the owning app's Playwright directory (e.g., `apps/mirror/e2e/`) with a `.spec.ts` suffix. Use the Playwright CLI only (`.claude/rules/testing.md`). Tests must describe real user flows, not internal state checks.
+E2E tests go in the owning app's Playwright directory (e.g., `apps/greyboard/e2e/`) with a `.spec.ts` suffix. Use the Playwright CLI only (`.claude/rules/testing.md`). Tests must describe real user flows, not internal state checks.
 
 ## Team Orchestration Plan
 

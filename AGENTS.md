@@ -1,6 +1,6 @@
 # Feel Good Monorepo
 
-Turborepo monorepo with 3 Next.js applications and shared packages.
+Turborepo monorepo with 2 Next.js applications and shared packages.
 
 ## Quick Start
 
@@ -24,36 +24,31 @@ pnpm lint --filter=@feel-good/greyboard   # Lint single app
 ## Monorepo Structure
 
 ```
-apps/           Next.js applications (greyboard, mirror, ui-factory)
-packages/       Shared libraries (ui, features, icons, utils, convex, tavus)
-tooling/        Shared configs (eslint, prettier, typescript, sentry)
+apps/           Next.js applications (greyboard, ui-factory)
+packages/       Shared libraries (ui, features, icons, utils, greyboard-core)
+tooling/        Shared configs (eslint, typescript)
 docs/           Conventions, plans, brainstorms, solutions
 workspace/      Ticket tracking system
 ```
 
 ## Apps
 
-| App        | Description                   | Port |
-| ---------- | ----------------------------- | ---- |
-| greyboard  | AI-powered task management    | 3000 |
-| mirror     | Interactive blogging platform | 3001 |
-| ui-factory | Design system showcase        | 3002 |
+| App        | Description                | Port |
+| ---------- | -------------------------- | ---- |
+| greyboard  | AI-powered task management | 3000 |
+| ui-factory | Design system showcase     | 3002 |
 
 ## Packages
 
-| Package                    | Purpose                                                 | Example Import                    |
-| -------------------------- | ------------------------------------------------------- | --------------------------------- |
-| @feel-good/ui              | shadcn/ui primitives                                    | `@feel-good/ui/primitives/button` |
-| @feel-good/features        | Feature components (auth, dock, editor, theme)          | `@feel-good/features/auth/blocks` |
-| @feel-good/icons           | SVG icon components                                     | `@feel-good/icons`                |
-| @feel-good/utils           | Utilities (cn, etc.)                                    | `@feel-good/utils/cn`             |
-| @feel-good/convex          | Convex backend                                          | `@feel-good/convex`               |
-| @feel-good/greyboard-core  | Greyboard domain core (types, config, persistence)      | `@feel-good/greyboard-core/types` |
-| @feel-good/tavus           | Tavus CVI video calling                                 | `@feel-good/tavus/client`         |
-| @feel-good/tsconfig        | Shared TypeScript configs (base, react-library, nextjs) | —                                 |
-| @feel-good/eslint-config   | Shared ESLint configurations                            | —                                 |
-| @feel-good/prettier-config | Shared Prettier configuration                           | —                                 |
-| @feel-good/sentry-config   | Shared Sentry configuration for Next.js                 | `@feel-good/sentry-config/nextjs` |
+| Package                   | Purpose                                                 | Example Import                    |
+| ------------------------- | ------------------------------------------------------- | --------------------------------- |
+| @feel-good/ui             | shadcn/ui primitives                                    | `@feel-good/ui/primitives/button` |
+| @feel-good/features       | Feature components (auth, dock, theme)                  | `@feel-good/features/auth/blocks` |
+| @feel-good/icons          | SVG icon components                                     | `@feel-good/icons`                |
+| @feel-good/utils          | Utilities (cn, etc.)                                    | `@feel-good/utils/cn`             |
+| @feel-good/greyboard-core | Greyboard domain core (types, config, persistence)      | `@feel-good/greyboard-core/types` |
+| @feel-good/tsconfig       | Shared TypeScript configs (base, react-library, nextjs) | —                                 |
+| @feel-good/eslint-config  | Shared ESLint configurations                            | —                                 |
 
 ### Auth Package Layers
 
@@ -114,7 +109,6 @@ Path- and topic-scoped guidance lives in `.claude/rules/` — load the relevant 
 
 | Topic             | File                                 |
 | ----------------- | ------------------------------------ |
-| Convex backend    | `.claude/rules/convex.md`            |
 | Forms             | `.claude/rules/forms.md`             |
 | React components  | `.claude/rules/react-components.md`  |
 | State management  | `.claude/rules/state-management.md`  |
@@ -127,4 +121,3 @@ Path- and topic-scoped guidance lives in `.claude/rules/` — load the relevant 
 | Dev process       | `.claude/rules/dev-process.md`       |
 | Git worktrees     | `.claude/rules/git-worktrees.md`     |
 | App-specific      | `.claude/rules/apps/`                |
-| Sentry            | `.claude/rules/sentry/`              |

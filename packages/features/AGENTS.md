@@ -195,43 +195,6 @@ dock/
 └── index.ts              # Barrel export
 ```
 
-## Editor Feature
-
-Rich text viewer components powered by Tiptap. Used by Mirror for article rendering.
-
-### Imports
-
-```typescript
-// Components
-import { MarkdownViewer, RichTextViewer } from "@feel-good/features/editor/components";
-
-// Lib (extensions, sanitization, plain text extraction)
-import { extensions, sanitizeContent, getPlainText } from "@feel-good/features/editor/lib";
-
-// Types
-import type { EditorTypes } from "@feel-good/features/editor/types";
-
-// Styles (import in your app's global CSS or layout)
-import "@feel-good/features/editor/styles/tiptap-content.css";
-```
-
-### Structure
-
-```
-editor/
-├── components/           # Viewer components
-│   ├── markdown-viewer.tsx
-│   └── rich-text-viewer.tsx
-├── lib/                  # Tiptap extensions, sanitization, text extraction
-│   ├── extensions.ts
-│   ├── sanitize-content.ts
-│   └── get-plain-text.ts
-├── styles/
-│   └── tiptap-content.css
-├── types.ts
-└── index.ts
-```
-
 ## Theme Feature
 
 Theme toggle components for light/dark mode switching.
@@ -259,4 +222,3 @@ theme/
 - `@convex-dev/better-auth` - Convex adapter
 - `convex` - Real-time backend
 - `zod` - Validation schemas
-- `@tiptap/react` - Rich text editor (editor feature)

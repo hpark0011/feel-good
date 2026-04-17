@@ -9,10 +9,10 @@
       "autoPort": true
     },
     {
-      "name": "mirror",
+      "name": "ui-factory",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["dev", "--filter=@feel-good/mirror"],
-      "port": 3001,
+      "runtimeArgs": ["dev", "--filter=@feel-good/ui-factory"],
+      "port": 3002,
       "autoPort": true
     }
   ]

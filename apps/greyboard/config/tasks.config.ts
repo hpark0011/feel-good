@@ -1,4 +1,4 @@
-import { ProjectColor } from "@feel-good/greyboard-core/types";
+import { type ProjectColor } from "@feel-good/greyboard-core/types";
 
 export const PROJECT_COLORS: {
   color: ProjectColor;

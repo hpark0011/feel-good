@@ -69,21 +69,20 @@ Changes the base directory for automatic scanning. Useful when builds run from m
 
 ## Current Configuration
 
-### apps/mirror/styles/globals.css
+### apps/greyboard/styles/globals.css
 
 ```css
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "./fonts.css";
 
 @source "../node_modules/@feel-good/ui";
 
 /* ... rest of configuration */
 ```
 
-### apps/greyboard/styles/globals.css
+### apps/ui-factory/app/globals.css
 
-Should include the same `@source` directive if using shared UI components.
+Should include the same `@source` directive for `@feel-good/ui` and `@feel-good/features`.
 
 ## Troubleshooting
 
@@ -98,10 +97,10 @@ Should include the same `@source` directive if using shared UI components.
 
 ```bash
 # Check if symlink exists
-ls -la apps/mirror/node_modules/@feel-good/ui
+ls -la apps/greyboard/node_modules/@feel-good/ui
 
 # Search generated CSS for a class
-curl -s "http://localhost:3001/_next/static/chunks/*.css" | grep "bg-primary"
+curl -s "http://localhost:3000/_next/static/chunks/*.css" | grep "bg-primary"
 ```
 
 ## References

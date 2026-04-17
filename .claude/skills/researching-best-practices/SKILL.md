@@ -79,9 +79,9 @@ Return the report path + one-sentence summary to the user. No file dump, no agen
 
 ```
 User: "Research best practices for streaming LLM responses with backpressure —
-      compare against what our mirror chat does today."
+      compare against what our greyboard assistant does today."
 
-→ Phase 1 passes (topic + context + implicit scope: mirror chat).
+→ Phase 1 passes (topic + context + implicit scope: greyboard assistant).
 → Phase 2 spawns 4 researchers + codebase analyst in one message (5 parallel Agent calls).
 → Phase 3 verification flags that the social agent's Medium post has no code reference,
   asks for a replacement source, weighs the research-paper findings on backpressure

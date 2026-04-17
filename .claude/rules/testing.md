@@ -5,8 +5,8 @@
 Use the Playwright CLI for e2e tests. Never use Playwright MCP or browser-automation MCP tools for testing.
 
 ```bash
-pnpm --filter=@feel-good/mirror test:e2e    # Run all e2e tests
-pnpm --filter=@feel-good/mirror test:e2e:ui  # Run with Playwright UI
+pnpm --filter=@feel-good/<app> test:e2e    # Run all e2e tests
+pnpm --filter=@feel-good/<app> test:e2e:ui  # Run with Playwright UI
 ```
 
 Test files go in `apps/{app}/tests/` or `apps/{app}/e2e/`.
