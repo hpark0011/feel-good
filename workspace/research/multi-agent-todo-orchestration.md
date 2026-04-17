@@ -33,8 +33,8 @@ Before dispatching agents, map every pending todo to the files it modifies. Grou
 
 After each group completes:
 ```bash
-pnpm build --filter=@feel-good/mirror   # Type check + build
-pnpm lint --filter=@feel-good/mirror    # Lint check
+pnpm build --filter=@feel-good/greyboard   # Type check + build
+pnpm lint --filter=@feel-good/greyboard    # Lint check
 ```
 
 Only proceed to the next group if gates pass. This prevents cascading failures.

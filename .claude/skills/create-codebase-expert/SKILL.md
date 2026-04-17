@@ -133,9 +133,9 @@ Tell the user:
 ✓ Good boundary (layer appears in name):
 
 ```
-/create-codebase-expert chat-backend-developer
-Owns: packages/convex/chat/*, convex schema for messages/threads
-Does NOT own: apps/mirror/src/chat/** (frontend), Tavus integration
+/create-codebase-expert task-board-developer
+Owns: apps/greyboard/components/tasks/*, task board state logic
+Does NOT own: apps/greyboard/app/** (routing), Zustand timer store
 ```
 
 ✗ Bad boundary (ambiguous — implies end-to-end ownership it doesn't have):

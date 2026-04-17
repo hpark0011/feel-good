@@ -57,7 +57,6 @@ If the working tree is clean and no arg given, ask the user what to review inste
 
 | If the diff touches…                     | Load                                    |
 | ---------------------------------------- | --------------------------------------- |
-| `packages/convex/**`                     | `.claude/rules/convex.md`               |
 | `**/forms/**`, `react-hook-form` imports | `.claude/rules/forms.md`                |
 | `*.tsx` components                       | `.claude/rules/react-components.md`     |
 | `store/`, context providers              | `.claude/rules/state-management.md`     |
@@ -65,7 +64,7 @@ If the working tree is clean and no arg given, ask the user what to review inste
 | `*.ts` types, generics                   | `.claude/rules/typescript.md`           |
 | `providers/`, root layouts               | `.claude/rules/providers.md`            |
 | New/moved/renamed files                  | `.claude/rules/file-organization.md`    |
-| `apps/mirror/**`                         | `.claude/rules/apps/mirror/**`          |
+| `apps/greyboard/**`                      | `.claude/rules/apps/greyboard/**`       |
 | Anything                                 | `.claude/rules/dev-process.md` (always) |
 
 ### Phase 2 — Intent map
@@ -293,7 +292,7 @@ Report rules:
 
 | # | File | Issue | Reviewer | Confidence |
 |---|------|-------|----------|------------|
-| 3 | `apps/mirror/app/(chat)/chat-input.tsx:5` | Unused `cn` import in a hot file | convention | 0.70 |
+| 3 | `apps/greyboard/app/tasks/task-input.tsx:5` | Unused `cn` import in a hot file | convention | 0.70 |
 
 ### Looks good
 - Lock guard pattern with `expectedStartedAt` is a solid approach for stale-callback protection.

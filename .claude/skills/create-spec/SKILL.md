@@ -128,12 +128,12 @@ This skill ends when the spec is verified. The downstream half of the pipeline i
 ✓ Good invocation:
 
 ```
-User: "Create a spec for a rate-limited magic-link login flow in mirror. Budget: 2 weeks. Must reuse existing Convex auth."
+User: "Create a spec for a rate-limited magic-link login flow in greyboard. Budget: 2 weeks. Must reuse existing auth."
 
 → Phase 1 passes (scope, constraint, reuse boundary all explicit).
 → Phase 2 spawns Codebase Analyst + auth-layer domain expert.
 → Phase 3 instantiates spec-template/spec.md with FRs tied to real e2e paths
-  in apps/mirror/tests/.
+  in apps/greyboard/tests/.
 → Phase 4 adversarial loop flags one Critical (no abuse-mitigation NFR);
   accepted and spec updated.
 → Phase 5 verification passes.

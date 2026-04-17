@@ -14,7 +14,7 @@ acceptance_criteria:
   - "Arrow left/right moves `aria-activedescendant` or `document.activeElement` between dock items — verifiable via Playwright `page.keyboard.press('ArrowRight')` followed by `page.locator('[data-dock-item]:focus').getAttribute('data-index')`"
   - "`grep -n 'role=\"toolbar\"\\|role=\"listbox\"' packages/features/dock/` returns at least one match (proper ARIA role)"
   - "Home key focuses first item; End key focuses last item — `grep -n 'Home\\|End' packages/features/dock/` returns matches"
-  - "`pnpm build --filter=@feel-good/mirror` exits 0"
+  - "`pnpm build --filter=@feel-good/ui-factory` exits 0"
 owner_agent: "Accessibility Feature Agent"
 ---
 
@@ -79,7 +79,7 @@ const handleKeyDown = (e: React.KeyboardEvent) => {
 4. Add `onKeyDown` handler to the container that handles `ArrowLeft`, `ArrowRight`, `Home`, `End` keys
 5. Set `tabIndex={0}` on the active item and `tabIndex={-1}` on all others
 6. Add visible focus ring styles (e.g., `focus-visible:ring-2`) to dock items
-7. Run `pnpm build --filter=@feel-good/mirror` to verify no build errors
+7. Run `pnpm build --filter=@feel-good/ui-factory` to verify no build errors
 
 ## Constraints
 

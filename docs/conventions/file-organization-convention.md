@@ -135,28 +135,6 @@ Within a feature module, placement is mechanical — one answer per file type:
 
 ## Current Migration Direction
 
-### Mirror
-
-Move current route-local feature logic from:
-
-- `app/_view/*`
-- `app/(protected)/dashboard/_view/*`
-- `app/(protected)/dashboard/articles/_hooks/*`
-- `app/(protected)/dashboard/articles/_data/*`
-- `app/(protected)/dashboard/articles/_view/*`
-
-into:
-
-- `features/home/components/*`
-- `features/profile/components/*`
-- `features/articles/components/*`
-- `features/articles/hooks/*`
-- `features/articles/lib/*`
-
-Keep route-only composition pieces in `app/**/_components`.
-
-Note: `views/` directories in Mirror features have been merged into `components/`. See `docs/2026-02-19-report-file-organization-consistency.md` for the full rationale.
-
 ### Greyboard
 
 Continue feature-first organization under `apps/greyboard/features/**`; gradually reduce route-local `_hooks/_utils/_views` where logic is stable and reusable in feature modules.
@@ -171,7 +149,7 @@ Existing `_view` / `_views` route directories are legacy and should be migrated 
 
 ## Change Log
 
-1. 2026-02-19: Added `-connector.tsx` naming convention for context-bridging components. Deprecated `-view` suffix for new files. Completed Mirror `views/` → `components/` migration.
+1. 2026-02-19: Added `-connector.tsx` naming convention for context-bridging components. Deprecated `-view` suffix for new files.
 1. 2026-02-19: Removed `views/` from app-level feature module template. All React components go in `components/`. `views/` is reserved for cross-app packages where it defines a package API boundary. Added mechanical placement table for AI agents.
 1. 2026-02-09: Adopted repo-wide feature-first placement with `app/**/_components` as the only route-private folder pattern for new code.
 1. 2026-03-02: Clarified `lib/` purpose — data access (queries, mutations, adapters), not generic utilities.

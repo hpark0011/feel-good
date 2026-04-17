@@ -7,21 +7,19 @@
 
 ## Overview
 
-Upgrade the `@feel-good/greyboard` app from Next.js 15.4.10 to 16.1.4 to align with `@apps/mirror` which already runs Next.js 16.1.4. This ensures consistency across the monorepo and gives access to Next.js 16 features including Turbopack as the default bundler.
+Upgrade the `@feel-good/greyboard` app from Next.js 15.4.10 to 16.1.4. This gives access to Next.js 16 features including Turbopack as the default bundler.
 
 ## Current State
 
 | App | Next.js | React | react-dom | eslint-config-next |
 |-----|---------|-------|-----------|-------------------|
 | greyboard | 15.4.10 | 19.1.0 | 19.1.0 | 15.4.7 |
-| mirror | 16.1.4 | 19.2.3 | 19.2.3 | 16.1.4 |
 
 ## Target State
 
 | App | Next.js | React | react-dom | eslint-config-next |
 |-----|---------|-------|-----------|-------------------|
 | greyboard | 16.1.4 | 19.2.3 | 19.2.3 | 16.1.4 |
-| mirror | 16.1.4 | 19.2.3 | 19.2.3 | 16.1.4 |
 
 ## Breaking Changes in Next.js 16
 
