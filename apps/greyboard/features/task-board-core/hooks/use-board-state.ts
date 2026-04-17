@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useLayoutEffect, useMemo, useRef } from "react";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useProjectFilter } from "./use-project-filter";
 import { useLastSelectedProject } from "./use-last-selected-project";
@@ -92,7 +92,9 @@ export function useBoardState(): UseBoardStateReturn {
   // Refs allow callbacks to access current board state without being recreated on every
   // board change. This prevents infinite re-renders in dnd-kit's drag handlers.
   const boardRef = useRef(board);
-  boardRef.current = board;
+  useLayoutEffect(() => {
+    boardRef.current = board;
+  }, [board]);
 
   // Build O(1) lookup indexes for drag operations. Single pass builds both indexes.
   const { ticketColumnIndex, ticketIndex } = useMemo(() => {
@@ -112,8 +114,10 @@ export function useBoardState(): UseBoardStateReturn {
   // Refs for stable callback references
   const ticketColumnIndexRef = useRef(ticketColumnIndex);
   const ticketIndexRef = useRef(ticketIndex);
-  ticketColumnIndexRef.current = ticketColumnIndex;
-  ticketIndexRef.current = ticketIndex;
+  useLayoutEffect(() => {
+    ticketColumnIndexRef.current = ticketColumnIndex;
+    ticketIndexRef.current = ticketIndex;
+  }, [ticketColumnIndex, ticketIndex]);
 
   const findColumn = useCallback(
     (id: string, sourceBoard?: BoardState): string | null => {

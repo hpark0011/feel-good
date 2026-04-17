@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { FieldValues, UseFormReturn } from "react-hook-form";
+import { type FieldValues, type UseFormReturn } from "react-hook-form";
 
-interface UseDialogAutoSaveProps<TFieldValues extends FieldValues, TContext = any, TTransformedValues extends FieldValues = TFieldValues> {
+interface UseDialogAutoSaveProps<TFieldValues extends FieldValues, TContext = unknown, TTransformedValues extends FieldValues = TFieldValues> {
   form: UseFormReturn<TFieldValues, TContext, TTransformedValues>;
   onSubmit: (data: TTransformedValues) => void;
   onOpenChange: (open: boolean) => void;
@@ -9,7 +9,7 @@ interface UseDialogAutoSaveProps<TFieldValues extends FieldValues, TContext = an
 
 export function useDialogAutoSave<
   TFieldValues extends FieldValues & { title?: string },
-  TContext = any,
+  TContext = unknown,
   TTransformedValues extends FieldValues & { title?: string } = TFieldValues
 >({
   form,

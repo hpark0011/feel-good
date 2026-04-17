@@ -1,4 +1,4 @@
-import type { BoardState, Ticket, TimeEntry } from "@feel-good/greyboard-core/types";
+import type { BoardState, TimeEntry } from "@feel-good/greyboard-core/types";
 import { INITIAL_BOARD_STATE } from "@feel-good/greyboard-core/config";
 import { getStorageKey } from "@/lib/storage-keys";
 
